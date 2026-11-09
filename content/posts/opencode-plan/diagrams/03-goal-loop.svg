@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="d3-title d3-desc">
+  <title id="d3-title">/goal 的一轮</title>
+  <desc id="d3-desc">会话即将空闲时，reviewer 给出五种判词之一：continue 再跑一轮、wait 等后台任务、done 完成、paused 或 blocked 暂停。continue 之前先查停滞，轮次、停滞与等待各有上限。</desc>
+
+  <defs>
+    <marker id="d3-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d3-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">GOAL LOOP</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一轮 = 一次裁决 + 五种去向</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">judge 复用当前 agent/model，不带工具；它给 JSON，解析失败就暂停而不是猜</text>
+
+  <!-- idle -->
+  <rect x="56" y="196" width="170" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="141" y="222" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">会话即将空闲</text>
+  <text x="141" y="242" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">idle hook</text>
+
+  <!-- judge -->
+  <rect x="272" y="196" width="180" height="64" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="362" y="222" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">judge</text>
+  <text x="362" y="242" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">同一 agent/model 的第二次调用</text>
+
+  <line x1="226" y1="228" x2="268" y2="228" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+
+  <!-- verdicts -->
+  <rect x="520" y="100" width="180" height="44" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="610" y="120" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">continue</text>
+  <text x="610" y="136" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">还没完，再跑一轮</text>
+
+  <rect x="520" y="160" width="180" height="44" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="610" y="180" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">wait</text>
+  <text x="610" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">等后台 shell，什么都不做</text>
+
+  <rect x="520" y="220" width="180" height="44" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="610" y="240" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">done</text>
+  <text x="610" y="256" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">标 complete</text>
+
+  <rect x="520" y="280" width="180" height="44" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="610" y="300" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">paused / blocked</text>
+  <text x="610" y="316" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">标 paused，等人</text>
+
+  <line x1="452" y1="218" x2="516" y2="124" stroke="#4f5d75" stroke-width="1" marker-end="url(#d3-arrow)"/>
+  <line x1="452" y1="224" x2="516" y2="182" stroke="#4f5d75" stroke-width="1" marker-end="url(#d3-arrow)"/>
+  <line x1="452" y1="234" x2="516" y2="240" stroke="#4f5d75" stroke-width="1" marker-end="url(#d3-arrow)"/>
+  <line x1="452" y1="240" x2="516" y2="300" stroke="#4f5d75" stroke-width="1" marker-end="url(#d3-arrow)"/>
+
+  <!-- stall box -->
+  <rect x="736" y="100" width="176" height="150" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+  <text x="750" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">continue 之前先查停滞</text>
+  <text x="750" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">理由与上一轮相同，或</text>
+  <text x="750" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">这一轮没调用任何工具</text>
+  <text x="750" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">→ stalls + 1</text>
+  <text x="750" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">连续 3 次 → paused</text>
+  <text x="750" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">否则 rounds+1、注入</text>
+  <text x="750" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">continuation、唤醒会话</text>
+
+  <line x1="700" y1="122" x2="732" y2="140" stroke="#bf4520" stroke-width="1" marker-end="url(#d3-arrow-accent)"/>
+
+  <!-- limits -->
+  <rect x="56" y="330" width="400" height="96" rx="6" fill="#ffffff" stroke="rgba(79,93,117,0.4)" stroke-width="1"/>
+  <text x="72" y="354" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">HARD LIMITS</text>
+  <text x="72" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">MAX_ROUNDS = 50（轮次用尽 → paused）</text>
+  <text x="72" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">MAX_STALLS = 3（停滞 → paused）</text>
+  <text x="72" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">WAIT_LIMIT = 30 分钟（等后台超时 → paused）</text>
+
+  <text x="56" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">goal 状态存在插件 storage（key = session:&lt;id&gt;），子会话与 fork 不继承；带进程 boot 标识，跨进程的 goal 以 paused 回来。</text>
+  <text x="56" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">每轮一次 judge 就是一次额外模型调用——50 轮的成本要提前算。</text>
+</svg>

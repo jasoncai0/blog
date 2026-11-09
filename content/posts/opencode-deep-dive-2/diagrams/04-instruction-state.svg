@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d4-title d4-desc">
+  <title id="d4-title">指令状态的迁移</title>
+  <desc id="d4-desc">无状态行时首次 prepare 冻结基线；之后每步只发变化 key 的增量，没变化不发事件；压缩结束时 epoch 前移，当前值升为新基线；revert 删除边界后的行回到无状态；fork 用父的最新值做子基线，move 不迁移状态。</desc>
+
+  <defs>
+    <marker id="d4-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d4-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">INSTRUCTION STATE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一行状态，四个字段，六个迁移</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">epoch_start / through_seq / initial_values / current_values —— 所有迁移都在维护这四者的关系</text>
+
+  <rect x="40" y="210" width="150" height="76" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="54" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">无状态行</text>
+  <text x="54" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">新会话 / revert 之后</text>
+  <text x="54" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">下次 prepare 重新初始化</text>
+
+  <rect x="250" y="210" width="160" height="76" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="264" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">initial（基线）</text>
+  <text x="264" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">initial = current</text>
+  <text x="264" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">发一条无文本的 delta</text>
+
+  <rect x="470" y="210" width="160" height="76" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="484" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">delta（增量）</text>
+  <text x="484" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只有变化的 key 入 delta</text>
+  <text x="484" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">文本冻结进事件</text>
+
+  <rect x="740" y="210" width="180" height="76" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="754" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">epoch（新基线）</text>
+  <text x="754" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">initial := current</text>
+  <text x="754" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">epoch_start = through_seq = seq</text>
+
+  <!-- edges -->
+  <line x1="190" y1="248" x2="246" y2="248" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d4-arrow)"/>
+  <text x="192" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">首次</text>
+
+  <line x1="410" y1="248" x2="466" y2="248" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d4-arrow)"/>
+  <text x="412" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">每步 diff</text>
+
+  <line x1="630" y1="248" x2="736" y2="248" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d4-arrow)"/>
+  <text x="640" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">compaction.ended</text>
+  <line x1="736" y1="272" x2="634" y2="272" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d4-arrow)"/>
+  <text x="640" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">后续变化</text>
+
+  <!-- self loop on delta -->
+  <path d="M550,210 V176 H620 V206" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#d4-arrow)"/>
+  <text x="556" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">无变化：不发事件</text>
+
+  <!-- revert back to empty -->
+  <path d="M470,286 V380 H115 V290" fill="none" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="5,4" marker-end="url(#d4-arrow-accent)"/>
+  <text x="150" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">revert：删 through_seq ≥ 边界的整行</text>
+
+  <!-- fork / move notes -->
+  <rect x="330" y="404" width="570" height="86" rx="6" fill="#ffffff" stroke="rgba(79,93,117,0.35)" stroke-width="0.8"/>
+  <text x="346" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">FORK · MOVE</text>
+  <text x="346" y="448" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">fork：不复制状态行，子会话以父会话的 current 做 initial——注意是"父的最新值"，不是 fork 边界处的值。</text>
+  <text x="346" y="468" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">move：不碰状态，下一个 Step 的 prepare 把新目录的差异当普通 delta 发出去，基线不重冻。</text>
+
+  <text x="48" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">不变量：through_seq 永远等于最近一次 delta 的序号；initial_values 只在下一次 epoch 时被整体替换。</text>
+</svg>

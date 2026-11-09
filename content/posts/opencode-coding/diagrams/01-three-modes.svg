@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="580" viewBox="0 0 960 580" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">三种生成形态在 harness 里的差异</title>
+  <desc id="d1-desc">编码、文本生成、媒体生成共用同一条模型调用与流归一，但在工具、上下文、输出落点、权限、预算五个维度上完全不同。</desc>
+
+  <defs>
+    <marker id="d1-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">THREE GENERATION MODES</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">同一条模型调用，三种外壳</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">差异不在模型，在 harness：给不给工具、喂不喂历史、输出去哪、要不要审批、预算怎么算</text>
+
+  <!-- column headers -->
+  <rect x="300" y="112" width="200" height="52" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+  <text x="400" y="134" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">编码</text>
+  <text x="400" y="152" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">agent + tools</text>
+
+  <rect x="516" y="112" width="200" height="52" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="616" y="134" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">文本生成</text>
+  <text x="616" y="152" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">title / summary</text>
+
+  <rect x="732" y="112" width="180" height="52" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="822" y="134" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">媒体生成</text>
+  <text x="822" y="152" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">image / speech</text>
+
+  <!-- rows -->
+  <text x="60" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">工具</text>
+  <line x1="48" y1="220" x2="912" y2="220" stroke="rgba(45,49,66,0.10)" stroke-width="1"/>
+  <text x="320" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">读/改/跑一整套</text>
+  <text x="536" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">没有</text>
+  <text x="752" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">没有</text>
+
+  <text x="60" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">上下文</text>
+  <line x1="48" y1="282" x2="912" y2="282" stroke="rgba(45,49,66,0.10)" stroke-width="1"/>
+  <text x="320" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">完整 transcript + 指令</text>
+  <text x="536" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">只喂首条消息或摘要输入</text>
+  <text x="752" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">只有 prompt</text>
+
+  <text x="60" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">输出落点</text>
+  <line x1="48" y1="344" x2="912" y2="344" stroke="rgba(45,49,66,0.10)" stroke-width="1"/>
+  <text x="320" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具调用 → 文件 + 消息</text>
+  <text x="536" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">纯文本（标题 / 摘要）</text>
+  <text x="752" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">二进制 → artifact / blob</text>
+
+  <text x="60" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">权限</text>
+  <line x1="48" y1="406" x2="912" y2="406" stroke="rgba(45,49,66,0.10)" stroke-width="1"/>
+  <text x="320" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">每次工具调用都 assert</text>
+  <text x="536" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不涉及</text>
+  <text x="752" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不涉及</text>
+
+  <text x="60" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">预算</text>
+  <line x1="48" y1="468" x2="912" y2="468" stroke="rgba(45,49,66,0.10)" stroke-width="1"/>
+  <text x="320" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">压缩 + 截断 + 动态 maxTokens</text>
+  <text x="536" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不给 maxTokens（推理难预算）</text>
+  <text x="752" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">固定参数</text>
+
+  <text x="60" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">三者共用同一套：provider 路由、流式归一、错误分类、成本记账。差异全在调用之前与之后——harness 的本体就是"之前"与"之后"。</text>
+</svg>

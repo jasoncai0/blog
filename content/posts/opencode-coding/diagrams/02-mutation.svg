@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="d2-title d2-desc">
+  <title id="d2-title">一次代码改动的物理管线</title>
+  <desc id="d2-desc">从选择写法开始，经权限断言与按路径加锁，读现状、计算新内容、写盘、格式化，最后返回带 diff 的工具结果。</desc>
+
+  <defs>
+    <marker id="d2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d2-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">MUTATION PIPELINE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">改一个文件要走八步，格式化只是其中一步</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">三种写法的差异在 ④⑤ 两步，格式化三者都跑，只是位置不同</text>
+
+  <!-- row 1 -->
+  <rect x="60" y="120" width="190" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="74" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">① 选写法</text>
+  <text x="74" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">write / edit / patch</text>
+  <text x="74" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">整份覆盖 / 精确替换 / 补丁</text>
+
+  <rect x="290" y="120" width="190" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="304" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">② 权限断言</text>
+  <text x="304" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">action 多为 edit</text>
+  <text x="304" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">资源是被写入的路径</text>
+
+  <rect x="520" y="120" width="190" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="534" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">③ 按路径加锁</text>
+  <text x="534" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">解析后的绝对路径</text>
+  <text x="534" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">同文件并发写串行化</text>
+
+  <rect x="750" y="120" width="170" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="764" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">④ 读现状</text>
+  <text x="764" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">edit / patch 必须</text>
+  <text x="764" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">write 可以跳过</text>
+
+  <!-- row 2 (right to left) -->
+  <rect x="750" y="300" width="170" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="764" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">⑤ 算新内容</text>
+  <text x="764" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">内存里改字符串</text>
+  <text x="764" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">未匹配即失败</text>
+
+  <rect x="520" y="300" width="190" height="80" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="534" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">⑥ 写盘</text>
+  <text x="534" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">保留原有 BOM</text>
+  <text x="534" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">失败即整个调用失败</text>
+
+  <rect x="290" y="300" width="190" height="80" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+  <text x="304" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">⑦ 格式化</text>
+  <text x="304" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">write/edit 在 commit 内跑</text>
+  <text x="304" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">patch 在全部写完后跑</text>
+
+  <rect x="60" y="300" width="190" height="80" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="74" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">⑧ 结果带 diff</text>
+  <text x="74" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">增删行数回到工具结果</text>
+  <text x="74" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">Step 结束时汇总进快照</text>
+
+  <!-- arrows -->
+  <line x1="250" y1="160" x2="286" y2="160" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="480" y1="160" x2="516" y2="160" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="710" y1="160" x2="746" y2="160" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="835" y1="200" x2="835" y2="296" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="750" y1="340" x2="714" y2="340" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="520" y1="340" x2="484" y2="340" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="290" y1="340" x2="254" y2="340" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <text x="60" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">第 ④ 步是三种写法真正的分水岭：edit 必须先在内存里找到唯一匹配；patch 需要先解析上下文；只有 write 敢直接覆盖。</text>
+  <text x="60" y="460" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">"格式化"是尽力而为：write/edit 在 commit 里跑，patch 在全部写完后跑；失败只记日志，不阻断写入——别指望它替代 pre-commit hook。</text>
+  <text x="60" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">注意：快照不在这条管线上。它按 Step 拍，不在每个文件写完时拍——所以 revert 的单位是"一步"，不是"一次写"。</text>
+</svg>

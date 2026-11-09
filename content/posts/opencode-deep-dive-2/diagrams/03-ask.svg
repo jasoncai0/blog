@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="d3-title d3-desc">
+  <title id="d3-title">ask 的往返与并发唤醒</title>
+  <desc id="d3-desc">两个 ask 同时挂起时，对一个回答 always 会写入 saved 规则并重新求值另一个挂起请求，命中后直接放行不再弹窗；reject 则分两条通道结束当前 Step。</desc>
+
+  <defs>
+    <marker id="d3-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d3-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">ASK ROUND TRIP</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次 always 会顺手解决另一个挂起</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">请求是并发挂起的，回复是串行结算的：saved 规则写完后要重新求值所有可放行的 pending</text>
+
+  <text x="52" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">REQUEST A</text>
+
+  <rect x="50" y="144" width="160" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="62" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">pending</text>
+  <text x="62" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">求值得到 ask</text>
+  <text x="62" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">创建挂起请求</text>
+
+  <rect x="230" y="144" width="160" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="242" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">asked</text>
+  <text x="242" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">事件推给客户端</text>
+  <text x="242" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">Deferred.await 挂住</text>
+
+  <rect x="410" y="144" width="160" height="70" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="422" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">reply: always</text>
+  <text x="422" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">用户选择记住</text>
+  <text x="422" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">带 save 描述</text>
+
+  <rect x="590" y="144" width="160" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="602" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">写 saved 规则</text>
+  <text x="602" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">按项目 + action + resource</text>
+  <text x="602" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">幂等 upsert</text>
+
+  <rect x="770" y="144" width="140" height="70" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="782" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">A 放行</text>
+  <text x="782" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">工具开始执行</text>
+
+  <text x="52" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">REQUEST B</text>
+
+  <rect x="50" y="276" width="160" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="62" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">pending</text>
+  <text x="62" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">同一 Step 的另一个调用</text>
+
+  <rect x="230" y="276" width="160" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="242" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">asked</text>
+  <text x="242" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">也弹了窗，还没人回</text>
+
+  <rect x="410" y="276" width="160" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="422" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">重新求值</text>
+  <text x="422" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">saved 规则参与计算</text>
+
+  <rect x="590" y="276" width="160" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="602" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">命中 allow</text>
+  <text x="602" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">不再需要弹窗</text>
+
+  <rect x="770" y="276" width="140" height="70" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="782" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">B 放行</text>
+  <text x="782" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">弹窗自动消失</text>
+
+  <!-- arrows row A -->
+  <line x1="210" y1="179" x2="226" y2="179" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="390" y1="179" x2="406" y2="179" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="570" y1="179" x2="586" y2="179" stroke="#bf4520" stroke-width="1.2" marker-end="url(#d3-arrow-accent)"/>
+  <line x1="750" y1="179" x2="766" y2="179" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+
+  <!-- arrows row B -->
+  <line x1="210" y1="311" x2="226" y2="311" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="390" y1="311" x2="406" y2="311" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="570" y1="311" x2="586" y2="311" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="750" y1="311" x2="766" y2="311" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+
+  <!-- wake link -->
+  <line x1="670" y1="214" x2="670" y2="258" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="4,3"/>
+  <path d="M490,258 V262" fill="none" stroke="#bf4520" stroke-width="1.1"/>
+  <line x1="490" y1="258" x2="492" y2="258" stroke="#bf4520" stroke-width="1.1"/>
+  <path d="M670,258 H490" fill="none" stroke="#bf4520" stroke-width="1.1"/>
+  <line x1="490" y1="258" x2="490" y2="272" stroke="#bf4520" stroke-width="1.1" marker-end="url(#d3-arrow-accent)"/>
+  <text x="500" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">写完后唤醒所有可放行的 pending（按创建顺序重算）</text>
+
+  <!-- reject channels -->
+  <rect x="50" y="400" width="860" height="92" rx="6" fill="#ffffff" stroke="rgba(79,93,117,0.35)" stroke-width="0.8"/>
+  <text x="66" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">IF THE ANSWER IS REJECT</text>
+  <text x="66" y="448" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">带 message：以 <tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace">CorrectedError</tspan> 结束本 Step，用户的话回到模型，可以换个做法继续。</text>
+  <text x="66" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">不带 message：走 defect 隧道穿透到请求层，才转 <tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace">DeclinedError</tspan>——这件事到此为止，不是"换个方式"。</text>
+
+  <text x="50" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">同一个 Step 里并发的工具调用可以各自挂起，但结算必须串行：否则两条 always 会互相覆盖 saved 规则。</text>
+</svg>

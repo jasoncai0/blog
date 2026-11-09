@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">委派的两种等待方式</title>
+  <desc id="d1-desc">前台委派：父会话阻塞在 job 上，子会话自己的忙期跑完才返回工具结果。后台委派：父立刻拿到结果继续，子跑完再以合成消息唤醒父。</desc>
+
+  <defs>
+    <marker id="d1-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d1-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">DELEGATION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">委派有两种等待方式，决定了两条不同的时间线</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">子会话永远有自己的忙期（key 是子会话 ID），父只是在"等它"或"不等它"之间选一个</text>
+
+  <!-- panel A -->
+  <text x="60" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">A · 前台（默认）</text>
+
+  <text x="60" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">父</text>
+  <rect x="90" y="144" width="120" height="34" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="150" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">工具调用 subagent</text>
+
+  <rect x="210" y="144" width="120" height="34" rx="4" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="270" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">阻塞在 job 上</text>
+
+  <rect x="330" y="144" width="110" height="34" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="385" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">拿到结果，续步</text>
+
+  <text x="60" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">子</text>
+  <rect x="210" y="204" width="120" height="34" rx="4" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+  <text x="270" y="226" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">自己的忙期</text>
+
+  <line x1="270" y1="178" x2="270" y2="200" stroke="#4f5d75" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#d1-arrow)"/>
+  <line x1="330" y1="221" x2="330" y2="182" stroke="#4f5d75" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#d1-arrow)"/>
+  <text x="60" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">父的 drain 覆盖子运行时长；父被中断时会联动中断子。</text>
+
+  <!-- panel B -->
+  <text x="510" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">B · 后台（background: true）</text>
+
+  <text x="510" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">父</text>
+  <rect x="540" y="144" width="110" height="34" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="595" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">调用后立刻返回</text>
+
+  <rect x="650" y="144" width="90" height="34" rx="4" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="695" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">本轮结束</text>
+
+  <rect x="740" y="144" width="150" height="34" rx="4" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="815" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">被 synthetic 消息唤醒</text>
+
+  <text x="510" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">子</text>
+  <rect x="650" y="204" width="240" height="34" rx="4" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+  <text x="770" y="226" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">继续跑，跑在 job 的全局 scope</text>
+
+  <line x1="770" y1="200" x2="790" y2="182" stroke="#bf4520" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#d1-arrow-accent)"/>
+  <text x="510" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">父中断不波及子；完成消息与删 marker 有先后，崩在中间只会重发一次。</text>
+
+  <!-- bottom notes -->
+  <rect x="60" y="292" width="830" height="86" rx="6" fill="#ffffff" stroke="rgba(79,93,117,0.35)" stroke-width="0.8"/>
+  <text x="76" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">WHAT THE CHILD ACTUALLY GETS</text>
+  <text x="76" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">父只给子一句话：任务描述 + 一句"你是被另一个会话派来的子代理"。子的历史从零开始，看不到父的 transcript。</text>
+  <text x="76" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">父也只拿回子最后那条文本（或后台的一条合成消息），看不到子的中间步骤、工具输出与失败细节。</text>
+
+  <text x="60" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">这就是它和"共享黑板的协作"最大的区别：委派是一条单向的窄管道：进出都只有文本。</text>
+  <text x="60" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">深度默认上限 1：默认只允许一层委派，子代理不能再派子代理。</text>
+</svg>

@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">OpenCode 与计费网关、计费服务的集成架构</title>
+  <desc id="arch-desc">OpenCode 把模型请求发给计费网关，网关先向计费服务冻结额度，再代理到上游模型；计费服务写账本和任务状态，可选的 SSE 投影器从 OpenCode 事件流对账，插件只补充归属和预检。</desc>
+
+  <defs>
+    <marker id="ar-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="ar-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">INTEGRATION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">OpenCode 扣费：网关强制，插件增强，SSE 对账</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">上游 key 只在网关；OpenCode 只拿网关 key。插件被禁用也不影响扣费。</text>
+
+  <!-- plugin -->
+  <rect x="40" y="105" width="230" height="55" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+  <text x="56" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">OpenCode Plugin</text>
+  <text x="56" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">kind / run id / 预检</text>
+
+  <!-- opencode -->
+  <rect x="40" y="190" width="230" height="150" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="56" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">OpenCode</text>
+  <text x="56" y="231" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">TUI / CLI / Server</text>
+  <text x="56" y="250" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">session / execution / step</text>
+  <text x="56" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">x-opencode-session-id</text>
+  <text x="56" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">x-opencode-project</text>
+  <text x="56" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">GET /api/event (SSE)</text>
+
+  <!-- gateway -->
+  <rect x="330" y="170" width="250" height="180" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="346" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">Billing Gateway</text>
+  <text x="346" y="211" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">无状态 / 可水平扩展</text>
+  <text x="346" y="231" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">· 协议适配 OpenAI/Anthropic</text>
+  <text x="346" y="247" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">· SSE 解析 / usage 归一化</text>
+  <text x="346" y="263" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">· 冻结 / 结算 / 释放</text>
+  <text x="346" y="279" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">· 回填 usage.cost</text>
+  <text x="346" y="301" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">唯一模型出口</text>
+
+  <!-- providers -->
+  <rect x="700" y="170" width="210" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="716" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">Upstream Providers</text>
+  <text x="716" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">OpenAI / Anthropic</text>
+  <text x="716" y="229" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">上游 key 只在网关</text>
+  <text x="716" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">usage / cost / request id</text>
+
+  <!-- billing -->
+  <rect x="330" y="430" width="250" height="130" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="346" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">Billing Service</text>
+  <text x="346" y="471" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">账户 / 预扣单 / 流水 / 任务</text>
+  <text x="346" y="487" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">价格版本 / 对账 / 差异工单</text>
+  <text x="346" y="512" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">reserve → settle → release</text>
+  <text x="346" y="528" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">task / run / step</text>
+
+  <!-- db -->
+  <rect x="700" y="455" width="170" height="90" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="716" y="479" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">MySQL / PG</text>
+  <text x="716" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">account · ledger</text>
+  <text x="716" y="511" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">reservation · task</text>
+  <text x="716" y="526" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">唯一事实来源</text>
+
+  <!-- projector -->
+  <rect x="40" y="450" width="230" height="80" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+  <text x="56" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">SSE Projector</text>
+  <text x="56" y="491" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">订阅 session.step.ended</text>
+  <text x="56" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">session.execution.*</text>
+  <text x="56" y="521" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">旁路对账 / 漏扣检测</text>
+
+  <!-- plugin -> gateway -->
+  <path d="M270 132 H300 V200 H326" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ar-arrow)"/>
+  <rect x="300" y="152" width="92" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="346" y="163" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">headers / preflight</text>
+
+  <!-- opencode -> gateway -->
+  <line x1="270" y1="225" x2="326" y2="225" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#ar-arrow)"/>
+  <rect x="282" y="216" width="40" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="302" y="227" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">calls</text>
+
+  <!-- gateway -> opencode (stream) -->
+  <line x1="326" y1="255" x2="274" y2="255" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ar-arrow)"/>
+  <rect x="280" y="246" width="40" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="300" y="257" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">SSE</text>
+
+  <!-- gateway -> providers -->
+  <line x1="580" y1="210" x2="696" y2="210" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#ar-arrow)"/>
+  <rect x="608" y="201" width="62" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="639" y="212" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">proxy</text>
+
+  <line x1="696" y1="240" x2="584" y2="240" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ar-arrow)"/>
+  <rect x="608" y="231" width="62" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="639" y="242" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">stream</text>
+
+  <!-- gateway -> billing -->
+  <line x1="455" y1="350" x2="455" y2="426" stroke="#bf4520" stroke-width="1.2" marker-end="url(#ar-arrow-accent)"/>
+  <rect x="380" y="378" width="72" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="416" y="389" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">reserve/settle</text>
+
+  <line x1="475" y1="426" x2="475" y2="354" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ar-arrow)"/>
+  <rect x="484" y="388" width="52" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="510" y="399" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">result</text>
+
+  <!-- billing -> db -->
+  <line x1="580" y1="500" x2="696" y2="500" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#ar-arrow)"/>
+  <rect x="608" y="491" width="52" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="634" y="502" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">ledger</text>
+
+  <!-- opencode -> projector -->
+  <line x1="150" y1="340" x2="150" y2="446" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ar-arrow)"/>
+  <rect x="160" y="382" width="110" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="215" y="393" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">GET /api/event</text>
+
+  <!-- projector -> billing -->
+  <line x1="270" y1="500" x2="326" y2="500" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#ar-arrow)"/>
+  <rect x="278" y="491" width="48" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="302" y="502" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">recon</text>
+
+  <text x="48" y="600" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">网关强制意味着：即使插件被禁用、客户端被改，模型请求仍然经过网关；扣费不依赖客户端上报。</text>
+  <text x="48" y="616" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">插件只做三件事：补归属头、prompt 前预检余额、把余额/费用展示给用户。</text>
+</svg>

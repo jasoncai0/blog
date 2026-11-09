@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">执行声明的生命周期</title>
+  <desc id="d1-desc">空闲时没有声明；开始执行时在同一个事务里写入 claim；成功、失败或用户打断会释放；shutdown 与崩溃不释放，留给下次启动恢复；恢复超过预算则落 Failed 并释放。</desc>
+
+  <defs>
+    <marker id="d1-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d1-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">CLAIM LIFECYCLE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">执行声明：写前记账，正常才销账</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">claim 不是锁，是"上次没好好结束"的标记；恢复因此是 at-least-once，不是 exactly-once</text>
+
+  <rect x="360" y="120" width="240" height="64" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="374" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">空闲</text>
+  <text x="374" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">time_suspended 为空，没有执行中的 turn</text>
+
+  <rect x="360" y="250" width="240" height="64" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="374" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">执行中（claim 在）</text>
+  <text x="374" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">一条 fiber 持有，同一会话串行</text>
+
+  <rect x="360" y="430" width="240" height="64" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="374" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">终态已发布</text>
+  <text x="374" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">Succeeded / Failed / Interrupted</text>
+
+  <rect x="60" y="250" width="220" height="64" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+  <text x="74" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">claim 残留</text>
+  <text x="74" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">shutdown 或进程死亡时不释放</text>
+
+  <rect x="680" y="250" width="220" height="64" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1" stroke-dasharray="5,4"/>
+  <text x="694" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#bf4520">重启恢复</text>
+  <text x="694" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">扫 time_suspended，attempts++</text>
+
+  <!-- edges -->
+  <line x1="480" y1="184" x2="480" y2="246" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1-arrow)"/>
+  <text x="490" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">Execution.Started + store.claim（同一事务）</text>
+
+  <line x1="480" y1="314" x2="480" y2="426" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1-arrow)"/>
+  <text x="490" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">成功 / 失败 / 用户打断</text>
+  <text x="490" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">释放 claim，会话可再次被唤醒</text>
+
+  <line x1="356" y1="282" x2="284" y2="282" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#d1-arrow)"/>
+  <text x="288" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不释放</text>
+
+  <path d="M170,250 V206 H790 V246" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#d1-arrow)"/>
+  <text x="186" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">下次启动扫描 time_suspended</text>
+
+  <line x1="676" y1="274" x2="608" y2="274" stroke="#bf4520" stroke-width="1.1" marker-end="url(#d1-arrow-accent)"/>
+  <text x="612" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">重放同一 turn</text>
+
+  <path d="M790,314 V430 H604" fill="none" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#d1-arrow-accent)"/>
+  <text x="700" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">超预算 → Failed，释放</text>
+
+  <text x="60" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">恢复时会先把上个进程遗留的 streaming / running 工具标成 aborted，再注入一条"从上次中断处继续"的 synthetic 输入。</text>
+</svg>

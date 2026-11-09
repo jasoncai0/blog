@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="task-model-title task-model-desc">
+  <title id="task-model-title">Task / Run / Step 三层任务模型</title>
+  <desc id="task-model-desc">一个长期 Task 包含多次 Run，每次 Run 包含多个 Step；每个 Step 先冻结上限、执行上游调用，再按实际用量结算，并把结果写入流水。</desc>
+
+  <defs>
+    <marker id="tm-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="tm-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">TASK / RUN / STEP</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">三层任务模型：Task 管边界，Run 管状态，Step 管钱</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">一次长会话由很多次短调用组成；资金在 Step 上结清，状态在 Run 上收敛</text>
+
+  <!-- Task container -->
+  <rect x="48" y="110" width="864" height="440" rx="8" fill="#ececec" stroke="#2d3142" stroke-width="1"/>
+  <text x="68" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">TASK · 一个工作单元</text>
+  <text x="68" y="151" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">OpenCode Session / 视频项目 / 批量作业</text>
+  <text x="700" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">预算上限 · 累计消费 · 最终对账</text>
+
+  <!-- Run container -->
+  <rect x="80" y="170" width="800" height="350" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="100" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">RUN · 一次执行</text>
+  <text x="100" y="211" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">一次 prompt 触发的 agent loop / 一次渲染 / 一次批处理</text>
+  <text x="642" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">状态机 · max_credits · max_steps</text>
+
+  <!-- Step container -->
+  <rect x="112" y="235" width="736" height="250" rx="6" fill="#f5f5f5" stroke="#4f5d75" stroke-width="1"/>
+  <text x="132" y="261" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">STEP · 一次可计量操作</text>
+  <text x="132" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">一次 LLM 调用 / 一次付费工具 / 一次转写</text>
+
+  <!-- Step boxes -->
+  <rect x="136" y="296" width="212" height="82" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="152" y="319" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">① Reserve</text>
+  <text x="152" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">冻结上限，不是扣费</text>
+  <text x="152" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">input_est + max_output</text>
+  <text x="152" y="367" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">price_version 快照</text>
+
+  <rect x="374" y="296" width="212" height="82" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="390" y="319" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">② Execute</text>
+  <text x="390" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">调上游，保持流式</text>
+  <text x="390" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">SSE / usage 在末尾确定</text>
+  <text x="390" y="367" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">step_id + attempt</text>
+
+  <rect x="612" y="296" width="212" height="82" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="628" y="319" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">③ Settle</text>
+  <text x="628" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">按实际用量多退少补</text>
+  <text x="628" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">held → consumed</text>
+  <text x="628" y="367" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">写流水 + 结算明细</text>
+
+  <line x1="348" y1="337" x2="370" y2="337" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#tm-arrow)"/>
+  <line x1="586" y1="337" x2="608" y2="337" stroke="#bf4520" stroke-width="1.2" marker-end="url(#tm-arrow-accent)"/>
+
+  <!-- Usage / ledger row -->
+  <rect x="136" y="404" width="250" height="52" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="152" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">UsageEvent</text>
+  <text x="152" y="441" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">tokens · cache · reasoning · cost</text>
+
+  <rect x="584" y="404" width="240" height="52" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="600" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">Ledger</text>
+  <text x="600" y="441" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">CONSUME / REFUND / ADJUST</text>
+
+  <line x1="386" y1="430" x2="580" y2="430" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#tm-arrow)"/>
+  <rect x="432" y="421" width="104" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="484" y="432" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">可重算 / 可对账</text>
+
+  <!-- bottom annotation -->
+  <text x="68" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">Task 不因一次 Run 结束而关闭；Run 终态只决定这一次执行是否成功。Step 结束立即结算，不留下整段冻结。</text>
+  <text x="68" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">一个 Step 一张预扣单；重试复用同一张单，结算幂等键 = step_id + attempt。</text>
+</svg>

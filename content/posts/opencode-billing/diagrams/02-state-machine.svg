@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="state-title state-desc">
+  <title id="state-title">Run 与预扣单的状态机</title>
+  <desc id="state-desc">Run 从创建进入运行，随后收敛为成功、失败、取消或未知；预扣单从冻结进入已结算、已释放或已过期，过期后的迟到用量只补记流水，不改变状态。</desc>
+
+  <defs>
+    <marker id="sm-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="sm-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">STATE MACHINE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">两套状态机：执行归执行，资金归资金</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">Run 的终态决定「这次执行是否成功」，预扣单的终态决定「这笔钱是否结清」</text>
+
+  <line x1="48" y1="380" x2="912" y2="380" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+
+  <!-- Run lane -->
+  <text x="48" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">RUN / 执行状态</text>
+
+  <rect x="90" y="180" width="110" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="145" y="204" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">CREATED</text>
+  <text x="145" y="219" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">已创建</text>
+
+  <rect x="250" y="180" width="110" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="305" y="204" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">RUNNING</text>
+  <text x="305" y="219" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">执行中 / 每步结算</text>
+
+  <rect x="520" y="112" width="140" height="44" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="590" y="139" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">SUCCEEDED</text>
+
+  <rect x="520" y="178" width="140" height="44" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="590" y="205" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">FAILED</text>
+
+  <rect x="520" y="244" width="140" height="44" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="590" y="271" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">CANCELED</text>
+
+  <rect x="520" y="310" width="140" height="44" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="590" y="337" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">UNKNOWN</text>
+
+  <line x1="200" y1="204" x2="246" y2="204" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+  <line x1="360" y1="204" x2="420" y2="204" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+
+  <!-- branch bus -->
+  <line x1="420" y1="134" x2="420" y2="332" stroke="#4f5d75" stroke-width="1.2"/>
+  <line x1="420" y1="134" x2="516" y2="134" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+  <line x1="420" y1="200" x2="516" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+  <line x1="420" y1="266" x2="516" y2="266" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+  <line x1="420" y1="332" x2="516" y2="332" stroke="#bf4520" stroke-width="1.2" marker-end="url(#sm-arrow-accent)"/>
+
+  <rect x="760" y="310" width="152" height="44" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+  <text x="836" y="330" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">对账后收敛</text>
+  <text x="836" y="345" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">不立即退款</text>
+  <path d="M660 332 H756" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#sm-arrow-accent)"/>
+
+  <!-- Reservation lane -->
+  <text x="48" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">RESERVATION / 资金状态</text>
+
+  <rect x="90" y="455" width="120" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="150" y="479" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">HELD</text>
+  <text x="150" y="494" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">冻结中，不是扣费</text>
+
+  <rect x="330" y="400" width="130" height="44" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="395" y="427" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">SETTLED</text>
+
+  <rect x="330" y="470" width="130" height="44" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="395" y="497" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">RELEASED</text>
+
+  <rect x="330" y="540" width="130" height="44" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="395" y="567" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">EXPIRED</text>
+
+  <rect x="560" y="540" width="210" height="44" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="665" y="560" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">迟到补记 CONSUME</text>
+  <text x="665" y="575" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">状态不变，金额累加</text>
+
+  <path d="M210 471 H290 Q298 471 298 463 V432 Q298 424 306 424 H326" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+  <path d="M210 479 H265 Q273 479 273 487 V492 H326" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+  <path d="M210 487 H290 Q298 487 298 495 V552 Q298 560 306 560 H326" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#sm-arrow)"/>
+  <path d="M460 562 H556" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#sm-arrow-accent)"/>
+
+  <rect x="232" y="426" width="56" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="260" y="437" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">settle</text>
+  <rect x="232" y="500" width="60" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="262" y="511" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">release</text>
+  <rect x="232" y="568" width="60" height="15" rx="2" fill="#f5f5f5"/>
+  <text x="262" y="579" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">deadline</text>
+
+  <text x="710" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">成功 → 结算最后一步</text>
+  <text x="710" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">失败/取消 → 结算 + 释放</text>
+  <text x="710" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">未知 → 冻结保留到对账</text>
+</svg>

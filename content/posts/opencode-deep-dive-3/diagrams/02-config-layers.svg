@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="d2-title d2-desc">
+  <title id="d2-title">配置的来源与优先级</title>
+  <desc id="d2-desc">八类来源被压成六层：managed、项目 .opencode、项目 opencode.json、显式文件、全局目录、远端与集成文档。没有全局深合并，每个领域插件各自 fold。</desc>
+
+  <defs>
+    <marker id="d2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">CONFIG LAYERS</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">配置不是一个对象，是一份有序的文档列表</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">合并发生在各领域插件里，不在 Config 层；Config 只负责排序与归一化</text>
+
+  <line x1="40" y1="520" x2="40" y2="112" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d2-arrow)"/>
+  <text x="30" y="330" text-anchor="middle" transform="rotate(-90 30 330)" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">PRIORITY</text>
+
+  <rect x="64" y="112" width="360" height="60" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+  <text x="78" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">① managed</text>
+  <text x="78" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">系统目录 / macOS MDM / OPENCODE_CONFIG_CONTENT</text>
+
+  <rect x="64" y="182" width="360" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="78" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">② 项目 .opencode/</text>
+  <text x="78" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">补充目录，优先级高于同层 json</text>
+
+  <rect x="64" y="252" width="360" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="78" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">③ 项目 opencode.json(c)</text>
+  <text x="78" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">从目录向上逐级，近祖先覆盖远祖先</text>
+
+  <rect x="64" y="322" width="360" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="78" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">④ 显式文件</text>
+  <text x="78" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">OPENCODE_CONFIG 指向的那一份</text>
+
+  <rect x="64" y="392" width="360" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="78" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">⑤ 全局目录</text>
+  <text x="78" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">~/.config/opencode 的 json / jsonc</text>
+
+  <rect x="64" y="462" width="360" height="60" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="78" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">⑥ wellknown + 集成文档</text>
+  <text x="78" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">远端注册的 origin 与 Console 推送，只能碰白名单键</text>
+
+  <path d="M436,142 H456 V492 H436" fill="none" stroke="#4f5d75" stroke-width="1"/>
+  <line x1="456" y1="317" x2="536" y2="317" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <text x="462" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">排序 + 归一化</text>
+
+  <rect x="540" y="176" width="360" height="282" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="556" y="202" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="500" fill="#2d3142">Entry[] → 各领域自己 fold</text>
+  <text x="556" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">· 单值字段取最后一个定义者（latest）</text>
+  <text x="556" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">· provider 是字段级 overlay，settings/body 递归合并</text>
+  <text x="556" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">· agents / mcp 等命名 map 逐名覆盖</text>
+  <text x="556" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">· 数组语义不统一：多数累积，latest 类整份替换</text>
+  <text x="556" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">· policies 反向：早加载者胜（managed 最高）</text>
+  <text x="556" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">归一化在 schema 解码之前：旧字段迁移或拒绝，</text>
+  <text x="556" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">而不是静默忽略——忽略会让用户以为它生效了。</text>
+  <text x="556" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">每个 Location 一个实例，100ms 防抖后原地 reload；</text>
+  <text x="556" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">deep-equal 相同就不发 config.updated。</text>
+  <text x="556" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">插件不是配置来源，是消费者：读 entries、改自己的 agent。</text>
+
+  <text x="64" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">想调优先级，改的是"文档顺序"，不是某个数值；想改合并语义，改的是对应领域插件的 fold。</text>
+</svg>

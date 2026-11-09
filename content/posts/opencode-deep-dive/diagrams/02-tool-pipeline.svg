@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d2-title d2-desc">
+  <title id="d2-title">一次工具调用的管线</title>
+  <desc id="d2-desc">八个阶段：快照选工具、before hook、解码输入、执行、编码与规范化、截断、after hook、持久化。任何未归类的异常都会被归一为 Tool.Error。</desc>
+
+  <defs>
+    <marker id="d2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d2-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">TOOL PIPELINE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次工具调用要过八道关</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">注册在作用域里，快照在请求前生成，副作用发生之前调用记录已经落库</text>
+
+  <!-- row 1 -->
+  <rect x="56" y="120" width="196" height="74" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="68" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">01 SNAPSHOT</text>
+  <text x="68" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">按权限选工具</text>
+  <text x="68" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">分原生 / CodeMode 两桶</text>
+
+  <rect x="288" y="120" width="196" height="74" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="300" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">02 BEFORE HOOK</text>
+  <text x="300" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">execute.before</text>
+  <text x="300" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">可改输入，也可直接拒绝</text>
+
+  <rect x="520" y="120" width="196" height="74" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="532" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">03 DECODE</text>
+  <text x="532" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">校验并解码输入</text>
+  <text x="532" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">不合格的输入永不执行</text>
+
+  <rect x="752" y="120" width="196" height="74" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="764" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">04 EXECUTE</text>
+  <text x="764" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">运行工具本体</text>
+  <text x="764" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">依赖在构造期就捕获好</text>
+
+  <!-- row 2 (right to left) -->
+  <rect x="752" y="272" width="196" height="74" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="764" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">05 ENCODE</text>
+  <text x="764" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">编码 + 规范化</text>
+  <text x="764" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">文本合并、图片压缩</text>
+
+  <rect x="520" y="272" width="196" height="74" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="532" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">06 TRUNCATE</text>
+  <text x="532" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">截断到预算内</text>
+  <text x="532" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">2000 行 / 50 KiB，溢出写文件</text>
+
+  <rect x="288" y="272" width="196" height="74" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="300" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">07 AFTER HOOK</text>
+  <text x="300" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">execute.after</text>
+  <text x="300" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">成功失败都会触发</text>
+
+  <rect x="56" y="272" width="196" height="74" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="68" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">08 PERSIST</text>
+  <text x="68" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">事件落库 → 投影</text>
+  <text x="68" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">Tool.Success / Tool.Failure</text>
+
+  <!-- arrows row1 -->
+  <line x1="252" y1="157" x2="284" y2="157" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="484" y1="157" x2="516" y2="157" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="716" y1="157" x2="748" y2="157" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <!-- down connector -->
+  <path d="M850,194 V238 H850 V268" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <!-- arrows row2 -->
+  <line x1="748" y1="309" x2="720" y2="309" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="516" y1="309" x2="488" y2="309" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="284" y1="309" x2="256" y2="309" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <!-- annotations -->
+  <rect x="56" y="386" width="892" height="56" rx="6" fill="#ffffff" stroke="rgba(79,93,117,0.35)" stroke-width="0.8"/>
+  <text x="72" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">错误只有一种出口：任何非 <tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace">Tool.Error</tspan> 的抛出都会被归一；但中断（Effect interruption）不会被翻译成模型可见的失败，它必须向上冒泡。</text>
+  <text x="72" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">CodeMode 里的内层调用（<tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace">execute</tspan> 工具）同样走这八道关，只是由解释器而不是模型来发起。</text>
+
+  <text x="56" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">第 06 步之后，模型看到的是被截断的 content，而落盘的完整输出通过 metadata 里的路径回指——上下文省下来了，信息没丢。</text>
+</svg>

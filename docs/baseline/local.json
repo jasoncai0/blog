@@ -1,0 +1,92 @@
+{
+ "opencode-architecture": {
+  "h1": 1,
+  "h2": 18,
+  "h3": 5,
+  "table": 9,
+  "figure": 4,
+  "pre": 2,
+  "hr": 1
+ },
+ "opencode-deep-dive": {
+  "h1": 1,
+  "h2": 11,
+  "h3": 39,
+  "table": 10,
+  "figure": 6,
+  "pre": 5,
+  "hr": 1
+ },
+ "opencode-deep-dive-2": {
+  "h1": 1,
+  "h2": 10,
+  "h3": 47,
+  "table": 16,
+  "figure": 4,
+  "pre": 6,
+  "hr": 1
+ },
+ "opencode-deep-dive-3": {
+  "h1": 1,
+  "h2": 9,
+  "h3": 30,
+  "table": 10,
+  "figure": 3,
+  "pre": 7,
+  "hr": 1
+ },
+ "opencode-deep-dive-4": {
+  "h1": 1,
+  "h2": 9,
+  "h3": 18,
+  "table": 5,
+  "figure": 1,
+  "pre": 2,
+  "hr": 1
+ },
+ "opencode-coding": {
+  "h1": 1,
+  "h2": 9,
+  "h3": 24,
+  "table": 9,
+  "figure": 3,
+  "pre": 0,
+  "hr": 1
+ },
+ "opencode-context-management": {
+  "h1": 1,
+  "h2": 17,
+  "h3": 20,
+  "table": 9,
+  "figure": 6,
+  "pre": 10,
+  "hr": 1
+ },
+ "opencode-billing": {
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "table": 2,
+  "figure": 5,
+  "pre": 5,
+  "hr": 12
+ },
+ "opencode-multiagent": {
+  "h1": 1,
+  "h2": 8,
+  "h3": 22,
+  "table": 7,
+  "figure": 3,
+  "pre": 5,
+  "hr": 1
+ },
+ "opencode-plan": {
+  "h1": 1,
+  "h2": 8,
+  "h3": 17,
+  "table": 6,
+  "figure": 3,
+  "pre": 3,
+  "hr": 1
+ }
+}

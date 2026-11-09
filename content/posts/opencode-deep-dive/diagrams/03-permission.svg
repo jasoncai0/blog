@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660" role="img" aria-labelledby="d3-title d3-desc">
+  <title id="d3-title">权限决策链</title>
+  <desc id="d3-desc">一次工具调用前的权限判定：先判 deny，再合并已保存的 allow，逐 resource 用最后一条匹配规则求值，经过插件 hook 与无人值守降级后得到 allow/deny/ask；ask 会挂起并等待用户回复 once/always/reject。</desc>
+
+  <defs>
+    <marker id="d3-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d3-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">PERMISSION DECISION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">权限判定：最后一条匹配的规则胜出，没人管就默认问</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">规则是 {action, resource, effect} 三元组，effect 只有 allow / deny / ask</text>
+
+  <!-- step 1 -->
+  <rect x="330" y="110" width="300" height="52" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="500" fill="#2d3142">permission.assert(action, resources)</text>
+  <text x="344" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">工具自己声明要查什么</text>
+
+  <!-- deny check -->
+  <polygon points="480,192 600,240 480,288 360,240" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="480" y="236" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">命中 deny？</text>
+  <text x="480" y="252" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">deny 优先</text>
+
+  <rect x="70" y="212" width="220" height="56" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+  <text x="84" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#bf4520">BlockedError</text>
+  <text x="84" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">变成 ToolFailure 回到模型</text>
+
+  <!-- step 2 -->
+  <rect x="330" y="318" width="300" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">② 合并已保存的 allow + 逐 resource 求值</text>
+  <text x="344" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">最后一条匹配的规则胜出，无匹配默认 ask</text>
+
+  <!-- step 3 hook -->
+  <rect x="330" y="402" width="300" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="500" fill="#2d3142">permission.evaluate hook</text>
+  <text x="344" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">插件可以改 effect 或附一条说明</text>
+
+  <!-- step 4 unattended -->
+  <rect x="330" y="486" width="300" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">③ 无人值守降级</text>
+  <text x="344" y="526" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">auto-accept 模式下 ask 直接按 once 处理</text>
+
+  <!-- outcomes -->
+  <rect x="70" y="572" width="200" height="56" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="84" y="594" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">allow → 执行</text>
+  <text x="84" y="612" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">最常见路径，零开销</text>
+
+  <rect x="330" y="572" width="300" height="56" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="344" y="594" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">ask → 挂起，等用户</text>
+  <text x="344" y="612" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">发 permission.asked，Deferred.await</text>
+
+  <rect x="690" y="572" width="200" height="56" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+  <text x="704" y="594" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#bf4520">deny → BlockedError</text>
+  <text x="704" y="612" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">在 hook 之后仍可能被否决</text>
+
+  <!-- ask sub-flow -->
+  <rect x="648" y="180" width="262" height="252" rx="8" fill="#ffffff" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4"/>
+  <text x="664" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">ASK ROUND TRIP</text>
+  <text x="664" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">客户端弹窗 → POST .../permission/:id/reply</text>
+  <text x="664" y="256" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">· once：放行这一次</text>
+  <text x="664" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">· always：写 saved 规则，并唤醒</text>
+  <text x="664" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">　同会话其它可放行的挂起</text>
+  <text x="664" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">· reject + message：让本 Step 以</text>
+  <text x="664" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">　CorrectedError 结束</text>
+  <text x="664" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">· reject 无 message：穿透到请求层</text>
+  <text x="664" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">　才转成 DeclinedError</text>
+  <text x="664" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">默认：全允许，但读 .env 要问</text>
+
+  <!-- edges -->
+  <line x1="480" y1="162" x2="480" y2="188" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="360" y1="240" x2="294" y2="240" stroke="#bf4520" stroke-width="1.2" marker-end="url(#d3-arrow-accent)"/>
+  <text x="300" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">是</text>
+  <line x1="480" y1="288" x2="480" y2="314" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <text x="488" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">否</text>
+  <line x1="480" y1="374" x2="480" y2="398" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="480" y1="458" x2="480" y2="482" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d3-arrow)"/>
+  <line x1="400" y1="542" x2="190" y2="568" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d3-arrow)"/>
+  <line x1="480" y1="542" x2="480" y2="568" stroke="#bf4520" stroke-width="1.2" marker-end="url(#d3-arrow-accent)"/>
+  <line x1="570" y1="542" x2="770" y2="568" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d3-arrow)"/>
+</svg>

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="d4-title d4-desc">
+  <title id="d4-title">事件的两条路径：持久化投影与实时广播</title>
+  <desc id="d4-desc">同一个 durable 事件走两条路：左侧写入 event 表并由 projector 投影成读模型供 API 查询；右侧由 EventFeed 编码一次后进入每个连接独立的 4096 帧队列，以 SSE 推送。底层是执行声明驱动的崩溃恢复。</desc>
+
+  <defs>
+    <marker id="d4-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d4-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">EVENT ARCHITECTURE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次状态变更加两条读路径：投影与广播</text>
+
+  <!-- source -->
+  <rect x="360" y="104" width="240" height="46" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="480" y="124" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">不可变的事件</text>
+  <text x="480" y="139" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">session.inbox.enqueued / tool.success …</text>
+
+  <line x1="430" y1="150" x2="290" y2="180" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+  <line x1="530" y1="150" x2="670" y2="180" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+
+  <!-- left column -->
+  <text x="96" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">WRITE PATH</text>
+
+  <rect x="96" y="188" width="290" height="54" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="110" y="210" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="500" fill="#2d3142">Bus.publish</text>
+  <text x="110" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">按聚合分配单调序号，写入 event 表</text>
+
+  <line x1="241" y1="242" x2="241" y2="268" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+
+  <rect x="96" y="276" width="290" height="54" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="110" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">Projector</text>
+  <text x="110" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">同一事务内折叠事件，幂等（已投影则拒绝）</text>
+
+  <line x1="241" y1="330" x2="241" y2="356" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+
+  <rect x="96" y="364" width="290" height="54" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="110" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">读模型</text>
+  <text x="110" y="404" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">session_message · session_part · session_inbox</text>
+
+  <line x1="241" y1="418" x2="241" y2="444" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+
+  <rect x="96" y="452" width="290" height="54" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="110" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">HTTP 查询</text>
+  <text x="110" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">消息分页、待办收件箱、上下文视图</text>
+
+  <!-- right column -->
+  <text x="574" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">READ PATH</text>
+
+  <rect x="574" y="188" width="290" height="54" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="588" y="210" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="500" fill="#2d3142">EventFeed</text>
+  <text x="588" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">公共事件过滤 + schema 编码，只做一次</text>
+
+  <line x1="719" y1="242" x2="719" y2="268" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+
+  <rect x="574" y="276" width="290" height="54" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="588" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">每连接独立队列</text>
+  <text x="588" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">容量 4096 帧；溢出只断开这一条连接</text>
+
+  <line x1="719" y1="330" x2="719" y2="356" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+
+  <rect x="574" y="364" width="290" height="54" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="588" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="500" fill="#2d3142">SSE · data: &lt;json&gt;</text>
+  <text x="588" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">15 秒心跳；首帧 server.connected</text>
+
+  <line x1="719" y1="418" x2="719" y2="444" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d4-arrow)"/>
+
+  <rect x="574" y="452" width="290" height="54" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="588" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">多端状态</text>
+  <text x="588" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">TUI / Web / Desktop 各自渲染同一事件</text>
+
+  <!-- recovery footer -->
+  <rect x="96" y="530" width="768" height="52" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="112" y="551" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">RECOVERY</text>
+  <text x="112" y="568" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">执行声明在开始前写入、正常结束才释放；进程死掉后声明仍在，重启时据此恢复会话，并把遗留的 running 工具调用判失败。</text>
+</svg>

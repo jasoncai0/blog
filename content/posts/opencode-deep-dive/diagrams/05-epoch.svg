@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="d5-title d5-desc">
+  <title id="d5-title">指令的基线、增量与 epoch</title>
+  <desc id="d5-desc">时间线：会话开始时把当时的指令冻结成基线；运行中文件变化只发布增量，成为一条 system 消息；压缩结束时 epoch 前移，当前值变成新基线，旧增量退役；移动、回滚、fork 各有规则。</desc>
+
+  <defs>
+    <marker id="d5-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">INSTRUCTION EPOCH</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">指令不是每轮重读：基线 + 增量 + epoch</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">越"跨会话共享"的内容越靠前，让基线成为可复用的缓存前缀</text>
+
+  <!-- timeline -->
+  <line x1="70" y1="300" x2="880" y2="300" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d5-arrow)"/>
+  <text x="70" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">TIME</text>
+
+  <!-- ticks -->
+  <circle cx="150" cy="300" r="4" fill="#2d3142"/>
+  <circle cx="370" cy="300" r="4" fill="#2d3142"/>
+  <circle cx="590" cy="300" r="4" fill="#bf4520"/>
+  <circle cx="810" cy="300" r="4" fill="#2d3142"/>
+
+  <!-- top event boxes -->
+  <rect x="60" y="130" width="180" height="76" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="72" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">① 会话开始</text>
+  <text x="72" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">提交首个 delta</text>
+  <text x="72" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">当时的完整值冻结为基线</text>
+
+  <rect x="280" y="130" width="180" height="76" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="292" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">② 文件变化</text>
+  <text x="292" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只发布变化源</text>
+  <text x="292" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">key → SHA-256 内容哈希</text>
+
+  <rect x="500" y="130" width="180" height="76" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="512" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">③ 压缩结束</text>
+  <text x="512" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">compaction.ended</text>
+  <text x="512" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">epoch 前移到该序号</text>
+
+  <rect x="720" y="130" width="180" height="76" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="732" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">④ move / revert / fork</text>
+  <text x="732" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">边界操作各有规则</text>
+  <text x="732" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">不重新读一遍所有源</text>
+
+  <!-- connectors -->
+  <line x1="150" y1="206" x2="150" y2="292" stroke="rgba(79,93,117,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="370" y1="206" x2="370" y2="292" stroke="rgba(79,93,117,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="590" y1="206" x2="590" y2="292" stroke="rgba(191,69,32,0.6)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="810" y1="206" x2="810" y2="292" stroke="rgba(79,93,117,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- bottom boxes -->
+  <rect x="60" y="346" width="180" height="76" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="72" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">模型看到：基线</text>
+  <text x="72" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">完整值，没有更新文本</text>
+  <text x="72" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">顺序固定，利于缓存</text>
+
+  <rect x="280" y="346" width="180" height="76" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="292" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">模型看到：一条 system</text>
+  <text x="292" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只写"哪几个源变了"</text>
+  <text x="292" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">正文按需冻结在事件里</text>
+
+  <rect x="500" y="346" width="180" height="76" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+  <text x="512" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#bf4520">旧增量退役</text>
+  <text x="512" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">当前值升为新基线</text>
+  <text x="512" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">下一段对话重新开始累积</text>
+
+  <rect x="720" y="346" width="180" height="76" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="732" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">状态怎么处理</text>
+  <text x="732" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">move 保留；revert 视情况清空</text>
+  <text x="732" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">fork 继承父的最新基线</text>
+
+  <!-- epoch brackets -->
+  <path d="M150,452 V466 H590 V452" fill="none" stroke="#4f5d75" stroke-width="1"/>
+  <text x="370" y="484" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">EPOCH 1</text>
+  <path d="M590,452 V466 H810 V452" fill="none" stroke="#bf4520" stroke-width="1"/>
+  <text x="700" y="484" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">EPOCH 2</text>
+
+  <text x="60" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">基线的意义：同一段对话里，请求前缀保持不变；变化只以极小的 system 消息追加，而不是把每一版 AGENTS.md 永久堆进上下文。</text>
+</svg>

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="d2-title d2-desc">
+  <title id="d2-title">MCP 连接的状态机</title>
+  <desc id="d2-desc">从未连接开始，连接并完成 initialize 后进入 ready；断线或超时进入 failed，按退避重连；ready 期间工具列表变化会触发防抖后的 reload，in-flight 调用在断线时以类型化错误失败。</desc>
+
+  <defs>
+    <marker id="d2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d2-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">MCP CONNECTION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">每个 MCP server 一台独立的状态机</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">一台挂了只重连它自己：状态机之间不共享错误，也不共享退避</text>
+
+  <rect x="60" y="150" width="180" height="70" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="74" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">未连接</text>
+  <text x="74" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">配置里 enabled，但还没握手</text>
+
+  <rect x="320" y="150" width="180" height="70" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="334" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">连接中</text>
+  <text x="334" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">建传输 → initialize；内部重试 250ms ×2</text>
+
+  <rect x="580" y="150" width="200" height="70" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="594" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">ready</text>
+  <text x="594" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">工具已注册；可调用、可订阅</text>
+
+  <rect x="320" y="300" width="180" height="70" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="334" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">failed</text>
+  <text x="334" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">记录原因，进入退避</text>
+
+  <!-- edges -->
+  <line x1="240" y1="185" x2="316" y2="185" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <text x="246" y="177" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">connect</text>
+
+  <line x1="500" y1="185" x2="576" y2="185" stroke="#bf4520" stroke-width="1.2" marker-end="url(#d2-arrow-accent)"/>
+  <text x="504" y="177" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">initialize ok</text>
+
+  <line x1="410" y1="220" x2="410" y2="296" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <text x="418" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">超时 / 协议不匹配</text>
+
+  <path d="M320,335 H270 V205 H316" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#d2-arrow)"/>
+  <text x="132" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">人工触发重连</text>
+
+  <path d="M680,220 V262 H500 V296" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#d2-arrow)"/>
+  <text x="512" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">断线 / 调用失败</text>
+
+  <path d="M680,150 V118 H680 V112" fill="none" stroke="none"/>
+  <path d="M680,220 V270 H700" fill="none" stroke="none"/>
+  <path d="M680,150 C680,120 680,120 680,120" fill="none" stroke="none"/>
+
+  <path d="M640,150 V118 H744 V146" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#d2-arrow)"/>
+  <text x="652" y="110" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">ToolsChanged → 100ms 防抖 → reload</text>
+
+  <text x="60" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">断线时正在飞的调用不会被"重放"——它以类型化错误失败，由上层决定要不要重试；重连只恢复连接与工具表。</text>
+  <text x="60" y="460" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">重载不是重新注册：保持注册顺序，才能让插件的覆盖关系在工具变化后依然成立。</text>
+</svg>

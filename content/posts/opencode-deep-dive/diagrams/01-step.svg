@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">一个 Step 的状态机</title>
+  <desc id="d1-desc">从装载历史开始，组装请求并估算 token，必要时压缩后重试；llm.stream 产出后若含工具调用，则并发执行、结果落库，然后重新装载历史开新 Step；否则落 Step.Ended 进入 idle。请求失败时按可重试性回到 stream 或结束。</desc>
+
+  <defs>
+    <marker id="d1-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d1-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">STEP STATE MACHINE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一个 Step 的状态机：装载 → 请求 → 工具 → 再装载</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">循环由"库里是否还有未处理的工具结果"驱动，而不是内存里的 while</text>
+
+  <!-- main column -->
+  <rect x="330" y="108" width="260" height="58" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="131" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">① 装载历史</text>
+  <text x="344" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">从最近一次 compaction 边界之后投影出的消息</text>
+
+  <rect x="330" y="200" width="260" height="58" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">② 组装请求 + 估算</text>
+  <text x="344" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">system · instructions · 工具快照 · 历史</text>
+
+  <rect x="330" y="292" width="260" height="58" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="344" y="315" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" font-weight="500" fill="#2d3142">③ llm.stream</text>
+  <text x="344" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">一次逻辑调用；文本 / reasoning / tool_call 都是事件</text>
+
+  <!-- diamond -->
+  <polygon points="460,384 570,432 460,480 350,432" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="460" y="428" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">有 tool_call？</text>
+  <text x="460" y="444" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">durable 结果是否齐</text>
+
+  <!-- tools branch left -->
+  <rect x="70" y="384" width="220" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="84" y="407" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">④ 并发执行工具</text>
+  <text x="84" y="425" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">每调用一条 fiber：权限 → 执行 → 结果</text>
+  <text x="84" y="441" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">所有 fiber 等齐才结束 Step</text>
+  <text x="84" y="463" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">before / after hook 都在这一侧</text>
+
+  <!-- end -->
+  <rect x="330" y="512" width="260" height="58" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="344" y="535" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">⑤ Step.Ended → idle</text>
+  <text x="344" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">终态事件带 finish reason、cost、tokens、快照</text>
+
+  <!-- compaction side -->
+  <rect x="668" y="200" width="234" height="58" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="682" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">压缩（超预算时）</text>
+  <text x="682" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">摘要 + 最近上下文，替换旧历史</text>
+
+  <!-- retry side -->
+  <rect x="668" y="292" width="234" height="58" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="682" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">重试（可重试错误）</text>
+  <text x="682" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">同一步号、同一 assistant 消息</text>
+
+  <!-- edges -->
+  <line x1="460" y1="166" x2="460" y2="196" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1-arrow)"/>
+  <line x1="460" y1="258" x2="460" y2="288" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1-arrow)"/>
+  <line x1="460" y1="350" x2="460" y2="380" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1-arrow)"/>
+  <line x1="590" y1="229" x2="664" y2="229" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d1-arrow)"/>
+  <text x="668" y="275" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">压缩后回到 ② 重新组装</text>
+  <line x1="590" y1="321" x2="664" y2="321" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d1-arrow)"/>
+  <text x="668" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">退避后重发同一个 Step</text>
+  <line x1="350" y1="432" x2="294" y2="432" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1-arrow)"/>
+  <path d="M180,384 V166 H326" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#d1-arrow-accent)"/>
+  <text x="190" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">结果落库后回到 ①，开新 Step</text>
+  <line x1="460" y1="480" x2="460" y2="508" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1-arrow)"/>
+
+  <text x="70" y="620" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">六种 Outcome（Completed / Retry / Continue / RecoverFull / Compacted / OutputLimit）都在 ③ 之后分流，只有 Completed 会落到 ⑤。</text>
+</svg>

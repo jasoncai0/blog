@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="prompt-title prompt-desc">
+  <title id="prompt-title">一次 OpenCode prompt 的扣费时序</title>
+  <desc id="prompt-desc">OpenCode 的每个模型 Step 都先由网关冻结额度，再转发上游并按实际用量结算；工具执行后进入下一个 Step；Run 结束时关闭运行并写最终流水。</desc>
+
+  <defs>
+    <marker id="ps-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="ps-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">OPENCODE PROMPT</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次 prompt：多个 Step，逐笔结清，最后关 Run</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">网关读 x-opencode-session-id 归属任务；每个 Step 独立预扣/结算；Run 级只封顶，不冻结</text>
+
+  <!-- actors -->
+  <rect x="60" y="104" width="170" height="50" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="145" y="126" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">OpenCode</text>
+  <text x="145" y="141" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">session / step</text>
+
+  <rect x="300" y="104" width="170" height="50" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="385" y="126" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">Billing Gateway</text>
+  <text x="385" y="141" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">hold / proxy / settle</text>
+
+  <rect x="540" y="104" width="170" height="50" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="625" y="126" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">Billing Service</text>
+  <text x="625" y="141" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">account / run / ledger</text>
+
+  <rect x="780" y="104" width="150" height="50" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="855" y="126" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">Provider</text>
+  <text x="855" y="141" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">upstream</text>
+
+  <!-- lifelines -->
+  <line x1="145" y1="154" x2="145" y2="610" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,5" opacity="0.55"/>
+  <line x1="385" y1="154" x2="385" y2="610" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,5" opacity="0.55"/>
+  <line x1="625" y1="154" x2="625" y2="610" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,5" opacity="0.55"/>
+  <line x1="855" y1="154" x2="855" y2="610" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,5" opacity="0.55"/>
+
+  <!-- activation bars -->
+  <rect x="379" y="210" width="12" height="390" rx="3" fill="rgba(191,69,32,0.10)"/>
+  <rect x="619" y="250" width="12" height="350" rx="3" fill="rgba(45,49,66,0.08)"/>
+  <rect x="849" y="330" width="12" height="80" rx="3" fill="rgba(45,49,66,0.08)"/>
+
+  <!-- step loop frame -->
+  <rect x="50" y="188" width="870" height="312" rx="8" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="6,5"/>
+  <rect x="66" y="180" width="236" height="18" rx="2" fill="#f5f5f5"/>
+  <text x="72" y="193" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">每个 Step 重复 ①–⑦；工具执行不计 LLM 费用</text>
+
+  <!-- messages 1-7 -->
+  <line x1="145" y1="230" x2="381" y2="230" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#ps-arrow)"/>
+  <rect x="180" y="221" width="166" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="263" y="232" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">request + session id</text>
+
+  <line x1="385" y1="270" x2="621" y2="270" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#ps-arrow)"/>
+  <rect x="466" y="261" width="74" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="503" y="272" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">Reserve</text>
+
+  <line x1="625" y1="310" x2="389" y2="310" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ps-arrow)"/>
+  <rect x="470" y="301" width="74" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="507" y="312" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">hold ok</text>
+
+  <line x1="385" y1="350" x2="851" y2="350" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#ps-arrow)"/>
+  <rect x="600" y="341" width="48" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="624" y="352" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">forward</text>
+
+  <line x1="855" y1="390" x2="389" y2="390" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ps-arrow)"/>
+  <rect x="590" y="381" width="86" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="633" y="392" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">SSE + usage</text>
+
+  <line x1="385" y1="430" x2="621" y2="430" stroke="#bf4520" stroke-width="1.2" marker-end="url(#ps-arrow-accent)"/>
+  <rect x="454" y="421" width="100" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="504" y="432" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">Settle(actual)</text>
+
+  <line x1="381" y1="470" x2="149" y2="470" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ps-arrow)"/>
+  <rect x="214" y="461" width="148" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="288" y="472" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">SSE + usage.cost</text>
+
+  <!-- run close -->
+  <line x1="385" y1="542" x2="621" y2="542" stroke="#bf4520" stroke-width="1.2" marker-end="url(#ps-arrow-accent)"/>
+  <rect x="462" y="533" width="82" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="503" y="544" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">run close</text>
+
+  <line x1="625" y1="582" x2="389" y2="582" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ps-arrow)"/>
+  <rect x="474" y="573" width="72" height="16" rx="2" fill="#f5f5f5"/>
+  <text x="510" y="584" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">ledger</text>
+
+  <text x="48" y="626" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">Run 结束只关 Run；Task 仍可继续。没有整段冻结需要释放，已完成的 Step 已各自结清。</text>
+</svg>

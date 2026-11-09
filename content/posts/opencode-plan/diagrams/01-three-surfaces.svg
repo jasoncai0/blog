@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">三层规划的分工</title>
+  <desc id="d1-desc">Plan 模式管"能不能改"、todowrite 管"做到哪了"、/goal 管"要不要继续"，三者尺度不同、生命周期不同、状态存在不同地方。</desc>
+
+  <defs>
+    <marker id="d1-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">THREE PLANNING SURFACES</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">规划不是一个模块，是三个尺度的三件事</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">它们互不依赖，只共享同一个事实源：会话历史</text>
+
+  <!-- column 1 -->
+  <rect x="48" y="112" width="280" height="372" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="64" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SESSION SCOPE</text>
+  <text x="64" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">Plan 模式</text>
+  <text x="64" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">管"能不能改"</text>
+
+  <text x="64" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">谁触发</text>
+  <text x="64" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">用户切换 agent（plan ↔ build）</text>
+
+  <text x="64" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">状态在哪</text>
+  <text x="64" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">会话的 agent 字段 + 历史里的一条提醒</text>
+
+  <text x="64" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">怎么生效</text>
+  <text x="64" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">权限 deny edit + system-reminder</text>
+
+  <text x="64" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">何时结束</text>
+  <text x="64" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">用户切走为止（不会自动退出）</text>
+
+  <text x="64" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">漏洞：shell 没被 deny</text>
+  <text x="64" y="441" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">所以它不是沙箱，是"编辑门禁"</text>
+
+  <!-- column 2 -->
+  <rect x="344" y="112" width="280" height="372" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="360" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#4f5d75">STEP SCOPE</text>
+  <text x="360" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">todowrite</text>
+  <text x="360" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">管"做到哪了"</text>
+
+  <text x="360" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">谁触发</text>
+  <text x="360" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">模型自己（工具调用）</text>
+
+  <text x="360" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">状态在哪</text>
+  <text x="360" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">工具结果的 metadata（整份列表）</text>
+
+  <text x="360" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">怎么生效</text>
+  <text x="360" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">无状态：每次调用覆盖整份清单</text>
+
+  <text x="360" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">何时结束</text>
+  <text x="360" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">不结束：最后一份就是当前状态</text>
+
+  <text x="360" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">没有任何强制：模型可以永远不更新</text>
+  <text x="360" y="441" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">它只是"给人和模型看的便签"</text>
+
+  <!-- column 3 -->
+  <rect x="640" y="112" width="272" height="372" rx="8" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+  <text x="656" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TURN SCOPE</text>
+  <text x="656" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">/goal</text>
+  <text x="656" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">管"要不要继续"</text>
+
+  <text x="656" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">谁触发</text>
+  <text x="656" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">用户下 /goal；之后由 idle 钩子推进</text>
+
+  <text x="656" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">状态在哪</text>
+  <text x="656" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">插件 storage（key = session:&lt;id&gt;）</text>
+
+  <text x="656" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">怎么生效</text>
+  <text x="656" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">judge 给一行 JSON 判词</text>
+  <text x="656" y="354" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">continue / done / blocked / paused / wait</text>
+
+  <text x="656" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">何时结束</text>
+  <text x="656" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">判 done / paused / blocked、轮次或停滞超限</text>
+
+  <text x="656" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">它是唯一"会自己继续跑"的机制</text>
+  <text x="656" y="441" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">但仍然是同一个会话，不是新 agent</text>
+
+  <text x="48" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">三者可以叠加：plan 模式下用 todo 清单写计划，再用 /goal 盯着把计划做完。但它们之间没有硬依赖，各自独立生效。</text>
+</svg>

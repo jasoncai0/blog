@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="d6-title d6-desc">
+  <title id="d6-title">核心表的关系</title>
+  <desc id="d6-desc">project 到 workspace 到 session_v2 的归属关系；session_v2 派生出消息、分片、收件箱与指令状态；消息通过事件表增量写入；其余表按域分组。</desc>
+
+  <defs>
+    <marker id="d6-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="d6-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">STORAGE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">23 张表里，只有 8 张在热路径上</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">所有写入都经过事件表；其余表是它的投影、索引或周边状态</text>
+
+  <!-- project -->
+  <rect x="60" y="120" width="180" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="72" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#2d3142">project</text>
+  <text x="72" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">id · canonical · vcs</text>
+  <text x="72" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">解析目录时写入</text>
+
+  <!-- workspace -->
+  <rect x="300" y="120" width="180" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="312" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#2d3142">workspace</text>
+  <text x="312" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">id · project_id</text>
+  <text x="312" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">显式工作区才存在</text>
+
+  <!-- session -->
+  <rect x="300" y="260" width="200" height="116" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="312" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#bf4520">session_v2</text>
+  <text x="312" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">id · project_id · workspace_id</text>
+  <text x="312" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">parent_id · agent · model</text>
+  <text x="312" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">cost · token 累计</text>
+  <text x="312" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">time_suspended · resume_attempts</text>
+  <text x="312" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">执行声明与恢复计数就在这</text>
+
+  <!-- message -->
+  <rect x="580" y="150" width="200" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="592" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#2d3142">session_message</text>
+  <text x="592" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">id · session_id · type · seq</text>
+  <text x="592" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">data(json) · time_created</text>
+  <text x="592" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">唯一索引 (session_id, seq)</text>
+
+  <!-- part -->
+  <rect x="580" y="300" width="200" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="592" y="322" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#2d3142">session_part</text>
+  <text x="592" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">message_id · ordinal</text>
+  <text x="592" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">type · call_id · data(json)</text>
+  <text x="592" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">主键 (message_id, ordinal)</text>
+
+  <!-- inbox -->
+  <rect x="60" y="290" width="180" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="72" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#2d3142">session_inbox</text>
+  <text x="72" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">id · payload · delivery</text>
+  <text x="72" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">只存未消费的工作，投递即删</text>
+
+  <!-- instruction state -->
+  <rect x="60" y="420" width="200" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="72" y="442" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#2d3142">instruction_state</text>
+  <text x="72" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">当前值 · epoch 起始值</text>
+  <text x="72" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">正文在 instruction_blob，按哈希引用</text>
+
+  <!-- event -->
+  <rect x="760" y="440" width="180" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="772" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="500" fill="#2d3142">event</text>
+  <text x="772" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">aggregate_id · seq · type</text>
+  <text x="772" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">data(json) · 只追加</text>
+
+  <!-- edges -->
+  <line x1="240" y1="162" x2="296" y2="162" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d6-arrow)"/>
+  <text x="246" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">1:N</text>
+
+  <line x1="390" y1="204" x2="400" y2="256" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d6-arrow)"/>
+  <text x="402" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">1:N</text>
+
+  <path d="M500,300 H540 V198 H576" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d6-arrow)"/>
+  <text x="508" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">1:N</text>
+
+  <line x1="680" y1="246" x2="680" y2="296" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d6-arrow)"/>
+  <text x="686" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">1:N</text>
+
+  <line x1="300" y1="330" x2="244" y2="330" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d6-arrow)"/>
+
+  <path d="M320,376 V410 H264 V416" fill="none" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#d6-arrow)"/>
+
+  <path d="M480,376 V500 H756" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#d6-arrow-accent)"/>
+  <text x="486" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">每个状态变化先落 event，再投影成上面这些行</text>
+
+  <text x="60" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">其余：blob / blob_ref（内容寻址）、instruction_entry / instruction_blob（指令正文）、kv（机器级小状态）、permission（已保存规则）、</text>
+  <text x="60" y="574" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">job / schedule（后台任务与定时）、worktree / project_directory（工作区）、credential / account / account_state / control_account（登录）。</text>
+</svg>
