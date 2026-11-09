@@ -76,6 +76,22 @@ out=$(cd "$D4" && BLOG_TARGET="$T4" BLOG_BACKUP_DIR="$D4/bk" ./scripts/publish.s
 report 1 "$rc" "远端多出文章时中止"
 echo "$out" | grep -q "ghost" && report yes yes "错误信息点名 ghost" || report yes no "错误信息点名 ghost"
 
+
+# --- case 5: 上传失败必须打印可执行的回滚命令 ---
+D5=$(mktemp -d); T5=$(mktemp -d)/remote; touch "$T5"   # 目标是个文件，rsync 必然失败
+make_site "$D5"; add_post "$D5" "good5" 'tags: ["meta"]'; make_baseline "$D5"
+out=$(cd "$D5" && BLOG_TARGET="$T5" BLOG_BACKUP_DIR="$D5/bk" ./scripts/publish.sh --skip-pull --skip-live-check 2>&1); rc=$?
+report 1 "$rc" "上传失败时返回非零"
+echo "$out" | grep -q "回滚" && report yes yes "失败时打印回滚提示" || report yes no "失败时打印回滚提示"
+echo "$out" | grep -q "$T5" && report yes yes "回滚提示指向真实目标" || report yes no "回滚提示指向真实目标"
+
+# --- case 6: 连不上远端必须中止，不能静默当成空远端 ---
+D6=$(mktemp -d)
+make_site "$D6"; add_post "$D6" "good6" 'tags: ["meta"]'; make_baseline "$D6"
+out=$(cd "$D6" && BLOG_TARGET="deploy@127.0.0.1:/tmp/nope" BLOG_SSH_KEY=/nonexistent ./scripts/publish.sh --skip-pull --skip-live-check 2>&1); rc=$?
+report 1 "$rc" "连不上远端时中止"
+echo "$out" | grep -q "连不上" && report yes yes "给出连不上的原因" || report yes no "给出连不上的原因"
+
 echo "----"
 echo "passed $PASS, failed $FAIL"
 [ "$FAIL" -eq 0 ]

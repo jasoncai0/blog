@@ -35,6 +35,8 @@ hugo new content posts/<slug>/index.md
 
 图：放在 `content/posts/<slug>/diagrams/`，正文里写 `{{< fig "diagrams/01.svg" "图注" >}}`，会自动内联并编号「图 N」。引用了不存在的图会让构建失败。
 
+**代码块里要写短代码语法时**，必须转义成 `{{</* fig ... */>}}`。Hugo 会执行代码块里的 `{{< ... >}}`，不转义的话读者看到的是渲染结果而不是这段代码本身，而且会偷偷消耗图号。`check-tags.py` 会扫描并拦下未转义的写法。
+
 需要新 tag 时，先往 `data/tags.yaml` 加一个 key（ASCII 小写连字符）+ `name`（中文显示名）+ `description`，再在文章里用。
 
 ## 本地预览
@@ -69,4 +71,12 @@ python3 scripts/check-tags.py content/posts data/tags.yaml
 python3 scripts/verify-site.py --public public
 ```
 
-`verify-site.py` 检查：文章集合与基线一致、每篇的结构块数量没有漂移、每个用到的 tag 都有归档页、RSS 条目数与 `category`、sitemap 存在。
+`verify-site.py` 检查：内容里的每篇都有产物、每篇的结构块数量相对基线没有漂移、每个用到的 tag 都有归档页、RSS 条目数与 `category`、sitemap 存在。
+
+新文章不需要先登记基线（只会提示「还没进基线」）；**有意**给老文章加小节/图/表格后，块数量会变，这时刷新基线：
+
+```bash
+hugo --minify --cleanDestinationDir
+python3 scripts/verify-site.py --public public --update-baseline
+git add docs/baseline/local.json
+```

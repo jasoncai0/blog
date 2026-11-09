@@ -226,3 +226,32 @@ nav.toc #TableOfContents li { break-inside: avoid; }
 nav.toc #TableOfContents a { color: var(--ink); text-decoration: none; }
 nav.toc #TableOfContents a:hover { color: var(--accent); }
 @media (max-width: 720px) { nav.toc #TableOfContents ul { columns: 1; } }
+
+/* ---- 首页与归档列表（沿用纸感配色，补回旧 /style.css 的排版能力）---- */
+header { margin-bottom: 40px; }
+.tagline { margin: 0; color: var(--muted); font-size: 15px; }
+.links { margin: 10px 0 0; font-size: 13px; letter-spacing: 0.02em; }
+ul.posts { list-style: none; margin: 0; padding: 0; }
+ul.posts li {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+ul.posts time {
+  flex: 0 0 5.6rem;
+  color: var(--soft);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+ul.posts .entry { flex: 1; min-width: 0; }
+ul.posts .entry > a { color: var(--ink); font-weight: 600; text-decoration: none; }
+ul.posts .entry > a:hover { color: var(--accent); }
+ul.posts .summary { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.7; }
+ul.posts .post-tags { margin: 8px 0 0; }
+@media (max-width: 720px) {
+  ul.posts li { flex-direction: column; gap: 4px; }
+}

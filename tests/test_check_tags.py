@@ -50,3 +50,44 @@ class CheckTagsTest(unittest.TestCase):
 
     def test_empty_posts_dir_rejected(self):
         self.assertTrue(self.check())
+
+
+class ParserAndEscapeTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.vocab = self.tmp / "vocab.yaml"
+        self.vocab.write_text(VOCAB, encoding="utf-8")
+        self.posts = self.tmp / "posts"
+        self.posts.mkdir()
+
+    def check(self):
+        return check_tags.check_tags(self.posts, self.vocab)
+
+    def test_mixed_quotes_keeps_all_tags(self):
+        write(self.posts, "a.md", 'title: "A"\ntags: [Meta, "agent"]')
+        problems = self.check()
+        self.assertTrue(any("Meta" in p for p in problems), problems)
+
+    def test_inline_vocab_entry_accepted(self):
+        self.vocab.write_text("meta:\n  name: 随笔\nnewtag: { name: 新, description: d }\n", encoding="utf-8")
+        write(self.posts, "a.md", 'title: "A"\ntags: ["newtag"]')
+        self.assertEqual(self.check(), [])
+
+    def test_uppercase_vocab_key_rejected(self):
+        self.vocab.write_text("meta:\n  name: 随笔\nOpenCode:\n  name: x\n", encoding="utf-8")
+        write(self.posts, "a.md", 'title: "A"\ntags: ["meta"]')
+        problems = self.check()
+        self.assertTrue(any("OpenCode" in p for p in problems), problems)
+
+    def test_shortcode_in_code_block_rejected(self):
+        (self.posts / "a.md").write_text(
+            '---\ntitle: "A"\ntags: ["meta"]\n---\n\n```\n{{< fig "x.svg" "y" >}}\n```\n',
+            encoding="utf-8")
+        problems = self.check()
+        self.assertTrue(any("短代码" in p or "shortcode" in p for p in problems), problems)
+
+    def test_escaped_shortcode_in_code_block_passes(self):
+        (self.posts / "a.md").write_text(
+            '---\ntitle: "A"\ntags: ["meta"]\n---\n\n```\n{{</* fig "x.svg" "y" */>}}\n```\n',
+            encoding="utf-8")
+        self.assertEqual(self.check(), [])
