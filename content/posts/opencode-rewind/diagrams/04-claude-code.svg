@@ -75,6 +75,6 @@
   <text x="70" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">"不是版本控制的替代品"——官方原话</text>
   <text x="70" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">回退后若直接退出，那些消息会回来：会话随下一条 prompt 才落盘</text>
 
-  <text x="48" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">它把"恢复"拆成了两个正交维度（代码、对话），所以菜单是二维的；OpenCode 把它们绑在一个动作里，用户只能用 files 开关选一半。</text>
+  <text x="48" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">它把"恢复"拆成了两个正交维度（代码、对话），所以菜单是二维的；OpenCode 把它们绑在一个动作里，只有调用参数 files 能选一半。</text>
   <text x="48" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">这也是两者最大的产品差异：一个把选择权放在菜单里，一个放在调用参数里。</text>
 </svg>
