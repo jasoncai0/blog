@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d2-title d2-desc">
+  <title id="d2-title">一个 Step 的六段</title>
+  <desc id="d2-desc">Step 开始时取 agent 与工具的快照，组装请求，流式接收三类增量，工具调用被并行执行并等齐，最后结算事件并判定结局。</desc>
+
+  <defs>
+    <marker id="d2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">ONE STEP</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一个 Step 的六段：快照、请求、流、工具、结算、判定</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">快照发生在最前面：这一步用哪个人格、哪些工具，在这一刻就定死了</text>
+
+  <!-- stage 1 -->
+  <rect x="48" y="120" width="140" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="62" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">① 取快照</text>
+  <text x="62" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">agent 配置</text>
+  <text x="62" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">工具目录（按权限裁剪）</text>
+  <text x="62" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">模型与参数</text>
+
+  <!-- stage 2 -->
+  <rect x="208" y="120" width="140" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="222" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">② 组装请求</text>
+  <text x="222" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">system + 历史</text>
+  <text x="222" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">工具定义 + 媒体</text>
+  <text x="222" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">超预算就先压缩</text>
+
+  <!-- stage 3 -->
+  <rect x="368" y="120" width="160" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="382" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">③ 流式接收</text>
+  <text x="382" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">text delta → 直接落库</text>
+  <text x="382" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">reasoning delta → 落库</text>
+  <text x="382" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">tool-call delta → 参数流</text>
+
+  <!-- stage 4 -->
+  <rect x="548" y="120" width="170" height="84" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="562" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">④ 工具并行</text>
+  <text x="562" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">每个调用 fork 一个 fiber</text>
+  <text x="562" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">结果各自发布、各自落库</text>
+  <text x="562" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">全部等齐再收尾</text>
+
+  <!-- stage 5 -->
+  <rect x="738" y="120" width="170" height="84" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="752" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">⑤ 结算</text>
+  <text x="752" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">Step.Ended：用量、快照、文件</text>
+  <text x="752" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">被取消也要写完</text>
+  <text x="752" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">（uninterruptibleMask）</text>
+
+  <!-- arrows -->
+  <line x1="188" y1="162" x2="204" y2="162" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="348" y1="162" x2="364" y2="162" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="528" y1="162" x2="544" y2="162" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+  <line x1="718" y1="162" x2="734" y2="162" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <!-- stage 6 -->
+  <rect x="738" y="250" width="170" height="76" rx="6" fill="#ececec" stroke="#4f5d75" stroke-width="1"/>
+  <text x="752" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">⑥ 判定</text>
+  <text x="752" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">Completed / Retry / Continue</text>
+  <text x="752" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">Compacted / RecoverFull</text>
+  <text x="752" y="322" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">/ OutputLimit</text>
+
+  <line x1="823" y1="204" x2="823" y2="246" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <!-- notes -->
+  <rect x="48" y="250" width="650" height="76" rx="6" fill="#ffffff" stroke="rgba(79,93,117,0.35)" stroke-width="0.8"/>
+  <text x="64" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">快照的语义：切换 agent 只影响「下一个」Step——正在飞行的这个仍用它开始时采样到的配置。</text>
+  <text x="64" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">最后一步会主动把 toolChoice 设为 none：让模型只能"收尾"，顺带保住缓存前缀。</text>
+  <text x="64" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">工具的参数流事件与执行是两回事：参数边流边显示，真正执行要等参数收齐。</text>
+
+  <text x="48" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">Step 是"请求 + 它引发的工具"这一整段的单位。一次 drain 由若干 Step 串成，每一步都要重新组装请求、重新付一次输入 token。</text>
+  <text x="48" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">这也是为什么"多步"在成本上不是免费的：工具越多，Step 越多，重放的上下文越多。</text>
+</svg>
