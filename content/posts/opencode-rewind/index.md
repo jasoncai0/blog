@@ -40,7 +40,7 @@ TUI 的 `/undo`（快捷键 `<leader>u`）不是简单的"删消息"，它按固
 
 Web 端还有一套入口：消息菜单里的 "Undo message / Revert message"、`/undo` 与 `/redo` 命令，以及成功 toast 上带一个 Undo（`session-ui` 的 `message-content.tsx:475-490`）。App 的 toast Undo 能把边界再往回挪一个（`revert.ts:273-275`），但只在 toast 的存活期内——它不是一个持久的第二层 redo。
 
-`stage` 之后，TUI 不会立刻删消息——它把边界之后的消息置灰留在屏幕上（`messagesFromRevert`），底部给一条"N messages reverted"的面板，列出被改动的文件与增删行数（`:2260-2300`）。这个时候按 `/redo`，一切还原。
+`stage` 之后，TUI 不会立刻删消息，但也不再把它们画出来：时间线里只保留边界之前的行（`routes/session/rows.ts:71-73`），末尾换成一条"N messages reverted"的面板，列出被改动的文件与增删行数（`index.tsx:2260-2300`）。服务端仍然返回全部消息，过滤只发生在客户端。这个时候按 `/redo`，一切还原。
 
 ### 1.2 stage 内部：先拍"现在"，再回到"当时"
 
@@ -92,7 +92,7 @@ if (original) yield* snapshot.restore({ files: ... 每个文件 → original })
 yield* bus.publish(RevertEvent.Cleared, ...)
 ```
 
-它用 1.2 里存的那张 original 树把文件还原，然后撤掉标记、唤醒会话（`session.ts:344-351`）。注意它**不恢复消息**——消息本来就没被删过，只是被标记了，客户端只是过滤了展示（`packages/tui/src/routes/session/index.tsx:182-187`）。
+它用 1.2 里存的那张 original 树把文件还原，然后撤掉标记、唤醒会话（`session.ts:344-351`）。注意它**不恢复消息**——消息本来就没被删过，只是被标记了，客户端按标记过滤了展示（`packages/tui/src/routes/session/rows.ts:71-73`）。
 
 严格说这不是"重做"，是"取消这次回退"。真正的 redo（回退提交之后，再回到回退之前）OpenCode 没有。
 
@@ -343,7 +343,8 @@ Never mind                      什么都不做
 | 提交下一条 prompt 时自动 commit | `packages/tui/src/component/prompt/index.tsx:1345`、`packages/core/src/session/session.ts:173` |
 | 快照是独立 git 目录，依赖项目为 git | `packages/core/src/snapshot.ts:88-118` |
 | 未跟踪文件 2 MiB 上限、每 10 分钟 pack | `packages/core/src/snapshot.ts:133-148` |
-| TUI 回退面板显示文件与增删行数 | `packages/tui/src/routes/session/index.tsx:2260-2300` |
+| 回退后时间线只显示边界之前的消息 | `packages/tui/src/routes/session/rows.ts:71-73` |
+| 回退面板显示文件与增删行数 | `packages/tui/src/routes/session/index.tsx:2260-2300` |
 | Claude Code 的 checkpoint 时机、菜单、限制 | `https://code.claude.com/docs/en/checkpointing` |
 | Claude Code 快照位置与开关 | settings 文档 + 社区观察（非官方专门文档） |
 
