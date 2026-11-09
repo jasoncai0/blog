@@ -1,0 +1,10 @@
+{{- $src := .Get 0 -}}
+{{- $alt := .Get 1 | default "" -}}
+{{- $res := .Page.Resources.GetMatch $src -}}
+{{- if not $res -}}
+  {{- errorf "figure not found: %s (page %s)" $src .Page.File.Path -}}
+{{- end -}}
+{{- $svg := $res.Content | replaceRE `(?s)<\?xml[^>]*\?>\s*` "" -}}
+{{- $n := add (.Page.Scratch.Get "figcounter" | default 0) 1 -}}
+{{- .Page.Scratch.Set "figcounter" $n -}}
+<figure id="fig-{{ $n }}"><div class="diagram">{{ $svg | safeHTML }}</div><figcaption><span class="fig-no">图 {{ $n }}</span>{{ $alt }}</figcaption></figure>

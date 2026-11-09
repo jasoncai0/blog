@@ -1,0 +1,4 @@
+{{- $tags := .Params.tags -}}
+{{- with $tags }}
+<p class="post-tags">{{ range . }}{{ $meta := index hugo.Data.tags . }}<a class="tag-chip" href="{{ printf "/tags/%s.html" . | relURL }}">{{ with $meta }}{{ .name }}{{ else }}{{ . }}{{ end }}</a>{{ end }}</p>
+{{- end }}
