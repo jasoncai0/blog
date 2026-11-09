@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="566" viewBox="0 0 960 566" font-family="'Geist','PingFang SC',system-ui" role="img" aria-labelledby="t d">
+  <title id="t">同一次生成里的六个工具调用如何分批</title>
+  <desc id="d">六个工具调用中三个是写操作。Claude Code 把连续安全调用合并成批，DSH 用独占屏障切断并连续提交，hermes 按读写冲突切段，opencode 不设批次。</desc>
+  <rect width="960" height="566" fill="#f5f5f5"/>
+
+  <text x="24" y="34" font-size="8" fill="#5a6580" letter-spacing="0.16em" font-family="'Geist Mono','SF Mono',ui-monospace">TOOL BATCHES</text>
+  <text x="24" y="60" font-size="20" font-weight="600" fill="#2d3142">六个调用，四种分批</text>
+  <text x="24" y="82" font-size="11.5" fill="#5a6580">同一条 assistant message 里的工具调用：灰色只读，暖色写入。谁能和谁同批，由各家自己判定。</text>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace">
+    <rect x="620" y="70" width="10" height="10" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="636" y="78" font-size="9" fill="#5a6580">read</text>
+    <rect x="690" y="70" width="10" height="10" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="706" y="78" font-size="9" fill="#5a6580">write</text>
+    <path d="M770 70 L770 80" stroke="#d99a83" stroke-width="1.2" stroke-dasharray="2 2"/>
+    <text x="780" y="78" font-size="9" fill="#5a6580">exclusive barrier</text>
+  </g>
+
+  <text x="176" y="108" font-size="9.5" fill="#8a8577" font-family="'Geist Mono','SF Mono',ui-monospace">one assistant message → 6 × tool_use</text>
+
+  <!-- chips -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace" font-size="10">
+    <rect x="176" y="120" width="106" height="34" rx="5" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="188" y="141" fill="#3f4658">Read a.ts</text>
+    <rect x="302" y="120" width="106" height="34" rx="5" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="314" y="141" fill="#3f4658">Read b.ts</text>
+    <rect x="428" y="120" width="106" height="34" rx="5" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="440" y="141" fill="#8a3b1e">Edit c.ts</text>
+    <rect x="554" y="120" width="106" height="34" rx="5" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="566" y="141" fill="#3f4658">Read d.ts</text>
+    <rect x="680" y="120" width="106" height="34" rx="5" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="692" y="141" fill="#3f4658">Read e.ts</text>
+    <rect x="806" y="120" width="106" height="34" rx="5" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="818" y="141" fill="#8a3b1e">Bash rm x</text>
+  </g>
+
+  <!-- row 1: claude code -->
+  <g>
+    <text x="24" y="196" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">CLAUDE CODE</text>
+    <text x="24" y="212" font-size="10" fill="#8a8577">连续安全段合并</text>
+
+    <path d="M229 186 L229 176 L361 176 L361 186" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="272" y="170" font-size="9" fill="#bf4520">batch 1</text>
+    <path d="M481 186 L481 176 L495 176 L495 186" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="450" y="170" font-size="9" fill="#bf4520">batch 2</text>
+    <path d="M607 186 L607 176 L739 176 L739 186" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="650" y="170" font-size="9" fill="#bf4520">batch 3</text>
+    <path d="M859 186 L859 176 L873 176 L873 186" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+
+    <text x="930" y="206" font-size="10" fill="#5a6580" text-anchor="end">写调用切断批次；非安全调用在队列里当屏障。</text>
+  </g>
+
+  <!-- row 2: dsh -->
+  <g>
+    <text x="24" y="286" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">DSH</text>
+    <text x="24" y="302" font-size="10" fill="#8a8577">独占屏障 + 连续提交</text>
+
+    <path d="M229 276 L229 266 L361 266 L361 276" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <path d="M607 276 L607 266 L739 266 L739 276" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <path d="M481 262 L481 292" stroke="#d99a83" stroke-width="1.2" stroke-dasharray="3 2"/>
+    <path d="M859 262 L859 292" stroke="#d99a83" stroke-width="1.2" stroke-dasharray="3 2"/>
+
+    <text x="930" y="296" font-size="10" fill="#5a6580" text-anchor="end">分类 fail-closed；结果按模型序槽连续提交——第 2 个先完成也要等第 1 个。</text>
+  </g>
+
+  <!-- row 3: hermes -->
+  <g>
+    <text x="24" y="376" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">HERMES</text>
+    <text x="24" y="392" font-size="10" fill="#8a8577">按读写冲突切段</text>
+
+    <path d="M229 366 L229 356 L361 356 L361 366" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="272" y="350" font-size="9" fill="#bf4520">parallel</text>
+    <path d="M481 366 L481 356 L607 356 L607 366" fill="none" stroke="#b9b4a8" stroke-width="1.2"/>
+    <text x="512" y="350" font-size="9" fill="#8a8577">sequential</text>
+    <path d="M733 366 L733 356 L747 356 L747 366" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <path d="M859 366 L859 356 L873 356 L873 366" fill="none" stroke="#b9b4a8" stroke-width="1.2"/>
+
+    <text x="930" y="386" font-size="10" fill="#5a6580" text-anchor="end">reader↔reader 可并行；参数不可解析或路径冲突就退回顺序。</text>
+  </g>
+
+  <!-- row 4: opencode -->
+  <g>
+    <text x="24" y="466" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">OPENCODE</text>
+    <text x="24" y="482" font-size="10" fill="#8a8577">没有批次</text>
+
+    <path d="M229 446 L229 436 L859 436 L859 446" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="480" y="430" font-size="9" fill="#bf4520" text-anchor="middle">一批全 fork，没有屏障</text>
+
+    <text x="930" y="474" font-size="10" fill="#5a6580" text-anchor="end">无并发上限；顺序由「按来源排序 + 单写者发布」保证。</text>
+  </g>
+
+  <text x="24" y="520" font-size="10.5" fill="#5a6580">真正的分歧不在「能不能并行」，而在两个更细的问题：</text>
+  <text x="24" y="542" font-size="10.5" fill="#2d3142">① 一次生成内部，哪些调用必须保持先后（写调用是屏障）；② 结果写回时，允不允许乱序。</text>
+</svg>

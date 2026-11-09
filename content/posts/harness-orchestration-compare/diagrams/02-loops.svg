@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" font-family="'Geist','PingFang SC',system-ui" role="img" aria-labelledby="t d">
+  <title id="t">四种主循环的形状对比</title>
+  <desc id="d">四条时间线对比 opencode、Claude Code、hermes、DSH 在一次模型请求里何时启动工具、何时提交结果、循环如何回到下一次请求。</desc>
+  <rect width="960" height="640" fill="#f5f5f5"/>
+
+  <text x="24" y="34" font-size="8" fill="#5a6580" letter-spacing="0.16em" font-family="'Geist Mono','SF Mono',ui-monospace">LOOP SHAPES</text>
+  <text x="24" y="60" font-size="20" font-weight="600" fill="#2d3142">同一步里，工具什么时候起跑、什么时候提交</text>
+  <text x="24" y="82" font-size="11.5" fill="#5a6580">横轴是时间。灰色是模型请求，暖色是工具执行；四家的差别在两者重叠多少、结果按什么顺序写回。</text>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace" font-size="9">
+    <rect x="712" y="70" width="10" height="10" fill="#e6e2d9" stroke="#cfcbc2"/>
+    <text x="728" y="78" fill="#5a6580">model request</text>
+    <rect x="818" y="70" width="10" height="10" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="834" y="78" fill="#5a6580">tool run</text>
+  </g>
+
+  <!-- lane 1: opencode -->
+  <g>
+    <rect x="24" y="104" width="912" height="120" rx="8" fill="#ffffff" stroke="#e5e2da"/>
+    <text x="44" y="126" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">OPENCODE</text>
+    <text x="44" y="146" font-size="10.5" fill="#8a8577">step = 一次请求</text>
+
+    <rect x="150" y="130" width="470" height="26" rx="4" fill="#e6e2d9" stroke="#cfcbc2"/>
+    <text x="162" y="147" font-size="10.5" fill="#3f4658">llm.stream：边生成边发布事件</text>
+
+    <rect x="280" y="164" width="78" height="16" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="288" y="175" font-size="9.5" fill="#8a3b1e">tool-call A</text>
+    <rect x="366" y="164" width="70" height="16" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="374" y="175" font-size="9.5" fill="#8a3b1e">B</text>
+    <rect x="444" y="164" width="86" height="16" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="452" y="175" font-size="9.5" fill="#8a3b1e">C</text>
+
+    <path d="M620 143 L620 190" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="626" y="190" font-size="9" fill="#bf4520">awaitAll</text>
+    <path d="M620 143 L686 143" stroke="#b9b4a8" stroke-width="1" stroke-dasharray="3 3"/>
+    <rect x="690" y="130" width="110" height="26" rx="4" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="700" y="147" font-size="10" fill="#5a6580">写回结果</text>
+
+    <text x="44" y="212" font-size="10.5" fill="#5a6580">工具不等生成结束：事件流里遇到 tool-call 就 fork，step 结束时 Fiber.awaitAll 收拢。</text>
+  </g>
+
+  <!-- lane 2: Claude Code -->
+  <g>
+    <rect x="24" y="236" width="912" height="120" rx="8" fill="#ffffff" stroke="#e5e2da"/>
+    <text x="44" y="258" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">CLAUDE CODE</text>
+    <text x="44" y="278" font-size="10.5" fill="#8a8577">turn 是一等对象</text>
+
+    <rect x="150" y="262" width="440" height="26" rx="4" fill="#e6e2d9" stroke="#cfcbc2"/>
+    <text x="162" y="279" font-size="10.5" fill="#3f4658">request → assistant message（3× tool_use）</text>
+
+    <path d="M592 288 L592 306" stroke="#bf4520" stroke-width="1.2"/>
+    <rect x="600" y="306" width="66" height="13" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <rect x="600" y="322" width="66" height="13" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <rect x="600" y="338" width="66" height="13" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="674" y="316" font-size="9" fill="#bf4520">batch：并行</text>
+    <path d="M600 306 L594 306 L594 351 L600 351" fill="none" stroke="#d99a83" stroke-width="1"/>
+
+    <rect x="740" y="262" width="160" height="26" rx="4" fill="#e6e2d9" stroke="#cfcbc2"/>
+    <text x="752" y="279" font-size="10.5" fill="#3f4658">下一次 request</text>
+    <path d="M666 325 L720 325 L720 275 L740 275" fill="none" stroke="#b9b4a8" stroke-width="1" stroke-dasharray="3 3"/>
+
+    <text x="44" y="344" font-size="10.5" fill="#5a6580">批内并行、批间串行；遇到写调用切断批次，非安全调用在队列里当屏障。</text>
+  </g>
+
+  <!-- lane 3: hermes -->
+  <g>
+    <rect x="24" y="368" width="912" height="120" rx="8" fill="#ffffff" stroke="#e5e2da"/>
+    <text x="44" y="390" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">HERMES</text>
+    <text x="44" y="410" font-size="10.5" fill="#8a8577">phase 流水线</text>
+
+    <rect x="150" y="398" width="52" height="22" rx="3" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="158" y="412" font-size="8.5" fill="#5a6580">begin</text>
+    <rect x="208" y="398" width="62" height="22" rx="3" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="214" y="412" font-size="8.5" fill="#5a6580">prepare</text>
+    <rect x="276" y="398" width="70" height="22" rx="3" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="282" y="412" font-size="8.5" fill="#5a6580">assemble</text>
+    <rect x="352" y="398" width="40" height="22" rx="3" fill="#efece5" stroke="#d8d5cd"/>
+    <text x="358" y="412" font-size="8.5" fill="#5a6580">gate</text>
+
+    <rect x="400" y="398" width="210" height="22" rx="3" fill="#e6e2d9" stroke="#cfcbc2"/>
+    <text x="410" y="413" font-size="10" fill="#3f4658">api call + retry loop</text>
+
+    <rect x="618" y="398" width="128" height="22" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="626" y="413" font-size="9.5" fill="#8a3b1e">tool round（切段）</text>
+
+    <path d="M748 420 L760 438 L150 438 L150 426" fill="none" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="4 3"/>
+    <path d="M150 426 L146 434 L154 434 Z" fill="#bf4520"/>
+    <text x="770" y="446" font-size="9" fill="#bf4520">while budget &gt; 0</text>
+
+    <text x="44" y="476" font-size="10.5" fill="#5a6580">每个工具轮次先落盘再执行；phase 按名取参、回写 verdict，方便挂钩子与取消。</text>
+  </g>
+
+  <!-- lane 4: DSH -->
+  <g>
+    <rect x="24" y="500" width="912" height="120" rx="8" fill="#ffffff" stroke="#e5e2da"/>
+    <text x="44" y="522" font-size="10" letter-spacing="0.1em" fill="#5a6580" font-family="'Geist Mono','SF Mono',ui-monospace">DSH</text>
+    <text x="44" y="542" font-size="10.5" fill="#8a8577">step 只有三种结局</text>
+
+    <text x="150" y="522" font-size="9" fill="#8a8577" font-family="'Geist Mono','SF Mono',ui-monospace">step/start</text>
+    <path d="M170 528 L170 566" stroke="#b9b4a8" stroke-width="1"/>
+    <rect x="176" y="530" width="366" height="26" rx="4" fill="#e6e2d9" stroke="#cfcbc2"/>
+    <text x="186" y="547" font-size="10.5" fill="#3f4658">llm（一次请求）</text>
+
+    <rect x="552" y="530" width="40" height="26" rx="3" fill="#f2c9b9" stroke="#d99a83"/>
+    <text x="558" y="547" font-size="9" fill="#8a3b1e">独占</text>
+    <rect x="600" y="530" width="34" height="11" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <rect x="600" y="545" width="34" height="11" rx="3" fill="#f6d9cd" stroke="#d99a83"/>
+    <text x="642" y="540" font-size="9" fill="#bf4520">并行池</text>
+
+    <path d="M690 543 L690 574" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="696" y="574" font-size="9" fill="#bf4520">连续槽提交</text>
+    <text x="800" y="536" font-size="9" fill="#8a8577" font-family="'Geist Mono','SF Mono',ui-monospace">step/end</text>
+    <path d="M800 540 L800 566" stroke="#b9b4a8" stroke-width="1"/>
+    <path d="M810 556 L884 556" stroke="#bf4520" stroke-width="1.1"/>
+    <path d="M884 556 L876 552 L876 560 Z" fill="#bf4520"/>
+    <text x="818" y="548" font-size="9" fill="#bf4520">next-step?</text>
+
+    <text x="44" y="608" font-size="10.5" fill="#5a6580">独占调用是屏障，并行池只在连续安全调用之间形成；结果按模型序槽连续提交。</text>
+  </g>
+
+</svg>

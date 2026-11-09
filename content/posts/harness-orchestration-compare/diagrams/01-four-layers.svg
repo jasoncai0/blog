@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="596" viewBox="0 0 960 596" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">一个 harness 的四层结构</title>
+  <desc id="d1-desc">排列着四层：输入队列、主循环、工具调度、委派与持久。每层列出四个框架各自的实现名字。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">ORCHESTRATION LAYERS</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">模型只会生成，编排全在它外面这四层</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">四家的差别不在模型，而在每一层用什么数据结构、什么时候把控制权交回给谁</text>
+
+  <!-- layer 4 -->
+  <rect x="48" y="112" width="864" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L4 · 委派与持久</text>
+  <text x="68" y="158" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">任务交给谁、做到哪、下次还记不记得</text>
+  <text x="68" y="176" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">子会话 / 后台任务 / 团队任务板 / 脚本化 fan-out / 持久目标</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8">
+    <rect x="404" y="124" width="118" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="463" y="141" text-anchor="middle" fill="#2d3142">opencode · subagent job</text>
+    <rect x="530" y="124" width="112" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="586" y="141" text-anchor="middle" fill="#2d3142">CC · Agent / teammate</text>
+    <rect x="650" y="124" width="120" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="710" y="141" text-anchor="middle" fill="#2d3142">hermes · delegate / pm</text>
+    <rect x="778" y="124" width="118" height="26" rx="13" fill="rgba(191,69,32,0.07)" stroke="#bf4520"/>
+    <text x="837" y="141" text-anchor="middle" fill="#bf4520">DSH · team / workflow</text>
+  </g>
+
+  <!-- layer 3 -->
+  <rect x="48" y="232" width="864" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L3 · 工具调度</text>
+  <text x="68" y="278" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">一次生成里的多个 tool call，怎么并发、怎么把关</text>
+  <text x="68" y="296" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">注册表 / 权限与沙箱 / 并发与取消 / 结果截断与落盘</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8">
+    <rect x="404" y="244" width="118" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="463" y="261" text-anchor="middle" fill="#2d3142">opencode · forkScoped</text>
+    <rect x="530" y="244" width="112" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="586" y="261" text-anchor="middle" fill="#2d3142">CC · tool_use 批次</text>
+    <rect x="650" y="244" width="120" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="710" y="261" text-anchor="middle" fill="#2d3142">hermes · toolset</text>
+    <rect x="778" y="244" width="118" height="26" rx="13" fill="rgba(191,69,32,0.07)" stroke="#bf4520"/>
+    <text x="837" y="261" text-anchor="middle" fill="#bf4520">DSH · guard + PTC</text>
+  </g>
+
+  <!-- layer 2 -->
+  <rect x="48" y="352" width="864" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="376" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L2 · 主循环</text>
+  <text x="68" y="398" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">「调用模型 → 执行工具 → 回灌结果」循环几次、谁来继续</text>
+  <text x="68" y="416" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">step / turn 的边界，停止条件，错误与重试，压缩插在哪一步</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8">
+    <rect x="404" y="364" width="118" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="463" y="381" text-anchor="middle" fill="#2d3142">opencode · drain / step</text>
+    <rect x="530" y="364" width="112" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="586" y="381" text-anchor="middle" fill="#2d3142">CC · query loop</text>
+    <rect x="650" y="364" width="120" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="710" y="381" text-anchor="middle" fill="#2d3142">hermes · agent loop</text>
+    <rect x="778" y="364" width="118" height="26" rx="13" fill="rgba(191,69,32,0.07)" stroke="#bf4520"/>
+    <text x="837" y="381" text-anchor="middle" fill="#bf4520">DSH · agent-loop 插件</text>
+  </g>
+
+  <!-- layer 1 -->
+  <rect x="48" y="472" width="864" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L1 · 输入队列</text>
+  <text x="68" y="518" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">人（或另一个 agent）在循环跑着的时候插话</text>
+  <text x="68" y="536" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">排队 / 打断 / 改变当前这一步 / 等空闲再投递</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8">
+    <rect x="404" y="484" width="118" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="463" y="501" text-anchor="middle" fill="#2d3142">opencode · session_inbox</text>
+    <rect x="530" y="484" width="112" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="586" y="501" text-anchor="middle" fill="#2d3142">CC · 消息队列 / interrupt</text>
+    <rect x="650" y="484" width="120" height="26" rx="13" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="710" y="501" text-anchor="middle" fill="#2d3142">hermes · gateway 输入</text>
+    <rect x="778" y="484" width="118" height="26" rx="13" fill="rgba(191,69,32,0.07)" stroke="#bf4520"/>
+    <text x="837" y="501" text-anchor="middle" fill="#bf4520">DSH · next-step / next-turn</text>
+  </g>
+
+  <!-- left spine -->
+  <line x1="30" y1="112" x2="30" y2="576" stroke="#bf4520" stroke-width="2"/>
+  <line x1="24" y1="112" x2="36" y2="112" stroke="#bf4520" stroke-width="2"/>
+  <line x1="24" y1="576" x2="36" y2="576" stroke="#bf4520" stroke-width="2"/>
+  <text x="12" y="344" transform="rotate(-90 12 344)" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">越往上越少由模型决定</text>
+</svg>

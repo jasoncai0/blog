@@ -34,3 +34,6 @@ agent:
 meta:
   name: 建站与随笔
   description: 站点本身、工具与写作
+harness:
+  name: Harness
+  description: Agent harness 的执行模型、循环与编排对照
