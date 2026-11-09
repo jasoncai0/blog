@@ -89,6 +89,15 @@
   "pre": 2,
   "table": 5
  },
+ "opencode-execution": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 10,
+  "h3": 13,
+  "hr": 0,
+  "pre": 3,
+  "table": 7
+ },
  "opencode-interrupt": {
   "figure": 3,
   "h1": 1,
