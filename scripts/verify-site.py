@@ -30,8 +30,23 @@ def vocab_keys(path: Path) -> list[str]:
     return keys
 
 
+def used_tags(content: Path) -> set[str]:
+    """文章里实际写到的 tag —— 只有它们才会有归档页。"""
+    tags: set[str] = set()
+    for post in content.rglob("*.md"):
+        text = post.read_text(encoding="utf-8")
+        inline_match = re.search(r"^tags:\s*\[(.*?)\]", text, re.M)
+        if inline_match:
+            tags.update(re.findall(r"[\"']([^\"']+)[\"']", inline_match.group(1)))
+            continue
+        block = re.search(r"^tags:\s*\n((?:\s+-\s+.+\n)+)", text, re.M)
+        if block:
+            tags.update(re.findall(r"-\s+(.+)", block.group(1)))
+    return {tag.strip() for tag in tags if tag.strip()}
+
+
 def verify_site(public: Path, baseline: dict, base_url: str | None = None,
-                vocab: Path = DEFAULT_VOCAB) -> list[str]:
+                vocab: Path = DEFAULT_VOCAB, content: Path = Path("content/posts")) -> list[str]:
     errors: list[str] = []
     posts_dir = public / "posts"
     produced = {p.stem for p in posts_dir.glob("*.html")} if posts_dir.is_dir() else set()
@@ -52,15 +67,14 @@ def verify_site(public: Path, baseline: dict, base_url: str | None = None,
                 errors.append(f"FAIL: {slug} 的 {key} 期望 {want}，实际 {actual.get(key)}")
 
     if vocab.exists():
-        keys = vocab_keys(vocab)
+        keys = set(vocab_keys(vocab))
         tag_files = {p.stem for p in (public / "tags").glob("*.html")} if (public / "tags").is_dir() else set()
-        for key in keys:
-            if key not in tag_files:
-                errors.append(f"FAIL: 缺少 tags 归档页 {key}.html")
+        for tag in sorted(used_tags(content)):
+            if tag not in tag_files:
+                errors.append(f"FAIL: 缺少 tags 归档页 {tag}.html")
         if "index" not in tag_files:
             errors.append("FAIL: 缺少 tags 索引页 tags/index.html")
-        extra = tag_files - set(keys) - {"index"}
-        for name in sorted(extra):
+        for name in sorted(tag_files - keys - {"index"}):
             errors.append(f"FAIL: tags 多出词表外的归档页 {name}.html")
     else:
         errors.append(f"FAIL: 找不到 tag 词表 {vocab}")
@@ -98,6 +112,7 @@ def main() -> None:
     parser.add_argument("--baseline", type=Path, default=DEFAULT_BASELINE)
     parser.add_argument("--vocab", type=Path, default=DEFAULT_VOCAB)
     parser.add_argument("--base-url", default=None)
+    parser.add_argument("--content", type=Path, default=Path("content/posts"))
     args = parser.parse_args()
 
     baseline = json.loads(args.baseline.read_text(encoding="utf-8")) if args.baseline.exists() else {}
@@ -105,7 +120,7 @@ def main() -> None:
         print(f"FAIL: 基线为空或不存在 {args.baseline}", file=sys.stderr)
         sys.exit(1)
 
-    errors = verify_site(args.public, baseline, args.base_url, args.vocab)
+    errors = verify_site(args.public, baseline, args.base_url, args.vocab, args.content)
     for error in errors:
         print(error)
     if errors:

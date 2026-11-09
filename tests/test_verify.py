@@ -19,10 +19,14 @@ class VerifySiteTest(unittest.TestCase):
         (self.public / "posts").mkdir(parents=True)
         self.vocab = self.tmp / "tags.yaml"
         self.vocab.write_text(VOCAB, encoding="utf-8")
+        self.content = self.tmp / "content"
+        (self.content / "posts" / "a").mkdir(parents=True)
+        (self.content / "posts" / "a" / "index.md").write_text(
+            '---\ntitle: "a"\ntags: ["meta"]\n---\n', encoding="utf-8")
 
     def test_detects_missing_tag_page(self):
         (self.public / "posts" / "a.html").write_text("<h1>a</h1>", encoding="utf-8")
-        errors = verify.verify_site(self.public, {"a": {"h2": 1}}, vocab=self.vocab)
+        errors = verify.verify_site(self.public, {"a": {"h2": 1}}, vocab=self.vocab, content=self.content)
         self.assertTrue(any("tags" in e for e in errors))
 
     def test_detects_post_count_mismatch(self):
@@ -42,5 +46,5 @@ class VerifySiteTest(unittest.TestCase):
             "<rss><channel><item><title>a</title></item></channel></rss>", encoding="utf-8"
         )
         (self.public / "sitemap.xml").write_text("<urlset/>", encoding="utf-8")
-        errors = verify.verify_site(self.public, {"a": {"h2": 1}}, vocab=self.vocab)
+        errors = verify.verify_site(self.public, {"a": {"h2": 1}}, vocab=self.vocab, content=self.content)
         self.assertTrue(any("category" in e for e in errors))

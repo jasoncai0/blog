@@ -30,6 +30,23 @@ add_post() { # $1=站点 $2=slug $3=tags 行
   git -C "$1" -c user.name=t -c user.email=t@t commit -qm "add $2" >/dev/null 2>&1
 }
 
+make_baseline() { # $1=站点：先构建一次，把块数量记成基线（模拟仓库里已有的基线文件）
+  ( cd "$1" && hugo --quiet >/dev/null 2>&1 || true
+    mkdir -p docs/baseline
+    python3 -c '
+import json, pathlib, subprocess, sys
+out = {}
+for html in pathlib.Path("public/posts").glob("*.html"):
+    out[html.stem] = json.loads(subprocess.check_output(
+        [sys.executable, "scripts/blockstats.py", str(html)]))
+pathlib.Path("docs/baseline/local.json").write_text(json.dumps(out))
+'
+    rm -rf public
+    git add -A >/dev/null 2>&1
+    git -c user.name=t -c user.email=t@t commit -qm baseline >/dev/null 2>&1
+  )
+}
+
 # --- case 1: 缺 tag 必须失败，且目标目录不被创建 ---
 D1=$(mktemp -d); T1=$(mktemp -d)/remote
 make_site "$D1"; add_post "$D1" "bad" ""
@@ -39,7 +56,7 @@ report 1 "$rc" "缺 tag 时发布失败"
 
 # --- case 2: 正常发布 ---
 D2=$(mktemp -d); T2=$(mktemp -d)/remote
-make_site "$D2"; add_post "$D2" "good" 'tags: ["meta"]'
+make_site "$D2"; add_post "$D2" "good" 'tags: ["meta"]'; make_baseline "$D2"
 out=$(cd "$D2" && BLOG_TARGET="$T2" BLOG_BACKUP_DIR="$D2/bk" ./scripts/publish.sh --skip-pull --skip-live-check 2>&1); rc=$?
 report 0 "$rc" "正常发布成功"
 [ -f "$T2/posts/good.html" ] && report present present "目标目录有文章" || report present missing "目标目录有文章"
@@ -54,7 +71,7 @@ report 1 "$rc" "锁被占用时发布失败"
 
 # --- case 4: 远端多出文章必须中止 ---
 D4=$(mktemp -d); T4=$(mktemp -d)/remote; mkdir -p "$T4/posts"; touch "$T4/posts/ghost.html"
-make_site "$D4"; add_post "$D4" "good3" 'tags: ["meta"]'
+make_site "$D4"; add_post "$D4" "good3" 'tags: ["meta"]'; make_baseline "$D4"
 out=$(cd "$D4" && BLOG_TARGET="$T4" BLOG_BACKUP_DIR="$D4/bk" ./scripts/publish.sh --skip-pull --skip-live-check 2>&1); rc=$?
 report 1 "$rc" "远端多出文章时中止"
 echo "$out" | grep -q "ghost" && report yes yes "错误信息点名 ghost" || report yes no "错误信息点名 ghost"
