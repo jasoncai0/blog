@@ -84,7 +84,7 @@ echo "== 4/7 本地自检"
 python3 scripts/verify-site.py --public public || { echo "FAIL: 站点自检未通过"; exit 1; }
 
 echo "== 5/7 远端集合比对"
-LOCAL_SLUGS=$(ls -1 public/posts | sed 's/\.html$//' | sort)
+LOCAL_SLUGS=$(ls -1 public/posts/*.html | xargs -n1 basename | sed 's/\.html$//' | sort)
 while IFS= read -r slug; do
   [ -z "$slug" ] && continue
   if ! grep -qx "$slug" <<<"$LOCAL_SLUGS"; then
