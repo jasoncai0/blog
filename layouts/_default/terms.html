@@ -1,0 +1,9 @@
+{{ define "main" }}
+<p class="back"><a href="{{ "/" | relURL }}">← 返回首页</a></p>
+<h1>标签</h1>
+<nav class="tag-cloud" aria-label="全部标签">
+{{- range .Data.Terms.Alphabetical }}
+<a class="tag-chip" href="{{ .Page.RelPermalink }}">{{ with index hugo.Data.tags .Term }}{{ .name }}{{ else }}{{ .Term }}{{ end }}<span class="count">{{ .Count }}</span></a>
+{{- end }}
+</nav>
+{{ end }}

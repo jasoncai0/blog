@@ -1,0 +1,11 @@
+{{ define "main" }}
+<p class="back"><a href="{{ "/" | relURL }}">← 返回首页</a></p>
+<h1>{{ with index hugo.Data.tags .Data.Term }}{{ .name }}{{ else }}{{ .Data.Term }}{{ end }}</h1>
+<p class="tagline">{{ with index hugo.Data.tags .Data.Term }}{{ .description }}{{ end }} · 共 {{ len .Pages }} 篇</p>
+
+<ul class="posts">
+{{- range .Pages.ByDate.Reverse }}
+<li><time>{{ .Date.Format "2006-01-02" }}</time><div class="entry"><a href="{{ .RelPermalink }}">{{ .Title }}</a><p class="summary">{{ .Params.summary }}</p>{{ partial "tag-chips.html" . }}</div></li>
+{{- end }}
+</ul>
+{{ end }}
