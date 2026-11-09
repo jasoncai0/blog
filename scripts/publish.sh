@@ -13,7 +13,7 @@ cd "$ROOT"
 
 TARGET="${BLOG_TARGET:-ubuntu@62.234.122.22:/var/www/blog}"
 LOCK="${BLOG_LOCK:-/tmp/blog-publish.lock}"
-SSH_KEY="${BLOG_SSH_KEY:-/tmp/blog_deploy_key}"
+SSH_KEY="${BLOG_SSH_KEY:-$HOME/.dsh/keys/blog_deploy_key}"
 SSH_OPTS=(-i "$SSH_KEY" -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/tmp/ssh_known_hosts_js)
 SITE_URL="${BLOG_SITE_URL:-https://www.jasoncai.site}"
 BACKUP_DIR="${BLOG_BACKUP_DIR:-$HOME/backups}"
