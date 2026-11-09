@@ -38,7 +38,7 @@ remote_path() { echo "${TARGET#*:}"; }
 
 list_target_posts() {
   if is_remote; then
-    ssh -o BatchMode=yes "$(remote_host)" "ls -1 $(remote_path)/posts 2>/dev/null || true" | sed 's/\.html$//' | sort
+    ssh -o NumberOfPasswordPrompts=1 "$(remote_host)" "ls -1 $(remote_path)/posts 2>/dev/null || true" | sed 's/\.html$//' | sort
   else
     ls -1 "$TARGET/posts" 2>/dev/null | sed 's/\.html$//' | sort
   fi
@@ -47,7 +47,7 @@ list_target_posts() {
 backup_target() {
   local stamp="$1" dest
   if is_remote; then
-    ssh -o BatchMode=yes "$(remote_host)" "mkdir -p ~/backups && cp -a $(remote_path) ~/backups/blog-$stamp" || return 1
+    ssh -o NumberOfPasswordPrompts=1 "$(remote_host)" "mkdir -p ~/backups && cp -a $(remote_path) ~/backups/blog-$stamp" || return 1
   else
     [ -d "$TARGET" ] || return 0
     dest="$BACKUP_DIR/blog-$stamp"
@@ -103,7 +103,7 @@ backup_target "$STAMP" || { echo "FAIL: 备份失败，未上传" >&2; exit 1; }
 RSYNC_FLAGS=(-a)
 [ "$FINAL" -eq 1 ] && RSYNC_FLAGS+=(--delete)
 if is_remote; then
-  rsync "${RSYNC_FLAGS[@]}" -e "ssh -o BatchMode=yes" public/ "$(remote_host):$(remote_path)/"
+  rsync "${RSYNC_FLAGS[@]}" -e "ssh -o NumberOfPasswordPrompts=1" public/ "$(remote_host):$(remote_path)/"
 else
   mkdir -p "$TARGET"
   rsync "${RSYNC_FLAGS[@]}" public/ "$TARGET/"
