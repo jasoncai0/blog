@@ -1,6 +1,6 @@
 ---
 title: "OpenCode 机制深潜"
-date: "2026-11-09"
+date: "2026-11-09T12:55:00+08:00"
 summary: "逐个拆开 agent loop、工具八道关、权限判定、MCP 生命周期、skill 与九层记忆、执行面、SQLite 存储与插件 hook：数据结构、调用链、设计取舍与失败模式。"
 description: "基于 opencode 2.2.5 源码，逐个拆开 agent loop、工具管线、权限、MCP、skill 与记忆、执行面、存储与插件机制：数据结构、调用链、设计取舍与失败模式。"
 tags: ["opencode", "architecture", "context-engineering"]

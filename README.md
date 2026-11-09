@@ -28,7 +28,7 @@ hugo new content posts/<slug>/index.md
 | 字段 | 说明 |
 |---|---|
 | `title` | 文章标题，正文里不要再写 `# 一级标题` |
-| `date` | 发布日期 |
+| `date` | 发布时间，**必须带时分**（如 `2026-11-09T21:19:00+08:00`），同一天多篇靠它排序 |
 | `summary` | 首页与 RSS 用的一句话摘要，**必填** |
 | `description` | `<meta name="description">` 用，可省略，缺省回落到 `summary` |
 | `tags` | 1–4 个，必须来自 `data/tags.yaml`；写错或漏写，发布会被拦下 |

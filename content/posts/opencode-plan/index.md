@@ -1,6 +1,6 @@
 ---
 title: "OpenCode 的任务规划：三层机制，一个目的"
-date: "2026-11-09"
+date: "2026-11-09T18:56:00+08:00"
 summary: "规划不是一个模块，而是三个尺度的三件事：Plan 模式管能不能改、todowrite 管做到哪了、/goal 管要不要继续。以及它们各自的边界与坑。"
 description: "规划不是一个模块，而是三个尺度的三件事：Plan 模式管能不能改、todowrite 管做到哪了、/goal 管要不要继续。以及它们各自的边界与坑。"
 tags: ["opencode", "planning"]

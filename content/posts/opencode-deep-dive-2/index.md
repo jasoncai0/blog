@@ -1,6 +1,6 @@
 ---
 title: "OpenCode 机制深潜 II：状态机、并发与错误边界"
-date: "2026-11-09"
+date: "2026-11-09T13:10:00+08:00"
 summary: "第二层解剖：Step 的五个变量与四个 return、claim 释放矩阵与三种中断、工具 hook 的失败语义、权限挂起与 MCP 连接状态机、指令迁移表、运行面进程状态机，以及存储的索引、迁移与快照对象图。"
 description: "基于 opencode 2.2.5 源码的第二层解剖：Step 的五个变量与四个 return、claim 释放矩阵、工具 hook 的失败语义、权限挂起与 MCP 连接状态机、指令迁移表、运行面进程状态机与存储内部结构。"
 tags: ["opencode", "concurrency", "architecture"]

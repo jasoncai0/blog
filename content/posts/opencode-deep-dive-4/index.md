@@ -1,6 +1,6 @@
 ---
 title: "OpenCode 机制深潜 IV：事件目录与投影"
-date: "2026-11-09"
+date: "2026-11-09T13:56:00+08:00"
 summary: "48 个 durable 事件的全目录、投影矩阵、publish 的完整路径、订阅者拓扑，以及一个反直觉的事实：事件行默认不落库，只有 workerd 打开 persist。"
 description: "基于 opencode 2.2.5 源码的第四层解剖：48 个 durable 事件的全目录、投影矩阵、publish 的完整路径、订阅者拓扑、事件持久化的开关，以及这套账本的代价。"
 tags: ["opencode", "event-sourcing"]

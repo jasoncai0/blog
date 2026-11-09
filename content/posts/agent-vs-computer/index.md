@@ -1,6 +1,6 @@
 ---
 title: "Agent 与计算机系统：类比、异同与架构演进"
-date: "2026-11-02"
+date: "2026-11-02T20:08:00+08:00"
 summary: "把 LLM agent 当成一台计算机逐层对照：上下文≈内存、RAG≈外存、harness≈内核、提示注入≈冯·诺依曼代码注入，再看池化与 K8s 式编排的演进。"
 description: "把 LLM agent 当成一台计算机逐层对照：上下文≈内存、RAG≈外存、harness≈内核、提示注入≈冯·诺依曼代码注入，再看池化与 K8s 式编排的演进。"
 tags: ["agent", "architecture"]

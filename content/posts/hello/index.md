@@ -1,6 +1,6 @@
 ---
 title: "这个博客是怎么搭起来的"
-date: "2026-11-02"
+date: "2026-11-02T20:12:00+08:00"
 summary: "一台腾讯云北京的轻量服务器，nginx 托管静态文件，Let's Encrypt 的证书，没有数据库，没有后台。 写作流程是：本地 posts/ 下新建一个 Markdown 文件，跑 ./publish.sh，构建成 …"
 description: "一台腾讯云北京的轻量服务器，nginx 托管静态文件，Let's Encrypt 的证书，没有数据库，没有后台。 写作流程是：本地 posts/ 下新建一个 Markdown 文件，跑 ./publish.sh，构建成 …"
 tags: ["meta"]

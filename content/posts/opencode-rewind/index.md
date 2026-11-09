@@ -1,6 +1,6 @@
 ---
 title: "Rewind：OpenCode 能退到哪，Claude Code 怎么退，以及从零怎么实现"
-date: "2026-11-09"
+date: "2026-11-09T21:19:00+08:00"
 summary: "OpenCode 有 /undo 与 /redo，但它退的是「到某条消息之前」，redo 只在下次提交前有效；Claude Code 把代码与对话拆成两个开关，让用户当场选退一半。这一篇先拆开两者的语义，再给出一套从零实现 rewind 的步骤：边界、快照、日志、恢复协议、历史截断。"
 description: "Rewind 不是「把文件拷回去」。它要回答四个问题：退到哪、退什么、能不能再退回来、退到一半崩了怎么办。OpenCode 与 Claude Code 在这四个问题上的答案不同，从零实现的顺序也不同。"
 tags: ["opencode", "architecture", "concurrency"]

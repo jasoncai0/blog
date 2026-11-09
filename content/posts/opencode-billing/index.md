@@ -1,6 +1,6 @@
 ---
 title: "给 Agent 装一张账单：OpenCode 的计费服务端设计"
-date: "2026-11-09"
+date: "2026-11-09T13:55:00+08:00"
 summary: "从 Task / Run / Step 三层任务模型出发，讲清预扣、结算、释放、长任务与对账；再把机制接到 OpenCode 的 session 头、step 事件、provider baseURL 和插件 hook 上，形成一套网关强制、插件增强、SSE 对账的扣费服务端方案。含 5 张机制图。"
 description: "从 Task / Run / Step 三层任务模型出发，讲清预扣、结算、释放、长任务与对账；再把机制接到 OpenCode 的 session 头、step 事件、provider baseURL 和插件 hook 上，形成一套网关强制、插件增强、SSE 对账的扣费服务端方案。"
 tags: ["opencode", "billing", "architecture"]

@@ -1,6 +1,6 @@
 ---
 title: "OpenCode 上下文管理机制"
-date: "2026-11-09"
+date: "2026-11-09T03:05:00+08:00"
 summary: "每个 Step 如何重建上下文、token 预算如何触发摘要压缩、checkpoint 与原生压缩如何回放，以及缓存友好性设计；含 6 张机制图。"
 description: "基于 opencode 2.2.5 源码，拆解 Session 上下文的装载、token 计量、摘要压缩、checkpoint、原生压缩与缓存策略。"
 tags: ["opencode", "context-engineering"]

@@ -1,6 +1,6 @@
 ---
 title: "OpenCode 的多智能体：委派、并行与「没有编排器」"
-date: "2026-11-09"
+date: "2026-11-09T18:37:00+08:00"
 summary: "OpenCode 的 multi-agent 是人格切换 + 一层委派 + 大量并行：子会话怎么开、深度为何默认 1、完成怎么回传，以及它刻意没有的编排器、黑板与投票。"
 description: "OpenCode 的 multi-agent 是人格切换 + 一层委派 + 大量并行：子会话怎么开、深度为何默认 1、完成怎么回传，以及它刻意没有的编排器、黑板与投票。"
 tags: ["opencode", "multi-agent"]

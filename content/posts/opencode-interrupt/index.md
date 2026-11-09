@@ -1,6 +1,6 @@
 ---
 title: "打断：OpenCode 如何停止一次正在执行的会话"
-date: "2026-11-09"
+date: "2026-11-09T03:06:00+08:00"
 summary: "从一次 Esc 开始，逐层追到 HTTP 端点、SessionRunCoordinator 的 fiber、Step 的工具取消与 SQLite 里的执行声明；解释 ack 与清理为何解耦、resume 只恢复 steer、以及崩溃后 claim 如何恢复。"
 description: "基于 sst/opencode v2.2.5 源码的打断机制研究：进程内 fiber 中断、执行声明、inbox 投递与崩溃恢复。"
 tags: ["opencode", "concurrency"]
