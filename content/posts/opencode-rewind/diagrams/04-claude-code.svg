@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="r4-title r4-desc">
+  <title id="r4-title">Claude Code 的 checkpoint 与六个动作</title>
+  <desc id="r4-desc">每个开启一轮的 prompt 前创建一个 checkpoint，保留最近一百个；在选中的点上可以恢复代码与对话、只恢复对话、只恢复代码，或从该点向上向下做摘要。</desc>
+
+  <defs>
+    <marker id="r4-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="r4-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">CHECKPOINT</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">代码与对话是两个开关，所以能"只退一半"</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">checkpoint 打在 prompt 之前；菜单里恢复什么、保留什么，由用户当场选</text>
+
+  <!-- timeline -->
+  <text x="56" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#8b93a7">SESSION TIMELINE</text>
+  <line x1="56" y1="170" x2="470" y2="170" stroke="#c9cdd6" stroke-width="1"/>
+
+  <circle cx="96" cy="170" r="4" fill="#2d3142"/>
+  <text x="96" y="158" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">P1</text>
+  <circle cx="196" cy="170" r="4" fill="#2d3142"/>
+  <text x="196" y="158" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">P2</text>
+  <circle cx="296" cy="170" r="5" fill="#bf4520"/>
+  <text x="296" y="158" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">P3</text>
+  <circle cx="396" cy="170" r="4" fill="#2d3142"/>
+  <text x="396" y="158" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">P4</text>
+
+  <text x="96" y="192" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8b93a7">改动 a.ts</text>
+  <text x="196" y="192" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8b93a7">改动 b.ts</text>
+  <text x="296" y="192" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">选中这里</text>
+  <text x="396" y="192" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8b93a7">未发送</text>
+
+  <text x="56" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">每个 checkpoint 记的是"这条 prompt 之前"的文件状态；</text>
+  <text x="56" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">只跟踪编辑工具碰过的文件，bash / 外部改动另算。</text>
+
+  <!-- menu -->
+  <rect x="520" y="112" width="392" height="330" rx="7" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="536" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8b93a7">/rewind 菜单（选中 P3 之后）</text>
+
+  <rect x="536" y="146" width="360" height="40" rx="4" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="548" y="163" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">Restore code and conversation</text>
+  <text x="548" y="177" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">文件和对话都回到 P3 之前</text>
+
+  <rect x="536" y="194" width="360" height="40" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1"/>
+  <text x="548" y="211" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">Restore conversation</text>
+  <text x="548" y="225" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">只退对话，当前代码保留</text>
+
+  <rect x="536" y="242" width="360" height="40" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1"/>
+  <text x="548" y="259" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">Restore code</text>
+  <text x="548" y="273" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">只退文件，对话留着</text>
+
+  <rect x="536" y="290" width="360" height="36" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="548" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">Summarize from here</text>
+  <text x="548" y="319" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8b93a7">把这一点之后压成摘要，文件不动</text>
+
+  <rect x="536" y="332" width="360" height="36" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="548" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">Summarize up to here</text>
+  <text x="548" y="361" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8b93a7">把这一点之前压成摘要，之后保留</text>
+
+  <text x="548" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8b93a7">+ Never mind（什么都不做）</text>
+  <text x="548" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">两个 code 选项只在"这点之后确实有被跟踪的改动"时出现</text>
+  <text x="548" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">恢复对话后，原 prompt 回到输入框，可直接改再发</text>
+
+  <path d="M296,176 V212 H512" fill="none" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r4-arrow)"/>
+
+  <!-- limits -->
+  <rect x="56" y="264" width="432" height="178" rx="6" fill="#ffffff" stroke="#c9cdd6" stroke-width="1"/>
+  <text x="70" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8b93a7">它自己的说明</text>
+  <text x="70" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">保留最近 100 个；快照约 30 天后清掉，不需要 git</text>
+  <text x="70" y="322" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">编辑前存文件副本；只跟踪编辑工具碰过的文件</text>
+  <text x="70" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">子代理的改动一般不恢复（前台 fork 的 skill 例外）</text>
+  <text x="70" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">符号链接 / 硬链接跳过，并提示跳过了几个文件</text>
+  <text x="70" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">轮次中途插进来的消息没有自己的 checkpoint</text>
+  <text x="70" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">"不是版本控制的替代品"——官方原话</text>
+  <text x="70" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">回退后若直接退出，那些消息会回来：会话随下一条 prompt 才落盘</text>
+
+  <text x="48" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">它把"恢复"拆成了两个正交维度（代码、对话），所以菜单是二维的；OpenCode 把它们绑在一个动作里，用户只能用 files 开关选一半。</text>
+  <text x="48" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">这也是两者最大的产品差异：一个把选择权放在菜单里，一个放在调用参数里。</text>
+</svg>

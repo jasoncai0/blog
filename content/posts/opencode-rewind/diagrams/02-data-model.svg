@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="r2-title r2-desc">
+  <title id="r2-title">Rewind 的三个存储对象</title>
+  <desc id="r2-desc">会话历史按 seq 排序，checkpoint 记录每个边界指向的树，树对象库里按内容寻址共享文件版本；改动日志把 step 与它碰过的文件连起来。</desc>
+
+  <defs>
+    <marker id="r2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">DATA MODEL</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">要回退，先得有三样东西可查</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">边界回答"退到哪"，树回答"长什么样"，日志回答"哪些文件被谁碰过"</text>
+
+  <!-- column 1: session -->
+  <text x="56" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#8b93a7">① 会话（按 seq）</text>
+  <rect x="56" y="136" width="196" height="34" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1"/>
+  <text x="68" y="157" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">seq 41 · user</text>
+  <rect x="56" y="176" width="196" height="34" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1"/>
+  <text x="68" y="197" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">seq 42 · assistant</text>
+  <rect x="56" y="216" width="196" height="34" rx="4" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="68" y="237" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">seq 43 · 边界</text>
+  <rect x="56" y="256" width="196" height="34" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="68" y="277" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7">seq 44 · 待删</text>
+  <rect x="56" y="296" width="196" height="34" rx="4" fill="#ffffff" stroke="#c9cdd6" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="68" y="317" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7">seq 45 · 待删</text>
+
+  <!-- column 2: checkpoints -->
+  <text x="330" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#8b93a7">② checkpoint（每边界一条）</text>
+  <rect x="330" y="136" width="230" height="72" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">seq 41 · tree t1a</text>
+  <text x="344" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">第 1 轮之前</text>
+  <text x="344" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8b93a7">created_at · 无文件改动</text>
+
+  <rect x="330" y="220" width="230" height="72" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="344" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">seq 43 · tree t2b</text>
+  <text x="344" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">第 2 轮之前（被选中的边界）</text>
+  <text x="344" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8b93a7">3 个文件有改动</text>
+
+  <!-- column 3: object store -->
+  <text x="626" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#8b93a7">③ 树与内容对象</text>
+  <rect x="626" y="136" width="278" height="60" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="640" y="155" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">tree t2b</text>
+  <text x="640" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">src/a.ts → blob 9f2c</text>
+  <text x="640" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">src/b.ts → blob 71ae</text>
+
+  <rect x="626" y="206" width="278" height="60" rx="5" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="640" y="225" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">tree t3c</text>
+  <text x="640" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">src/a.ts → blob 4d10</text>
+  <text x="640" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">src/b.ts → blob 71ae</text>
+
+  <rect x="626" y="276" width="278" height="54" rx="5" fill="#ebeef3" stroke="#8b93a7" stroke-width="1"/>
+  <text x="640" y="295" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">blob 71ae 被两棵树共享</text>
+  <text x="640" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">同内容只存一份，删 checkpoint 不等于删 blob</text>
+
+  <line x1="252" y1="233" x2="326" y2="256" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r2-arrow)"/>
+  <line x1="560" y1="256" x2="622" y2="166" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r2-arrow)"/>
+
+  <!-- journal -->
+  <rect x="56" y="356" width="460" height="86" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="70" y="376" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">④ 改动日志（可选但强烈建议）</text>
+  <text x="70" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">step 42 → 碰过 src/a.ts、src/b.ts；step 44 → 碰过 src/c.ts</text>
+  <text x="70" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">靠 diff 猜"谁改的"会把 shell 与子代理的改动混进来；靠工具事件记就不会</text>
+  <text x="70" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">没有日志也能做，代价是只能整树回滚，做不了"只回这几个文件"</text>
+
+  <text x="544" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">恢复时的查表顺序：</text>
+  <text x="544" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">边界 → 受影响文件 → 每个文件最早的树</text>
+  <text x="544" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">同一文件被多步改过，取最早那次之前</text>
+
+  <text x="48" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">三样东西的最小版本：一张树 ID 表 + 一个内容寻址的 blob 目录。日志可以后补，但补不出来的是"当时谁改的"。</text>
+</svg>

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="r3-title r3-desc">
+  <title id="r3-title">恢复的六个步骤</title>
+  <desc id="r3-desc">恢复分六步：定计划、预检、保护现状、逐文件写入、校验、截断历史。任一步失败都用第三步的备份整体回滚，避免只回了一半。</desc>
+
+  <defs>
+    <marker id="r3-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="r3-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">RESTORE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">恢复不是"把文件拷回去"，是六步里唯一不能只做一半的事</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">前三步都不碰目标文件；真正写盘只有第 4 步，出错就整体退回第 3 步的备份</text>
+
+  <!-- six stages -->
+  <rect x="48" y="120" width="140" height="132" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="60" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">① PLAN</text>
+  <text x="60" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">算清单</text>
+  <text x="60" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">哪些文件要动</text>
+  <text x="60" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">每个的目标树</text>
+  <text x="60" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">同文件取最早</text>
+  <text x="60" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">一次 start</text>
+
+  <rect x="200" y="120" width="140" height="132" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="212" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">② PREFLIGHT</text>
+  <text x="212" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">先说不</text>
+  <text x="212" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">路径越界、符号链接</text>
+  <text x="212" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">外部改动、锁冲突</text>
+  <text x="212" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">能跳过就跳过并</text>
+  <text x="212" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">在结果里报数</text>
+
+  <rect x="352" y="120" width="140" height="132" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520" stroke-width="1"/>
+  <text x="364" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">③ PROTECT</text>
+  <text x="364" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">给"现在"留一份</text>
+  <text x="364" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">capture 当前树</text>
+  <text x="364" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">记进 revert 元数据</text>
+  <text x="364" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">这一步让 redo</text>
+  <text x="364" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">成为可能</text>
+
+  <rect x="504" y="120" width="140" height="132" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="516" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">④ APPLY</text>
+  <text x="516" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">逐文件写</text>
+  <text x="516" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">按路径加锁</text>
+  <text x="516" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">保留 BOM、权限</text>
+  <text x="516" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">树里没的路径</text>
+  <text x="516" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">要删掉</text>
+
+  <rect x="656" y="120" width="140" height="132" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="668" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">⑤ VERIFY</text>
+  <text x="668" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">读回来比一次</text>
+  <text x="668" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">跑一遍 diff</text>
+  <text x="668" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">对不上就整体</text>
+  <text x="668" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">回滚，而不是</text>
+  <text x="668" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">补第二次</text>
+
+  <rect x="808" y="120" width="104" height="132" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="820" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">⑥ TRUNCATE</text>
+  <text x="820" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">再动历史</text>
+  <text x="820" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">文件先回</text>
+  <text x="820" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">历史后删</text>
+  <text x="820" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">顺序反了</text>
+  <text x="820" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">就找不回</text>
+
+  <line x1="188" y1="186" x2="196" y2="186" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r3-arrow)"/>
+  <line x1="340" y1="186" x2="348" y2="186" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r3-arrow)"/>
+  <line x1="492" y1="186" x2="500" y2="186" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r3-arrow)"/>
+  <line x1="644" y1="186" x2="652" y2="186" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r3-arrow)"/>
+  <line x1="796" y1="186" x2="804" y2="186" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#r3-arrow)"/>
+
+  <!-- rollback -->
+  <path d="M650,252 V288 H422 V296" fill="none" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="5,4" marker-end="url(#r3-arrow-accent)"/>
+  <text x="452" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">④⑤ 任一步出错</text>
+
+  <rect x="48" y="300" width="374" height="76" rx="5" fill="#ffffff" stroke="#bf4520" stroke-width="1"/>
+  <text x="62" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">回滚用 ③ 的备份，不用 ① 的目标树</text>
+  <text x="62" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">目标树是"要变成的样子"，备份是"刚才的样子"；</text>
+  <text x="62" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">回滚要回到刚才，否则一个失败会同时毁掉两边。</text>
+
+  <rect x="450" y="300" width="462" height="76" rx="5" fill="#ffffff" stroke="#c9cdd6" stroke-width="1"/>
+  <text x="464" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">幂等：同一目标重复执行，结果必须一样</text>
+  <text x="464" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">崩溃后无法判断"第 4 步做到哪了"，只能整段重放；</text>
+  <text x="464" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">所以恢复需要一个意图记录（intent log），先写再做。</text>
+
+  <text x="48" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">第 ⑥ 步的时机是产品选择：OpenCode 把它推迟到"下一条 prompt"，Claude Code 推迟到"下一次发送 prompt 时把会话一起落盘"——两者都在用同一个办法绕开"删了历史就回不来"。</text>
+  <text x="48" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">真正的难点不在写文件，而在"写一半崩了"和"用户在这期间又改了同一个文件"——前者靠意图记录 + 幂等，后者靠锁或预检。</text>
+  <text x="48" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">一条经验：先做"只能整体回滚、不能部分回滚"的版本，等边界与日志稳定了，再开放单文件恢复。</text>
+</svg>
