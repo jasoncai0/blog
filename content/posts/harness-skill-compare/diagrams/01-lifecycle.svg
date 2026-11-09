@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="452" viewBox="0 0 960 452" role="img" aria-labelledby="f1-title f1-desc">
+  <title id="f1-title">技能的五段生命周期</title>
+  <desc id="f1-desc">从发现、编目、激活、执行到回填，五个阶段排成一条流水线。编目阶段把名字和一行描述常驻在上下文里，执行阶段才把正文和资源目录放进来，两者构成两层成本。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">SKILL LIFECYCLE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一个技能在会话里只走这五步</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">前三步决定「模型知不知道它」，后两步决定「知道之后付多少上下文」</text>
+
+  <!-- stage nodes -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+    <rect x="48" y="118" width="160" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="64" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">01</text>
+    <text x="64" y="160" font-size="11" font-weight="600" fill="#2d3142">发现</text>
+    <text x="64" y="180" font-size="8" fill="#4f5d75">扫约定目录，收候选</text>
+    <text x="64" y="195" font-size="8" fill="#4f5d75">按优先级去重</text>
+
+    <rect x="224" y="118" width="160" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="240" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">02</text>
+    <text x="240" y="160" font-size="11" font-weight="600" fill="#2d3142">编目</text>
+    <text x="240" y="180" font-size="8" fill="#4f5d75">名字 + 一行描述</text>
+    <text x="240" y="195" font-size="8" fill="#4f5d75">常驻上下文</text>
+
+    <rect x="400" y="118" width="160" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="416" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">03</text>
+    <text x="416" y="160" font-size="11" font-weight="600" fill="#2d3142">激活</text>
+    <text x="416" y="180" font-size="8" fill="#4f5d75">模型调工具，或</text>
+    <text x="416" y="195" font-size="8" fill="#4f5d75">用户显式点名</text>
+
+    <rect x="576" y="118" width="160" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="592" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">04</text>
+    <text x="592" y="160" font-size="11" font-weight="600" fill="#2d3142">执行</text>
+    <text x="592" y="180" font-size="8" fill="#4f5d75">正文全文 + 资源目录</text>
+    <text x="592" y="195" font-size="8" fill="#4f5d75">进入对话</text>
+
+    <rect x="752" y="118" width="160" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="768" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">05</text>
+    <text x="768" y="160" font-size="11" font-weight="600" fill="#2d3142">回填</text>
+    <text x="768" y="180" font-size="8" fill="#4f5d75">留在对话里</text>
+    <text x="768" y="195" font-size="8" fill="#4f5d75">同一轮不再加载</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#c9c2bb" stroke-width="1.2" fill="none">
+    <path d="M210 164 L222 164" marker-end="url(#ar)"/>
+    <path d="M386 164 L398 164" marker-end="url(#ar)"/>
+    <path d="M562 164 L574 164" marker-end="url(#ar)"/>
+    <path d="M738 164 L750 164" marker-end="url(#ar)"/>
+  </g>
+  <defs>
+    <marker id="ar" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#c9c2bb"/>
+    </marker>
+    <marker id="ar2" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <!-- cost layers -->
+  <rect x="48" y="252" width="864" height="152" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">CONTEXT COST · 两层</text>
+
+  <rect x="68" y="290" width="392" height="94" rx="4" fill="#f4f1ee" stroke="#c9c2bb"/>
+  <text x="84" y="310" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">常驻：每条技能一行</text>
+  <text x="84" y="328" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">name + description，每一轮请求都在</text>
+  <text x="84" y="343" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">四家都有预算：整块、单条、或按类降级</text>
+  <text x="84" y="363" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">Claude 1% · DSH 500 · opencode 差异 · hermes 分类</text>
+
+  <rect x="476" y="290" width="416" height="94" rx="4" fill="#f4f1ee" stroke="#c9c2bb"/>
+  <text x="492" y="310" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">按需：正文与引用文件</text>
+  <text x="492" y="328" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">只有被激活的那一个进上下文，且只进一次</text>
+  <text x="492" y="343" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">四家都不预先展开正文；差别在资源怎么指路</text>
+  <text x="492" y="363" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">base dir · 文件清单 · linked_files · fork</text>
+
+  <!-- connect stages to layers -->
+  <g stroke="#bf4520" stroke-width="1.2" fill="none">
+    <path d="M304 210 L304 286" marker-end="url(#ar2)"/>
+    <path d="M656 210 L656 286" marker-end="url(#ar2)"/>
+  </g>
+
+  <text x="48" y="432" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">四家的分歧集中在 02 与 03：编目放在哪、由谁触发；04 之后都是把 SKILL.md 的正文塞进对话，区别只在附带什么。</text>
+</svg>

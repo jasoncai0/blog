@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" role="img" aria-labelledby="f2-title f2-desc">
+  <title id="f2-title">四家的技能发现来源</title>
+  <desc id="f2-desc">四列并排：opencode 从配置目录、配置项、远端索引和内置技能取；Claude Code 从企业、用户、项目、嵌套目录、插件、legacy 命令与 claude.ai 同步取；hermes 分四个 tier；DSH 有六个 rank。每列自上而下优先级递减。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">DISCOVERY ROOTS</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">同一份约定，四种找法</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">都认 SKILL.md + frontmatter；分歧在扫哪里、扫多深、同名谁赢</text>
+
+  <!-- panel 1 opencode -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="48" y="110" width="204" height="330" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="64" y="134" font-size="11" font-weight="600" fill="#2d3142">opencode</text>
+    <text x="64" y="150" font-size="7.5" fill="#5a6580">配置目录 + 远端索引</text>
+
+    <g font-size="8">
+      <rect x="64" y="164" width="172" height="30" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="72" y="183" fill="#2d3142">配置目录内 skill/ 与 skills/</text>
+      <rect x="64" y="200" width="172" height="30" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="72" y="219" fill="#2d3142">config.skills 里的路径</text>
+      <rect x="64" y="236" width="172" height="30" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="72" y="255" fill="#2d3142">config.skills 里的 URL</text>
+      <rect x="64" y="272" width="172" height="30" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="72" y="291" fill="#2d3142">内置 skill://opencode</text>
+    </g>
+
+    <text x="64" y="324" font-size="7.5" fill="#4f5d75">URL 源拉 index.json 到缓存，</text>
+    <text x="64" y="336" font-size="7.5" fill="#4f5d75">按版本原子替换</text>
+    <text x="64" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">深度 6 · 遇 SKILL.md 即停</text>
+    <text x="64" y="378" font-size="7.5" fill="#4f5d75">扁平 .md 只收根目录一层</text>
+    <text x="64" y="396" font-size="7.5" fill="#4f5d75">id 取目录名或文件名</text>
+  </g>
+
+  <!-- panel 2 claude -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="268" y="110" width="204" height="330" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="284" y="134" font-size="11" font-weight="600" fill="#2d3142">Claude Code</text>
+    <text x="284" y="150" font-size="7.5" fill="#5a6580">企业 / 用户 / 项目 / 插件 / 同步</text>
+
+    <g font-size="8">
+      <rect x="284" y="164" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="292" y="181" fill="#2d3142">managed &gt; 用户 &gt; 项目</text>
+      <rect x="284" y="194" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="292" y="211" fill="#2d3142">嵌套子目录（碰文件才加载）</text>
+      <rect x="284" y="224" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="292" y="241" fill="#2d3142">插件 skills/&lt;name&gt;/</text>
+      <rect x="284" y="254" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="292" y="271" fill="#2d3142">legacy .claude/commands/</text>
+      <rect x="284" y="284" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="292" y="301" fill="#2d3142">claude.ai 同步 / MCP / 内置</text>
+    </g>
+
+    <text x="284" y="330" font-size="7.5" fill="#4f5d75">企业策略压过个人，个人压过项目；</text>
+    <text x="284" y="342" font-size="7.5" fill="#4f5d75">根目录与嵌套版本并存，靠前缀区分</text>
+    <text x="284" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">符号链接不跟随</text>
+    <text x="284" y="384" font-size="7.5" fill="#4f5d75">目录作用域拼成 apps/web:deploy</text>
+    <text x="284" y="402" font-size="7.5" fill="#4f5d75">插件技能拼成 plugin:skill，同一命名空间</text>
+  </g>
+
+  <!-- panel 3 hermes -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="488" y="110" width="204" height="330" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="504" y="134" font-size="11" font-weight="600" fill="#2d3142">hermes</text>
+    <text x="504" y="150" font-size="7.5" fill="#5a6580">四个 tier，分类即目录</text>
+
+    <g font-size="8">
+      <rect x="504" y="164" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="512" y="181" fill="#2d3142">project（受信项目目录）</text>
+      <rect x="504" y="194" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="512" y="211" fill="#2d3142">local：~/.hermes/skills/</text>
+      <rect x="504" y="224" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="512" y="241" fill="#2d3142">create_dir（技能自建）</text>
+      <rect x="504" y="254" width="172" height="26" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="512" y="271" fill="#2d3142">external_dirs（可多个）</text>
+    </g>
+
+    <text x="504" y="302" font-size="7.5" fill="#4f5d75">category/sub/skill 的层级就是</text>
+    <text x="504" y="314" font-size="7.5" fill="#4f5d75">编目里的分类，load_name 是相对路径</text>
+    <text x="504" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">excluded: .git .hub .archive</text>
+    <text x="504" y="362" font-size="7.5" fill="#4f5d75">references/ templates/ assets/</text>
+    <text x="504" y="374" font-size="7.5" fill="#4f5d75">scripts/ 不当作独立技能扫描</text>
+    <text x="504" y="396" font-size="7.5" fill="#4f5d75">同名同层必须字节一致，否则不列</text>
+  </g>
+
+  <!-- panel 4 dsh -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="708" y="110" width="204" height="330" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="724" y="134" font-size="11" font-weight="600" fill="#2d3142">DSH</text>
+    <text x="724" y="150" font-size="7.5" fill="#5a6580">六个 rank，小者胜</text>
+
+    <g font-size="8">
+      <rect x="724" y="162" width="172" height="24" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="732" y="178" fill="#2d3142">.dsh/skills</text>
+      <text x="884" y="178" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">100</text>
+      <rect x="724" y="190" width="172" height="24" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="732" y="206" fill="#2d3142">.agents/skills</text>
+      <text x="884" y="206" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">200</text>
+      <rect x="724" y="218" width="172" height="24" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="732" y="234" fill="#2d3142">customSkillDirs</text>
+      <text x="884" y="234" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">300</text>
+      <rect x="724" y="246" width="172" height="24" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="732" y="262" fill="#2d3142">~/.dsh/skills</text>
+      <text x="884" y="262" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">400</text>
+      <rect x="724" y="274" width="172" height="24" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="732" y="290" fill="#2d3142">~/.agents/skills</text>
+      <text x="884" y="290" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">500</text>
+      <rect x="724" y="302" width="172" height="24" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+      <text x="732" y="318" fill="#2d3142">bundled</text>
+      <text x="884" y="318" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">600</text>
+    </g>
+
+    <text x="724" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">深度 1 · 只认 SKILL.md 或 *.md</text>
+    <text x="724" y="366" font-size="7.5" fill="#4f5d75">projectRoot = 最近含 .git 的祖先</text>
+    <text x="724" y="384" font-size="7.5" fill="#4f5d75">rank 相同按 provider 注册顺序</text>
+    <text x="724" y="402" font-size="7.5" fill="#4f5d75">用户级 .system 目录被跳过</text>
+  </g>
+
+  <text x="48" y="458" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">自上而下优先级递减。opencode 的 URL 源没有本地优先级，靠 id 去重；hermes 的 tier 是硬边界，低 tier 同名技能永远赢不了高 tier。</text>
+</svg>

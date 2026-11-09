@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="486" viewBox="0 0 960 486" role="img" aria-labelledby="f4-title f4-desc">
+  <title id="f4-title">激活的三道闸门与两种落点</title>
+  <desc id="f4-desc">上半部分是激活的通用结构：触发、闸门、落点。下半部分是四家对同一句 /deploy 的不同解读：opencode 直接追加技能消息，Claude Code 只生成提及附件，hermes 与 DSH 直接注入用户消息。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">ACTIVATION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">谁能触发，触发后变成什么</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">闸门决定「谁可以加载」，落点决定「加载结果以什么角色进入对话」</text>
+
+  <!-- trigger -->
+  <rect x="48" y="110" width="232" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">01 · 触发</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">
+    <text x="64" y="154">模型：读编目，判断任务匹配，调工具</text>
+    <text x="64" y="172">用户：打 /name，或用 @ 提及</text>
+    <text x="64" y="190">宿主：agent 定义里预载，或斜杠命令</text>
+    <text x="64" y="208" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">三种入口，同一个加载器</text>
+  </g>
+
+  <!-- gates -->
+  <rect x="330" y="110" width="252" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="346" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">02 · 闸门</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8">
+    <rect x="346" y="142" width="220" height="22" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="354" y="157" fill="#2d3142">disable-model-invocation：模型不可调</text>
+    <rect x="346" y="170" width="220" height="22" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="354" y="185" fill="#2d3142">user-invocable: false：用户看不见</text>
+    <rect x="346" y="198" width="220" height="22" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="354" y="213" fill="#2d3142">permission / allowlist：运行时拒绝</text>
+  </g>
+
+  <!-- landing -->
+  <rect x="632" y="110" width="280" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="648" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">03 · 落点</text>
+  <rect x="648" y="142" width="116" height="56" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+  <text x="656" y="158" font-size="8" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-weight="600" fill="#2d3142">tool result</text>
+  <text x="656" y="174" font-size="7.5" font-family="'Geist','PingFang SC',system-ui,sans-serif" fill="#4f5d75">opencode / DSH</text>
+  <text x="656" y="188" font-size="7.5" font-family="'Geist','PingFang SC',system-ui,sans-serif" fill="#4f5d75">模型调用时</text>
+  <rect x="776" y="142" width="120" height="56" rx="3" fill="rgba(191,69,32,0.07)" stroke="#bf4520"/>
+  <text x="784" y="158" font-size="8" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-weight="600" fill="#bf4520">user message</text>
+  <text x="784" y="174" font-size="7.5" font-family="'Geist','PingFang SC',system-ui,sans-serif" fill="#4f5d75">hermes / CC / DSH 手势</text>
+  <text x="784" y="188" font-size="7.5" font-family="'Geist','PingFang SC',system-ui,sans-serif" fill="#4f5d75">用户点名时</text>
+
+  <g stroke="#c9c2bb" stroke-width="1.2" fill="none">
+    <path d="M280 164 L328 164" marker-end="url(#ar)"/>
+    <path d="M582 164 L630 164" marker-end="url(#ar)"/>
+  </g>
+
+  <text x="48" y="248" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">闸门决定「谁能触发」，落点决定「注入成什么角色」。后者影响缓存、压缩和去重：tool result 跟着一次调用走，user message 会留在历史里。</text>
+
+  <!-- bottom: /deploy semantics -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="48" y="266" width="204" height="164" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="64" y="290" font-size="10" font-weight="600" fill="#2d3142">opencode</text>
+    <text x="64" y="306" font-size="7.5" fill="#5a6580">/skills 面板选中即插入</text>
+    <text x="64" y="330" font-size="7.5" fill="#4f5d75">输入框插入字面 @deploy，</text>
+    <text x="64" y="343" font-size="7.5" fill="#4f5d75">同时挂一个 skills 附件</text>
+    <text x="64" y="366" font-size="7.5" fill="#4f5d75">服务端追加一条技能消息，</text>
+    <text x="64" y="379" font-size="7.5" fill="#4f5d75">正文直接进上下文</text>
+    <text x="64" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">不经模型判断</text>
+
+    <rect x="268" y="266" width="204" height="164" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="284" y="290" font-size="10" font-weight="600" fill="#2d3142">Claude Code</text>
+    <text x="284" y="306" font-size="7.5" fill="#5a6580">/deploy 出现在不同位置，语义不同</text>
+    <text x="284" y="330" font-size="7.5" fill="#4f5d75">开头 → 直接执行</text>
+    <text x="284" y="343" font-size="7.5" fill="#4f5d75">正文中间 → 只生成 skill_mention</text>
+    <text x="284" y="366" font-size="7.5" fill="#4f5d75">命令面板选中 → 命令展开</text>
+    <text x="284" y="379" font-size="7.5" fill="#4f5d75">正文最终以 user 消息注入</text>
+    <text x="284" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">位置决定语义</text>
+
+    <rect x="488" y="266" width="204" height="164" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="504" y="290" font-size="10" font-weight="600" fill="#2d3142">hermes</text>
+    <text x="504" y="306" font-size="7.5" fill="#5a6580">每个技能自动注册斜杠命令</text>
+    <text x="504" y="330" font-size="7.5" fill="#4f5d75">直接构造一条 user message：</text>
+    <text x="504" y="343" font-size="7.5" fill="#4f5d75">「用户已调用该技能」+ 正文</text>
+    <text x="504" y="366" font-size="7.5" fill="#4f5d75">+ 技能绝对目录 + 运行提示</text>
+    <text x="504" y="379" font-size="7.5" fill="#4f5d75">不走 tool result</text>
+    <text x="504" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">点名即执行</text>
+
+    <rect x="708" y="266" width="204" height="164" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="724" y="290" font-size="10" font-weight="600" fill="#2d3142">DSH</text>
+    <text x="724" y="306" font-size="7.5" fill="#5a6580">文本里的 /deploy 是确定性手势</text>
+    <text x="724" y="330" font-size="7.5" fill="#4f5d75">pre-step 直接追加一条</text>
+    <text x="724" y="343" font-size="7.5" fill="#4f5d75">&lt;skill_content&gt; 用户消息</text>
+    <text x="724" y="366" font-size="7.5" fill="#4f5d75">未知名当普通文本，不报错；</text>
+    <text x="724" y="379" font-size="7.5" fill="#4f5d75">也是禁用模型调用的唯一入口</text>
+    <text x="724" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">空白边界 · 任意位置</text>
+  </g>
+
+  <text x="48" y="456" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">同一句 /deploy：两家当作「用户已决定」，一家当作「用户在提及」，一家的输入框根本不用斜杠——但四家最终都把同一段 SKILL.md 正文放进了对话。</text>
+  <defs>
+    <marker id="ar" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#c9c2bb"/>
+    </marker>
+  </defs>
+</svg>

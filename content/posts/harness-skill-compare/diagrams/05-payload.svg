@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f5-title f5-desc">
+  <title id="f5-title">加载之后模型实际收到的四种载荷</title>
+  <desc id="f5-desc">四张卡片并排展示 opencode、Claude Code、hermes、DSH 在激活一个技能后返回给模型的原始结构：opencode 是带文件清单的文本块，Claude 是基目录加正文，hermes 是 JSON，DSH 是带资源区的 XML 包装。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">PAYLOAD</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">同一篇 SKILL.md，四种包装</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">正文都是原文照搬；差别在附带什么——基目录、文件清单、工具授权、还是执行位置</text>
+
+  <!-- opencode -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="48" y="106" width="420" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="64" y="128" font-size="10" font-weight="600" fill="#2d3142">opencode</text>
+    <text x="64" y="142" font-size="7" fill="#5a6580">tool result：文本块 + 采样的文件清单</text>
+    <rect x="64" y="150" width="388" height="112" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">
+      <text x="72" y="164">&lt;skill_content name="deploy"&gt;</text>
+      <text x="72" y="176" fill="#5a6580"># Skill: deploy</text>
+      <text x="72" y="188">&lt;正文全文，原样&gt;</text>
+      <text x="72" y="200">Base directory for this skill: …/skills/deploy</text>
+      <text x="72" y="212">Note: file list is sampled.</text>
+      <text x="72" y="224">&lt;skill_files&gt;&lt;file&gt;scripts/release.sh&lt;/file&gt;…&lt;/skill_files&gt;</text>
+      <text x="72" y="236">&lt;/skill_content&gt;</text>
+    </g>
+    <text x="64" y="280" font-size="7.5" fill="#4f5d75">文件清单加载时现扫，最多 10 条；没有工具授权</text>
+    <text x="64" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">toModelOutput · fs.scan · slice(0, 10)</text>
+  </g>
+
+  <!-- claude -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="492" y="106" width="420" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="508" y="128" font-size="10" font-weight="600" fill="#2d3142">Claude Code</text>
+    <text x="508" y="142" font-size="7" fill="#5a6580">先回执，再把正文作为 user 消息注入</text>
+    <rect x="508" y="150" width="388" height="112" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">
+      <text x="516" y="164">tool_result: Launching skill: deploy</text>
+      <text x="516" y="176">&lt;command-name&gt;/deploy&lt;/command-name&gt;</text>
+      <text x="516" y="188">Base directory for this skill: …/skills/deploy</text>
+      <text x="516" y="200">&lt;正文全文，原样&gt;</text>
+      <text x="516" y="218" fill="#5a6580">// 同一份 frontmatter 还决定：</text>
+      <text x="516" y="230">allowed-tools: Bash(git:*) → 本轮预授权</text>
+    </g>
+    <text x="508" y="280" font-size="7.5" fill="#4f5d75">唯一会改变工具集与执行位置的一家；授权只管本轮，fork 时正文不进主上下文</text>
+    <text x="508" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">skill-format · allowed-tools · context: fork</text>
+  </g>
+
+  <!-- hermes -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="48" y="318" width="420" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="64" y="340" font-size="10" font-weight="600" fill="#2d3142">hermes</text>
+    <text x="64" y="354" font-size="7" fill="#5a6580">JSON tool result：正文 + 附属文件清单</text>
+    <rect x="64" y="362" width="388" height="112" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">
+      <text x="72" y="376">{ "success": true, "name": "deploy",</text>
+      <text x="72" y="388">  "content": "&lt;正文，已预渲染&gt;",</text>
+      <text x="72" y="400">  "skill_dir": "/Users/…/.hermes/skills/deploy",</text>
+      <text x="72" y="412">  "linked_files": { "references": […], "scripts": […] },</text>
+      <text x="72" y="424">  "usage_hint": "To view linked files, call skill_view(…)" }</text>
+    </g>
+    <text x="64" y="492" font-size="7.5" fill="#4f5d75">正文在返回前就展开模板与 ! 内联 shell；deps 现场安装</text>
+    <text x="64" y="506" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">preprocess · ${HERMES_SKILL_DIR} · pm.ensure</text>
+  </g>
+
+  <!-- dsh -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="492" y="318" width="420" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="508" y="340" font-size="10" font-weight="600" fill="#2d3142">DSH</text>
+    <text x="508" y="354" font-size="7" fill="#5a6580">XML 包装：资源区 + 指令区</text>
+    <rect x="508" y="362" width="388" height="112" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">
+      <text x="516" y="376">&lt;skill_content name="deploy"&gt;</text>
+      <text x="516" y="388">&lt;skill_resources&gt;</text>
+      <text x="516" y="400">Base directory for this skill: …/.dsh/skills/deploy</text>
+      <text x="516" y="412">&lt;/skill_resources&gt;</text>
+      <text x="516" y="424">&lt;skill_instructions&gt;&lt;正文全文&gt;&lt;/skill_instructions&gt;</text>
+      <text x="516" y="436">&lt;/skill_content&gt;</text>
+    </g>
+    <text x="508" y="492" font-size="7.5" fill="#4f5d75">只有正文和基目录；没有文件清单，也没有工具授权</text>
+    <text x="508" y="506" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">renderSkillContent · resourceBase</text>
+  </g>
+
+  <!-- after -->
+  <rect x="48" y="530" width="864" height="52" rx="6" fill="#f4f1ee" stroke="#c9c2bb"/>
+  <text x="64" y="548" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#5a6580">AFTER</text>
+  <text x="64" y="566" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">缓存：正文进了历史，之后每轮都带着它 · 去重：CC 认 command-name，DSH 靠 pre-step，opencode 重复调用会再追加一份</text>
+  <text x="64" y="578" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">压缩：DSH 会重建编目，opencode 压缩时会剥掉 skills 附件，hermes 压缩后清空 skill_view 去重缓存</text>
+</svg>

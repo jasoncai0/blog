@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f3-title f3-desc">
+  <title id="f3-title">编目注入的位置</title>
+  <desc id="f3-desc">四家都把技能编目放进请求，但放的位置不同：hermes 与 opencode 在 system 指令里，DSH 与 Claude Code 在 user 消息里（DSH 是持久的 system-reminder，Claude 是 meta 附件）。下方列出各自的预算与截断策略。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">CATALOG PLACEMENT</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">编目不是一个位置，是四种</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同样一份「名字 + 描述」，可以住在 system prompt、指令前缀、持久 user 消息、或一条 meta 附件里</text>
+
+  <!-- panel hermes -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="48" y="106" width="420" height="182" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="64" y="130" font-size="10.5" font-weight="600" fill="#2d3142">hermes</text>
+    <text x="64" y="146" font-size="7.5" fill="#5a6580">编目写在 system prompt 的一节里</text>
+
+    <rect x="64" y="158" width="118" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="72" y="172" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">SYSTEM</text>
+    <text x="72" y="188" font-size="7.5" font-weight="600" fill="#bf4520">## Skills</text>
+    <text x="72" y="201" font-size="7" fill="#4f5d75">分类 + 名称 + 描述</text>
+
+    <rect x="192" y="158" width="150" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="200" y="172" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">USER</text>
+    <text x="200" y="190" font-size="7.5" fill="#4f5d75">用户消息</text>
+
+    <rect x="352" y="158" width="100" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="360" y="172" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">ASSISTANT</text>
+    <text x="360" y="190" font-size="7.5" fill="#4f5d75">模型回复</text>
+
+    <text x="64" y="234" font-size="8" fill="#4f5d75">系统提示在会话内字节稳定，缓存优先</text>
+    <text x="64" y="250" font-size="8" fill="#4f5d75">单条描述截到 60 字符；分类太多时整类降级</text>
+    <text x="64" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">## Skills · &lt;available_skills&gt; · skill_view</text>
+  </g>
+
+  <!-- panel opencode -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="492" y="106" width="420" height="182" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="508" y="130" font-size="10.5" font-weight="600" fill="#2d3142">opencode</text>
+    <text x="508" y="146" font-size="7.5" fill="#5a6580">编目是指令前缀的一部分</text>
+
+    <rect x="508" y="158" width="118" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="516" y="172" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">SYSTEM</text>
+    <text x="516" y="188" font-size="7.5" font-weight="600" fill="#bf4520">instructions</text>
+    <text x="516" y="201" font-size="7" fill="#4f5d75">技能排在靠前位置</text>
+
+    <rect x="636" y="158" width="150" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="644" y="172" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">USER</text>
+    <text x="644" y="190" font-size="7.5" fill="#4f5d75">用户消息</text>
+
+    <rect x="796" y="158" width="100" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="804" y="172" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">ASSISTANT</text>
+    <text x="804" y="190" font-size="7.5" fill="#4f5d75">模型回复</text>
+
+    <text x="508" y="234" font-size="8" fill="#4f5d75">全部指令块按稳定顺序渲染，未变的部分保持可复用</text>
+    <text x="508" y="250" font-size="8" fill="#4f5d75">编目变了不发全量，只发新增 / 改动 / 删除三种差异</text>
+    <text x="508" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">listUpdate · supersedes · no longer available</text>
+  </g>
+
+  <!-- panel dsh -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="48" y="304" width="420" height="182" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="64" y="328" font-size="10.5" font-weight="600" fill="#2d3142">DSH</text>
+    <text x="64" y="344" font-size="7.5" fill="#5a6580">一条持久的 user 消息，带 system-reminder 外壳</text>
+
+    <rect x="64" y="356" width="118" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="72" y="370" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">SYSTEM</text>
+    <text x="72" y="388" font-size="7.5" fill="#4f5d75">无技能内容</text>
+
+    <rect x="192" y="356" width="150" height="52" rx="3" fill="rgba(191,69,32,0.07)" stroke="#bf4520"/>
+    <text x="200" y="370" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">USER</text>
+    <text x="200" y="386" font-size="7.5" font-weight="600" fill="#bf4520">&lt;system-reminder&gt;</text>
+    <text x="200" y="399" font-size="7" fill="#4f5d75">available_skills</text>
+
+    <rect x="352" y="356" width="100" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="360" y="370" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">ASSISTANT</text>
+    <text x="360" y="388" font-size="7.5" fill="#4f5d75">模型回复</text>
+
+    <text x="64" y="432" font-size="8" fill="#4f5d75">digest 没变就不重发；变了原位替换那条旧消息</text>
+    <text x="64" y="448" font-size="8" fill="#4f5d75">压缩把旧编目藏进摘要后，下一个 pre-step 自动重建</text>
+    <text x="64" y="468" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">agent/pre-step · replaceMessage · digest</text>
+  </g>
+
+  <!-- panel claude -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="492" y="304" width="420" height="182" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="508" y="328" font-size="10.5" font-weight="600" fill="#2d3142">Claude Code</text>
+    <text x="508" y="344" font-size="7.5" fill="#5a6580">一条 meta 附件，不是 system prompt</text>
+
+    <rect x="508" y="356" width="118" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="516" y="370" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">SYSTEM</text>
+    <text x="516" y="388" font-size="7.5" fill="#4f5d75">只有一句行为约束</text>
+
+    <rect x="636" y="356" width="150" height="52" rx="3" fill="rgba(191,69,32,0.07)" stroke="#bf4520"/>
+    <text x="644" y="370" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">USER · META</text>
+    <text x="644" y="386" font-size="7.5" font-weight="600" fill="#bf4520">skill_listing</text>
+    <text x="644" y="399" font-size="7" fill="#4f5d75">- name: description</text>
+
+    <rect x="796" y="356" width="100" height="52" rx="3" fill="#f4f1ee" stroke="#c9c2bb"/>
+    <text x="804" y="370" font-size="6.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#5a6580">ASSISTANT</text>
+    <text x="804" y="388" font-size="7.5" fill="#4f5d75">模型回复</text>
+
+    <text x="508" y="432" font-size="8" fill="#4f5d75">另有 skill_mention：/name 在正文中间时只算提及，调不调用由模型判断</text>
+    <text x="508" y="448" font-size="8" fill="#4f5d75">/skills 面板把「每轮都付」这件事直接标成 7d tokens</text>
+    <text x="508" y="468" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">attachment · isMeta · skill_listing</text>
+  </g>
+
+  <!-- budget band -->
+  <rect x="48" y="504" width="864" height="58" rx="6" fill="#f4f1ee" stroke="#c9c2bb"/>
+  <text x="64" y="522" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#5a6580">BUDGET</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">
+    <text x="64" y="540">Claude：总量 = 上下文 × 4 × 1%（默认约 8000 字符），单条 1536</text>
+    <text x="300" y="540">DSH：单条描述 500 字符</text>
+    <text x="470" y="540">opencode：无预算，只发差异</text>
+    <text x="680" y="540">hermes：单条 60 字符，整类降级</text>
+    <text x="64" y="554" font-size="7" fill="#4f5d75">超预算时按「内置 + 使用频率」保完整描述，其余只留名字</text>
+    <text x="470" y="554" font-size="7" fill="#4f5d75">不管总量，靠「变更才发」控制增量</text>
+  </g>
+
+  <text x="48" y="586" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">前两家把编目当「提示词」，后两家把它当「消息」：前者随 system 一起缓存，后者可以在会话中途被替换、被压缩、被重新注入。</text>
+</svg>
