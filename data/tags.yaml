@@ -1,0 +1,36 @@
+opencode:
+  name: OpenCode
+  description: OpenCode 的架构、机制与源码拆解
+architecture:
+  name: 架构
+  description: 系统结构与设计取舍
+concurrency:
+  name: 并发
+  description: 并发、取消与执行模型
+context-engineering:
+  name: 上下文工程
+  description: 上下文构建、预算与压缩
+multi-agent:
+  name: 多智能体
+  description: 委派、子会话与协作结构
+codegen:
+  name: 代码生成
+  description: 写代码、改文件与工具调用
+event-sourcing:
+  name: 事件溯源
+  description: 事件目录、投影与订阅
+billing:
+  name: 计费
+  description: 用量、结算与对账
+collaborative-editing:
+  name: 协同编辑
+  description: OT、CRDT 与并发合并
+planning:
+  name: 任务规划
+  description: 计划、任务分解与执行编排
+agent:
+  name: Agent
+  description: Agent 与计算机系统的类比与演进
+meta:
+  name: 建站与随笔
+  description: 站点本身、工具与写作
