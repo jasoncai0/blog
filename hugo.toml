@@ -1,0 +1,23 @@
+baseURL = "https://www.jasoncai.site/"
+languageCode = "zh-cn"
+title = "Jason Cai"
+uglyURLs = true
+enableRobotsTXT = true
+disableKinds = ["section"]
+
+[taxonomies]
+  tag = "tags"
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[outputFormats.RSS]
+  baseName = "rss"
+
+[params]
+  description = "笔记与记录"
+  author = "Jason Cai"
+  github = "https://github.com/jasoncai0"
+
+[markup.goldmark.renderer]
+  unsafe = true
