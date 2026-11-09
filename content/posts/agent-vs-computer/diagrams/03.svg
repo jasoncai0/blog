@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 680" width="1440" height="680" font-family="Noto Sans SC, sans-serif"><defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#334155"/></marker></defs><rect x="0" y="0" width="1440" height="680" fill="#ffffff"/>
+<text x="720.0" y="36" font-size="22" font-weight="bold" text-anchor="middle" fill="#0f172a">上下文管理 = 内存管理：操作逐一对照</text>
+<rect x="220" y="60" width="520" height="40" rx="9" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+<text x="480.0" y="85.0" font-size="15" font-weight="bold" text-anchor="middle" fill="#0f172a">操作系统内存管理</text>
+<rect x="800" y="60" width="600" height="40" rx="9" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="1100.0" y="85.0" font-size="15" font-weight="bold" text-anchor="middle" fill="#0f172a">Agent 上下文管理</text>
+<rect x="30" y="115" width="170" height="52" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<text x="115.0" y="146.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">分配 / 配额</text>
+<rect x="220" y="115" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="146.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">进程内存上限、cgroup memory.max</text>
+<rect x="800" y="115" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="146.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">上下文预算：system prompt、工具、历史各占多少</text>
+<rect x="30" y="179" width="170" height="52" rx="9" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="115.0" y="210.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">换出 / 换入</text>
+<rect x="220" y="179" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="210.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">swap out / page in（无损）</text>
+<rect x="800" y="179" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="210.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">compaction 摘要 / 重新读文件（有损，靠外置补回）</text>
+<rect x="30" y="243" width="170" height="52" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<text x="115.0" y="274.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">回收</text>
+<rect x="220" y="243" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="274.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">页回收、GC 清理无引用对象</text>
+<rect x="800" y="243" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="274.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">tool result clearing：清掉早已用完的工具结果</text>
+<rect x="30" y="307" width="170" height="52" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<text x="115.0" y="338.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">工作集</text>
+<rect x="220" y="307" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="338.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">最近被访问的页集合</text>
+<rect x="800" y="307" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="338.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">当前任务真正需要的高信号 token</text>
+<rect x="30" y="371" width="170" height="52" rx="9" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="115.0" y="402.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">抖动</text>
+<rect x="220" y="371" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="402.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">thrashing：换页开销压过有效计算</text>
+<rect x="800" y="371" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="402.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">context rot + 反复压缩：越长越笨、越压越忘</text>
+<rect x="30" y="435" width="170" height="52" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<text x="115.0" y="466.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">预取</text>
+<rect x="220" y="435" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="466.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">prefetch / readahead</text>
+<rect x="800" y="435" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="466.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">预检索：推理前先把可能用到的文档取进来</text>
+<rect x="30" y="499" width="170" height="52" rx="9" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="115.0" y="530.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">按需调页</text>
+<rect x="220" y="499" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="530.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">缺页中断自动加载</text>
+<rect x="800" y="499" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="530.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">just-in-time 检索：靠模型自己意识到缺什么再去查</text>
+<rect x="30" y="563" width="170" height="52" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<text x="115.0" y="594.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">共享页</text>
+<rect x="220" y="563" width="520" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="594.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">共享库、写时复制</text>
+<rect x="800" y="563" width="600" height="52" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1100.0" y="594.0" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">fork 共享父前缀、同构 agent 共享 prompt cache</text>
+<text x="720" y="647" font-size="13" text-anchor="middle" fill="#dc2626">红色三项是关键差异：换出有损、没有缺页中断、抖动表现为质量下降而不只是变慢</text>
+<polyline points="742,141 798,141" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="742,205 798,205" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="742,269 798,269" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="742,333 798,333" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="742,397 798,397" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="742,461 798,461" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="742,525 798,525" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="742,589 798,589" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/></svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="d1t d1d">
+  <title id="d1t">一次并发插入的三种合并结果</title>
+  <desc id="d1d">基础文本 ab，Alice 与 Bob 同时在 a 后插入字符，三种合并策略分别得到 aXYb、aYXb 与 aXb；前两者收敛且保留双方意图，第三者收敛但丢失了一个人的输入。</desc>
+  <defs>
+    <marker id="d1a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">THE CONCURRENCY TRIAD</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次并发插入，三种都「收敛」的结果</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">两人同时往同一个缝隙里塞字符——三种合并都会让副本一致，差别全在被悄悄丢掉的那部分</text>
+
+  <text x="480" y="112" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#5a6580">基础状态</text>
+  <rect x="392" y="120" width="176" height="52" rx="6" fill="#ececec" stroke="rgba(45,49,66,0.14)"/>
+  <text x="450" y="155" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="22" fill="#2d3142">a</text>
+  <text x="510" y="155" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="22" fill="#2d3142">b</text>
+  <line x1="480" y1="128" x2="480" y2="164" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <rect x="48" y="196" width="268" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="182" y="218" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">Alice</text>
+  <text x="182" y="237" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#4f5d75">insert(1, "X")</text>
+
+  <rect x="644" y="196" width="268" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="778" y="218" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">Bob</text>
+  <text x="778" y="237" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#4f5d75">insert(1, "Y")</text>
+
+  <path d="M316 224 H 440 V 178" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1a)"/>
+  <path d="M644 224 H 520 V 178" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d1a)"/>
+
+  <line x1="48" y1="284" x2="912" y2="284" stroke="rgba(45,49,66,0.12)" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="48" y="278" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#5a6580">合并结果</text>
+
+  <rect x="48" y="300" width="272" height="186" rx="8" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="66" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" letter-spacing="0.1em" fill="#5a6580">① 顺序 A → B</text>
+  <rect x="64" y="338" width="240" height="52" rx="4" fill="#f5f5f5" stroke="rgba(45,49,66,0.10)"/>
+  <text x="184" y="372" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="19" fill="#2d3142">a X Y b</text>
+  <path d="M0 5 L3.5 9 L11 0" transform="translate(66,414)" stroke="#3d6b52" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="86" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">收敛：所有副本一致</text>
+  <path d="M0 5 L3.5 9 L11 0" transform="translate(66,442)" stroke="#3d6b52" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="86" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">意图：两人的输入都在</text>
+
+  <rect x="344" y="300" width="272" height="186" rx="8" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="362" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" letter-spacing="0.1em" fill="#5a6580">② 顺序 B → A</text>
+  <rect x="360" y="338" width="240" height="52" rx="4" fill="#f5f5f5" stroke="rgba(45,49,66,0.10)"/>
+  <text x="480" y="372" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="19" fill="#2d3142">a Y X b</text>
+  <path d="M0 5 L3.5 9 L11 0" transform="translate(362,414)" stroke="#3d6b52" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="382" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">收敛：所有副本一致</text>
+  <path d="M0 5 L3.5 9 L11 0" transform="translate(362,442)" stroke="#3d6b52" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="382" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">意图：两人的输入都在</text>
+
+  <rect x="640" y="300" width="272" height="186" rx="8" fill="#ffffff" stroke="#bf4520" stroke-opacity="0.45"/>
+  <text x="658" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" letter-spacing="0.1em" fill="#bf4520">③ 后写覆盖（LWW）</text>
+  <rect x="656" y="338" width="240" height="52" rx="4" fill="#f5f5f5" stroke="rgba(45,49,66,0.10)"/>
+  <text x="776" y="372" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="19" fill="#2d3142">a X b</text>
+  <path d="M0 5 L3.5 9 L11 0" transform="translate(658,414)" stroke="#3d6b52" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="678" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">收敛：所有副本一致</text>
+  <path d="M0 0 L9 9 M9 0 L0 9" transform="translate(658,440)" stroke="#bf4520" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <text x="678" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">意图：Bob 的 Y 无痕消失</text>
+
+  <text x="48" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">三种结果里，只有第三种会让一个人怀疑自己没按保存——但它也是唯一一种合并成本恒为一次比较、无需任何历史与元数据的。</text>
+  <text x="48" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">收敛是底线，不是目标。真正要设计的是：当「意图」和「成本」冲突时，你打算丢哪一边、以及丢的时候要不要告诉用户。</text>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="d2t d2d">
+  <title id="d2t">OT 的一次完整往返</title>
+  <desc id="d2d">客户端 A 与 B 在同一版本各发一个插入操作，服务端先应用 B 得到 r6，再把 A 的操作变换后应用得到 r7，最后广播；A 收到 B 后还要变换自己的待发操作，两边最终收敛到同一文本。</desc>
+  <defs>
+    <marker id="d2a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">ONE ROUND TRIP</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">服务端定序，客户端变换</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同一次往返里，「变换」发生了两次：一次在服务端，一次在客户端收到远端操作的时候</text>
+
+  <text x="160" y="122" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#5a6580">CLIENT A</text>
+  <text x="480" y="122" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">SERVER · 唯一写入者</text>
+  <text x="800" y="122" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#5a6580">CLIENT B</text>
+
+  <rect x="42" y="146" width="236" height="48" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="160" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">本地已应用，待确认</text>
+  <text x="160" y="184" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#4f5d75">a = insert(2,"X") @ r5</text>
+
+  <rect x="682" y="146" width="236" height="48" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="800" y="166" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">本地已应用，待确认</text>
+  <text x="800" y="184" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#4f5d75">b = insert(2,"Y") @ r5</text>
+
+  <text x="480" y="206" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">并发发送</text>
+  <path d="M278 216 H 356 V 234" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2a)"/>
+  <path d="M682 216 H 604 V 234" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2a)"/>
+
+  <rect x="362" y="238" width="236" height="48" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="480" y="258" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">r6 ← b（先到，直接应用）</text>
+  <text x="480" y="276" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">文本变成 a Y b</text>
+
+  <rect x="362" y="296" width="236" height="56" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520"/>
+  <text x="480" y="316" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">r7 ← a′ = transform(a, b)</text>
+  <text x="480" y="334" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">插入点被 b 顶到后面：2 → 3</text>
+  <text x="480" y="346" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">文本变成 a Y X b</text>
+
+  <path d="M480 352 V 362" fill="none" stroke="#4f5d75" stroke-width="1.2"/>
+  <path d="M480 362 H 284 V 384" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2a)"/>
+  <path d="M480 362 H 676 V 384" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2a)"/>
+  <text x="480" y="378" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">广播</text>
+
+  <rect x="42" y="388" width="236" height="56" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="160" y="408" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">收到 b，还要变换自己的 a</text>
+  <text x="160" y="426" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">a″ = transform(a, b)</text>
+  <text x="160" y="439" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">否则会应用两次 b 的位移</text>
+
+  <rect x="682" y="388" width="236" height="56" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="800" y="408" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">直接应用 a′</text>
+  <text x="800" y="426" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">无需再变换</text>
+  <text x="800" y="439" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">它基于最新版本到达</text>
+
+  <rect x="120" y="478" width="720" height="62" rx="8" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="144" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#5a6580">CONVERGED</text>
+  <text x="144" y="526" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="18" fill="#2d3142">a Y X b</text>
+  <path d="M0 5 L3.5 9 L11 0" transform="translate(650,504)" stroke="#3d6b52" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="670" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">两个副本逐字节相同</text>
+  <text x="670" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">顺序被服务端钉死，意图靠变换规则保住</text>
+
+  <text x="48" y="576" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">服务端的「定序」几乎不花钱：它本来就在串行处理请求。真正贵的是客户端——它必须维护「已发送未确认」队列，并对每个远端操作重算一遍。</text>
+  <text x="48" y="596" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">代价集中在一处：所有并发都必须经过同一个序列。历史窗口、离线时长、副本数量，全部由那个中心节点兜底。</text>
+</svg>

@@ -1,0 +1,117 @@
+<svg class="state" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="d2-title d2-desc">
+            <title id="d2-title">SessionRunCoordinator 的四个状态与迁移</title>
+            <desc id="d2-desc">状态机展示空闲、执行中、停止中与收尾四个状态，包括门铃自环、中断迁移、fiber 退出的两条路径，以及收尾时根据门铃决定启动后继或回到空闲。</desc>
+            <defs>
+              <pattern id="d2-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+                <circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/>
+              </pattern>
+              <marker id="d2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+              </marker>
+              <marker id="d2-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#bf4520"/>
+              </marker>
+            </defs>
+
+            <rect width="100%" height="100%" fill="#f5f5f5"/>
+            <rect width="100%" height="100%" fill="url(#d2-dots)" opacity="0.55"/>
+
+            <!-- start dot -->
+            <circle cx="48" cy="270" r="6" fill="#2d3142"/>
+            <line x1="56" y1="270" x2="80" y2="270" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+            <!-- ---- transitions first ---- -->
+            <!-- idle -> running -->
+            <line x1="240" y1="270" x2="360" y2="270" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+            <!-- running -> stopping (accent) -->
+            <path d="M 540 250 H 582 Q 590 250 590 242 V 158 Q 590 150 598 150 H 650"
+                  fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#d2-arrow-accent)"/>
+
+            <!-- stopping -> settling -->
+            <line x1="720" y1="190" x2="720" y2="380" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+            <!-- running -> settling (drain finished), hop over the interrupt path -->
+            <rect x="711" y="340" width="18" height="12" fill="#f5f5f5"/>
+            <path d="M 450 310 V 342 Q 450 350 458 350 H 712 a 8,8 0 0,1 16,0 H 782 Q 790 350 790 358 V 380"
+                  fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+            <!-- settling -> idle when no doorbell -->
+            <path d="M 650 440 H 168 Q 160 440 160 432 V 310"
+                  fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+            <!-- settling -> running when doorbell rung -->
+            <path d="M 850 400 H 884 Q 892 400 892 392 V 64 Q 892 56 884 56 H 528 Q 520 56 520 64 V 230"
+                  fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+            <!-- running self-loop: doorbell -->
+            <path d="M 390 230 V 208 Q 390 200 398 200 H 462 Q 470 200 470 208 V 230"
+                  fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+            <!-- stopping self-loop: interrupt during cleanup is a no-op -->
+            <path d="M 690 110 V 88 Q 690 80 698 80 H 802 Q 810 80 810 88 V 110"
+                  fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#d2-arrow)"/>
+
+            <!-- ---- labels ---- -->
+            <rect x="269" y="250" width="62" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="300" y="259" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">WAKE / RUN</text>
+
+            <rect x="598" y="207" width="68" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="602" y="216" fill="#bf4520" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">INTERRUPT()</text>
+
+            <rect x="728" y="282" width="62" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="732" y="291" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">FIBER EXIT</text>
+
+            <rect x="556" y="330" width="68" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="560" y="339" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">DRAIN DONE</text>
+
+            <rect x="366" y="420" width="68" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="370" y="429" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">NO DOORBELL</text>
+
+            <rect x="669" y="36" width="73" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="673" y="45" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">DOORBELL SET</text>
+
+            <rect x="478" y="204" width="30" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="482" y="213" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">WAKE</text>
+
+            <rect x="818" y="84" width="35" height="12" rx="2" fill="#f5f5f5"/>
+            <text x="822" y="93" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">NO-OP</text>
+
+            <!-- ---- states ---- -->
+            <!-- idle -->
+            <rect x="80" y="230" width="160" height="80" rx="8" fill="#f5f5f5"/>
+            <rect x="80" y="230" width="160" height="80" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+            <text x="160" y="272" fill="#2d3142" font-size="14" font-weight="600" font-family="'Geist', 'Noto Sans SC', sans-serif" text-anchor="middle">空闲</text>
+            <text x="160" y="292" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">IDLE · no execution</text>
+
+            <!-- running -->
+            <rect x="360" y="230" width="180" height="80" rx="8" fill="#f5f5f5"/>
+            <rect x="360" y="230" width="180" height="80" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+            <text x="450" y="272" fill="#2d3142" font-size="14" font-weight="600" font-family="'Geist', 'Noto Sans SC', sans-serif" text-anchor="middle">执行中</text>
+            <text x="450" y="292" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">RUNNING · one fiber</text>
+
+            <!-- stopping (focal) -->
+            <rect x="650" y="110" width="200" height="80" rx="8" fill="#f5f5f5"/>
+            <rect x="650" y="110" width="200" height="80" rx="8" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+            <text x="750" y="152" fill="#2d3142" font-size="14" font-weight="600" font-family="'Geist', 'Noto Sans SC', sans-serif" text-anchor="middle">停止中</text>
+            <text x="750" y="172" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">STOPPING · accepted</text>
+
+            <!-- settling -->
+            <rect x="650" y="380" width="200" height="80" rx="8" fill="#f5f5f5"/>
+            <rect x="650" y="380" width="200" height="80" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+            <text x="750" y="422" fill="#2d3142" font-size="14" font-weight="600" font-family="'Geist', 'Noto Sans SC', sans-serif" text-anchor="middle">收尾</text>
+            <text x="750" y="442" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">SETTLING · publish</text>
+
+            <!-- ---- legend ---- -->
+            <line x1="80" y1="532" x2="880" y2="532" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+            <text x="80" y="552" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">LEGEND</text>
+
+            <line x1="80" y1="572" x2="104" y2="572" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+            <text x="114" y="575" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">TRANSITION</text>
+
+            <line x1="230" y1="572" x2="254" y2="572" stroke="#bf4520" stroke-width="1.4" marker-end="url(#d2-arrow-accent)"/>
+            <text x="264" y="575" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">INTERRUPT PATH</text>
+
+            <line x1="418" y1="572" x2="442" y2="572" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#d2-arrow)"/>
+            <text x="452" y="575" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">NO-OP</text>
+          </svg>

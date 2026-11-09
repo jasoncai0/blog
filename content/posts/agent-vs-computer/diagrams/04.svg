@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" width="1440" height="600" font-family="Noto Sans SC, sans-serif"><defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#334155"/></marker></defs><rect x="0" y="0" width="1440" height="600" fill="#ffffff"/>
+<text x="720.0" y="36" font-size="22" font-weight="bold" text-anchor="middle" fill="#0f172a">冯·诺依曼的老问题：指令与数据同处一处 → 提示注入</text>
+<rect x="30" y="70" width="660" height="500" rx="14" fill="#f1f5f9" fill-opacity="0.35" stroke="#64748b" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="44" y="94" font-size="14" font-weight="bold" text-anchor="start" fill="#64748b">计算机：代码注入与防御</text>
+<rect x="60" y="115" width="600" height="80" rx="9" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="360.0" y="151.5" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">冯·诺依曼：代码和数据放在同一块内存</text>
+<text x="360.0" y="170.5" font-size="12" text-anchor="middle" fill="#475569">缓冲区溢出把“数据”写成可执行“代码”</text>
+<rect x="60" y="215" width="600" height="80" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="360.0" y="251.5" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">防御 1：NX 位 / W^X</text>
+<text x="360.0" y="270.5" font-size="12" text-anchor="middle" fill="#475569">数据页不可执行，可执行页不可写</text>
+<rect x="60" y="315" width="600" height="80" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="360.0" y="351.5" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">防御 2：带标签的内存（CHERI capability）</text>
+<text x="360.0" y="370.5" font-size="12" text-anchor="middle" fill="#475569">指针自带权限与来源，硬件检查</text>
+<rect x="60" y="415" width="600" height="120" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="360.0" y="463.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">防御 3：哈佛架构 / 特权分离</text>
+<text x="360.0" y="482.0" font-size="12" text-anchor="middle" fill="#475569">指令与数据走不同通道</text>
+<text x="360.0" y="499.0" font-size="12" text-anchor="middle" fill="#475569">不可信输入只能进入低权限进程处理</text>
+<rect x="750" y="70" width="660" height="500" rx="14" fill="#dbeafe" fill-opacity="0.35" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="764" y="94" font-size="14" font-weight="bold" text-anchor="start" fill="#2563eb">Agent：提示注入与防御</text>
+<rect x="780" y="115" width="600" height="80" rx="9" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="1080.0" y="151.5" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">指令和数据在同一个上下文窗口里</text>
+<text x="1080.0" y="170.5" font-size="12" text-anchor="middle" fill="#475569">网页 / 文件 / 工具结果里的文字被当成指令执行</text>
+<rect x="780" y="215" width="600" height="80" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1080.0" y="251.5" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">≈ NX：来源标签 + “数据不是指令”声明</text>
+<text x="1080.0" y="270.5" font-size="12" text-anchor="middle" fill="#475569">system-reminder、agent-message 等包裹与授权隔离</text>
+<rect x="780" y="315" width="600" height="80" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1080.0" y="351.5" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">≈ 带标签内存：每条消息带不可伪造的来源</text>
+<text x="1080.0" y="370.5" font-size="12" text-anchor="middle" fill="#475569">hand-back 缩进框架、指令形状扫描、分类器审查</text>
+<rect x="780" y="415" width="600" height="120" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<text x="1080.0" y="463.0" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">≈ 哈佛架构：控制流与数据流分离</text>
+<text x="1080.0" y="482.0" font-size="12" text-anchor="middle" fill="#475569">规划者只看可信输入，处理不可信数据的子 agent 无权限</text>
+<text x="1080.0" y="499.0" font-size="12" text-anchor="middle" fill="#475569">（如 Dual LLM 模式、CaMeL 一类设计）</text>
+<polyline points="662,155 778,155" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<text x="720" y="147" font-size="12" text-anchor="middle" fill="#334155">同一病根</text>
+<polyline points="662,255 778,255" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="662,355 778,355" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/>
+<polyline points="662,475 778,475" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#m)"/></svg>
