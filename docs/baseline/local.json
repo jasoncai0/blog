@@ -125,6 +125,15 @@
   "pre": 3,
   "table": 6
  },
+ "opencode-rewind": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 8,
+  "h3": 18,
+  "hr": 7,
+  "pre": 6,
+  "table": 7
+ },
  "ot-crdt-lww": {
   "figure": 6,
   "h1": 1,
