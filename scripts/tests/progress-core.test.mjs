@@ -1,0 +1,71 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import * as c from "../../assets/js/progress-core.mjs";
+
+test("progressFromScroll 把视口底部映射到 0–100", () => {
+  assert.equal(c.progressFromScroll(0, 800, 300, 2000), 25);
+  assert.equal(c.progressFromScroll(1500, 800, 300, 2000), 100); // 越界截断
+  assert.equal(c.progressFromScroll(0, 800, 500, 2000), 15);     // 顶部留白不计
+  assert.equal(c.progressFromScroll(-200, 800, 300, 2000), 25);  // 回弹负值按 0 处理
+});
+
+test("一屏放得下时直接算 100", () => {
+  assert.equal(c.progressFromScroll(0, 800, 300, 400), 100);
+});
+
+test("scrollForProgress 是 progressFromScroll 的反函数", () => {
+  assert.equal(c.scrollForProgress(25, 800, 300, 2000), 0);
+  assert.equal(c.scrollForProgress(50, 800, 300, 2000), 500);
+  assert.equal(c.scrollForProgress(5, 800, 300, 2000), -400); // 交由调用方 clamp
+});
+
+test("isDone 与 formatMark", () => {
+  assert.equal(c.isDone(94), false);
+  assert.equal(c.isDone(95), true);
+  assert.equal(c.formatMark({ p: 62, d: false }), "62%");
+  assert.equal(c.formatMark({ p: 96, d: true }), "读完");
+  assert.equal(c.formatMark(null), "");
+});
+
+test("writeEntry 取最大进度且 d 只增不减", () => {
+  let s = c.writeEntry({}, "a", 70, 1000);
+  s = c.writeEntry(s, "a", 40, 2000);
+  assert.deepEqual(s.a, { p: 70, t: 2000, d: false });
+  s = c.writeEntry(s, "a", 96, 3000);
+  assert.deepEqual(s.a, { p: 96, t: 3000, d: true });
+  s = c.writeEntry(s, "a", 10, 4000);
+  assert.deepEqual(s.a, { p: 96, t: 4000, d: true });
+});
+
+test("writeEntry 修剪过期与超量条目，且保留其他篇", () => {
+  const old = 1000;
+  const now = old + c.MAX_AGE_MS + 1;
+  let s = { stale: { p: 50, t: old, d: false }, keep: { p: 10, t: now - 1000, d: false } };
+  s = c.writeEntry(s, "new", 30, now);
+  assert.equal(s.stale, undefined);
+  assert.ok(s.keep && s.new);
+});
+
+test("条目超过 300 时丢最旧的", () => {
+  let s = {};
+  for (let i = 0; i < 301; i++) s = c.writeEntry(s, `p${i}`, 10, 1000 + i);
+  assert.equal(Object.keys(s).length, 300);
+  assert.equal(s.p0, undefined);
+  assert.ok(s.p300);
+});
+
+test("parseStore 容忍坏数据", () => {
+  assert.deepEqual(c.parseStore("not json"), {});
+  assert.deepEqual(c.parseStore("[]"), {});
+  assert.deepEqual(c.parseStore('{"a":{"p":-5,"t":"x"}}'), {});
+  assert.deepEqual(c.parseStore('{"a":{"p":62,"t":1,"d":false}}').a.p, 62);
+  assert.equal(c.serializeStore({ a: { p: 1, t: 1, d: false } }), '{"a":{"p":1,"t":1,"d":false}}');
+});
+
+test("shouldResume 只在 5–94 之间为真", () => {
+  assert.equal(c.shouldResume({ p: 4, d: false }), false);
+  assert.equal(c.shouldResume({ p: 5, d: false }), true);
+  assert.equal(c.shouldResume({ p: 94, d: false }), true);
+  assert.equal(c.shouldResume({ p: 95, d: true }), false);
+  assert.equal(c.shouldResume(null), false);
+});
