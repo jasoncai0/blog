@@ -47,8 +47,8 @@ def test_article_scroll_records_progress(page, base):
     page.goto(base + "/posts/hello.html")
     page.wait_for_selector(".rp-bar")
     assert page.locator(".rp-bar").count() == 1, "应当只注入一个进度条"
-    assert page.eval_on_selector(".rp-chip", "e => e.textContent").strip() in {"0%", "1%", "2%"}
     assert page.eval_on_selector(".rp-chip", "e => e.hasAttribute('hidden')"), "顶部胶囊应隐藏"
+    assert page.eval_on_selector(".rp-bar", "e => e.getAttribute('aria-valuenow')").isdigit()
     page.mouse.wheel(0, 100000)
     page.wait_for_timeout(1400)  # 等 1s 落盘节流
     store = page.evaluate(f"localStorage.getItem({KEY!r})")
@@ -122,6 +122,18 @@ def test_bfcache_does_not_double_scroll(context, base):
     assert abs(after - before) <= 50, f"滚动位置被脚本动过: {before} -> {after}"
 
 
+def test_partial_view_is_not_done(context, base):
+    # 正文 1099px 高、从 ~411px 开始：900×1200 的视口只看到一部分，不能算读完
+    page = context.new_page()
+    page.goto(base + "/posts/hello.html")
+    page.wait_for_selector(".rp-bar")
+    page.wait_for_timeout(800)
+    text = page.eval_on_selector(".rp-chip", "e => e.textContent").strip()
+    assert text != "读完", f"正文还有一部分在视口外，不该显示读完: {text}"
+    store = json.loads(page.evaluate(f"localStorage.getItem({KEY!r})") or "{}")
+    assert store.get("hello", {}).get("p", 0) < 95, store
+
+
 def test_short_post_fills_viewport(context, base):
     # 正文一屏放得下：不看滚动也该是 100%，不能停在 0% 占位
     page = context.new_page()
@@ -158,6 +170,26 @@ def test_storage_failure_is_silent(context, base):
     assert errors == [], f"不该有未捕获错误: {errors}"
 
 
+def test_js_url_is_fingerprinted(page, base):
+    page.goto(base + "/posts/hello.html")
+    src = page.eval_on_selector("script[src*='reading-progress']", "e => e.getAttribute('src')")
+    assert "/js/reading-progress." in src and src.endswith(".js"), f"JS 应带 fingerprint: {src}"
+    assert "reading-progress.js" != src.rsplit("/", 1)[-1], "不该再用未指纹化的固定 URL"
+
+
+def test_home_marks_refresh_after_bfcache(context, base):
+    preset(context, {"hello": {"p": 62, "t": 0, "d": False}})
+    page = context.new_page()
+    page.goto(base + "/")
+    mark = page.locator('li[data-progress-post="hello"] .read-mark')
+    assert mark.inner_text().strip() == "62%"
+    # 模拟从文章页后退、页面由 bfcache 恢复：存储里已经是 100
+    page.evaluate("localStorage.setItem('jasoncai:read:v1', JSON.stringify({hello:{p:100,t:1,d:true}}))")
+    page.evaluate("window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}))")
+    page.wait_for_timeout(100)
+    assert mark.inner_text().strip() == "读完", "bfcache 恢复后标记应重算"
+
+
 def test_home_marks(context, base):
     preset(context, {
         "hello": {"p": 62, "t": 0, "d": False},
@@ -183,6 +215,9 @@ CASES = [
     (test_anchor_wins_over_resume, True, {}),
     (test_bfcache_does_not_double_scroll, True, {}),
     (test_home_marks, True, {}),
+    (test_js_url_is_fingerprinted, False, {}),
+    (test_home_marks_refresh_after_bfcache, True, {}),
+    (test_partial_view_is_not_done, True, {}),
     (test_short_post_fills_viewport, True, {"viewport": {"width": 900, "height": 2400}}),
     (test_no_js_page_intact, True, {"java_script_enabled": False}),
     (test_storage_failure_is_silent, True, {}),

@@ -10,7 +10,6 @@ export const MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
 // 视口底部落在正文的哪个百分比上。顶部留白与文末不足一屏的部分都不计入。
 export function progressFromScroll(scrollY, viewportHeight, contentTop, contentHeight) {
   if (!(contentHeight > 0)) return 0;
-  if (contentHeight <= viewportHeight) return 100;
   // 移动端回弹会报负的 scrollY，先压平，否则顶部留白会被负值抵消。
   const y = Math.max(0, scrollY);
   const raw = ((y + viewportHeight - contentTop) / contentHeight) * 100;

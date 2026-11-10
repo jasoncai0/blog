@@ -9,8 +9,11 @@ test("progressFromScroll 把视口底部映射到 0–100", () => {
   assert.equal(c.progressFromScroll(-200, 800, 300, 2000), 25);  // 回弹负值按 0 处理
 });
 
-test("一屏放得下时直接算 100", () => {
+test("一屏放得下时算 100，正文起点在视口下方时不算", () => {
   assert.equal(c.progressFromScroll(0, 800, 300, 400), 100);
+  // 正文 1099px 高、从 411px 开始：视口 1200 只看到 789px，不是 100
+  assert.equal(c.progressFromScroll(0, 1200, 411, 1099), 72);
+  assert.equal(c.progressFromScroll(0, 800, 411, 1099), 35);
 });
 
 test("scrollForProgress 是 progressFromScroll 的反函数", () => {

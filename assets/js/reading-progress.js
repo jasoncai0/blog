@@ -54,25 +54,34 @@ function boot() {
   const host = document.querySelector(".post-body[data-progress-post]");
   if (!host) {
     markHome();
+    // 从文章页后退回来时页面可能直接来自 bfcache，标记要在恢复后重算一次
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) markHome();
+    });
     return;
   }
   const slug = host.dataset.progressPost;
 
   const bar = document.createElement("div");
   bar.className = "rp-bar";
-  bar.setAttribute("aria-hidden", "true");
+  bar.setAttribute("role", "progressbar");
+  bar.setAttribute("aria-valuemin", "0");
+  bar.setAttribute("aria-valuemax", "100");
+  bar.setAttribute("aria-valuenow", "0");
   const fill = document.createElement("div");
   fill.className = "rp-bar-fill";
   bar.append(fill);
 
   const chip = document.createElement("div");
   chip.className = "rp-chip";
+  chip.setAttribute("aria-hidden", "true"); // 与进度条同值的视觉副本，别让读屏念两遍
   chip.setAttribute("hidden", "");
   chip.textContent = "0%";
 
   document.body.append(bar, chip);
 
   let percent = 0;
+  let revealed = false; // 用户真的滚动过（或续读跳转过）才露出胶囊
   let metrics = measure();
   let flushTimer = 0;
   let frame = 0;
@@ -84,9 +93,11 @@ function boot() {
 
   function paint() {
     fill.style.width = `${percent}%`;
+    bar.setAttribute("aria-valuenow", String(percent));
     chip.textContent = isDone(percent) ? "读完" : `${percent}%`;
     chip.classList.toggle("is-done", isDone(percent));
-    chip.toggleAttribute("hidden", percent <= 2);
+    const show = percent > 2 && (revealed || isDone(percent));
+    chip.toggleAttribute("hidden", !show);
   }
 
   function flush() {
@@ -110,9 +121,11 @@ function boot() {
     percent = progressFromScroll(window.scrollY, window.innerHeight, metrics.top, metrics.height);
     paint();
     scheduleFlush();
+    if (isDone(percent)) flush(); // 都读完了，别等节流器（短文连滚动都不会有）
   }
 
   function onScroll() {
+    revealed = true;
     if (frame) return;
     frame = requestAnimationFrame(update);
   }
@@ -137,8 +150,6 @@ function boot() {
   // 续读：只在「干净地打开这一页」时接手。锚点、后退/前进、浏览器已经恢复过
   // 滚动位置（scrollY !== 0）这三种情况都不抢——浏览器比我们知道得更多。
   function maybeResume() {
-    metrics = measure();
-    if (metrics.height <= window.innerHeight) return; // 一屏放得下，没有位置可续
     if (location.hash) return;
     if (navType() === "back_forward") return;
     if (window.scrollY !== 0) return;
@@ -154,7 +165,8 @@ function boot() {
     root.style.scrollBehavior = "auto"; // 站点的 smooth 会让续读变成慢慢滑下去
     window.scrollTo(0, target);
     root.style.scrollBehavior = previous;
-    showHint(entry.p);
+    revealed = true;
+    if (target > 0) showHint(entry.p); // 没真跳（目标被 clamp 到 0）就别提示
     onScroll();
   }
 
@@ -168,17 +180,14 @@ function boot() {
     if (document.visibilityState === "hidden") flush();
   });
 
-  paint();
+  update(); // 首屏也算一次：长文顶部是真百分比，短文直接是 100%
 
   const resume = () =>
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
+        metrics = measure(); // 图片加载完可能改变正文高度
         maybeResume();
-        // 正文一屏放得下：整段都已可见，按 100% 记，别把占位的 0% 留在屏幕上。
-        if (measure().height <= window.innerHeight) {
-          update();
-          flush(); // 已经读完，立刻落盘，别等节流器
-        }
+        update();
       }),
     );
   if (document.readyState === "complete") {
