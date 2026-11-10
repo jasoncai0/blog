@@ -18,13 +18,13 @@
   "table": 6
  },
  "claude-code-harness-layers": {
-  "figure": 8,
+  "figure": 10,
   "h1": 1,
-  "h2": 9,
-  "h3": 12,
+  "h2": 10,
+  "h3": 16,
   "hr": 0,
-  "pre": 7,
-  "table": 3
+  "pre": 9,
+  "table": 4
  },
  "harness-orchestration-compare": {
   "figure": 5,

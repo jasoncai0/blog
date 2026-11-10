@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="700" viewBox="0 0 960 700" role="img" aria-labelledby="d10-title d10-desc">
+  <title id="d10-title">一个业务问题落到可执行形状的六个阶段</title>
+  <desc id="d10-desc">从上到下六个阶段：输入队列、计划、任务图、工具批次、委派、编排脚本。每个阶段左侧是阶段名与一句话说明，右侧是该阶段真实的数据形状。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">DECOMPOSITION · CLAUDE CODE</text>
+  <text x="48" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一个业务问题，是怎么落到可执行的形状上</text>
+  <text x="48" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">没有拆解器。每个阶段只做一次转换：把上一层的意图，固定成下一层能检查、能调度的字段</text>
+
+  <!-- row 1 -->
+  <rect x="48" y="104" width="864" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">① L1 · 输入队列</text>
+  <text x="68" y="148" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">一句话变成一条队列记录</text>
+  <text x="68" y="166" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580">不是字符串，带 priority 与 agentId</text>
+  <rect x="340" y="114" width="552" height="64" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+  <text x="352" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">{ type: "prompt", value: "月底前给结算服务加多币种", priority: "next" }</text>
+  <text x="352" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">agentId?: string   // 有它，这条消息就投给某个子代理</text>
+  <text x="352" y="168" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a8280">skipSlashCommands · isMeta · skipAttachments</text>
+
+  <!-- row 2 -->
+  <rect x="48" y="196" width="864" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="218" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">② L2 · 计划</text>
+  <text x="68" y="240" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">先固定验收，再动手</text>
+  <text x="68" y="258" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580">批准的是这一版计划，不是这个目标</text>
+  <rect x="340" y="206" width="552" height="64" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+  <text x="352" y="228" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">~/.claude/plans/multi-currency.md</text>
+  <text x="352" y="244" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a"># Plan   1 表结构 · 2 汇率源 · 3 幂等迁移 · 4 回归</text>
+  <text x="352" y="260" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a8280">ExitPlanMode → 自动接受 / 逐条审 / 继续规划</text>
+
+  <!-- row 3 -->
+  <rect x="48" y="288" width="864" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="310" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">③ L4 · 任务图</text>
+  <text x="68" y="332" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">拆成能被认领的节点</text>
+  <text x="68" y="350" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580">blockedBy 是软依赖，不是调度器</text>
+  <rect x="340" y="298" width="552" height="64" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+  <text x="352" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">TaskCreate({ subject, description, activeForm })   → "Task #3 created"</text>
+  <text x="352" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">TaskUpdate({ task_id, owner, addBlockedBy: ["#1", "#2"] })</text>
+  <text x="352" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a8280">status: pending → in_progress → completed</text>
+
+  <!-- row 4 -->
+  <rect x="48" y="380" width="864" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">④ L3 · 工具批次</text>
+  <text x="68" y="424" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">并发单位是调用，不是任务</text>
+  <text x="68" y="442" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580">只合并连续的安全调用，写操作当屏障</text>
+  <rect x="340" y="390" width="552" height="64" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+  <text x="352" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">tool_use: [ Read a.ts ] [ Grep "foo" ] [ Edit b.ts ]</text>
+  <text x="352" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">批次 1 = [Read, Grep] 并行 ‖ 屏障 ‖ 批次 2 = [Edit]</text>
+  <text x="352" y="444" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a8280">isConcurrencySafe(input) ? 并入上一批 : 新开一批</text>
+
+  <!-- row 5 -->
+  <rect x="48" y="472" width="864" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="494" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">⑤ L4 · 委派</text>
+  <text x="68" y="516" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">把不确定的那块送出去</text>
+  <text x="68" y="534" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580">默认后台，先回句柄；depth 3 / 并发 20</text>
+  <rect x="340" y="482" width="552" height="64" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+  <text x="352" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">Agent({ prompt, subagent_type: "Explore", isolation: "worktree" })</text>
+  <text x="352" y="520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">→ { status: "async_launched", agentId, outputFile }</text>
+  <text x="352" y="536" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a8280">回执先过安检：handback = send / flagged / withheld</text>
+
+  <!-- row 6 -->
+  <rect x="48" y="564" width="864" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">⑥ L4 · 固化</text>
+  <text x="68" y="608" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">把编排写成文件</text>
+  <text x="68" y="626" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580">可改、可重跑、可只补失败的那几步</text>
+  <rect x="340" y="574" width="552" height="64" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+  <text x="352" y="596" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">Workflow({ script })   // export const meta = { name, phases }</text>
+  <text x="352" y="612" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#3f4a5a">pipeline(items, i =&gt; agent(prompt1(i)), (r, i) =&gt; agent(prompt2(i)))</text>
+  <text x="352" y="628" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a8280">scriptPath 可编辑；resumeFromRunId 跳过已完成的 agent()</text>
+
+  <text x="48" y="676" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#8a8280">左边是意图，右边是这一层真正读写的字段。字段名取自 2.1.277 类型面与 2.1.319 二进制字符串；省略号处是业务内容。</text>
+</svg>

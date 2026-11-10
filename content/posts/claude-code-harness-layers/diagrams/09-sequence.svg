@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="700" viewBox="0 0 960 700" role="img" aria-labelledby="d9-title d9-desc">
+  <title id="d9-title">一个 turn 的时序：人、Claude Code、模型、本地文件</title>
+  <desc id="d9-desc">四条泳道：人、Claude Code 引擎、模型、本地文件与进程。每一步左侧标出所属层级：L1 输入队列、L2 主循环、L3 工具调度、L4 委派与持久。</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#5a6580"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">SEQUENCE · ONE TURN · L1–L4</text>
+  <text x="48" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一个 turn 的时序：每一步落在哪一层</text>
+  <text x="48" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">左侧标签是该步所属的层。一个 turn 从输入到 end_turn，中间请求几次并不固定</text>
+
+  <!-- lane headers -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif">
+    <rect x="48" y="100" width="144" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="120" y="120" text-anchor="middle" font-size="11.5" font-weight="600" fill="#2d3142">人</text>
+    <text x="120" y="135" text-anchor="middle" font-size="7.5" fill="#5a6580">终端 / IDE</text>
+
+    <rect x="276" y="100" width="144" height="46" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="348" y="120" text-anchor="middle" font-size="11.5" font-weight="600" fill="#bf4520">Claude Code</text>
+    <text x="348" y="135" text-anchor="middle" font-size="7.5" fill="#5a6580">队列 · 循环 · 权限</text>
+
+    <rect x="504" y="100" width="144" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="576" y="120" text-anchor="middle" font-size="11.5" font-weight="600" fill="#2d3142">模型 · Opus</text>
+    <text x="576" y="135" text-anchor="middle" font-size="7.5" fill="#5a6580">只看得到消息</text>
+
+    <rect x="732" y="100" width="144" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="804" y="120" text-anchor="middle" font-size="11.5" font-weight="600" fill="#2d3142">本地文件 / 进程</text>
+    <text x="804" y="135" text-anchor="middle" font-size="7.5" fill="#5a6580">工作目录 · shell</text>
+  </g>
+
+  <!-- lifelines -->
+  <g stroke="#d8d8d8" stroke-dasharray="3 4">
+    <line x1="120" y1="146" x2="120" y2="642"/>
+    <line x1="348" y1="146" x2="348" y2="642"/>
+    <line x1="576" y1="146" x2="576" y2="642"/>
+    <line x1="804" y1="146" x2="804" y2="642"/>
+  </g>
+
+  <!-- layer badges -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="500" text-anchor="middle">
+    <rect x="48" y="163" width="32" height="14" rx="3" fill="#ffffff" stroke="#5f6b7f"/><text x="64" y="173" fill="#5f6b7f">L1</text>
+    <rect x="48" y="193" width="32" height="14" rx="3" fill="#ffffff" stroke="#5f6b7f"/><text x="64" y="203" fill="#5f6b7f">L1</text>
+    <rect x="48" y="225" width="32" height="14" rx="3" fill="#ffffff" stroke="#bf4520"/><text x="64" y="235" fill="#bf4520">L2</text>
+    <rect x="48" y="257" width="32" height="14" rx="3" fill="#ffffff" stroke="#bf4520"/><text x="64" y="267" fill="#bf4520">L2</text>
+    <rect x="48" y="289" width="32" height="14" rx="3" fill="#ffffff" stroke="#3f6b66"/><text x="64" y="299" fill="#3f6b66">L3</text>
+    <rect x="48" y="321" width="32" height="14" rx="3" fill="#ffffff" stroke="#3f6b66"/><text x="64" y="331" fill="#3f6b66">L3</text>
+    <rect x="48" y="351" width="32" height="14" rx="3" fill="#ffffff" stroke="#3f6b66"/><text x="64" y="361" fill="#3f6b66">L3</text>
+    <rect x="48" y="381" width="32" height="14" rx="3" fill="#ffffff" stroke="#3f6b66"/><text x="64" y="391" fill="#3f6b66">L3</text>
+    <rect x="48" y="413" width="32" height="14" rx="3" fill="#ffffff" stroke="#3f6b66"/><text x="64" y="423" fill="#3f6b66">L3</text>
+    <rect x="48" y="443" width="32" height="14" rx="3" fill="#ffffff" stroke="#3f6b66"/><text x="64" y="453" fill="#3f6b66">L3</text>
+    <rect x="48" y="473" width="32" height="14" rx="3" fill="#ffffff" stroke="#5f6b7f"/><text x="64" y="483" fill="#5f6b7f">L1</text>
+    <rect x="48" y="503" width="32" height="14" rx="3" fill="#ffffff" stroke="#bf4520"/><text x="64" y="513" fill="#bf4520">L2</text>
+    <rect x="48" y="533" width="32" height="14" rx="3" fill="#ffffff" stroke="#bf4520"/><text x="64" y="543" fill="#bf4520">L2</text>
+    <rect x="48" y="563" width="32" height="14" rx="3" fill="#ffffff" stroke="#bf4520"/><text x="64" y="573" fill="#bf4520">L2</text>
+    <rect x="48" y="593" width="32" height="14" rx="3" fill="#ffffff" stroke="#7d6444"/><text x="64" y="603" fill="#7d6444">L4</text>
+    <rect x="48" y="623" width="32" height="14" rx="3" fill="#ffffff" stroke="#7d6444"/><text x="64" y="633" fill="#7d6444">L4</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.8" fill="#2d3142">
+    <!-- 1 -->
+    <line x1="120" y1="170" x2="342" y2="170" stroke="#5a6580" stroke-width="1" marker-end="url(#arrow)"/>
+    <text x="124" y="163">① 输入一句话，Enter</text>
+
+    <!-- 2 -->
+    <rect x="360" y="187" width="206" height="26" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+    <text x="372" y="199" font-size="7.2" fill="#4f5d75">② 入队：priority = next</text>
+    <text x="372" y="208" font-size="7.2" fill="#8a8280">turn 在跑，就等批次边界</text>
+
+    <!-- 3 -->
+    <line x1="348" y1="232" x2="570" y2="232" stroke="#bf4520" stroke-width="1" marker-end="url(#arrow-accent)"/>
+    <text x="352" y="225" fill="#bf4520">③ 组请求：系统提示 + 历史 + 工具表</text>
+
+    <!-- 4 -->
+    <line x1="576" y1="264" x2="354" y2="264" stroke="#5a6580" stroke-width="1" marker-end="url(#arrow)"/>
+    <text x="360" y="257">④ 流式：文本 + tool_use ×3</text>
+    <text x="360" y="275" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#8a8280">stop_reason = tool_use</text>
+
+    <!-- 5 -->
+    <rect x="360" y="283" width="206" height="26" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+    <text x="372" y="295" font-size="7.2" fill="#4f5d75">⑤ 分批：[Read, Grep] ‖ [Edit]</text>
+    <text x="372" y="304" font-size="7.2" fill="#8a8280">只合并连续的只读调用</text>
+
+    <!-- 6 -->
+    <line x1="348" y1="328" x2="798" y2="328" stroke="#5a6580" stroke-width="1" marker-end="url(#arrow)"/>
+    <text x="352" y="321">⑥ Read a.ts / Grep "foo"，并行</text>
+
+    <!-- 7 -->
+    <line x1="804" y1="358" x2="354" y2="358" stroke="#5a6580" stroke-width="1" marker-end="url(#arrow)"/>
+    <text x="360" y="351">⑦ 文件内容 / 匹配行</text>
+
+    <!-- 8 -->
+    <rect x="360" y="375" width="206" height="26" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+    <text x="372" y="387" font-size="7.2" fill="#4f5d75">⑧ 判决：deny → ask → allow</text>
+    <text x="372" y="396" font-size="7.2" fill="#8a8280">先命中先赢；钩子压不过 deny</text>
+
+    <!-- 9 -->
+    <line x1="348" y1="420" x2="798" y2="420" stroke="#bf4520" stroke-width="1" marker-end="url(#arrow-accent)"/>
+    <text x="352" y="413" fill="#bf4520">⑨ Edit b.ts：写入前过权限</text>
+
+    <!-- 10 -->
+    <line x1="804" y1="450" x2="354" y2="450" stroke="#5a6580" stroke-width="1" marker-end="url(#arrow)"/>
+    <text x="360" y="443">⑩ 写入结果 + diff</text>
+
+    <!-- 11 -->
+    <line x1="120" y1="480" x2="342" y2="480" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow-accent)"/>
+    <text x="124" y="473" fill="#bf4520" font-size="7.2">⑪ 插话：入队，等下一个边界</text>
+
+    <!-- 12 -->
+    <line x1="348" y1="510" x2="570" y2="510" stroke="#bf4520" stroke-width="1" marker-end="url(#arrow-accent)"/>
+    <text x="352" y="503" fill="#bf4520">⑫ tool_result ×3，按 tool_use_id 回灌</text>
+
+    <!-- 13 -->
+    <rect x="360" y="527" width="206" height="26" rx="4" fill="#f7f5f2" stroke="#e2ddd6"/>
+    <text x="372" y="539" font-size="7.2" fill="#4f5d75">⑬ 上下文检查：microcompact</text>
+    <text x="372" y="548" font-size="7.2" fill="#8a8280">不够再 auto-compact，然后重注入</text>
+
+    <!-- 14 -->
+    <line x1="576" y1="570" x2="354" y2="570" stroke="#5a6580" stroke-width="1" marker-end="url(#arrow)"/>
+    <text x="360" y="563">⑭ 最终文本，stop_reason = end_turn</text>
+
+    <!-- 15 -->
+    <line x1="348" y1="600" x2="798" y2="600" stroke="#5a6580" stroke-width="1" marker-end="url(#arrow)"/>
+    <text x="352" y="593">⑮ 追加 session.jsonl 与 checkpoint 快照</text>
+
+    <!-- 16 -->
+    <line x1="348" y1="630" x2="126" y2="630" stroke="#bf4520" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+    <text x="132" y="623" fill="#bf4520">⑯ turn.complete：回答 + 用量</text>
+  </g>
+
+  <!-- legend -->
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.2" fill="#5a6580">
+    <rect x="48" y="657" width="26" height="12" rx="3" fill="#ffffff" stroke="#5f6b7f"/>
+    <text x="61" y="666" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="6.4" fill="#5f6b7f">L1</text>
+    <text x="80" y="666">输入队列</text>
+    <rect x="146" y="657" width="26" height="12" rx="3" fill="#ffffff" stroke="#bf4520"/>
+    <text x="159" y="666" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="6.4" fill="#bf4520">L2</text>
+    <text x="178" y="666">主循环</text>
+    <rect x="244" y="657" width="26" height="12" rx="3" fill="#ffffff" stroke="#3f6b66"/>
+    <text x="257" y="666" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="6.4" fill="#3f6b66">L3</text>
+    <text x="276" y="666">工具调度</text>
+    <rect x="342" y="657" width="26" height="12" rx="3" fill="#ffffff" stroke="#7d6444"/>
+    <text x="355" y="666" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="6.4" fill="#7d6444">L4</text>
+    <text x="374" y="666">委派与持久</text>
+  </g>
+
+  <text x="48" y="686" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#8a8280">实线是同步消息，虚线是异步投递。⑥⑦ 与 ⑨⑩ 可以并行，但 ⑨ 要等 ⑥⑦ 收尾（写操作是屏障）；模型看不到 ②⑤⑧⑬。</text>
+</svg>

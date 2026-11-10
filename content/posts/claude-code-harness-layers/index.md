@@ -1,8 +1,8 @@
 ---
 title: "四层地基：Claude Code 里那些模型看不见的决定"
-date: "2026-11-10T12:05:00+08:00"
-summary: "把 Claude Code 拆成输入队列、主循环、工具调度、委派与持久四层，逐层看它怎么把一次生成变成一件能跨小时、跨进程的长期工作。配八张图，和一间只有一名员工的公司。"
-description: "把 Claude Code 拆成输入队列、主循环、工具调度、委派与持久四层，逐层看它怎么把一次生成变成一件能跨小时、跨进程的长期工作。"
+date: "2026-11-10T13:12:00+08:00"
+summary: "把 Claude Code 拆成输入队列、主循环、工具调度、委派与持久四层。从四个真实的数据结构出发，看它怎么把一次生成变成一件能跨小时、跨进程的长期工作；末尾补上从业务问题到 workflow 的那段拆解。配十张图。"
+description: "把 Claude Code 拆成输入队列、主循环、工具调度、委派与持久四层：从四个真实的数据结构出发，逐层看一次生成如何变成一件长期工作。"
 tags: ["harness", "architecture", "agent", "concurrency"]
 slug: "claude-code-harness-layers"
 ---
@@ -25,18 +25,25 @@ slug: "claude-code-harness-layers"
 
 {{< fig "diagrams/01-four-layers.svg" "四层地基。模型在中间，四层各自补上一个它没有的能力：被插话、能持续、有边界、可委派且可回放。右侧是每层失效时的典型症状。" >}}
 
-## 1. 一个比喻：只有一名员工的公司
+## 1. 先看四个形状
 
-这名员工能力极强，但每天失忆。他一次只能看桌面上的东西，桌面满了就得清；他没有手，只能用公司给的工具；他不知道时间过去了多久，也不会主动说"我累了"。
+"harness" 这个词容易被说得很虚。它做的事，其实可以落到四个真实的数据结构上；后面每一节，就是把其中一个拆开。
 
-公司要让他干成一件长活，只需要做四件事：
+```js
+// L1：进队列的不是字符串
+{ type: "prompt", value, priority: "next", agentId?, isMeta?, skipAttachments? }
 
-- 有人在他干活时把新需求递进来，还不能打断他正在做的那一步（**L1**）。
-- 让他在失忆的前提下把一件事做完：每做完一步存个档，桌面满了知道扔什么（**L2**）。
-- 管住他的手：哪些工具能用、哪些动作要签字、出了事最多能碰到哪（**L3**）。
-- 把大活外包给另一个同样失忆的人，并把他交回来的东西当"外人说的话"处理（**L4**）。
+// L2：一轮不是一次请求
+turn.start → turn.step → turn.complete { answer, usage, isAborted, turnId }
 
-后面四节，一层一层看这家公司具体怎么做的。
+// L3：能不能并行，要按调用判，不按工具名
+isConcurrencySafe(input)   // 只有连续的安全调用才并成一批
+
+// L4：委派先回句柄，不回答案
+{ status: "async_launched", agentId, description, outputFile }
+```
+
+这四行分别回答四个问题：话怎么进来、循环什么时候停、工具怎么执行、活怎么交出去。它们都不在模型里，也都不是"智能"的——是状态机、策略表和边界条件。后面四节，一节拆一个。
 
 ## 2. L1 输入队列：话从哪里递进去
 
@@ -72,11 +79,11 @@ slug: "claude-code-harness-layers"
 - `Ctrl+Enter`（`2.1.275+`）：立即发送。如果 Claude 正在跑可以转后台的活（shell、子代理），活转后台继续跑，Claude 在同一个 turn 里读消息；如果它只是在写回复或跑不可后台的东西，才真正中断这个 turn。
 - `↑`：从输入框第一行把队列取回来，逐条放回输入框改。
 
-还有一个容易漏的：`/model`、`/effort`、`/fast` 不进队列，立即生效；其中 `/model` 从该 turn 的下一次请求开始用新模型。会话被转到后台时，队列跟着会话走，但命令不跟。命令依赖当前输入框和会话状态，队列条目只依赖消息本身。
+还有一个容易漏的：`/model`、`/effort`、`/fast` 不进队列，立即生效；其中 `/model` 从该 turn 的下一次请求开始用新模型。会话被转到后台时，队列跟着会话走，但命令不跟——命令依赖当前输入框和会话状态，队列条目只依赖消息本身。
 
-> 比喻：前台不会冲进会议室打断。她只在门开的时候递纸条，纸条按顺序叠好，而且绝不会夹进别人正读到一半的文件里。她甚至知道纸条是给哪个房间的（`agentId`）。
+这一层的难点从来不是存储。存一个数组谁都会；知道"这条消息只能在这两个时刻之一进去"，才是 L1 的全部。
 
-## 3. L2 主循环：一份工单，几次请求，一块会满的桌面
+## 3. L2 主循环：一次输入，几次请求，一块会满的预算
 
 Claude Code 把 "turn" 当一等对象，不是一个 while 循环的副产品。类型面上有三个事件：
 
@@ -120,7 +127,7 @@ while (true) {
 
 这里有一个设计取向值得记下来：**拒绝也是一种工具结果**。权限判决返回 deny 时，引擎不是终止循环，而是往对话里塞一条 `Permission denied for <tool>: <reason>` 的 tool_result，让模型看到"这条路被封了"，自己换一条。错误、超时、截断，全都走同一条回灌通道。循环只有一种输入形状，这是它能长期跑下去的原因。
 
-### 桌面会满
+### 上下文会满
 
 上下文窗口是这个循环的油箱。但油箱多大，Claude Code 自己也不完全确定。类型面里有个 `ContextWindowSource` 枚举：`env / settings / clientdata / experiment / model-default / unknown-model / auto`。窗口大小来自环境变量、设置、客户端数据、实验开关，或者干脆是"未知模型的保底值"。
 
@@ -142,13 +149,13 @@ while (true) {
 
 {{< fig "diagrams/04-context-budget.svg" "油表、三档压缩和压缩后的重注入白名单。阈值取设置值与模型窗口的较小者；microcompact 只动工具结果，auto-compact 才动对话。" >}}
 
-> 比喻：员工每做完一步就把桌面拍张照存档。桌面满了，先把废纸篓倒掉（工具结果落盘），还满就请人写一页纪要（compact）。但墙上的公司规章和当前计划不许动，而且每次清完桌子都要重新贴一遍。
+记住这一条：压缩的难点是保留什么，不是怎么总结。
 
-## 4. L3 工具调度：工具箱、门禁、防爆间
+## 4. L3 工具调度：注册表、权限、沙箱、批次
 
 这一层要同时回答四个问题：模型能用什么、能不能现在用、最多几个人同时用、用完的东西怎么交回来。
 
-### 4.1 注册表：二十三把工具，外加一扇随叫随开的门
+### 4.1 注册表：二十三种内置工具，其余按需加载
 
 类型面里 `ToolName` 是 23 个内置工具的联合类型；MCP server 和插件再往里加。工具多到一个程度，把全部 schema 塞进上下文就不划算了，于是有了延迟加载：MCP 工具默认只报名字（`Deferred tools are announced by name in a message from the system`），模型真要用时再调 `ToolSearch` 取完整 schema。二进制里对应 `DeferredToolPlaceholder` 和一句 `Fetches full schema definitions for deferred tools so they can be called.`
 
@@ -203,9 +210,7 @@ else groups.push({ isConcurrencySafe: safe, blocks: [call] });
 
 工具结果太长时，中间会被折叠成 `... [N characters truncated] ...`，头尾保留。特别大的结果落盘，对话里只留一个句柄；子代理的结果干脆只给 `outputFile`。截断不是 L3 的小聪明，是 L2 预算政策在执行层的落实：**上下文里每一块都要有人为它的大小负责**。
 
-> 比喻：门禁（权限）决定你能不能进这间屋；防爆间（沙箱）决定进了屋你能碰什么；车间主任（分批器）决定几个人同时上、谁必须先等。三件事由三个人管，所以经常出现"门禁放了、防爆间拦了"的组合。
-
-## 5. L4 委派与持久：外包、拆弹、档案室
+## 5. L4 委派与持久：句柄、回执、事件流
 
 ### 5.1 默认异步：委派的第一课是"别等"
 
@@ -221,7 +226,7 @@ Agent 工具的默认行为是后台执行。返回值的三种形状说明了�
 
 默认异步不是性能优化，是**语义选择**：委派被建模成"派活"，不是"函数调用"。函数调用必须等返回值，派活可以先干别的，回执晚点到。后台子代理的结果也确实不是立刻回来的——它作为一条 completion notification 在后续的 turn 里到达，被标记为自动事件。
 
-配套的硬限制有两道：嵌套默认 3 层（`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`，设 1 关闭），并发默认 20（`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`，`2.1.217+`）。超过并发时给模型的话是 `Concurrent subagent limit reached. ... Do not retry.` ——直接告诉它别重试，因为重试只会更堵。到了嵌套深度上限，harness 会把 Agent 工具从它的工具清单里收走（fork 除外）。这是一种"自我阉割"式的防失控：不是报错，是让下一层根本没有派活的能力。
+配套的硬限制有两道：嵌套默认 3 层（`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`，设 1 关闭），并发默认 20（`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`，`2.1.217+`）。超过并发时给模型的话是 `Concurrent subagent limit reached. ... Do not retry.`——直接告诉它别重试，因为重试只会更堵。到了嵌套深度上限，harness 会把 Agent 工具从它的工具清单里收走（fork 除外）。这是一种"自我阉割"式的防失控：不是报错，是让下一层根本没有派活的能力。
 
 ### 5.2 fork 还是白纸
 
@@ -273,24 +278,21 @@ Claude Code 在 `2.1.271+` 做了一套回执安检：
 
 为什么是 JSONL 而不是数据库？因为这份数据的读取模式是"从头到尾读一遍"和"从中间截断"，不是"按 id 查一行"。追加写天然崩溃安全，一行坏了不影响前面；分叉就是复制文件；给人看也不用工具。checkpoint 和 git 是两套独立的东西——它记的是"Claude 改了什么"，不是"仓库变成了什么样"。
 
-> 比喻：外包公司派活，收报告先拆弹；档案室按时间一页页装订，不装订成册就没法倒带；书签（checkpoint）贴在"我动过手"的那几页上，不是贴在每一页上。
-
 {{< fig "diagrams/08-persistence.svg" "一条只追加的 JSONL 时间线，和围绕它的三种操作：checkpoint 在改动处留个书签，fork 从某行分叉出一条新流，rewind 退回到某个书签。" >}}
 
-## 6. 四层怎么咬合：一条消息的旅程
+## 6. 四层怎么咬合：一个 turn 的时序
 
-把上面拆开的东西装回去，看一条消息从按键到落盘经过谁：
+把前面拆开的东西装回去，看一次输入从按键到落盘经过谁。图里左侧的标签，就是每一步所属的层：
 
-1. 你按回车。turn 正在跑，消息进 L1 队列，带 `priority: "next"`。
-2. 当前工具批次结束。poller 把队列合并进对话；如果是命令，等到 turn 结束。
-3. L2 组装下一次请求，先查预算；超了就先 microcompact，再超就 compact。
-4. 模型流式返回，前半段文字，后半段 `tool_use`。
-5. L3 判权限（deny / ask / allow），把连续的只读调用合成一批并发跑，写操作当屏障。
-6. 结果太长就截断或落盘，然后作为 tool_result 回灌。被拒绝的调用也回灌一条错误结果。
-7. 某个调用是 Agent：L4 起一个子代理，默认后台，先返回句柄；子代理有自己的 L2 循环和 L3 调度。
-8. 子代理交报告。过安检、去指令化、进父上下文。turn 结束，消息落 JSONL，checkpoint 记一笔。
+{{< fig "diagrams/09-sequence.svg" "一个 turn 的完整时序。人、引擎、模型、本地文件四条泳道；每步都标了所属的层。模型只在 ③④⑫⑭ 出现，其余步骤都是引擎在做。" >}}
 
-这张时序里，模型只在第 4 步和第 6 步"出现"。其余六步都是 harness 在做，而每一步都能单独把一次长任务搞砸：
+读这张图只需要抓住三件事：
+
+1. **模型只有一条消息流。** 它看不到入队、分批、判决、压缩；它只看到 ③ 的请求和 ⑫ 回灌的 `tool_result`。
+2. **文件只经引擎的手。** ⑥⑦ 的读可以并行；⑨ 的写要先过 ⑧ 的权限，并且要等读收尾——写操作是屏障。
+3. **循环的边界由 `stop_reason` 决定。** `tool_use` 就回灌再发一次；`end_turn` 才落盘、交还控制权。
+
+每一步都能单独把一次长任务搞砸：
 
 | 故障 | 坏在哪层 | 现象 |
 | --- | --- | --- |
@@ -302,7 +304,59 @@ Claude Code 在 `2.1.271+` 做了一套回执安检：
 | 委派同步等待 | L4 | 子代理退化成一次昂贵的函数调用 |
 | 子代理报告直接当用户消息 | L4 | 外部内容获得指令权限 |
 
-## 7. 如果你要自己搭一个
+## 7. 拆解：从业务问题到可执行的 workflow
+
+前面六节讲的都是"一次请求怎么跑完"。真实任务很少只有一次请求：需求是一句话，交付是十几个文件、几次验证，可能还要跨会话等一个后台任务。
+
+这中间没有"拆解器"模块。拆解是模型推理，harness 做的是给推理结果一个能执行、能检查的形状——一共六个落点：
+
+{{< fig "diagrams/10-decomposition.svg" "六个落点：输入、计划、任务图、批次、委派、脚本。左边是意图，右边是这一层真正读写的字段。" >}}
+
+### 7.1 四种耐久度递增的产物
+
+| 产物 | 存在哪 | 谁读它 | 缺了它 |
+| --- | --- | --- | --- |
+| 计划 | `~/.claude/plans/*.md` | 人、模型 | 做完才发现方向错了 |
+| todo | 会话内存 | 模型自己 | 长任务做到一半忘了还剩什么 |
+| 任务图 | 任务板（owner、blockedBy） | 模型、子代理、钩子 | 并行做的两件事互相踩 |
+| workflow 脚本 | `scriptPath` | 引擎 | 每次跑出来的形状都不一样 |
+
+耐久度越高，越不依赖当前这次对话。计划能给人看，todo 只活在这个会话里，任务图能被别人认领，脚本能重跑。
+
+### 7.2 三样东西在推动拆解
+
+**工具描述里的"何时用"。** `EnterPlanMode` 的描述列了新功能、多方案、跨文件、需求模糊；`TaskCreate` 的描述写得更直白：
+
+```
+Complex multi-step tasks - When a task requires 3 or more distinct steps
+Plan mode - create a task list
+Mark it as in_progress BEFORE beginning work
+```
+
+**系统提醒。** plan mode 的系统提醒里预置了一段 `code-implementation phases` 模板，可以用 `--plan-mode-instructions` 换掉，但只读约束和 `ExitPlanMode` 协议脚注不允许改。todo 的提醒靠计数器，不靠定时器：`turnsSinceLastTodoWrite` 攒到几次就提醒一次，提醒里还会带上 `## Plan (from TodoWrite state)`。
+
+**人的否决权。** `ExitPlanMode` 给三个选项：自动接受编辑、逐条审、继续规划。批准绑定到具体的那一版计划——字符串里的原话是 `The team lead's verdict was for a different request, not this plan. Call ExitPlanMode again to resubmit it for approval.` 改完计划要重新提交。
+
+### 7.3 走一遍
+
+假设需求是"给结算服务加多币种"：
+
+1. **计划**：plan mode 里派 Explore 侦察（它跳过 `CLAUDE.md`，只找文件），产出表结构、汇率源、迁移、回归四步，写进计划文件，`ExitPlanMode` 等人批。
+2. **任务图**：批准后用 `TaskCreate` 建四条，`TaskUpdate` 加 `owner` 和 `blockedBy`——迁移要等表结构和汇率源，回归要等迁移。
+3. **批次**：每个任务一个 turn。一个 turn 里模型可能一次要读三个文件，L3 把连续的只读合成一批并发跑，写操作单独成批。
+4. **委派**：不确定的部分（比如"现有代码里有没有类似的多币种处理"）派给 Explore，默认后台，先回 `agentId`；报告回来先过安检。
+5. **固化**：如果这套流程要反复跑，写成 `Workflow` 脚本：`meta.phases` 定义阶段，`pipeline(items, agent, agent)` 定义每个条目怎么走。改完 `scriptPath` 重跑，`resumeFromRunId` 会跳过没改过的 `agent()`。
+6. **收尾**：跑测试、过一遍 hook、落 checkpoint。
+
+### 7.4 这套东西的边界
+
+- `blockedBy` 是**软依赖**。它写在任务板上，不是调度器；模型可以不等它。
+- 真正的控制流只在 workflow 脚本里。任务板管"还剩什么"，不管"下一步谁跑"。
+- 拆过头会炸。深度 3、并发 20、Explore 一次性、回执安检，都是给"拆得太细"兜底的。
+
+所以拆解的产出不是一张更细的清单，而是**一个能被别人接手的状态**：计划能读，任务能认领，脚本能重跑。
+
+## 8. 如果你要自己搭一个
 
 每层的最小实现，按"不做就会立刻疼"的顺序：
 
@@ -327,6 +381,7 @@ Claude Code 在 `2.1.271+` 做了一套回执安检：
 - 深度和并发两个硬上限，到顶就收工具。
 - 子代理的输出按不可信内容处理：标注来源、去指令化、记录处置结果。
 - 追加写的事件日志 + 显式 checkpoint；fork 就是复制前缀。
+- 拆解要落成可检查的产物：计划文件、任务图、脚本，别只留在对话里。
 
 三个反直觉的结论，算是这篇的收尾：
 
@@ -336,11 +391,11 @@ Claude Code 在 `2.1.271+` 做了一套回执安检：
 
 这四层没有一层是"智能"的。它们是状态机、策略表和边界条件。模型负责生成，harness 负责让生成这件事在时间、权限和失忆的约束下成立。
 
-## 8. 证据与方法
+## 9. 证据与方法
 
-- **文档**：[How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works)、[Interactive mode](https://code.claude.com/docs/en/interactive-mode)、[Context window](https://code.claude.com/docs/en/context-window)、[Subagents](https://code.claude.com/docs/en/sub-agents)、[Sandboxing](https://code.claude.com/docs/en/sandboxing)、[Permissions](https://code.claude.com/docs/en/permissions)。
-- **类型面**：`/plugin-types` 导出，`2.1.277`，13521 行。`turn.*` 事件、`stop_reason` 联合、`ToolName` 联合、`PermissionUpdate` 都在这里。
-- **二进制**：本机 `2.1.319` / `2.1.321` 的字符串表（68MB），分批器、`InboxPoller`、`isConcurrencySafe` 计数、`CLAUDE_CODE_MAX_*`、截断正则都来自这里。
+- **文档**：[How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works)、[Interactive mode](https://code.claude.com/docs/en/interactive-mode)、[Context window](https://code.claude.com/docs/en/context-window)、[Subagents](https://code.claude.com/docs/en/sub-agents)、[Sandboxing](https://code.claude.com/docs/en/sandboxing)、[Permissions](https://code.claude.com/docs/en/permissions)、[Permission modes](https://code.claude.com/docs/en/permission-modes)。
+- **类型面**：`/plugin-types` 导出，`2.1.277`，13521 行。`turn.*` 事件、`stop_reason` 联合、`ToolName` 联合、`PermissionUpdate`、`Workflow` 与 `Agent` 的输入形状都在这里。
+- **二进制**：本机 `2.1.319` / `2.1.321` 的字符串表（68MB）。分批器、`InboxPoller`、`isConcurrencySafe` 计数、`CLAUDE_CODE_MAX_*`、截断正则、`TaskCreate` / `TaskUpdate` 的描述与字段都来自这里。
 - **推断**：凡是文档和类型面都没有明说、只能从命名和相邻代码推出来的（比如 `pause_turn` 的续法、`InboxPoller` 与 turn 边界的对齐方式），文中都标了「推断」。
 
 版本会变，机制的形状不太会。下一次你看到"Claude 好像忘了我刚说的话"，大概可以先想一下：是压缩把哪块白名单漏了，还是那条消息压根没赶上投递边界。
