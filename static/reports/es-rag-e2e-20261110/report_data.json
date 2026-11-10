@@ -1,0 +1,1535 @@
+{
+  "name": "ES RAG asset retrieval E2E — synthetic Chinese corpus",
+  "startedAt": "2026-11-10T18:19:30+0800",
+  "environment": {
+    "index": "assets_e2e_20261110",
+    "es": "Elasticsearch 8.15.3 (single node, 1 GB heap, security disabled)",
+    "embedding": "BAAI/bge-small-zh-v1.5 via fastembed/ONNX, 512 dims, local CPU",
+    "llm": "deterministic extractive mock (OpenAI-compatible endpoint)",
+    "app": "Spring Boot 3.3.5 / Java 23 runtime, target Java 17"
+  },
+  "dataset": {
+    "assets": 23,
+    "queries": 28,
+    "totalContentChars": 8263,
+    "tenants": [
+      "t1",
+      "t2"
+    ]
+  },
+  "ingestion": [
+    {
+      "assetId": "asset-1001",
+      "chunkCount": 2,
+      "latencyMs": 1067.1,
+      "contentChars": 449
+    },
+    {
+      "assetId": "asset-1002",
+      "chunkCount": 2,
+      "latencyMs": 362.08,
+      "contentChars": 403
+    },
+    {
+      "assetId": "asset-1003",
+      "chunkCount": 1,
+      "latencyMs": 153.4,
+      "contentChars": 393
+    },
+    {
+      "assetId": "asset-1004",
+      "chunkCount": 1,
+      "latencyMs": 125.34,
+      "contentChars": 365
+    },
+    {
+      "assetId": "asset-1005",
+      "chunkCount": 2,
+      "latencyMs": 238.43,
+      "contentChars": 416
+    },
+    {
+      "assetId": "asset-1006",
+      "chunkCount": 1,
+      "latencyMs": 173.81,
+      "contentChars": 394
+    },
+    {
+      "assetId": "asset-1007",
+      "chunkCount": 1,
+      "latencyMs": 133.09,
+      "contentChars": 375
+    },
+    {
+      "assetId": "asset-1008",
+      "chunkCount": 2,
+      "latencyMs": 166.44,
+      "contentChars": 406
+    },
+    {
+      "assetId": "asset-1009",
+      "chunkCount": 2,
+      "latencyMs": 130.84,
+      "contentChars": 419
+    },
+    {
+      "assetId": "asset-1010",
+      "chunkCount": 1,
+      "latencyMs": 137.78,
+      "contentChars": 347
+    },
+    {
+      "assetId": "asset-1011",
+      "chunkCount": 1,
+      "latencyMs": 93.22,
+      "contentChars": 367
+    },
+    {
+      "assetId": "asset-1012",
+      "chunkCount": 1,
+      "latencyMs": 167.53,
+      "contentChars": 357
+    },
+    {
+      "assetId": "asset-1013",
+      "chunkCount": 1,
+      "latencyMs": 157.59,
+      "contentChars": 348
+    },
+    {
+      "assetId": "asset-1014",
+      "chunkCount": 1,
+      "latencyMs": 126.99,
+      "contentChars": 380
+    },
+    {
+      "assetId": "asset-1015",
+      "chunkCount": 1,
+      "latencyMs": 164.99,
+      "contentChars": 360
+    },
+    {
+      "assetId": "asset-1016",
+      "chunkCount": 2,
+      "latencyMs": 178.92,
+      "contentChars": 405
+    },
+    {
+      "assetId": "asset-1017",
+      "chunkCount": 1,
+      "latencyMs": 152.22,
+      "contentChars": 396
+    },
+    {
+      "assetId": "asset-1018",
+      "chunkCount": 1,
+      "latencyMs": 158.48,
+      "contentChars": 339
+    },
+    {
+      "assetId": "asset-1019",
+      "chunkCount": 1,
+      "latencyMs": 212.67,
+      "contentChars": 353
+    },
+    {
+      "assetId": "asset-1020",
+      "chunkCount": 1,
+      "latencyMs": 120.28,
+      "contentChars": 333
+    },
+    {
+      "assetId": "asset-2001",
+      "chunkCount": 1,
+      "latencyMs": 107.4,
+      "contentChars": 265
+    },
+    {
+      "assetId": "asset-2002",
+      "chunkCount": 1,
+      "latencyMs": 96.56,
+      "contentChars": 214
+    },
+    {
+      "assetId": "asset-2003",
+      "chunkCount": 1,
+      "latencyMs": 92.54,
+      "contentChars": 179
+    }
+  ],
+  "index": {
+    "docCount": 29,
+    "expectedChunks": 29
+  },
+  "queries": [
+    {
+      "id": "q01",
+      "query": "第四季度收入增长主要由哪个市场带动",
+      "category": "semantic",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-1001"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1001",
+        "asset-1018",
+        "asset-1002",
+        "asset-1004",
+        "asset-1008"
+      ],
+      "scores": {
+        "asset-1001": 0.807148,
+        "asset-1018": 0.781009,
+        "asset-1002": 0.739384,
+        "asset-1004": 0.710655,
+        "asset-1008": 0.678635
+      },
+      "latencyMs": 33.78,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q02",
+      "query": "毛利率下降的原因是什么",
+      "category": "multi-relevant",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-1001",
+        "asset-1004"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1001",
+        "asset-1018",
+        "asset-1002",
+        "asset-1004",
+        "asset-1008"
+      ],
+      "scores": {
+        "asset-1001": 0.748021,
+        "asset-1018": 0.714292,
+        "asset-1002": 0.695819,
+        "asset-1004": 0.694816,
+        "asset-1008": 0.675178
+      },
+      "latencyMs": 31.68,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 0.8772153153380493,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q03",
+      "query": "供应商付款账期是多少天",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:legal"
+      ],
+      "relevant": [
+        "asset-1003"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1003",
+        "asset-1019",
+        "asset-1012",
+        "asset-1020",
+        "asset-1016"
+      ],
+      "scores": {
+        "asset-1003": 0.82431,
+        "asset-1019": 0.732017,
+        "asset-1012": 0.720325,
+        "asset-1020": 0.704865,
+        "asset-1016": 0.704248
+      },
+      "latencyMs": 63.84,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q04",
+      "query": "收到可疑钓鱼邮件应该怎么处理",
+      "category": "policy",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1"
+      ],
+      "relevant": [
+        "asset-1005"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1005",
+        "asset-1016",
+        "asset-1006"
+      ],
+      "scores": {
+        "asset-1005": 0.785212,
+        "asset-1016": 0.688367,
+        "asset-1006": 0.677376
+      },
+      "latencyMs": 33.4,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q05",
+      "query": "在家办公如何连接公司内网",
+      "category": "semantic",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1"
+      ],
+      "relevant": [
+        "asset-1006"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1006",
+        "asset-1005",
+        "asset-1016"
+      ],
+      "scores": {
+        "asset-1006": 0.779566,
+        "asset-1005": 0.729553,
+        "asset-1016": 0.677976
+      },
+      "latencyMs": 22.13,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q06",
+      "query": "客户手机号属于哪个数据级别",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:eng"
+      ],
+      "relevant": [
+        "asset-1007"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1007",
+        "asset-1017",
+        "asset-1016",
+        "asset-1015",
+        "asset-1005"
+      ],
+      "scores": {
+        "asset-1007": 0.855369,
+        "asset-1017": 0.763083,
+        "asset-1016": 0.741857,
+        "asset-1015": 0.729773,
+        "asset-1005": 0.71853
+      },
+      "latencyMs": 39.25,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q07",
+      "query": "支付超时事故的根本原因",
+      "category": "incident",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:eng"
+      ],
+      "relevant": [
+        "asset-1008"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1008",
+        "asset-1009",
+        "asset-1016",
+        "asset-1005",
+        "asset-1004"
+      ],
+      "scores": {
+        "asset-1008": 0.791597,
+        "asset-1009": 0.686614,
+        "asset-1016": 0.666603,
+        "asset-1005": 0.659087,
+        "asset-1004": 0.657763
+      },
+      "latencyMs": 33.09,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q08",
+      "query": "API 网关采用什么限流算法",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:eng"
+      ],
+      "relevant": [
+        "asset-1009"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1009",
+        "asset-1016",
+        "asset-1017",
+        "asset-1008",
+        "asset-1007"
+      ],
+      "scores": {
+        "asset-1009": 0.860363,
+        "asset-1016": 0.748406,
+        "asset-1017": 0.709883,
+        "asset-1008": 0.709601,
+        "asset-1007": 0.700867
+      },
+      "latencyMs": 40.47,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q09",
+      "query": "员工满意度得分是多少",
+      "category": "hr",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:hr"
+      ],
+      "relevant": [
+        "asset-1010"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1010",
+        "asset-1005",
+        "asset-1011",
+        "asset-1016",
+        "asset-1012"
+      ],
+      "scores": {
+        "asset-1010": 0.844603,
+        "asset-1005": 0.738342,
+        "asset-1011": 0.727022,
+        "asset-1016": 0.708135,
+        "asset-1012": 0.691895
+      },
+      "latencyMs": 33.64,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q10",
+      "query": "调薪从什么时候开始生效",
+      "category": "hr",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:hr"
+      ],
+      "relevant": [
+        "asset-1011"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1011",
+        "asset-1010",
+        "asset-1012",
+        "asset-1016",
+        "asset-1005"
+      ],
+      "scores": {
+        "asset-1011": 0.828551,
+        "asset-1010": 0.73993,
+        "asset-1012": 0.699383,
+        "asset-1016": 0.677568,
+        "asset-1005": 0.675879
+      },
+      "latencyMs": 32.94,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q11",
+      "query": "劳动合同续签需要提前多久",
+      "category": "policy",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:hr"
+      ],
+      "relevant": [
+        "asset-1012"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1012",
+        "asset-1011",
+        "asset-1005",
+        "asset-1016",
+        "asset-1010"
+      ],
+      "scores": {
+        "asset-1012": 0.864922,
+        "asset-1011": 0.744338,
+        "asset-1005": 0.724748,
+        "asset-1016": 0.701824,
+        "asset-1010": 0.700368
+      },
+      "latencyMs": 21.88,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q12",
+      "query": "海外市场重点进入哪些国家",
+      "category": "semantic",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:exec"
+      ],
+      "relevant": [
+        "asset-1013"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1013",
+        "asset-1001",
+        "asset-1014",
+        "asset-1018",
+        "asset-1006"
+      ],
+      "scores": {
+        "asset-1013": 0.830194,
+        "asset-1001": 0.716841,
+        "asset-1014": 0.713439,
+        "asset-1018": 0.679,
+        "asset-1006": 0.646899
+      },
+      "latencyMs": 26.25,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q13",
+      "query": "商标在哪些国家注册",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:legal"
+      ],
+      "relevant": [
+        "asset-1014"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1014",
+        "asset-1016",
+        "asset-1019",
+        "asset-1015",
+        "asset-1020"
+      ],
+      "scores": {
+        "asset-1014": 0.835299,
+        "asset-1016": 0.682343,
+        "asset-1019": 0.673662,
+        "asset-1015": 0.671204,
+        "asset-1020": 0.666543
+      },
+      "latencyMs": 22.96,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q14",
+      "query": "数据出境需要做哪些合规评估",
+      "category": "policy",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:legal"
+      ],
+      "relevant": [
+        "asset-1015"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1015",
+        "asset-1007",
+        "asset-1016",
+        "asset-1005",
+        "asset-1020"
+      ],
+      "scores": {
+        "asset-1015": 0.867919,
+        "asset-1007": 0.73866,
+        "asset-1016": 0.708958,
+        "asset-1005": 0.700894,
+        "asset-1020": 0.69962
+      },
+      "latencyMs": 26.22,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q15",
+      "query": "资产录入需要填哪些字段",
+      "category": "manual",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1"
+      ],
+      "relevant": [
+        "asset-1016"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1016",
+        "asset-1005",
+        "asset-1006"
+      ],
+      "scores": {
+        "asset-1016": 0.832241,
+        "asset-1005": 0.698442,
+        "asset-1006": 0.643966
+      },
+      "latencyMs": 30.13,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q16",
+      "query": "召回率评估用什么指标",
+      "category": "evaluation",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:eng"
+      ],
+      "relevant": [
+        "asset-1017"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1017",
+        "asset-1016",
+        "asset-1015",
+        "asset-1008",
+        "asset-1009"
+      ],
+      "scores": {
+        "asset-1017": 0.803184,
+        "asset-1016": 0.722267,
+        "asset-1015": 0.706071,
+        "asset-1008": 0.701849,
+        "asset-1009": 0.696261
+      },
+      "latencyMs": 23.3,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q17",
+      "query": "第一季度收入增长多少",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-1018"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1018",
+        "asset-1001",
+        "asset-1002",
+        "asset-1004",
+        "asset-1016"
+      ],
+      "scores": {
+        "asset-1018": 0.77302,
+        "asset-1001": 0.762107,
+        "asset-1002": 0.705009,
+        "asset-1004": 0.704972,
+        "asset-1016": 0.654222
+      },
+      "latencyMs": 31.0,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q18",
+      "query": "预算什么时候提交",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-1002"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1002",
+        "asset-1001",
+        "asset-1003",
+        "asset-1004",
+        "asset-1019"
+      ],
+      "scores": {
+        "asset-1002": 0.812463,
+        "asset-1001": 0.808802,
+        "asset-1003": 0.74376,
+        "asset-1004": 0.734913,
+        "asset-1019": 0.72143
+      },
+      "latencyMs": 29.21,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q19",
+      "query": "芯片采购成本为什么上升",
+      "category": "causal",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-1004"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1004",
+        "asset-1001",
+        "asset-1019",
+        "asset-1018",
+        "asset-1002"
+      ],
+      "scores": {
+        "asset-1004": 0.884071,
+        "asset-1001": 0.802376,
+        "asset-1019": 0.780002,
+        "asset-1018": 0.749177,
+        "asset-1002": 0.726706
+      },
+      "latencyMs": 23.87,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q20",
+      "query": "采购超过 500 万需要谁审批",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-1019"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1019",
+        "asset-1003",
+        "asset-1016",
+        "asset-1008",
+        "asset-1004"
+      ],
+      "scores": {
+        "asset-1019": 0.856633,
+        "asset-1003": 0.75929,
+        "asset-1016": 0.745594,
+        "asset-1008": 0.729212,
+        "asset-1004": 0.724089
+      },
+      "latencyMs": 38.05,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q21",
+      "query": "客户合同归档多久内完成",
+      "category": "exact",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:legal"
+      ],
+      "relevant": [
+        "asset-1020"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1020",
+        "asset-1003",
+        "asset-1012",
+        "asset-1005",
+        "asset-1015"
+      ],
+      "scores": {
+        "asset-1020": 0.853585,
+        "asset-1003": 0.802302,
+        "asset-1012": 0.778864,
+        "asset-1005": 0.739696,
+        "asset-1015": 0.727702
+      },
+      "latencyMs": 37.71,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q22",
+      "query": "Q4 财务分析报告",
+      "category": "tenant-isolation",
+      "tenantId": "t2",
+      "principals": [
+        "tenant:t2",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-2001"
+      ],
+      "forbidden": [
+        "asset-1001"
+      ],
+      "returned": [
+        "asset-2001",
+        "asset-2002"
+      ],
+      "scores": {
+        "asset-2001": 0.733755,
+        "asset-2002": 0.658604
+      },
+      "latencyMs": 31.96,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q23",
+      "query": "员工满意度",
+      "category": "acl-negative",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [],
+      "forbidden": [
+        "asset-1010",
+        "asset-1011",
+        "asset-1012"
+      ],
+      "returned": [
+        "asset-1018",
+        "asset-1005",
+        "asset-1001",
+        "asset-1016",
+        "asset-1002"
+      ],
+      "scores": {
+        "asset-1018": 0.700307,
+        "asset-1005": 0.698499,
+        "asset-1001": 0.694336,
+        "asset-1016": 0.683821,
+        "asset-1002": 0.678141
+      },
+      "latencyMs": 35.24,
+      "recallAt1": null,
+      "recallAt5": null,
+      "mrr": null,
+      "ndcgAt5": null,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q24",
+      "query": "供应商付款账期",
+      "category": "acl-negative",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1"
+      ],
+      "relevant": [],
+      "forbidden": [
+        "asset-1003"
+      ],
+      "returned": [
+        "asset-1016",
+        "asset-1005",
+        "asset-1006"
+      ],
+      "scores": {
+        "asset-1016": 0.704204,
+        "asset-1005": 0.655827,
+        "asset-1006": 0.628603
+      },
+      "latencyMs": 25.55,
+      "recallAt1": null,
+      "recallAt5": null,
+      "mrr": null,
+      "ndcgAt5": null,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q25",
+      "query": "供应商付款账期",
+      "category": "tenant-isolation",
+      "tenantId": "t2",
+      "principals": [
+        "tenant:t2",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-2002"
+      ],
+      "forbidden": [
+        "asset-1003"
+      ],
+      "returned": [
+        "asset-2002",
+        "asset-2001"
+      ],
+      "scores": {
+        "asset-2002": 0.772126,
+        "asset-2001": 0.671809
+      },
+      "latencyMs": 18.92,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q26",
+      "query": "员工满意度",
+      "category": "tenant-isolation",
+      "tenantId": "t2",
+      "principals": [
+        "tenant:t2",
+        "group:hr"
+      ],
+      "relevant": [
+        "asset-2003"
+      ],
+      "forbidden": [
+        "asset-1010"
+      ],
+      "returned": [
+        "asset-2003"
+      ],
+      "scores": {
+        "asset-2003": 0.791854
+      },
+      "latencyMs": 17.22,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q27",
+      "query": "2024 年 Q4 财务分析报告",
+      "category": "tenant-isolation",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:finance"
+      ],
+      "relevant": [
+        "asset-1001"
+      ],
+      "forbidden": [
+        "asset-2001"
+      ],
+      "returned": [
+        "asset-1001",
+        "asset-1002",
+        "asset-1018",
+        "asset-1016",
+        "asset-1004"
+      ],
+      "scores": {
+        "asset-1001": 0.812622,
+        "asset-1002": 0.74972,
+        "asset-1018": 0.741204,
+        "asset-1016": 0.707487,
+        "asset-1004": 0.702599
+      },
+      "latencyMs": 26.43,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    },
+    {
+      "id": "q28",
+      "query": "asset-1015",
+      "category": "exact-id",
+      "tenantId": "t1",
+      "principals": [
+        "tenant:t1",
+        "group:legal"
+      ],
+      "relevant": [
+        "asset-1015"
+      ],
+      "forbidden": [],
+      "returned": [
+        "asset-1015"
+      ],
+      "scores": {
+        "asset-1015": 0.0
+      },
+      "latencyMs": 20.02,
+      "recallAt1": 1.0,
+      "recallAt5": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 1.0,
+      "forbiddenReturned": [],
+      "pass": true
+    }
+  ],
+  "metrics": {
+    "retrievalQueries": 26,
+    "recallAt1": 1.0,
+    "recallAt5": 1.0,
+    "mrr": 1.0,
+    "ndcgAt5": 0.9953,
+    "negativeQueries": 2,
+    "negativePass": 2,
+    "forbiddenReturned": 0,
+    "searchLatencyMs": {
+      "p50": 30.13,
+      "p95": 40.47
+    },
+    "ingestionLatencyMs": {
+      "p50": 153.4,
+      "p95": 362.08
+    }
+  },
+  "rag": {
+    "queries": [
+      {
+        "id": "q01",
+        "question": "第四季度收入增长主要由哪个市场带动",
+        "answer": "根据资料：2024 年第四季度，公司实现营业收入 3.82 亿元，同比增长 18%。增长主要由海外市场带动：海外收入同比增长 42%，国内收入同比增长 9%。海外市场中，东南亚贡献最大，其次是欧洲。 第四季度毛利率为 41.3%，较去年同期下降 2. [1]；另外，2025 年度预算编制说明》。 本报告的数据口径为合并报表，未经审计。收入确认遵循新收入准则，海外收入按交付时的即期汇率折算。报告由财务分析组编制，每月 10  [2]。",
+        "citations": [
+          {
+            "no": 1,
+            "chunkId": "t1:asset-1001:0",
+            "assetId": "asset-1001",
+            "assetName": "2024 年 Q4 财务分析报告",
+            "text": "2024 年第四季度，公司实现营业收入 3.82 亿元，同比增长 18%。增长主要由海外市场带动：海外收入同比增长 42%，国内收入同比增长 9%。海外市场中，东南亚贡献最大，其次是欧洲。 第四季度毛利率为 41.3%，较去年同期下降 2.1 个百分点。毛利率下降的主要原因是芯片采购成本上升 12%，以及跨境物流费用增加。芯片成本上升详见《芯片采购成本分析》。 第四季度净利润为 0.51 亿元，经营性现金流为 1.20 亿元。销售费用率..."
+          },
+          {
+            "no": 2,
+            "chunkId": "t1:asset-1001:1",
+            "assetId": "asset-1001",
+            "assetName": "2024 年 Q4 财务分析报告",
+            "text": "2025 年度预算编制说明》。 本报告的数据口径为合并报表，未经审计。收入确认遵循新收入准则，海外收入按交付时的即期汇率折算。报告由财务分析组编制，每月 10 日更新管理报表，季度结束后 15 日发布正式分析。读者如需下钻到客户或项目维度，请使用财务数据集市中的 Q4 明细视图。"
+          },
+          {
+            "no": 3,
+            "chunkId": "t1:asset-1018:0",
+            "assetId": "asset-1018",
+            "assetName": "2025 年 Q1 经营分析",
+            "text": "2025 年第一季度，公司营业收入 1.05 亿元，同比增长 12%。云业务收入同比增长 30%，占总收入的 28%；传统软件收入同比增长 4%。海外收入同比增长 25%，国内收入同比增长 8%。 第一季度毛利率为 42.0%，较 2024 年第四季度回升 0.7 个百分点，主要得益于芯片采购价格企稳和交付效率提升。净利润为 0.14 亿元，销售费用率同比下降 0.5 个百分点。 第二季度重点是扩大云业务渗透率、控制海外交付成本，并完成..."
+          },
+          {
+            "no": 4,
+            "chunkId": "t1:asset-1002:1",
+            "assetId": "asset-1002",
+            "assetName": "2025 年度预算编制说明",
+            "text": "入、成本、费用、资本性支出和人员编制五张表。各部门提交前应完成上一版预算的执行偏差分析。财务 BP 会组织两轮评审，第一轮看业务假设，第二轮看现金流和利润影响。预算定稿后，系统自动锁定基线版本。"
+          },
+          {
+            "no": 5,
+            "chunkId": "t1:asset-1002:0",
+            "assetId": "asset-1002",
+            "assetName": "2025 年度预算编制说明",
+            "text": "2025 年度预算编制从 11 月 1 日开始。各部门应在 11 月 30 日前完成部门预算草案，并提交财务 BP 审核。财务 BP 在 12 月 10 日前完成汇总和平衡，12 月 20 日提交经营管理会审批，12 月 31 日前完成预算系统录入。 预算编制遵循“收入按项目、成本按科目、费用按部门”的原则。单笔金额超过 50 万元的资本性支出，必须附投资回报测算和现金流计划。新增 headcount 需要部门负责人和 HRBP 共同签..."
+          },
+          {
+            "no": 6,
+            "chunkId": "t1:asset-1004:0",
+            "assetId": "asset-1004",
+            "assetName": "芯片采购成本分析",
+            "text": "2024 年芯片采购平均成本同比上升 12%。成本上升有三个原因：第一，晶圆代工价格上调 8%；第二，供应商集中度高，前两大供应商占采购额的 70%，议价空间有限；第三，美元对人民币汇率波动带来约 2% 的额外成本。 为降低风险，采购部计划在 2025 年引入第二供应商，把单一供应商占比降到 50% 以下。同时把关键芯片的安全库存从 3 个月提高到 6 个月，预计占用现金约 3000 万元。 如果芯片价格继续上涨 10%，全年毛利率将下..."
+          },
+          {
+            "no": 7,
+            "chunkId": "t1:asset-1008:0",
+            "assetId": "asset-1008",
+            "assetName": "生产事故复盘：支付超时",
+            "text": "2025 年 2 月 14 日 10:03 至 10:26，支付接口出现大面积超时，持续 23 分钟。期间支付成功率从 99.2% 下降到 71%，影响订单约 1.8 万笔，未造成资金损失。 根本原因是数据库连接池被离线对账任务占满。对账任务在 10:00 启动，使用了与在线支付相同的连接池，导致支付服务无法获取连接。监控只配置了接口错误率告警，没有配置连接池等待时间告警，因此发现延迟了 8 分钟。 整改措施：对账任务使用独立连接池；支..."
+          },
+          {
+            "no": 8,
+            "chunkId": "t1:asset-1008:1",
+            "assetId": "asset-1008",
+            "assetName": "生产事故复盘：支付超时",
+            "text": "循“无责复盘”原则，重点是还原时间线和系统行为，不追究个人责任。所有改进项都有负责人、截止日期和验收标准。SRE 每周跟踪整改项，逾期未完成的升级到技术委员会。复盘文档保存至少 3 年。"
+          }
+        ],
+        "retrievedAssetIds": [
+          "asset-1001",
+          "asset-1018",
+          "asset-1002",
+          "asset-1004",
+          "asset-1008"
+        ],
+        "citedNos": [
+          1,
+          2
+        ],
+        "latencyMs": 39.39,
+        "citationValid": true
+      },
+      {
+        "id": "q03",
+        "question": "供应商付款账期是多少天",
+        "answer": "根据资料：本合同有效期自 2025 年 1 月 1 日起至 2026 年 12 月 31 日止。供应商应在每月 5 日前提交上月对账单，采购方在收到发票后 60 日内付款。付款账期为 60 天，不接受提前付款。 供应商延迟交付的，每延迟一日按合同金额 [1]；另外，采购审批按金额分级。单笔 5 万元以下由部门经理审批；5 万元至 50 万元由部门总监审批；50 万元至 500 万元由 CFO 审批；超过 500 万元由 C [2]。",
+        "citations": [
+          {
+            "no": 1,
+            "chunkId": "t1:asset-1003:0",
+            "assetId": "asset-1003",
+            "assetName": "供应商采购框架合同",
+            "text": "本合同有效期自 2025 年 1 月 1 日起至 2026 年 12 月 31 日止。供应商应在每月 5 日前提交上月对账单，采购方在收到发票后 60 日内付款。付款账期为 60 天，不接受提前付款。 供应商延迟交付的，每延迟一日按合同金额的 0.05% 支付违约金，累计不超过合同金额的 5%。因质量问题造成的返工费用由供应商承担。合同到期前 90 天，双方应书面确认是否续约；未确认的，合同到期自动终止。 争议解决适用中华人民共和国法律..."
+          },
+          {
+            "no": 2,
+            "chunkId": "t1:asset-1019:0",
+            "assetId": "asset-1019",
+            "assetName": "采购审批权限矩阵",
+            "text": "采购审批按金额分级。单笔 5 万元以下由部门经理审批；5 万元至 50 万元由部门总监审批；50 万元至 500 万元由 CFO 审批；超过 500 万元由 CEO 审批。超过 5000 万元的采购，还需提交董事会审议。 所有超过 10 万元的采购，必须取得至少三家供应商的报价。单一来源采购需要说明理由，并由采购委员会批准。紧急采购可以先执行后补审批，但必须在 3 个工作日内补齐材料。 采购申请人不得同时担任验收人。验收完成后，发票、合..."
+          },
+          {
+            "no": 3,
+            "chunkId": "t1:asset-1012:0",
+            "assetId": "asset-1012",
+            "assetName": "劳动合同续签流程",
+            "text": "劳动合同到期前 30 天，HR 应启动续签流程。HR 先向员工发送续签意向书，员工应在 5 个工作日内确认是否续签。员工同意续签的，由部门负责人评估绩效和岗位匹配度，HR 审核合同条款。 续签合同应在到期前完成签署。因特殊情况无法按时签署的，最长可延长 10 个工作日，但必须取得员工书面同意。员工不同意续签的，按终止劳动合同流程办理，并依法支付经济补偿。 连续订立两次固定期限合同后，员工提出订立无固定期限合同的，公司应依法订立。续签材料..."
+          },
+          {
+            "no": 4,
+            "chunkId": "t1:asset-1020:0",
+            "assetId": "asset-1020",
+            "assetName": "客户合同归档规范",
+            "text": "客户合同签署完成后，业务负责人应在 10 个工作日内完成归档。归档材料包括合同正文、附件、审批单、对方资质和签署授权文件。电子合同使用公司统一的电子签平台，禁止只保存扫描件。 归档命名规则为“客户名称_合同类型_签署日期_版本号”。合同保留期限为签署之日起 10 年；涉及诉讼或审计的合同，保留到事项结束后 2 年。到期销毁需要法务和财务双人审批。 合同借阅需要登记用途和归还时间。外部人员查阅合同，必须签署保密协议，并由法务陪同。合同原件..."
+          },
+          {
+            "no": 5,
+            "chunkId": "t1:asset-1016:1",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "份-流水号”，例如 RPT-2025-001。资产描述应写清楚用途、覆盖范围和有效期，避免只写“相关文档”。批量导入使用 CSV 模板，单次不超过 500 条。资产负责人变更时，权限和审批责任一并转移。"
+          },
+          {
+            "no": 6,
+            "chunkId": "t1:asset-1016:0",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "登录资产管理系统后，在“资产管理”页面点击“新建资产”。必填字段包括资产名称、资产类型、所属部门、负责人和资产描述；选填字段包括标签和访问控制组。资产名称不能重复，资产编号由系统自动生成。 录入正文后，系统会自动切块并建立向量索引。上传附件支持 PDF、Word 和 Markdown，单个文件不超过 20MB。点击“提交”后，通常 1 分钟内可以搜索到；如果超过 5 分钟仍未出现，请联系 IT 服务台。 在搜索框输入自然语言问题即可检索..."
+          }
+        ],
+        "retrievedAssetIds": [
+          "asset-1003",
+          "asset-1019",
+          "asset-1012",
+          "asset-1020",
+          "asset-1016"
+        ],
+        "citedNos": [
+          1,
+          2
+        ],
+        "latencyMs": 23.84,
+        "citationValid": true
+      },
+      {
+        "id": "q07",
+        "question": "支付超时事故的根本原因",
+        "answer": "根据资料：2025 年 2 月 14 日 10:03 至 10:26，支付接口出现大面积超时，持续 23 分钟。期间支付成功率从 99.2% 下降到 71%，影响订单约 1.8 万笔，未造成资金损失。 根本原因是数据库连接池被离线对账任务占满。对账任 [1]；另外，循“无责复盘”原则，重点是还原时间线和系统行为，不追究个人责任。所有改进项都有负责人、截止日期和验收标准。SRE 每周跟踪整改项，逾期未完成的升级到技术委员会。 [2]。",
+        "citations": [
+          {
+            "no": 1,
+            "chunkId": "t1:asset-1008:0",
+            "assetId": "asset-1008",
+            "assetName": "生产事故复盘：支付超时",
+            "text": "2025 年 2 月 14 日 10:03 至 10:26，支付接口出现大面积超时，持续 23 分钟。期间支付成功率从 99.2% 下降到 71%，影响订单约 1.8 万笔，未造成资金损失。 根本原因是数据库连接池被离线对账任务占满。对账任务在 10:00 启动，使用了与在线支付相同的连接池，导致支付服务无法获取连接。监控只配置了接口错误率告警，没有配置连接池等待时间告警，因此发现延迟了 8 分钟。 整改措施：对账任务使用独立连接池；支..."
+          },
+          {
+            "no": 2,
+            "chunkId": "t1:asset-1008:1",
+            "assetId": "asset-1008",
+            "assetName": "生产事故复盘：支付超时",
+            "text": "循“无责复盘”原则，重点是还原时间线和系统行为，不追究个人责任。所有改进项都有负责人、截止日期和验收标准。SRE 每周跟踪整改项，逾期未完成的升级到技术委员会。复盘文档保存至少 3 年。"
+          },
+          {
+            "no": 3,
+            "chunkId": "t1:asset-1009:1",
+            "assetId": "asset-1009",
+            "assetName": "API 网关限流方案",
+            "text": "合。 网关限流配置通过配置中心下发，支持按租户、接口和环境覆盖。压测时重点观察令牌桶的突发容量是否被瞬时流量打穿，以及 Redis 不可用时是否降级为本地限流。拒绝请求必须记录租户、接口、配额和当前速率，方便客户排查。"
+          },
+          {
+            "no": 4,
+            "chunkId": "t1:asset-1009:0",
+            "assetId": "asset-1009",
+            "assetName": "API 网关限流方案",
+            "text": "API 网关采用 Token Bucket 算法做租户级限流。默认每个租户 1000 QPS，突发容量 2000，令牌桶按秒补充。大客户可以在合同中约定更高配额，配额配置下发到网关集群，变更在 30 秒内生效。 超过配额时返回 HTTP 429，并在响应头中带上 Retry-After 和当前配额。网关同时支持按接口维度的二级限流，防止单个重接口拖垮整个租户。限流键由 tenant_id + route 组成，禁止使用来源 IP 作为唯..."
+          },
+          {
+            "no": 5,
+            "chunkId": "t1:asset-1016:1",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "份-流水号”，例如 RPT-2025-001。资产描述应写清楚用途、覆盖范围和有效期，避免只写“相关文档”。批量导入使用 CSV 模板，单次不超过 500 条。资产负责人变更时，权限和审批责任一并转移。"
+          },
+          {
+            "no": 6,
+            "chunkId": "t1:asset-1016:0",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "登录资产管理系统后，在“资产管理”页面点击“新建资产”。必填字段包括资产名称、资产类型、所属部门、负责人和资产描述；选填字段包括标签和访问控制组。资产名称不能重复，资产编号由系统自动生成。 录入正文后，系统会自动切块并建立向量索引。上传附件支持 PDF、Word 和 Markdown，单个文件不超过 20MB。点击“提交”后，通常 1 分钟内可以搜索到；如果超过 5 分钟仍未出现，请联系 IT 服务台。 在搜索框输入自然语言问题即可检索..."
+          },
+          {
+            "no": 7,
+            "chunkId": "t1:asset-1005:1",
+            "assetId": "asset-1005",
+            "assetName": "员工信息安全培训手册",
+            "text": "职第一周必须完成信息安全培训并通过考试，考试低于 80 分需要重考。每年至少进行一次全员钓鱼演练，点击率纳入部门安全指标。安全团队不会通过邮件索要密码或验证码；遇到此类邮件，即使发件人显示为内部同事，也应按可疑邮件处理。"
+          },
+          {
+            "no": 8,
+            "chunkId": "t1:asset-1005:0",
+            "assetId": "asset-1005",
+            "assetName": "员工信息安全培训手册",
+            "text": "收到可疑邮件时，不要点击链接，不要打开附件，也不要回复发件人。请保留邮件原始头信息，并立即转发到 security@example.com。安全团队会在 30 分钟内确认；如果已经点击，请立即断开网络并拨打安全热线，不要自行删除证据。 所有员工必须使用至少 12 位、包含大小写字母、数字和符号的密码，并开启多因素认证（MFA）。禁止在多个系统复用同一密码，禁止把密码写在便签或共享文档里。密码泄露后应在 1 小时内修改。 公司电脑禁止连接..."
+          },
+          {
+            "no": 9,
+            "chunkId": "t1:asset-1004:0",
+            "assetId": "asset-1004",
+            "assetName": "芯片采购成本分析",
+            "text": "2024 年芯片采购平均成本同比上升 12%。成本上升有三个原因：第一，晶圆代工价格上调 8%；第二，供应商集中度高，前两大供应商占采购额的 70%，议价空间有限；第三，美元对人民币汇率波动带来约 2% 的额外成本。 为降低风险，采购部计划在 2025 年引入第二供应商，把单一供应商占比降到 50% 以下。同时把关键芯片的安全库存从 3 个月提高到 6 个月，预计占用现金约 3000 万元。 如果芯片价格继续上涨 10%，全年毛利率将下..."
+          }
+        ],
+        "retrievedAssetIds": [
+          "asset-1008",
+          "asset-1009",
+          "asset-1016",
+          "asset-1005",
+          "asset-1004"
+        ],
+        "citedNos": [
+          1,
+          2
+        ],
+        "latencyMs": 26.89,
+        "citationValid": true
+      },
+      {
+        "id": "q14",
+        "question": "数据出境需要做哪些合规评估",
+        "answer": "根据资料：向境外提供个人信息前，必须完成数据出境合规评估。评估路径包括：通过国家网信部门的安全评估、订立个人信息出境标准合同，或者取得个人信息保护认证。涉及重要数据，或者处理超过 100 万人个人信息的，必须申报安全评估。 评估前要完成数据映射：列出 [1]；另外，客户数据分为四级。L1 为公开数据，例如已发布的产品介绍；L2 为内部数据，例如脱敏后的统计报表；L3 为机密数据，例如客户姓名、手机号、邮箱、身份证号等个人身 [2]。",
+        "citations": [
+          {
+            "no": 1,
+            "chunkId": "t1:asset-1015:0",
+            "assetId": "asset-1015",
+            "assetName": "数据出境合规评估",
+            "text": "向境外提供个人信息前，必须完成数据出境合规评估。评估路径包括：通过国家网信部门的安全评估、订立个人信息出境标准合同，或者取得个人信息保护认证。涉及重要数据，或者处理超过 100 万人个人信息的，必须申报安全评估。 评估前要完成数据映射：列出数据字段、数量、敏感程度、接收方、传输方式和保存期限。接收方必须提供安全保护能力说明，并签署数据处理协议。评估材料由法务、安全和业务共同评审。 安全评估的法定时限一般为 3 个月，材料不齐会重新计算。..."
+          },
+          {
+            "no": 2,
+            "chunkId": "t1:asset-1007:0",
+            "assetId": "asset-1007",
+            "assetName": "客户数据分级分类标准",
+            "text": "客户数据分为四级。L1 为公开数据，例如已发布的产品介绍；L2 为内部数据，例如脱敏后的统计报表；L3 为机密数据，例如客户姓名、手机号、邮箱、身份证号等个人身份信息；L4 为限制级数据，例如支付密钥、完整银行卡号、生物识别信息。 客户手机号属于 L3 机密数据。L3 数据必须加密存储，访问需要业务负责人审批，传输必须使用公司加密通道。L4 数据还需要双人审批和操作审计，禁止导出到个人设备。 客户数据的默认保留期限为业务结束后 3 年。..."
+          },
+          {
+            "no": 3,
+            "chunkId": "t1:asset-1016:1",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "份-流水号”，例如 RPT-2025-001。资产描述应写清楚用途、覆盖范围和有效期，避免只写“相关文档”。批量导入使用 CSV 模板，单次不超过 500 条。资产负责人变更时，权限和审批责任一并转移。"
+          },
+          {
+            "no": 4,
+            "chunkId": "t1:asset-1016:0",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "登录资产管理系统后，在“资产管理”页面点击“新建资产”。必填字段包括资产名称、资产类型、所属部门、负责人和资产描述；选填字段包括标签和访问控制组。资产名称不能重复，资产编号由系统自动生成。 录入正文后，系统会自动切块并建立向量索引。上传附件支持 PDF、Word 和 Markdown，单个文件不超过 20MB。点击“提交”后，通常 1 分钟内可以搜索到；如果超过 5 分钟仍未出现，请联系 IT 服务台。 在搜索框输入自然语言问题即可检索..."
+          },
+          {
+            "no": 5,
+            "chunkId": "t1:asset-1005:1",
+            "assetId": "asset-1005",
+            "assetName": "员工信息安全培训手册",
+            "text": "职第一周必须完成信息安全培训并通过考试，考试低于 80 分需要重考。每年至少进行一次全员钓鱼演练，点击率纳入部门安全指标。安全团队不会通过邮件索要密码或验证码；遇到此类邮件，即使发件人显示为内部同事，也应按可疑邮件处理。"
+          },
+          {
+            "no": 6,
+            "chunkId": "t1:asset-1005:0",
+            "assetId": "asset-1005",
+            "assetName": "员工信息安全培训手册",
+            "text": "收到可疑邮件时，不要点击链接，不要打开附件，也不要回复发件人。请保留邮件原始头信息，并立即转发到 security@example.com。安全团队会在 30 分钟内确认；如果已经点击，请立即断开网络并拨打安全热线，不要自行删除证据。 所有员工必须使用至少 12 位、包含大小写字母、数字和符号的密码，并开启多因素认证（MFA）。禁止在多个系统复用同一密码，禁止把密码写在便签或共享文档里。密码泄露后应在 1 小时内修改。 公司电脑禁止连接..."
+          },
+          {
+            "no": 7,
+            "chunkId": "t1:asset-1020:0",
+            "assetId": "asset-1020",
+            "assetName": "客户合同归档规范",
+            "text": "客户合同签署完成后，业务负责人应在 10 个工作日内完成归档。归档材料包括合同正文、附件、审批单、对方资质和签署授权文件。电子合同使用公司统一的电子签平台，禁止只保存扫描件。 归档命名规则为“客户名称_合同类型_签署日期_版本号”。合同保留期限为签署之日起 10 年；涉及诉讼或审计的合同，保留到事项结束后 2 年。到期销毁需要法务和财务双人审批。 合同借阅需要登记用途和归还时间。外部人员查阅合同，必须签署保密协议，并由法务陪同。合同原件..."
+          }
+        ],
+        "retrievedAssetIds": [
+          "asset-1015",
+          "asset-1007",
+          "asset-1016",
+          "asset-1005",
+          "asset-1020"
+        ],
+        "citedNos": [
+          1,
+          2
+        ],
+        "latencyMs": 27.17,
+        "citationValid": true
+      },
+      {
+        "id": "q20",
+        "question": "采购超过 500 万需要谁审批",
+        "answer": "根据资料：采购审批按金额分级。单笔 5 万元以下由部门经理审批；5 万元至 50 万元由部门总监审批；50 万元至 500 万元由 CFO 审批；超过 500 万元由 CEO 审批。超过 5000 万元的采购，还需提交董事会审议。 所有超过 10 万 [1]；另外，本合同有效期自 2025 年 1 月 1 日起至 2026 年 12 月 31 日止。供应商应在每月 5 日前提交上月对账单，采购方在收到发票后 60 日内付款 [2]。",
+        "citations": [
+          {
+            "no": 1,
+            "chunkId": "t1:asset-1019:0",
+            "assetId": "asset-1019",
+            "assetName": "采购审批权限矩阵",
+            "text": "采购审批按金额分级。单笔 5 万元以下由部门经理审批；5 万元至 50 万元由部门总监审批；50 万元至 500 万元由 CFO 审批；超过 500 万元由 CEO 审批。超过 5000 万元的采购，还需提交董事会审议。 所有超过 10 万元的采购，必须取得至少三家供应商的报价。单一来源采购需要说明理由，并由采购委员会批准。紧急采购可以先执行后补审批，但必须在 3 个工作日内补齐材料。 采购申请人不得同时担任验收人。验收完成后，发票、合..."
+          },
+          {
+            "no": 2,
+            "chunkId": "t1:asset-1003:0",
+            "assetId": "asset-1003",
+            "assetName": "供应商采购框架合同",
+            "text": "本合同有效期自 2025 年 1 月 1 日起至 2026 年 12 月 31 日止。供应商应在每月 5 日前提交上月对账单，采购方在收到发票后 60 日内付款。付款账期为 60 天，不接受提前付款。 供应商延迟交付的，每延迟一日按合同金额的 0.05% 支付违约金，累计不超过合同金额的 5%。因质量问题造成的返工费用由供应商承担。合同到期前 90 天，双方应书面确认是否续约；未确认的，合同到期自动终止。 争议解决适用中华人民共和国法律..."
+          },
+          {
+            "no": 3,
+            "chunkId": "t1:asset-1016:1",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "份-流水号”，例如 RPT-2025-001。资产描述应写清楚用途、覆盖范围和有效期，避免只写“相关文档”。批量导入使用 CSV 模板，单次不超过 500 条。资产负责人变更时，权限和审批责任一并转移。"
+          },
+          {
+            "no": 4,
+            "chunkId": "t1:asset-1016:0",
+            "assetId": "asset-1016",
+            "assetName": "资产管理系统操作手册",
+            "text": "登录资产管理系统后，在“资产管理”页面点击“新建资产”。必填字段包括资产名称、资产类型、所属部门、负责人和资产描述；选填字段包括标签和访问控制组。资产名称不能重复，资产编号由系统自动生成。 录入正文后，系统会自动切块并建立向量索引。上传附件支持 PDF、Word 和 Markdown，单个文件不超过 20MB。点击“提交”后，通常 1 分钟内可以搜索到；如果超过 5 分钟仍未出现，请联系 IT 服务台。 在搜索框输入自然语言问题即可检索..."
+          },
+          {
+            "no": 5,
+            "chunkId": "t1:asset-1008:0",
+            "assetId": "asset-1008",
+            "assetName": "生产事故复盘：支付超时",
+            "text": "2025 年 2 月 14 日 10:03 至 10:26，支付接口出现大面积超时，持续 23 分钟。期间支付成功率从 99.2% 下降到 71%，影响订单约 1.8 万笔，未造成资金损失。 根本原因是数据库连接池被离线对账任务占满。对账任务在 10:00 启动，使用了与在线支付相同的连接池，导致支付服务无法获取连接。监控只配置了接口错误率告警，没有配置连接池等待时间告警，因此发现延迟了 8 分钟。 整改措施：对账任务使用独立连接池；支..."
+          },
+          {
+            "no": 6,
+            "chunkId": "t1:asset-1008:1",
+            "assetId": "asset-1008",
+            "assetName": "生产事故复盘：支付超时",
+            "text": "循“无责复盘”原则，重点是还原时间线和系统行为，不追究个人责任。所有改进项都有负责人、截止日期和验收标准。SRE 每周跟踪整改项，逾期未完成的升级到技术委员会。复盘文档保存至少 3 年。"
+          },
+          {
+            "no": 7,
+            "chunkId": "t1:asset-1004:0",
+            "assetId": "asset-1004",
+            "assetName": "芯片采购成本分析",
+            "text": "2024 年芯片采购平均成本同比上升 12%。成本上升有三个原因：第一，晶圆代工价格上调 8%；第二，供应商集中度高，前两大供应商占采购额的 70%，议价空间有限；第三，美元对人民币汇率波动带来约 2% 的额外成本。 为降低风险，采购部计划在 2025 年引入第二供应商，把单一供应商占比降到 50% 以下。同时把关键芯片的安全库存从 3 个月提高到 6 个月，预计占用现金约 3000 万元。 如果芯片价格继续上涨 10%，全年毛利率将下..."
+          }
+        ],
+        "retrievedAssetIds": [
+          "asset-1019",
+          "asset-1003",
+          "asset-1016",
+          "asset-1008",
+          "asset-1004"
+        ],
+        "citedNos": [
+          1,
+          2
+        ],
+        "latencyMs": 24.85,
+        "citationValid": true
+      },
+      {
+        "id": "q22",
+        "question": "Q4 财务分析报告",
+        "answer": "根据资料：2024 年第四季度，t2 公司实现营业收入 0.92 亿元，同比增长 7%。增长主要来自国内中小企业客户，海外收入占比不足 5%。第四季度毛利率为 38.0%，同比下降 1.0 个百分点。 t2 的净利润为 0.08 亿元，经营性现金流为 [1]；另外，本合同适用于 t2 公司的区域供应商。合同有效期一年，付款账期为收到发票后 90 天。供应商延迟交付的，每日按合同金额的 0.03% 支付违约金，累计不超过 3 [2]。",
+        "citations": [
+          {
+            "no": 1,
+            "chunkId": "t2:asset-2001:0",
+            "assetId": "asset-2001",
+            "assetName": "2024 年 Q4 财务分析报告",
+            "text": "2024 年第四季度，t2 公司实现营业收入 0.92 亿元，同比增长 7%。增长主要来自国内中小企业客户，海外收入占比不足 5%。第四季度毛利率为 38.0%，同比下降 1.0 个百分点。 t2 的净利润为 0.08 亿元，经营性现金流为 0.15 亿元。2025 年重点是提升续费率、控制获客成本。t2 的预算审批由区域财务负责，不与 t1 共用预算。 t2 公司的报告口径与 t1 分开，收入和成本按区域核算。t2 的客户以中小企业为..."
+          },
+          {
+            "no": 2,
+            "chunkId": "t2:asset-2002:0",
+            "assetId": "asset-2002",
+            "assetName": "供应商采购框架合同",
+            "text": "本合同适用于 t2 公司的区域供应商。合同有效期一年，付款账期为收到发票后 90 天。供应商延迟交付的，每日按合同金额的 0.03% 支付违约金，累计不超过 3%。 t2 的合同续约需要提前 60 天书面确认。争议提交新加坡国际仲裁中心仲裁。合同附件包括区域价格清单和数据保护条款。 t2 的供应商合同由区域法务审核，付款由共享服务中心执行。合同变更需要区域总经理和财务负责人批准。涉及数据处理的供应商，还必须签署数据处理协议。"
+          }
+        ],
+        "retrievedAssetIds": [
+          "asset-2001",
+          "asset-2002"
+        ],
+        "citedNos": [
+          1,
+          2
+        ],
+        "latencyMs": 22.52,
+        "citationValid": true
+      }
+    ],
+    "citationValid": 6,
+    "citationTotal": 6,
+    "latencyP50": 24.85,
+    "latencyP95": 39.39
+  },
+  "updateDelete": {
+    "initialChunks": 2,
+    "updatedChunks": 1,
+    "docsAfterUpdate": 1,
+    "markerHitBefore": true,
+    "markerHitAfter": false,
+    "docsAfterDelete": 0,
+    "pass": true
+  },
+  "finishedAt": "2026-11-10T18:19:36+0800"
+}
