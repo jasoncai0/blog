@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660" role="img" aria-labelledby="d2-title d2-desc">
+<title id="d2-title">一次查询的两条路径：树导航与平面混合并行</title>
+<desc id="d2-desc">查询先做类型判定，然后同时走树导航和平面混合。树导航逐层展开、按 margin 决定提交或回溯，预算不足时逃逸到 scoped search；平面混合用词法和向量各取 top-50，RRF 合并后重排。两条路径在融合层汇合，输出带路径引用的回答。</desc>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">QUERY ROUTING · TWO PATHS</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">一次查询的两条路径：树缩小范围，向量挑出那一个</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">两条同时起跑，谁先给出高置信结果用谁；树走进死胡同，就地从当前节点逃逸</text>
+<rect x="300" y="106" width="360" height="42" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="480" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="middle" fill="#2d3142">华东区渠道返利收入，按新准则用哪张表？</text>
+<path d="M480,148 L480,168" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M480,168 L476.6,161.0 L483.4,161.0 Z" fill="#5a6580"/>
+<rect x="230" y="168" width="500" height="38" rx="6" fill="#f0f0f0" stroke="#dcdcdc" stroke-width="1"/>
+<text x="480" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="middle" fill="#5a6580">类型判定：导航 / 精确 / 探索 / 分析 · 规则优先，判不准再上模型</text>
+<path d="M400,206 L330,250" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M330,250 L334.1170725907346,243.39623491615416 L337.7358390982194,249.153363450789 Z" fill="#5a6580"/>
+<path d="M560,206 L630,250" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M630,250 L622.2641609017807,249.153363450789 L625.8829274092653,243.39623491615416 Z" fill="#5a6580"/>
+<text x="48" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="600" text-anchor="start" fill="#bf4520" letter-spacing="0.08em">A · 树导航  tree-first</text>
+<rect x="60" y="256" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="74" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">L0 地图</text>
+<text x="74" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">8 个域，选 3 个</text>
+<text x="246" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">0.6k</text>
+<path d="M260,286 L268,286" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M268,286 L261.0,289.4 L261.0,282.6 Z" fill="#5a6580"/>
+<rect x="268" y="256" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="282" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">L1 展开</text>
+<text x="282" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">beam 3</text>
+<text x="282" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">margin ≥ 0.15 只走一支</text>
+<text x="454" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">2.2k</text>
+<path d="M468,286 L476,286" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M476,286 L469.0,289.4 L469.0,282.6 Z" fill="#5a6580"/>
+<rect x="476" y="256" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="490" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">L2 清单</text>
+<text x="490" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">34 条 manifest</text>
+<text x="490" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">按类型过滤</text>
+<text x="662" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">0.5k</text>
+<path d="M676,286 L684,286" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M684,286 L677.0,289.4 L677.0,282.6 Z" fill="#5a6580"/>
+<rect x="684" y="256" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="698" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">L3 开卷</text>
+<text x="698" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">2 份正文</text>
+<text x="698" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">带字段裁剪</text>
+<text x="870" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">2–5k</text>
+<text x="48" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="600" text-anchor="start" fill="#5a6580" letter-spacing="0.08em">B · 平面混合  flat hybrid</text>
+<rect x="60" y="396" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="74" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">词法 BM25</text>
+<text x="74" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">表名 / 字段 / 别名</text>
+<text x="246" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">top-50</text>
+<path d="M260,426 L268,426" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M268,426 L261.0,429.4 L261.0,422.6 Z" fill="#5a6580"/>
+<rect x="268" y="396" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="282" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">向量 ANN</text>
+<text x="282" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">200 万 chunk</text>
+<text x="282" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">按节点分片</text>
+<text x="454" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">top-50</text>
+<path d="M468,426 L476,426" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M476,426 L469.0,429.4 L469.0,422.6 Z" fill="#5a6580"/>
+<rect x="476" y="396" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="490" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">RRF 合并</text>
+<text x="490" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">按资源 id 去重</text>
+<text x="662" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">100 条</text>
+<path d="M676,426 L684,426" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M684,426 L677.0,429.4 L677.0,422.6 Z" fill="#5a6580"/>
+<rect x="684" y="396" width="200" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="698" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">重排</text>
+<text x="698" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">cross-encoder</text>
+<text x="870" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" text-anchor="end" fill="#8b93a7">10 条</text>
+<rect x="60" y="336" width="330" height="30" rx="4" fill="#faf3f0" stroke="#e0b9ab" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="74" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" text-anchor="start" fill="#bf4520">逃逸：search(scope=当前节点)，只查这个子树</text>
+<path d="M340,336 L340,316" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/><path d="M340,316 L343.4,323.0 L336.6,323.0 Z" fill="#bf4520" stroke-dasharray="3 3"/>
+<path d="M340,366 L340,396" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/><path d="M340,396 L336.6,389.0 L343.4,389.0 Z" fill="#bf4520" stroke-dasharray="3 3"/>
+<path d="M884,286 922,286 922,534" fill="none" stroke="#5a6580" stroke-width="1.2"/>
+<path d="M884,426 922,426" fill="none" stroke="#5a6580" stroke-width="1.2"/>
+<path d="M922,534 L662,534" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M662,534 L669.0,530.6 L669.0,537.4 Z" fill="#5a6580"/>
+<rect x="300" y="512" width="360" height="44" rx="6" fill="#f0f0f0" stroke="#dcdcdc" stroke-width="1"/>
+<text x="480" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="middle" fill="#2d3142">证据融合：路径 + 相似度 + 新鲜度</text>
+<text x="480" y="547" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" text-anchor="middle" fill="#5a6580">同一资源来自两条路径时只保留一份证据</text>
+<path d="M480,556 L480,584" fill="none" stroke="#5a6580" stroke-width="1.2"/><path d="M480,584 L476.6,577.0 L483.4,577.0 Z" fill="#5a6580"/>
+<rect x="380" y="584" width="200" height="38" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="480" y="608" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="middle" fill="#2d3142">回答 + 引用路径</text>
+<text x="48" y="648" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#8b93a7">实线：主路径　虚线：逃逸　·　两条路并行起跑，1.2 秒内先到先用</text>
+</svg>
