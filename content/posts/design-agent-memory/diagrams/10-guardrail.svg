@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d10-title d10-desc">
+  <title id="d10-title">灰度与 guardrail 自动回滚</title>
+  <desc id="d10-desc">灰度按 1%、10%、50% 递增；指标连续三个窗口越过阈值即触发自动回滚到上一版本，回滚后指标回到基线。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">CANARY · GUARDRAIL</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">灰度不是慢慢放量，是带着刹车放量</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">指标越线的第三个窗口，系统自己松手</text>
+  <rect x="96" y="152" width="265.0" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="228.5" y="168" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="600" text-anchor="middle" fill="#2d3142">1%</text>
+  <rect x="361.0" y="152" width="264.0" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="493.0" y="168" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="600" text-anchor="middle" fill="#2d3142">10%</text>
+  <rect x="625.0" y="152" width="275.0" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="762.5" y="168" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="600" text-anchor="middle" fill="#2d3142">50%</text>
+  <rect x="502.0" y="196" width="180.0" height="218" rx="3" fill="#f6e7e1"/>
+  <line x1="96" y1="200" x2="96" y2="410" stroke="#d8d8d8" stroke-width="1"/>
+  <line x1="96" y1="410" x2="900" y2="410" stroke="#d8d8d8" stroke-width="1"/>
+  <line x1="96" y1="380.0" x2="900" y2="380.0" stroke="#d8d8d8" stroke-width="0.6"/>
+  <text x="88" y="383.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.0" font-weight="400" text-anchor="end" fill="#5a6580">2</text>
+  <line x1="96" y1="320.0" x2="900" y2="320.0" stroke="#d8d8d8" stroke-width="0.6"/>
+  <text x="88" y="323.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.0" font-weight="400" text-anchor="end" fill="#5a6580">3</text>
+  <line x1="96" y1="260.0" x2="900" y2="260.0" stroke="#d8d8d8" stroke-width="0.6"/>
+  <text x="88" y="263.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.0" font-weight="400" text-anchor="end" fill="#5a6580">4</text>
+  <line x1="96" y1="200.0" x2="900" y2="200.0" stroke="#d8d8d8" stroke-width="0.6"/>
+  <text x="88" y="203.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.0" font-weight="400" text-anchor="end" fill="#5a6580">5</text>
+  <line x1="96" y1="374.0" x2="900" y2="374.0" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="96" y1="290.0" x2="900" y2="290.0" stroke="#5a6580" stroke-width="1.1" stroke-dasharray="6,4"/>
+  <path d="M130.0,374.0 L196.0,380.0 L262.0,368.0 L328.0,368.0 L394.0,344.0 L460.0,314.0 L526.0,284.0 L592.0,248.0 L658.0,236.0 L724.0,362.0 L790.0,368.0 L856.0,374.0" fill="none" stroke="#2d3142" stroke-width="1.7"/>
+  <line x1="691.0" y1="196" x2="691.0" y2="410" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="3,3"/>
+  <circle cx="130.0" cy="374.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="196.0" cy="380.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="262.0" cy="368.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="328.0" cy="368.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="394.0" cy="344.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="460.0" cy="314.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="526.0" cy="284.0" r="2.6" fill="#bf4520" stroke="#bf4520" stroke-width="1.2"/>
+  <circle cx="592.0" cy="248.0" r="2.6" fill="#bf4520" stroke="#bf4520" stroke-width="1.2"/>
+  <circle cx="658.0" cy="236.0" r="2.6" fill="#bf4520" stroke="#bf4520" stroke-width="1.2"/>
+  <circle cx="724.0" cy="362.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="790.0" cy="368.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <circle cx="856.0" cy="374.0" r="2.6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+  <text x="96" y="144" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.12em">放量比例</text>
+  <rect x="767.0" y="298.4" width="104.5" height="10.6" fill="#f5f5f5"/>
+  <text x="770" y="306.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" text-anchor="start" fill="#5a6580">阈值 3.5 = 基线 2.1 + 2σ</text>
+  <text x="592.0" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="600" text-anchor="middle" fill="#bf4520">连续 3 个窗口超阈值</text>
+  <text x="698.0" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" text-anchor="start" fill="#bf4520">回滚到 v37</text>
+  <text x="500.0" y="272.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="end" fill="#bf4520">第 7 个窗口首次越线</text>
+  <text x="130.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w1</text>
+  <text x="196.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w2</text>
+  <text x="262.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w3</text>
+  <text x="328.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w4</text>
+  <text x="394.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w5</text>
+  <text x="460.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w6</text>
+  <text x="526.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w7</text>
+  <text x="592.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w8</text>
+  <text x="658.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w9</text>
+  <text x="724.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w10</text>
+  <text x="790.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w11</text>
+  <text x="856.0" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">w12</text>
+  <text x="493.0" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">灰度窗口（每窗口 200 个 turn）</text>
+  <rect x="48" y="462" width="9" height="9" rx="1" fill="#ffffff" stroke="#2d3142" stroke-width="1.1"/>
+  <text x="64" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">线上指标（撤销率 %）</text>
+  <line x1="196" y1="466" x2="216" y2="466" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="3,3"/>
+  <text x="224" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">自动回滚点</text>
+  <line x1="310" y1="466" x2="330" y2="466" stroke="#5a6580" stroke-width="1.1" stroke-dasharray="6,4"/>
+  <text x="338" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">guardrail 阈值</text>
+  <text x="912" y="470" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="end" fill="#5a6580">样例数据</text>
+  <text x="48" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">MEMORY EVOLUTION · CANARY</text>
+  <text x="912" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="end" fill="#5a6580">阈值 · 计数窗口 · 自动回滚</text>
+</svg>

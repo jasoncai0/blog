@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d8-title d8-desc">
+  <defs>
+    <marker id="arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+    <marker id="arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+  </defs>
+  <title id="d8-title">策略、决策日志与归因</title>
+  <desc id="d8-desc">策略版本驱动编译器，编译器每 turn 写一行决策日志；用户行为变成信号，与日志归因后得到样本，再训练出候选策略。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">POLICY · DECISION LOG · ATTRIBUTION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">让每一分进步都能归因到一次决策</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">第 9 节讲的是流程；这里是把流程跑起来需要的数据</text>
+  <rect x="48" y="148" width="186" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="64" y="173" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">策略</text>
+  <text x="64" y="191" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">mem.compile@v37</text>
+  <text x="64" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">参数：槽位配比、召回路数、</text>
+  <text x="64" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">重排阈值。只改参数，不改结构</text>
+  <rect x="274" y="148" width="186" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="290" y="173" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">编译器</text>
+  <text x="290" y="191" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">compile(turn, focus)</text>
+  <text x="290" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">读策略 → 产出注入；</text>
+  <text x="290" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">每次调用写一行日志</text>
+  <rect x="500" y="148" width="186" height="84" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="516" y="173" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">决策日志</text>
+  <text x="516" y="191" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">decision_log</text>
+  <text x="516" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">注入的记忆 id、被裁掉谁、</text>
+  <text x="516" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">为什么裁；每 turn 一行，只追加</text>
+  <rect x="726" y="148" width="186" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="742" y="173" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">用户行为</text>
+  <text x="742" y="191" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">action</text>
+  <text x="742" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">接受 · 撤销 · 点开来源</text>
+  <text x="742" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">编辑距离 · 导出时长</text>
+  <rect x="726" y="330" width="186" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="742" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">信号</text>
+  <text x="742" y="373" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">normalized</text>
+  <text x="742" y="391" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">三类信号落到 decision 上，</text>
+  <text x="742" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">不落在「这一整轮」上</text>
+  <rect x="500" y="330" width="186" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="516" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">归因样本</text>
+  <text x="516" y="373" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">(decision, reward)</text>
+  <text x="516" y="391" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">延迟归因按 0.5^n 打折扣，</text>
+  <text x="516" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">只记真正起过作用的槽位</text>
+  <rect x="274" y="330" width="186" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="290" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">离线评估</text>
+  <text x="290" y="373" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">replay + eval</text>
+  <text x="290" y="391" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">同一批冻结 turn，新旧策略</text>
+  <text x="290" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">各跑一遍，比指标</text>
+  <rect x="48" y="330" width="186" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="64" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">候选 v38</text>
+  <text x="64" y="373" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.9" font-weight="400" text-anchor="start" fill="#5a6580">candidate</text>
+  <text x="64" y="391" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">必须带 rollback_to 与预期</text>
+  <text x="64" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">指标；过门禁才允许升版</text>
+  <path d="M234,190.0 L274,190.0" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M460,190.0 L500,190.0" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M593.0,232 L593.0,330" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M819.0,232 L819.0,330" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="596.0" y="281.2" width="33.2" height="9.8" fill="#f5f5f5"/>
+  <text x="599.0" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#5a6580">每次调用</text>
+  <rect x="782.8" y="281.2" width="33.2" height="9.8" fill="#f5f5f5"/>
+  <text x="813.0" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="end" fill="#5a6580">行为归集</text>
+  <path d="M726,372.0 L686,372.0" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M500,372.0 L460,372.0" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M274,372.0 L234,372.0" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M141.0,330 L141.0,232" fill="none" stroke="#bf4520" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arrow-a)"/>
+  <rect x="146.0" y="281.2" width="69.6" height="9.8" fill="#f5f5f5"/>
+  <text x="149.0" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#bf4520">门禁 · 影子 · 灰度</text>
+  <text x="48" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">决策日志是唯一能做到「哪个决策变差了」的凭据；没有它，你只知道整体变好还是变差。</text>
+  <text x="48" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">而「整体变差」这句话不能改任何东西——「先例槽位的重排分普遍低于 0.3」才能。</text>
+  <text x="48" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">MEMORY EVOLUTION · DATA LOOP</text>
+  <text x="912" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="end" fill="#5a6580">策略 → 日志 → 信号 → 样本 → 候选</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d9-title d9-desc">
+  <defs>
+    <marker id="arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+  </defs>
+  <title id="d9-title">回放包与离线评估</title>
+  <desc id="d9-desc">回放需要冻结四样东西：情境快照、记忆库时点、策略版本、模型与随机源；用同一份回放包跑新旧两遍策略，产出指标与差异。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">REPLAY · FROZEN INPUTS</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">回放不是「再看一眼历史」，是把历史冻住</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">四样东西少冻一样，回放就变成「今天的系统解释昨天的行为」</text>
+  <rect x="48" y="128" width="352" height="288" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="64" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#2d3142">回放包</text>
+  <text x="126" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580">replay_bundle</text>
+  <text x="64" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#5a6580">四样东西缺一不可</text>
+  <line x1="64" y1="180" x2="384" y2="180" stroke="#d8d8d8" stroke-width="0.8"/>
+  <text x="64" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#2d3142">情境快照</text>
+  <text x="64" y="220" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#5a6580">episode_snapshot</text>
+  <text x="216" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">那一轮的原话、op 批次、画布 rev</text>
+  <rect x="56" y="240" width="336" height="54" rx="4" fill="#f6e7e1"/>
+  <line x1="64" y1="236" x2="384" y2="236" stroke="#d8d8d8" stroke-width="0.8"/>
+  <text x="64" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#bf4520">记忆库时点</text>
+  <text x="64" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#bf4520">memory_as_of</text>
+  <text x="216" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">库是活的，这里要的是当时那个 rev</text>
+  <line x1="64" y1="292" x2="384" y2="292" stroke="#d8d8d8" stroke-width="0.8"/>
+  <text x="64" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#2d3142">策略版本</text>
+  <text x="64" y="332" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#5a6580">policy_version</text>
+  <text x="216" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">新旧各一份，参数快照不读最新配置</text>
+  <line x1="64" y1="348" x2="384" y2="348" stroke="#d8d8d8" stroke-width="0.8"/>
+  <text x="64" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#2d3142">模型与随机源</text>
+  <text x="64" y="388" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#5a6580">model_seed</text>
+  <text x="216" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">模型 id + 采样种子，换一个结果就不可比</text>
+  <rect x="500" y="204" width="180" height="100" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="518" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">重放编译器</text>
+  <text x="518" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#5a6580">compile()</text>
+  <text x="518" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">同一份输入跑两遍，</text>
+  <text x="518" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">不调模型，或只采样 5%</text>
+  <path d="M400,254 L500,254" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="403.0" y="239.2" width="19.6" height="9.8" fill="#f5f5f5"/>
+  <text x="406" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" font-weight="400" text-anchor="start" fill="#5a6580">喂给</text>
+  <rect x="740" y="156" width="172" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="756" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">指标</text>
+  <text x="756" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">注入命中率 · 预算利用率</text>
+  <text x="756" y="218" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">召回分分布 · 降级率</text>
+  <rect x="740" y="288" width="172" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="756" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">差异</text>
+  <text x="756" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">哪条记忆被换掉、哪个槽位</text>
+  <text x="756" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#4f5d75">多吃了 200 tokens</text>
+  <path d="M680,236 L704.0,236.0 Q712,236 712.0,228.0 L712.0,208.0 Q712,200 720.0,200.0 L738,200" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M680,268 L704.0,268.0 Q712,268 712.0,276.0 L712.0,324.0 Q712,332 720.0,332.0 L738,332" fill="none" stroke="#5a6580" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <text x="48" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">「差异」比「指标」更早发现问题：指标要累积到显著，差异在第一次重放就能读出因果。</text>
+  <text x="48" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">而回放能成立的前提是钩子契约确定——同样的输入，两次编译必须给出同样的注入。</text>
+  <text x="48" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">MEMORY EVOLUTION · REPLAY</text>
+  <text x="912" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="end" fill="#5a6580">冻结 · 重放 · 对比</text>
+</svg>
