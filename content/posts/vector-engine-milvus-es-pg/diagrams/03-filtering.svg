@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="f3-title f3-desc">
+<title id="f3-title">过滤发生在 ANN 的三个位置</title>
+<desc id="f3-desc">过滤可以放在图搜索之前、segment 内部或近邻取回之后；位置决定了召回损失与延迟抖动。</desc>
+<defs>
+<marker id="f3-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+<marker id="f3-arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+</defs>
+<rect x="0" y="0" width="960" height="620" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#bf4520" letter-spacing="0.18em">WHERE DOES THE FILTER RUN?</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">过滤不是附属条件，它决定召回和延迟</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" font-weight="400" fill="#5a6580">同样一句 WHERE，在三种引擎里可能发生在完全不同的位置</text>
+<text x="48" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">① ANN 之前：先过滤，再搜索</text>
+<text x="912" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580" text-anchor="end">召回风险：低</text>
+<line x1="392" y1="185" x2="412" y2="185" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f3-arr)"/>
+<line x1="666" y1="185" x2="686" y2="185" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f3-arr)"/>
+<rect x="140" y="150" width="250" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="140" y="158" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="155" y="175" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">Lucene 倒排 / 位图</text>
+<text x="155" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">WHERE 先裁出候选集合</text>
+<rect x="414" y="150" width="250" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="414" y="158" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="429" y="175" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">子集上的 HNSW</text>
+<text x="429" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">候选少了，图搜索更省</text>
+<rect x="688" y="150" width="220" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="688" y="158" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="703" y="175" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">top-k</text>
+<text x="703" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">选择性低时退化为后过滤</text>
+<text x="48" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">② ANN 之中：段内过滤</text>
+<text x="912" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580" text-anchor="end">召回风险：低–中</text>
+<line x1="392" y1="315" x2="412" y2="315" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f3-arr)"/>
+<line x1="666" y1="315" x2="686" y2="315" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f3-arr)"/>
+<rect x="140" y="280" width="250" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="140" y="288" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="155" y="305" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">segment 内 bitset</text>
+<text x="155" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">标量索引先过滤，再段内 ANN</text>
+<rect x="414" y="280" width="250" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="414" y="288" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="429" y="305" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">跨 segment 归并</text>
+<text x="429" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">growing + sealed 都要查</text>
+<rect x="688" y="280" width="220" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="688" y="288" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="703" y="305" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">top-k</text>
+<text x="703" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">partition key 可整段裁掉</text>
+<text x="48" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">③ ANN 之后：先取近邻，再过滤</text>
+<text x="912" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580" text-anchor="end">召回风险：中–高</text>
+<line x1="392" y1="445" x2="412" y2="445" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f3-arr)"/>
+<line x1="666" y1="445" x2="686" y2="445" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f3-arr)"/>
+<rect x="140" y="410" width="250" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="140" y="418" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="155" y="435" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">HNSW 取 ef_search 个</text>
+<text x="155" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">按距离先拿一批近邻</text>
+<rect x="414" y="410" width="250" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="414" y="418" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="429" y="435" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">回表 WHERE 过滤</text>
+<text x="429" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">过滤越狠，剩下越少</text>
+<rect x="688" y="410" width="220" height="70" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="688" y="418" width="3" height="54" rx="1.5" fill="#4f5d75"/>
+<text x="703" y="435" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.8" font-weight="600" fill="#2d3142">iterative scan</text>
+<text x="703" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" fill="#5a6580">不够 k 条继续扫，延迟抖</text>
+<path d="M798 480 V492 Q798 500 790 500 H273 Q265 500 265 492 V480" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#f3-arr-a)"/>
+<text x="531" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="500" fill="#bf4520" text-anchor="middle">不够 k 条 → 继续扫（iterative scan）</text>
+<rect x="48" y="540" width="864" height="48" rx="8" fill="#f7e6e1" stroke="#bf4520" stroke-width="1"/>
+<text x="70" y="569" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.2" font-weight="500" fill="#2d3142">过滤位置决定 recall 掉多少、延迟抖不抖，以及 planner 能不能用上索引——这不是实现细节，是选型依据。</text>
+<text x="48" y="606" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" font-weight="400" fill="#8a94a8">ES 有倒排和位图，Milvus 有标量索引和 partition key，PG 直到 0.8 才有 iterative scan。</text>
+</svg>

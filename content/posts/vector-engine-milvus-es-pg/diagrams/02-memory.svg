@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="f2-title f2-desc">
+<title id="f2-title">十亿条 768 维向量的内存账</title>
+<desc id="f2-desc">按单副本估算，float32 需要约 3.07 TB，int8 约 768 GB，1 bit 约 96 GB；HNSW 图与副本另算。</desc>
+<defs>
+<marker id="f2-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+<marker id="f2-arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+</defs>
+<rect x="0" y="0" width="960" height="520" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#bf4520" letter-spacing="0.18em">THE MEMORY BILL FOR 1B VECTORS</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">十亿条 768 维向量，光放内存要多大</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" font-weight="400" fill="#5a6580">float32 是默认起点，量化才是十亿级的入场券</text>
+<line x1="206.0" y1="128" x2="206.0" y2="408" stroke="#c9ced6" stroke-width="0.8" opacity="0.55"/>
+<line x1="419.3" y1="128" x2="419.3" y2="408" stroke="#c9ced6" stroke-width="0.8" opacity="0.55"/>
+<line x1="632.7" y1="128" x2="632.7" y2="408" stroke="#c9ced6" stroke-width="0.8" opacity="0.55"/>
+<line x1="846.0" y1="128" x2="846.0" y2="408" stroke="#c9ced6" stroke-width="0.8" opacity="0.55"/>
+<text x="206" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" font-weight="400" fill="#8a94a8" text-anchor="middle">0</text>
+<text x="419.33333333333337" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" font-weight="400" fill="#8a94a8" text-anchor="middle">1 TB</text>
+<text x="632.6666666666667" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" font-weight="400" fill="#8a94a8" text-anchor="middle">2 TB</text>
+<text x="846" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" font-weight="400" fill="#8a94a8" text-anchor="middle">3 TB</text>
+<text x="48" y="155" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">float32</text>
+<text x="48" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" fill="#5a6580">原始精度</text>
+<rect x="206" y="140" width="640.0" height="36" rx="4" fill="#2d3142"/>
+<text x="856.0" y="163" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.4" font-weight="600" fill="#2d3142">3.07 TB</text>
+<text x="48" y="211" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">float16</text>
+<text x="48" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" fill="#5a6580">半精度</text>
+<rect x="206" y="196" width="320.0" height="36" rx="4" fill="#4f5d75"/>
+<text x="536.0" y="219" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.4" font-weight="600" fill="#2d3142">1.54 TB</text>
+<text x="48" y="267" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">int8</text>
+<text x="48" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" fill="#5a6580">8 bit，4×</text>
+<rect x="206" y="252" width="160.0" height="36" rx="4" fill="#6b7a8f"/>
+<text x="376.0" y="275" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.4" font-weight="600" fill="#2d3142">768 GB</text>
+<text x="48" y="323" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">int4</text>
+<text x="48" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" fill="#5a6580">4 bit，8×</text>
+<rect x="206" y="308" width="80.0" height="36" rx="4" fill="#8f99a8"/>
+<text x="296.0" y="331" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.4" font-weight="600" fill="#2d3142">384 GB</text>
+<text x="48" y="379" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="600" fill="#2d3142">1 bit (BBQ)</text>
+<text x="48" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" fill="#5a6580">32×</text>
+<rect x="206" y="364" width="20.0" height="36" rx="4" fill="#bf4520"/>
+<text x="236.0" y="387" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.4" font-weight="600" fill="#2d3142">96 GB</text>
+<text x="48" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" font-weight="400" fill="#5a6580">按 10⁹ 条 × 768 维、单副本计算；HNSW 图（m=16）另加约 100–150 GB，副本数再乘 N。</text>
+<text x="48" y="476" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" font-weight="400" fill="#5a6580">BBQ 的 32× 是相对 float32 的压缩比，实际占用还要加上图、元数据和 rescore 用的原始向量。</text>
+<text x="48" y="502" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" font-weight="400" fill="#8a94a8">量化不是免费午餐：1 bit 必须配 rescore，否则召回掉得比内存快。</text>
+</svg>

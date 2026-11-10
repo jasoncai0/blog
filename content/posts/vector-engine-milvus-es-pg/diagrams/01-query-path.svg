@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f1-title f1-desc">
+<title id="f1-title">三种系统的查询执行路径</title>
+<desc id="f1-desc">Milvus 按 shard 分发并在 segment 间归并，Elasticsearch fan-out 到每个 shard，pgvector 在单机上扫描一棵 HNSW 图并回表过滤。</desc>
+<defs>
+<marker id="f1-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+<marker id="f1-arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+</defs>
+<rect x="0" y="0" width="960" height="640" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#bf4520" letter-spacing="0.18em">THREE SYSTEMS, THREE QUERY PATHS</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">同一条 kNN 查询，走的是三条路</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" font-weight="400" fill="#5a6580">索引放在哪里、由谁归并，决定了更新、过滤和扩容的成本</text>
+<line x1="188" y1="254" x2="188" y2="270" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="188" y1="336" x2="188" y2="352" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="188" y1="418" x2="188" y2="434" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="480" y1="254" x2="480" y2="270" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="480" y1="336" x2="480" y2="352" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="480" y1="418" x2="480" y2="434" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="772" y1="254" x2="772" y2="270" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="772" y1="336" x2="772" y2="352" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<line x1="772" y1="418" x2="772" y2="434" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f1-arr)"/>
+<text x="48" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" font-weight="500" fill="#5a6580" letter-spacing="0.12em">01 / VECTOR-NATIVE</text>
+<rect x="48" y="130" width="28" height="2" fill="#2d3142"/>
+<text x="48" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" letter-spacing="0.02em">MILVUS</text>
+<text x="48" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.8" font-weight="400" fill="#5a6580">索引是独立服务，查询按 shard 分发</text>
+<rect x="48" y="190" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="48" y="198" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="64" y="215" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">client → proxy</text>
+<text x="64" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">无状态接入，解析并路由请求</text>
+<rect x="48" y="272" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="48" y="280" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="64" y="297" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">query node（按 shard）</text>
+<text x="64" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">proxy 只发给持有该 shard 的节点</text>
+<rect x="48" y="354" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="48" y="362" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="64" y="379" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">sealed + growing segment</text>
+<text x="64" y="397" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">每段各查一遍，段内先过滤</text>
+<rect x="48" y="436" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="48" y="444" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="64" y="461" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">reduce top-k</text>
+<text x="64" y="479" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">proxy 归并各分片结果</text>
+<text x="340" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" font-weight="500" fill="#5a6580" letter-spacing="0.12em">02 / SEARCH ENGINE</text>
+<rect x="340" y="130" width="28" height="2" fill="#2d3142"/>
+<text x="340" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" letter-spacing="0.02em">ELASTICSEARCH</text>
+<text x="340" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.8" font-weight="400" fill="#5a6580">索引藏在 segment 里，查询 fan-out 到 shard</text>
+<rect x="340" y="190" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="340" y="198" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="356" y="215" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">client → coordinating node</text>
+<text x="356" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">请求落到任一节点，由它统筹</text>
+<rect x="340" y="272" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="340" y="280" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="356" y="297" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">fan-out 到 N 个 shard</text>
+<text x="356" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">每个 shard 是一个独立 Lucene 索引</text>
+<rect x="340" y="354" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="340" y="362" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="356" y="379" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">每个 segment 一棵 HNSW</text>
+<text x="356" y="397" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">segment 不可变，merge 时重建图</text>
+<rect x="340" y="436" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="340" y="444" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="356" y="461" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">merge top-k</text>
+<text x="356" y="479" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">每个 shard 先取 num_candidates</text>
+<text x="632" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" font-weight="500" fill="#5a6580" letter-spacing="0.12em">03 / RELATIONAL + EXTENSION</text>
+<rect x="632" y="130" width="28" height="2" fill="#2d3142"/>
+<text x="632" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" letter-spacing="0.02em">POSTGRESQL</text>
+<text x="632" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.8" font-weight="400" fill="#5a6580">索引是一个 index AM，查询不离开单机</text>
+<rect x="632" y="190" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="632" y="198" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="648" y="215" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">client → backend</text>
+<text x="648" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">SQL 进 planner，按代价选索引</text>
+<rect x="632" y="272" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="632" y="280" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="648" y="297" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">index scan</text>
+<text x="648" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">一棵 HNSW 图，走 shared_buffers</text>
+<rect x="632" y="354" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="632" y="362" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="648" y="379" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">heap fetch + WHERE</text>
+<text x="648" y="397" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">先取近邻，再回表过滤</text>
+<rect x="632" y="436" width="280" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="1"/>
+<rect x="632" y="444" width="3" height="46" rx="1.5" fill="#4f5d75"/>
+<text x="648" y="461" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="600" fill="#2d3142">iterative rescan</text>
+<text x="648" y="479" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.7" font-weight="400" fill="#5a6580">不够 k 条继续扫，延迟会抖</text>
+<rect x="48" y="520" width="864" height="64" rx="8" fill="#f7e6e1" stroke="#bf4520" stroke-width="1"/>
+<text x="70" y="545" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="600" fill="#bf4520">索引的物理形态，决定了更新、过滤、扩容的成本。</text>
+<text x="70" y="565" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" font-weight="400" fill="#5a6580">Milvus 先在 query node 内归并 segment，再由 proxy 归并 shard；ES 在 shard 间归并；PG 在单棵图上过滤后重扫。</text>
+<text x="48" y="614" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" font-weight="400" fill="#8a94a8">三种系统都能做 ANN；差别在于索引由谁维护、查询在哪里归并、失败时降级什么。</text>
+</svg>
