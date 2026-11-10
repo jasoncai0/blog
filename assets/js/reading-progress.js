@@ -137,13 +137,14 @@ function boot() {
   // 续读：只在「干净地打开这一页」时接手。锚点、后退/前进、浏览器已经恢复过
   // 滚动位置（scrollY !== 0）这三种情况都不抢——浏览器比我们知道得更多。
   function maybeResume() {
+    metrics = measure();
+    if (metrics.height <= window.innerHeight) return; // 一屏放得下，没有位置可续
     if (location.hash) return;
     if (navType() === "back_forward") return;
     if (window.scrollY !== 0) return;
     const entry = readEntry(parseStore(safeGet() || ""), slug);
     if (!shouldResume(entry)) return;
 
-    metrics = measure();
     const target = Math.max(
       0,
       Math.round(scrollForProgress(entry.p, window.innerHeight, metrics.top, metrics.height)),
@@ -169,7 +170,17 @@ function boot() {
 
   paint();
 
-  const resume = () => requestAnimationFrame(() => requestAnimationFrame(maybeResume));
+  const resume = () =>
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        maybeResume();
+        // 正文一屏放得下：整段都已可见，按 100% 记，别把占位的 0% 留在屏幕上。
+        if (measure().height <= window.innerHeight) {
+          update();
+          flush(); // 已经读完，立刻落盘，别等节流器
+        }
+      }),
+    );
   if (document.readyState === "complete") {
     resume();
   } else {

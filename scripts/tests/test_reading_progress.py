@@ -122,6 +122,17 @@ def test_bfcache_does_not_double_scroll(context, base):
     assert abs(after - before) <= 50, f"滚动位置被脚本动过: {before} -> {after}"
 
 
+def test_short_post_fills_viewport(context, base):
+    # 正文一屏放得下：不看滚动也该是 100%，不能停在 0% 占位
+    page = context.new_page()
+    page.goto(base + "/posts/hello.html")
+    page.wait_for_selector(".rp-bar")
+    page.wait_for_timeout(800)
+    assert page.eval_on_selector(".rp-chip", "e => e.textContent").strip() == "读完"
+    store = read_store(page)
+    assert store["hello"]["p"] == 100, store
+
+
 def test_no_js_page_intact(context, base):
     page = context.new_page()
     page.goto(base + "/posts/hello.html")
@@ -172,6 +183,7 @@ CASES = [
     (test_anchor_wins_over_resume, True, {}),
     (test_bfcache_does_not_double_scroll, True, {}),
     (test_home_marks, True, {}),
+    (test_short_post_fills_viewport, True, {"viewport": {"width": 900, "height": 2400}}),
     (test_no_js_page_intact, True, {"java_script_enabled": False}),
     (test_storage_failure_is_silent, True, {}),
 ]
@@ -184,7 +196,8 @@ def free_port():
 
 
 def run_case(browser, fn, base, needs_context, context_kwargs):
-    ctx = browser.new_context(viewport={"width": 900, "height": 800}, **context_kwargs)
+    opts = {"viewport": {"width": 900, "height": 800}, **context_kwargs}
+    ctx = browser.new_context(**opts)
     try:
         if needs_context:
             fn(ctx, base)
