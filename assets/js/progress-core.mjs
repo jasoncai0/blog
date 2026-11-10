@@ -33,18 +33,20 @@ export function formatMark(entry) {
   return `${Math.round(entry.p)}%`;
 }
 
-export function readEntry(store, slug) {
+export function readEntry(store, slug, now = Date.now()) {
   if (!store || typeof store !== "object") return null;
   const entry = store[slug];
   if (!entry || typeof entry !== "object") return null;
   if (typeof entry.p !== "number" || !Number.isFinite(entry.p)) return null;
+  // 写入时的修剪只在下次落盘发生，读的时候也要按时效兜住，别把半年前的记录显示出来
+  if (typeof entry.t === "number" && now - entry.t > MAX_AGE_MS) return null;
   return { p: entry.p, t: entry.t, d: entry.d === true };
 }
 
 // 同一篇只记最高进度；d 一旦为真就不再回落；t 每次刷新，用于修剪。
 export function writeEntry(store, slug, percent, now) {
   const next = { ...(store || {}) };
-  const old = readEntry(next, slug);
+  const old = readEntry(next, slug, now);
   const p = Math.min(100, Math.max(0, Math.round(Number(percent) || 0)));
   const best = old ? Math.max(old.p, p) : p;
   next[slug] = {

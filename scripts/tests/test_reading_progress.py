@@ -34,7 +34,13 @@ def wait_for_server(url, timeout=15.0):
 
 
 def preset(context, entries):
-    context.add_init_script(f"localStorage.setItem({KEY!r}, {json.dumps(json.dumps(entries))})")
+    """预置存储；条目没写 t 的补成现在，否则会被 180 天时效挡掉。"""
+    payload = json.dumps(entries)
+    context.add_init_script(
+        f"const data = JSON.parse({json.dumps(payload)});"
+        "Object.values(data).forEach(e => { if (!e.t) e.t = Date.now(); });"
+        f"localStorage.setItem({json.dumps(KEY)}, JSON.stringify(data));"
+    )
 
 
 def read_store(page):
@@ -145,6 +151,39 @@ def test_short_post_fills_viewport(context, base):
     assert store["hello"]["p"] == 100, store
 
 
+def test_home_mark_shares_row_with_tags(context, base):
+    preset(context, {"hello": {"p": 62, "t": 0, "d": False}})
+    page = context.new_page()
+    page.goto(base + "/")
+    info = page.eval_on_selector('li[data-progress-post="hello"]', """li => {
+      const tags = li.querySelector('.post-tags');
+      const chip = tags.querySelector('.tag-chip');
+      const mark = li.querySelector('.read-mark');
+      const style = getComputedStyle(tags);
+      return {display: style.display, gap: style.columnGap,
+              markTop: Math.round(mark.getBoundingClientRect().top),
+              chipTop: Math.round(chip.getBoundingClientRect().top)};
+    }""")
+    assert info["display"] == "flex", info
+    assert info["gap"] == "6px", f"tag 间距应恢复到 6px: {info}"
+    assert abs(info["markTop"] - info["chipTop"]) <= 8, f"标记应与 tag 行同排: {info}"
+
+
+def test_storage_full_is_silent(context, base):
+    context.add_init_script(
+        "Storage.prototype.setItem = function () { const e = new Error('QuotaExceededError'); e.name='QuotaExceededError'; throw e; };"
+    )
+    page = context.new_page()
+    errors = []
+    page.on("pageerror", lambda exc: errors.append(str(exc)))
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.wait_for_selector(".rp-bar")
+    page.mouse.wheel(0, 3000)
+    page.wait_for_timeout(1400)
+    assert page.eval_on_selector(".rp-chip", "e => e.textContent").strip().endswith("%")
+    assert errors == [], f"配额满不该抛未捕获错误: {errors}"
+
+
 def test_no_js_page_intact(context, base):
     page = context.new_page()
     page.goto(base + "/posts/hello.html")
@@ -184,7 +223,7 @@ def test_home_marks_refresh_after_bfcache(context, base):
     mark = page.locator('li[data-progress-post="hello"] .read-mark')
     assert mark.inner_text().strip() == "62%"
     # 模拟从文章页后退、页面由 bfcache 恢复：存储里已经是 100
-    page.evaluate("localStorage.setItem('jasoncai:read:v1', JSON.stringify({hello:{p:100,t:1,d:true}}))")
+    page.evaluate("localStorage.setItem('jasoncai:read:v1', JSON.stringify({hello:{p:100,t:Date.now(),d:true}}))")
     page.evaluate("window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}))")
     page.wait_for_timeout(100)
     assert mark.inner_text().strip() == "读完", "bfcache 恢复后标记应重算"
@@ -216,6 +255,8 @@ CASES = [
     (test_bfcache_does_not_double_scroll, True, {}),
     (test_home_marks, True, {}),
     (test_js_url_is_fingerprinted, False, {}),
+    (test_home_mark_shares_row_with_tags, True, {}),
+    (test_storage_full_is_silent, True, {}),
     (test_home_marks_refresh_after_bfcache, True, {}),
     (test_partial_view_is_not_done, True, {}),
     (test_short_post_fills_viewport, True, {"viewport": {"width": 900, "height": 2400}}),

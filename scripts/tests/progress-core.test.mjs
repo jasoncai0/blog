@@ -40,6 +40,13 @@ test("writeEntry 取最大进度且 d 只增不减", () => {
   assert.deepEqual(s.a, { p: 96, t: 4000, d: true });
 });
 
+test("readEntry 对超过 180 天的记录返回 null", () => {
+  const now = 10 * c.MAX_AGE_MS;
+  const store = { old: { p: 62, t: now - c.MAX_AGE_MS - 1, d: false }, fresh: { p: 62, t: now - 1000, d: false } };
+  assert.equal(c.readEntry(store, "old", now), null);
+  assert.equal(c.readEntry(store, "fresh", now).p, 62);
+});
+
 test("writeEntry 修剪过期与超量条目，且保留其他篇", () => {
   const old = 1000;
   const now = old + c.MAX_AGE_MS + 1;

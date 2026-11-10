@@ -251,7 +251,6 @@ ul.posts .entry { flex: 1; min-width: 0; }
 ul.posts .entry > a { color: var(--ink); font-weight: 600; text-decoration: none; }
 ul.posts .entry > a:hover { color: var(--accent); }
 ul.posts .summary { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.7; }
-ul.posts .post-tags { margin: 8px 0 0; }
 @media (max-width: 720px) {
   ul.posts li { flex-direction: column; gap: 4px; }
 }
@@ -307,11 +306,10 @@ ul.posts .post-tags { margin: 8px 0 0; }
   pointer-events: none;
 }
 .rp-hint.is-out { opacity: 0; }
-/* 让标记和 tag 行同排：tag 行是 <p>，默认独占一行 */
-ul.posts .post-tags { display: inline-block; }
+/* tag 行与阅读标记同排，间距由 flex gap 给，别用 inline-block 压掉 .post-tags 的 gap */
+ul.posts .post-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+ul.posts .post-foot .post-tags { margin: 0; }
 ul.posts .read-mark {
-  margin-left: 8px;
-  vertical-align: middle;
   color: var(--soft);
   font-family: var(--mono);
   font-size: 11px;
