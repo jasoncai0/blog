@@ -12,6 +12,7 @@ content/posts/<slug>/diagrams/    # 该篇的 SVG，正文里用 {{< fig "diagra
 data/tags.yaml                    # tag 词表，唯一权威
 layouts/                          # baseof / single / list / terms / taxonomy / rss / 404
 assets/css/site.css               # 纸感主题（全站统一，无暗色模式）
+static/favicon.*                  # 站点图标（ico / svg / 32 / 512 / apple-touch），由 scripts/make-favicon.py 生成
 scripts/                          # check-tags / verify-site / publish / blockstats / migrate / reverse-convert
 docs/baseline/local.json          # 每篇的结构块数量基线，verify-site 用来防回归
 docs/superpowers/                 # 设计与实施计划
