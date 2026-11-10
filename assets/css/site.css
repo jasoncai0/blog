@@ -306,3 +306,13 @@ ul.posts .post-tags { margin: 8px 0 0; }
   pointer-events: none;
 }
 .rp-hint.is-out { opacity: 0; }
+.read-mark {
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  vertical-align: 1px;
+}

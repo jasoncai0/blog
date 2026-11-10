@@ -8,6 +8,7 @@ import {
   writeEntry,
   readEntry,
   shouldResume,
+  formatMark,
 } from "./progress-core.mjs";
 
 const FLUSH_MS = 1000;
@@ -32,9 +33,24 @@ function saveEntry(slug, percent) {
   }
 }
 
+// 首页：把每篇的最大进度标在标题下方，没读过的篇目不留空壳。
+function markHome() {
+  const store = parseStore(readRaw() || "");
+  for (const item of document.querySelectorAll("[data-progress-post]")) {
+    const mark = item.querySelector(".read-mark");
+    if (!mark) continue;
+    const text = formatMark(readEntry(store, item.dataset.progressPost));
+    if (text) mark.textContent = text;
+    else mark.remove();
+  }
+}
+
 function boot() {
   const host = document.querySelector(".post-body[data-progress-post]");
-  if (!host) return;
+  if (!host) {
+    markHome();
+    return;
+  }
   const slug = host.dataset.progressPost;
 
   const bar = document.createElement("div");

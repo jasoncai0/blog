@@ -122,6 +122,23 @@ def test_bfcache_does_not_double_scroll(context, base):
     assert abs(after - before) <= 50, f"滚动位置被脚本动过: {before} -> {after}"
 
 
+def test_home_marks(context, base):
+    preset(context, {
+        "hello": {"p": 62, "t": 0, "d": False},
+        "ot-crdt-lww": {"p": 100, "t": 0, "d": True},
+    })
+    page = context.new_page()
+    page.goto(base + "/")
+    hello = page.locator('li[data-progress-post="hello"] .read-mark')
+    lww = page.locator('li[data-progress-post="ot-crdt-lww"] .read-mark')
+    assert hello.count() == 1, "hello 那行应有进度标记"
+    assert hello.inner_text().strip() == "62%"
+    assert hello.is_visible(), "进度标记应可见"
+    assert lww.inner_text().strip() == "读完"
+    # 没读过的篇目不留空壳
+    assert page.locator('li[data-progress-post="agent-vs-computer"] .read-mark').count() == 0
+
+
 CASES = [
     (test_article_scroll_records_progress, False),
     (test_chip_appears_after_scrolling, False),
@@ -129,6 +146,7 @@ CASES = [
     (test_resume_scrolls_and_hints, True),
     (test_anchor_wins_over_resume, True),
     (test_bfcache_does_not_double_scroll, True),
+    (test_home_marks, True),
 ]
 
 
