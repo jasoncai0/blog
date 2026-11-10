@@ -256,17 +256,18 @@ ul.posts .post-tags { margin: 8px 0 0; }
   ul.posts li { flex-direction: column; gap: 4px; }
 }
 
-/* 阅读进度：顶部细条 + 右下角胶囊（T5 再补排版细节） */
+/* 阅读进度：顶部细条 + 右下角胶囊 + 续读提示 + 首页标记 */
 .rp-bar {
   position: fixed;
   inset: 0 0 auto;
   height: 2px;
-  z-index: 60;
+  z-index: 50;
+  background: transparent;
   pointer-events: none;
 }
 .rp-bar-fill {
-  height: 100%;
   width: 0;
+  height: 100%;
   background: var(--accent);
   transition: width 0.12s linear;
 }
@@ -274,11 +275,11 @@ ul.posts .post-tags { margin: 8px 0 0; }
   position: fixed;
   right: 20px;
   bottom: 20px;
-  z-index: 60;
-  padding: 4px 10px;
+  z-index: 50;
+  padding: 2px 8px;
   border: 1px solid var(--rule);
   border-radius: 999px;
-  background: var(--paper);
+  background: rgba(245, 245, 245, 0.9);
   color: var(--muted);
   font-family: var(--mono);
   font-size: 11px;
@@ -287,32 +288,33 @@ ul.posts .post-tags { margin: 8px 0 0; }
   pointer-events: none;
 }
 .rp-chip[hidden] { display: none; }
+.rp-chip.is-done { color: var(--accent); border-color: rgba(191, 69, 32, 0.35); }
 .rp-hint {
   position: fixed;
-  left: 50%;
-  bottom: 24px;
-  z-index: 60;
-  transform: translateX(-50%);
-  padding: 6px 14px;
+  right: 20px;
+  bottom: 60px;
+  z-index: 50;
+  padding: 2px 8px;
   border: 1px solid var(--rule);
   border-radius: 999px;
-  background: var(--paper);
+  background: rgba(245, 245, 245, 0.9);
   color: var(--muted);
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 11px;
   letter-spacing: 0.04em;
   opacity: 1;
-  transition: opacity 0.35s ease;
+  transition: opacity 300ms ease;
   pointer-events: none;
 }
 .rp-hint.is-out { opacity: 0; }
-.read-mark {
-  display: inline-block;
-  margin-left: 10px;
-  color: var(--accent);
+/* 让标记和 tag 行同排：tag 行是 <p>，默认独占一行 */
+ul.posts .post-tags { display: inline-block; }
+ul.posts .read-mark {
+  margin-left: 8px;
+  vertical-align: middle;
+  color: var(--soft);
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
-  vertical-align: 1px;
 }

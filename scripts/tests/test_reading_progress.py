@@ -122,6 +122,31 @@ def test_bfcache_does_not_double_scroll(context, base):
     assert abs(after - before) <= 50, f"滚动位置被脚本动过: {before} -> {after}"
 
 
+def test_no_js_page_intact(context, base):
+    page = context.new_page()
+    page.goto(base + "/posts/hello.html")
+    assert "hello" in page.inner_text("h1").strip().lower() or page.inner_text("h1").strip()
+    assert page.locator(".post-body p").count() > 0, "正文应当在"
+    assert page.locator(".rp-bar").count() == 0, "没有 JS 就不该有进度条"
+
+
+def test_storage_failure_is_silent(context, base):
+    context.add_init_script(
+        "Object.defineProperty(window, 'localStorage', { get() { throw new Error('denied'); } });"
+    )
+    page = context.new_page()
+    errors = []
+    page.on("pageerror", lambda exc: errors.append(str(exc)))
+    page.goto(base + "/posts/hello.html")
+    page.wait_for_selector(".rp-bar")
+    page.mouse.wheel(0, 3000)
+    page.wait_for_timeout(1400)
+    assert page.locator(".post-body p").count() > 0, "存储坏了正文也要在"
+    text = page.eval_on_selector(".rp-chip", "e => e.textContent").strip()
+    assert text == "读完" or text.endswith("%"), text
+    assert errors == [], f"不该有未捕获错误: {errors}"
+
+
 def test_home_marks(context, base):
     preset(context, {
         "hello": {"p": 62, "t": 0, "d": False},
@@ -140,13 +165,15 @@ def test_home_marks(context, base):
 
 
 CASES = [
-    (test_article_scroll_records_progress, False),
-    (test_chip_appears_after_scrolling, False),
-    (test_two_pages_merge, True),
-    (test_resume_scrolls_and_hints, True),
-    (test_anchor_wins_over_resume, True),
-    (test_bfcache_does_not_double_scroll, True),
-    (test_home_marks, True),
+    (test_article_scroll_records_progress, False, {}),
+    (test_chip_appears_after_scrolling, False, {}),
+    (test_two_pages_merge, True, {}),
+    (test_resume_scrolls_and_hints, True, {}),
+    (test_anchor_wins_over_resume, True, {}),
+    (test_bfcache_does_not_double_scroll, True, {}),
+    (test_home_marks, True, {}),
+    (test_no_js_page_intact, True, {"java_script_enabled": False}),
+    (test_storage_failure_is_silent, True, {}),
 ]
 
 
@@ -156,8 +183,8 @@ def free_port():
         return sock.getsockname()[1]
 
 
-def run_case(browser, fn, base, needs_context):
-    ctx = browser.new_context(viewport={"width": 900, "height": 800})
+def run_case(browser, fn, base, needs_context, context_kwargs):
+    ctx = browser.new_context(viewport={"width": 900, "height": 800}, **context_kwargs)
     try:
         if needs_context:
             fn(ctx, base)
@@ -185,8 +212,8 @@ def main():
         wait_for_server(base + "/posts/hello.html")
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
-            for fn, needs_context in CASES:
-                if not run_case(browser, fn, base, needs_context):
+            for fn, needs_context, context_kwargs in CASES:
+                if not run_case(browser, fn, base, needs_context, context_kwargs):
                     failures += 1
             browser.close()
     finally:

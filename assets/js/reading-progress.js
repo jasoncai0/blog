@@ -14,7 +14,7 @@ import {
 const FLUSH_MS = 1000;
 const HINT_MS = 2500;
 
-function readRaw() {
+function safeGet() {
   try {
     return localStorage.getItem(STORAGE_KEY);
   } catch {
@@ -22,20 +22,25 @@ function readRaw() {
   }
 }
 
+function safeSet(text) {
+  try {
+    localStorage.setItem(STORAGE_KEY, text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function saveEntry(slug, percent) {
   if (!slug) return;
-  try {
-    // 每次落盘都从 localStorage 重新读，合并其他标签页写进来的条目。
-    const store = parseStore(readRaw() || "");
-    localStorage.setItem(STORAGE_KEY, serializeStore(writeEntry(store, slug, percent, Date.now())));
-  } catch {
-    // 存不进去就算了，不影响阅读
-  }
+  // 每次落盘都从 localStorage 重新读，合并其他标签页写进来的条目。
+  const store = parseStore(safeGet() || "");
+  safeSet(serializeStore(writeEntry(store, slug, percent, Date.now())));
 }
 
 // 首页：把每篇的最大进度标在标题下方，没读过的篇目不留空壳。
 function markHome() {
-  const store = parseStore(readRaw() || "");
+  const store = parseStore(safeGet() || "");
   for (const item of document.querySelectorAll("[data-progress-post]")) {
     const mark = item.querySelector(".read-mark");
     if (!mark) continue;
@@ -135,7 +140,7 @@ function boot() {
     if (location.hash) return;
     if (navType() === "back_forward") return;
     if (window.scrollY !== 0) return;
-    const entry = readEntry(parseStore(readRaw() || ""), slug);
+    const entry = readEntry(parseStore(safeGet() || ""), slug);
     if (!shouldResume(entry)) return;
 
     metrics = measure();

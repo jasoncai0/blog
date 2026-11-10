@@ -12,6 +12,7 @@ content/posts/<slug>/diagrams/    # 该篇的 SVG，正文里用 {{< fig "diagra
 data/tags.yaml                    # tag 词表，唯一权威
 layouts/                          # baseof / single / list / terms / taxonomy / rss / 404
 assets/css/site.css               # 纸感主题（全站统一，无暗色模式）
+assets/js/                        # 阅读进度：progress-core.mjs（纯逻辑）+ reading-progress.js（DOM）
 static/favicon.*                  # 站点图标（ico / svg / 32 / 512 / apple-touch），由 scripts/make-favicon.py 生成
 scripts/                          # check-tags / verify-site / publish / blockstats / migrate / reverse-convert
 docs/baseline/local.json          # 每篇的结构块数量基线，verify-site 用来防回归
@@ -63,10 +64,22 @@ scripts/publish.sh --final         # 带 --delete 收尾（清理线上旧文件
 rsync -a --delete ~/backups/blog-<时间戳>/ ubuntu@62.234.122.22:/var/www/blog/
 ```
 
+## 阅读进度
+
+文章页顶部有一条 2px 的进度条，右下角在滚动后出现百分比胶囊（≥95% 显示「读完」）；再次打开同一篇会回到上次位置，并提示「从 N% 继续」。首页每篇标题后会标出读到哪了。
+
+- 只存在**读者自己的浏览器**里，键名 `jasoncai:read:v1`，不上传服务器。
+- 想清空：控制台执行 `localStorage.removeItem('jasoncai:read:v1')`。
+- 同一篇只记最高进度；超过 300 篇或 180 天未访问的条目会被自动丢弃。
+- 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有进度功能。
+- 内部实现见 `docs/superpowers/specs/2026-11-10-reading-progress-design.md`。
+
 ## 校验
 
 ```bash
 python3 -m unittest discover -s tests      # 脚本单测
+node --test "scripts/tests/*.test.mjs"     # 阅读进度纯逻辑
+hugo --minify && python3 scripts/tests/test_reading_progress.py   # 阅读进度浏览器回归
 bash tests/test_publish.sh                 # 发布流程行为测试（全在临时目录）
 python3 scripts/check-tags.py content/posts data/tags.yaml
 python3 scripts/verify-site.py --public public
