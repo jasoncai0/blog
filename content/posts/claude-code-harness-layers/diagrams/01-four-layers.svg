@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">Claude Code 的四层地基</title>
+  <desc id="d1-desc">自上而下四层：委派与持久、工具调度、主循环、输入队列。每层列出它补上的能力、关键机制和失效症状。左侧标注这些层都在模型视野之外。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">FOUR LAYERS · CLAUDE CODE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">模型只看得见消息和工具，其余全在这四层里</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">每层补一个模型没有的能力：被打断、能持续、有边界、可委派且可回放</text>
+
+  <!-- L4 -->
+  <rect x="48" y="112" width="864" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L4 · 委派与持久</text>
+  <text x="68" y="158" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">补上「同事」与「记忆」</text>
+  <text x="68" y="176" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">子会话 / 后台任务 / 任务板 / 事件日志</text>
+  <text x="330" y="140" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">Agent 默认后台，先回句柄不回答案；fork 继承对话，白纸型只带任务与规章</text>
+  <text x="330" y="158" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">回执要先过安检；JSONL 追加写，checkpoint 每 prompt 一个，可 resume / fork / rewind</text>
+  <text x="330" y="180" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失效：委派退化成同步函数调用；关掉终端就接不上</text>
+
+  <!-- L3 -->
+  <rect x="48" y="228" width="864" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="250" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L3 · 工具调度</text>
+  <text x="68" y="274" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">补上「手」与「边界」</text>
+  <text x="68" y="292" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">注册表 / 权限 / 沙箱 / 并发 / 截断</text>
+  <text x="330" y="256" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">判决三值，deny → ask → allow 先命中先赢；只合并连续的只读调用，写操作当屏障</text>
+  <text x="330" y="274" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">沙箱是 OS 级边界，只管 shell；结果过长就折叠、落盘，再进上下文</text>
+  <text x="330" y="296" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失效：越权或误杀；一份日志把上下文撑爆</text>
+
+  <!-- L2 -->
+  <rect x="48" y="344" width="864" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L2 · 主循环</text>
+  <text x="68" y="390" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">补上「持续」</text>
+  <text x="68" y="408" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">turn / step / 停止原因 / 压缩</text>
+  <text x="330" y="372" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">turn 是一等对象：start / step / complete，abort 走级联取消；stop_reason 八值决定续不续</text>
+  <text x="330" y="390" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">三级压缩：清工具结果 → 总结对话 → 手动；压完重注入白名单，抖动几次就刹车</text>
+  <text x="330" y="412" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失效：提前收工；压完忘了当前计划</text>
+
+  <!-- L1 -->
+  <rect x="48" y="460" width="864" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="482" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">L1 · 输入队列</text>
+  <text x="68" y="506" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">补上「被打断」</text>
+  <text x="68" y="524" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">排队 / 插话 / 立即发送 / 取回</text>
+  <text x="330" y="488" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">两个投递边界：工具批次结束（同一个 turn 内）与 turn 结束；命令只能等 turn 结束</text>
+  <text x="330" y="506" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">队列条目带 agentId 和 priority，可寻址到某个子代理；Ctrl+Enter 优先转后台而不是杀</text>
+  <text x="330" y="528" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失效：消息插错位置，tool_use 与 tool_result 不成对</text>
+
+  <!-- left bracket -->
+  <line x1="30" y1="112" x2="30" y2="556" stroke="#bf4520" stroke-width="1.5"/>
+  <line x1="24" y1="112" x2="36" y2="112" stroke="#bf4520" stroke-width="1.5"/>
+  <line x1="24" y1="556" x2="36" y2="556" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="13" y="334" transform="rotate(-90 13 334)" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">模型视野之外</text>
+
+  <!-- legend -->
+  <text x="48" y="584" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#5a6580">证据等级</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5">
+    <rect x="112" y="573" width="52" height="17" rx="8.5" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="138" y="585" text-anchor="middle" fill="#4f5d75">文档</text>
+    <rect x="170" y="573" width="58" height="17" rx="8.5" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="199" y="585" text-anchor="middle" fill="#4f5d75">类型面</text>
+    <rect x="234" y="573" width="58" height="17" rx="8.5" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="263" y="585" text-anchor="middle" fill="#4f5d75">二进制</text>
+    <rect x="298" y="573" width="52" height="17" rx="8.5" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="324" y="585" text-anchor="middle" fill="#4f5d75">推断</text>
+  </g>
+  <text x="912" y="585" text-anchor="end" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">claude code 2.1.319 / 2.1.321</text>
+</svg>

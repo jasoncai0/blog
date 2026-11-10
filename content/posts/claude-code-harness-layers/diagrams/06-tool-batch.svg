@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="d5-title d5-desc">
+  <title id="d5-title">工具调用的分批与并行</title>
+  <desc id="d5-desc">左侧时间轴上有四个工具调用：两个只读调用并行，一个写调用单独占据一个批次，后面又一个只读调用。批次之间是屏障。右侧是分批器的伪代码。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">L3 · TOOL BATCHING</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">并发单位是工具调用，不是"这一轮工具"</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">模型一次吐出五个调用，引擎把它们切成若干批；批次内部并行，批次之间串行</text>
+
+  <!-- timeline -->
+  <rect x="48" y="112" width="592" height="316" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">一次生成里的四个调用</text>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5">
+    <text x="68" y="212" fill="#2d3142">Read a.ts</text>
+    <text x="68" y="247" fill="#2d3142">Grep "foo"</text>
+    <text x="68" y="282" fill="#bf4520">Edit b.ts</text>
+    <text x="68" y="317" fill="#2d3142">Read c.ts</text>
+  </g>
+
+  <line x1="176" y1="190" x2="176" y2="340" stroke="#eeeeee"/>
+  <line x1="616" y1="190" x2="616" y2="340" stroke="#eeeeee"/>
+
+  <rect x="180" y="198" width="150" height="18" rx="3" fill="#e8e4dd" stroke="#c9c2bb"/>
+  <rect x="196" y="233" width="146" height="18" rx="3" fill="#e8e4dd" stroke="#c9c2bb"/>
+  <rect x="372" y="268" width="128" height="18" rx="3" fill="rgba(191,69,32,0.16)" stroke="#bf4520"/>
+  <rect x="520" y="303" width="86" height="18" rx="3" fill="#e8e4dd" stroke="#c9c2bb"/>
+
+  <!-- brackets -->
+  <g stroke="#5a6580" stroke-width="1" fill="none">
+    <path d="M180 186 L180 180 L336 180 L336 186"/>
+    <path d="M372 186 L372 180 L500 180 L500 186"/>
+    <path d="M520 186 L520 180 L606 180 L606 186"/>
+  </g>
+  <text x="258" y="174" text-anchor="middle" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">批次 1 · 并行</text>
+  <text x="436" y="174" text-anchor="middle" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">批次 2</text>
+  <text x="563" y="174" text-anchor="middle" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">批次 3</text>
+
+  <line x1="348" y1="196" x2="348" y2="338" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="512" y1="196" x2="512" y2="338" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="340" y="346" text-anchor="middle" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#bf4520">写操作 = 屏障</text>
+
+  <text x="68" y="366" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只读的调用可以同时跑；写操作单独成批，跑完才轮到下一批。</text>
+  <text x="68" y="382" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">"连续的只读段才合并"——中间夹一个写，前后两段只读不会并成一批。</text>
+  <text x="68" y="404" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">钩子跟着批次走：PostToolUse 每个工具一次，PostToolBatch 每批一次。</text>
+
+  <!-- code card -->
+  <rect x="660" y="112" width="252" height="316" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="680" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">分批器</text>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">
+    <text x="680" y="162">blocks = []</text>
+    <text x="680" y="178">for c in calls:</text>
+    <text x="680" y="194">  if safe(c) and last.safe:</text>
+    <text x="680" y="210">    last.calls.push(c)</text>
+    <text x="680" y="226">  else:</text>
+    <text x="680" y="242">    blocks.push({</text>
+    <text x="680" y="258">      safe: safe(c),</text>
+    <text x="680" y="274">      calls: [c] })</text>
+  </g>
+
+  <line x1="680" y1="292" x2="892" y2="292" stroke="#eeeeee"/>
+
+  <text x="680" y="312" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">默认判定：</text>
+  <text x="680" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">safe = isReadOnly(input)</text>
+  <text x="680" y="344" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">基类给的是 false：不声明就独占</text>
+
+  <text x="680" y="368" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">按调用判、不按工具判：</text>
+  <text x="680" y="384" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">同是 Bash，读的命令能并，</text>
+  <text x="680" y="400" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">写的命令就落到下一批。</text>
+
+  <text x="48" y="462" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">流式执行器让"边生成边跑"成为可能：模型还在吐后面的调用，前面已经跑完的批次可以先回灌。</text>
+  <text x="48" y="480" font-family="'Geist','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#9aa3b5">CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY · strings 2.1.319</text>
+</svg>

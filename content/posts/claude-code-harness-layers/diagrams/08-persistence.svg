@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d8-title d8-desc">
+  <title id="d8-title">会话持久化、检查点与分叉</title>
+  <desc id="d8-desc">左侧是一条只追加的 JSONL 会话记录，从用户消息到工具结果依次写入。右侧三张卡片分别说明检查点、分叉与回退的语义。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">L4 · PERSISTENCE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">会话是一条只追加的事件流，不是一份会变的状态</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">恢复、分叉、回退，都是在这条流上换一个读法</text>
+
+  <!-- jsonl -->
+  <rect x="48" y="104" width="488" height="336" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">会话文件 · 只追加</text>
+  <text x="68" y="148" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">~/.claude/projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</text>
+
+  <line x1="76" y1="172" x2="76" y2="392" stroke="#d8d8d8" stroke-width="1.5"/>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5">
+    <circle cx="76" cy="184" r="3.5" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="92" y="174" width="52" height="18" rx="3" fill="#f4f1ee"/>
+    <text x="118" y="187" text-anchor="middle" fill="#2d3142">user</text>
+
+    <circle cx="76" cy="226" r="3.5" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="92" y="216" width="72" height="18" rx="3" fill="#f4f1ee"/>
+    <text x="128" y="229" text-anchor="middle" fill="#2d3142">assistant</text>
+
+    <circle cx="76" cy="268" r="3.5" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="92" y="258" width="64" height="18" rx="3" fill="#f4f1ee"/>
+    <text x="124" y="271" text-anchor="middle" fill="#2d3142">tool_use</text>
+
+    <circle cx="76" cy="310" r="3.5" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="92" y="300" width="82" height="18" rx="3" fill="#f4f1ee"/>
+    <text x="133" y="313" text-anchor="middle" fill="#2d3142">tool_result</text>
+
+    <circle cx="76" cy="352" r="3.5" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="92" y="342" width="72" height="18" rx="3" fill="#f4f1ee"/>
+    <text x="128" y="355" text-anchor="middle" fill="#2d3142">assistant</text>
+
+    <circle cx="76" cy="386" r="3.5" fill="#bf4520" stroke="#bf4520"/>
+    <rect x="92" y="377" width="58" height="18" rx="3" fill="rgba(191,69,32,0.08)" stroke="#bf4520"/>
+    <text x="121" y="390" text-anchor="middle" fill="#bf4520">boundary</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">
+    <text x="196" y="187">用户的第一句话，turn 从这里开始</text>
+    <text x="196" y="229">文本与 tool_use，原样记下</text>
+    <text x="196" y="271">调用本身：名字、输入、id</text>
+    <text x="196" y="313">结果按 tool_use_id 配对</text>
+    <text x="196" y="355">下一段文本，可能又带工具</text>
+    <text x="196" y="390">压缩边界的标记，不删旧行</text>
+  </g>
+
+  <text x="68" y="416" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">压缩改的是下一次请求发出去的内容；文件里的原始记录还在。</text>
+
+  <!-- right cards -->
+  <rect x="556" y="104" width="356" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="576" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">CHECKPOINT</text>
+  <text x="576" y="150" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">文件快照，另一个账本</text>
+  <text x="576" y="170" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">每个用户 prompt 一个，保留最近 100 个</text>
+  <text x="576" y="186" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只跟踪编辑类工具改过的文件；与 git 无关</text>
+
+  <rect x="556" y="220" width="356" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="576" y="244" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">FORK</text>
+  <text x="576" y="266" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">在某个点复制一条新流</text>
+  <text x="576" y="286" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">新会话带旧历史，从此两边各自追加</text>
+  <text x="576" y="302" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">子代理的 fork 是同一个动作，只是深度 +1</text>
+
+  <rect x="556" y="336" width="356" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="576" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">REWIND</text>
+  <text x="576" y="382" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">退回到某个 prompt 之前</text>
+  <text x="576" y="402" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">可以只退对话、只退代码，或两者都退</text>
+  <text x="576" y="418" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">也能"从这里摘要"，把退回去的部分压掉</text>
+
+  <text x="48" y="470" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">中断时还在跑的工具不会重跑：恢复的是记录，不是进程。所以重放一条会话，不会重复执行有副作用的命令。</text>
+  <text x="48" y="488" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">真正让 L4 成立的不是"记住"，是"可寻址"：每个 turn、每个工具调用、每个子代理都有 id，才能被恢复、被引用、被合并。</text>
+  <text x="48" y="510" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#9aa3b5">docs/how-claude-code-works · docs/checkpointing · strings 2.1.319</text>
+</svg>

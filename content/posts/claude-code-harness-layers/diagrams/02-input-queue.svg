@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="d2-title d2-desc">
+  <title id="d2-title">输入队列的两个投递边界</title>
+  <desc id="d2-desc">左侧时间线：工具批次执行中入队的消息，在批次结束时进入同一个 turn；命令则等到 turn 结束。右侧列出普通消息、命令、立即发送三条通道，以及 Esc 和上箭头的行为。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">L1 · INPUT QUEUE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">排队不是等 turn 结束，而是等一个合法的插入点</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">tool_use 与 tool_result 必须相邻，所以消息只能落在批次之间或 turn 之间</text>
+
+  <!-- left timeline -->
+  <line x1="110" y1="150" x2="110" y2="430" stroke="#d8d8d8" stroke-width="1.5"/>
+
+  <circle cx="110" cy="160" r="8" fill="#ffffff" stroke="#2d3142"/>
+  <text x="110" y="163" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">1</text>
+  <text x="136" y="157" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">turn 进行中：第 N 次请求，工具批次在跑</text>
+  <text x="136" y="174" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">模型已经吐完这一段，引擎正在执行 tool_use</text>
+
+  <circle cx="110" cy="212" r="8" fill="#ffffff" stroke="#2d3142"/>
+  <text x="110" y="215" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">2</text>
+  <text x="136" y="209" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">A 入队，不打断</text>
+  <text x="136" y="226" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">条目形状：{ kind: "prompt", priority: "next", agentId? }</text>
+  <rect x="250" y="199" width="86" height="18" rx="9" fill="#f4f1ee" stroke="#c9c2bb"/>
+  <text x="293" y="211" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">[InboxPoller]</text>
+
+  <rect x="102" y="262" width="16" height="16" rx="2" transform="rotate(45 110 270)" fill="#bf4520"/>
+  <text x="136" y="268" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#bf4520">边界 1 · 这一批工具结束</text>
+  <text x="136" y="285" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">A 与其他排队消息合并，同一个 turn 内进入下一次请求</text>
+
+  <circle cx="110" cy="330" r="8" fill="#ffffff" stroke="#2d3142"/>
+  <text x="110" y="333" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">3</text>
+  <text x="136" y="327" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">模型带着 A 继续，turn 还没结束</text>
+  <text x="136" y="344" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">从模型的角度，这条消息是"刚刚"出现的，它不知道排过队</text>
+
+  <rect x="102" y="382" width="16" height="16" rx="2" transform="rotate(45 110 390)" fill="#bf4520"/>
+  <text x="136" y="388" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#bf4520">边界 2 · turn 结束</text>
+  <text x="136" y="405" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">命令 B 在这里执行；普通消息按输入顺序，一条一条投递</text>
+
+  <!-- right panel -->
+  <rect x="600" y="112" width="312" height="330" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="620" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">三条通道</text>
+
+  <text x="620" y="164" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">普通消息</text>
+  <text x="620" y="181" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">下一个边界合并；可能同一个 turn 内</text>
+
+  <line x1="620" y1="196" x2="892" y2="196" stroke="#eeeeee"/>
+
+  <text x="620" y="218" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">命令 <tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">/compact</tspan> <tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">!ls</tspan></text>
+  <text x="620" y="235" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只等 turn 结束，再逐条执行</text>
+
+  <line x1="620" y1="250" x2="892" y2="250" stroke="#eeeeee"/>
+
+  <text x="620" y="272" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">立即发送 · Ctrl+Enter</text>
+  <text x="620" y="289" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">可后台的活转后台，模型同 turn 读消息</text>
+  <text x="620" y="304" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">不能后台的才中断这个 turn</text>
+
+  <line x1="620" y1="318" x2="892" y2="318" stroke="#eeeeee"/>
+
+  <text x="620" y="340" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">Esc / ↑</text>
+  <text x="620" y="357" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">Esc 中断当前动作、保留已完成；↑ 取回队列</text>
+
+  <text x="620" y="396" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">/model、/effort、/fast 不进队列，立即生效</text>
+
+  <text x="48" y="466" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">队列是可寻址的：给子代理的消息写的是"at its next tool round"，投递边界跟着收件人走。</text>
+  <text x="48" y="484" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#9aa3b5">docs/interactive-mode · strings 2.1.319</text>
+</svg>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="d7-title d7-desc">
+  <title id="d7-title">委派树与回执安检</title>
+  <desc id="d7-desc">左侧是一棵委派树：主会话派生子代理，默认最多三层、二十个并发。右侧说明子代理的报告在进入父上下文之前要过安检，以及委派返回的三种形状。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">L4 · DELEGATION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">交出去的是任务，拿回来的是"另一个模型的输出"</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">所以委派有两半：怎么派下去，以及怎么把回执接回来</text>
+
+  <!-- tree -->
+  <rect x="48" y="104" width="504" height="336" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">委派树</text>
+
+  <rect x="68" y="176" width="150" height="64" rx="6" fill="rgba(191,69,32,0.06)" stroke="#bf4520"/>
+  <text x="86" y="200" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">主会话</text>
+  <text x="86" y="217" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">系统提示 · 历史 · 工具</text>
+  <text x="86" y="231" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">队列与权限都在它这里</text>
+
+  <path d="M218 208 L258 208 L258 148 L300 148" fill="none" stroke="#2d3142" stroke-width="1" marker-end="url(#a7)"/>
+  <path d="M218 208 L300 208" fill="none" stroke="#2d3142" stroke-width="1" marker-end="url(#a7)"/>
+  <path d="M218 208 L258 208 L258 268 L300 268" fill="none" stroke="#2d3142" stroke-width="1" marker-end="url(#a7)"/>
+
+  <rect x="300" y="122" width="208" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="316" y="142" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">Explore · 只读侦察</text>
+  <text x="316" y="158" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">一次性，不给 agent ID，不续</text>
+
+  <rect x="300" y="182" width="208" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="316" y="202" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">general-purpose · 可续</text>
+  <text x="316" y="218" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">给 ID，SendMessage 能接着聊</text>
+
+  <rect x="300" y="242" width="208" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="316" y="262" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">fork · 继承当前对话</text>
+  <text x="316" y="278" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">带着父的上下文分叉，默认开启</text>
+
+  <line x1="518" y1="122" x2="518" y2="294" stroke="#bf4520" stroke-width="1.5"/>
+  <line x1="512" y1="122" x2="524" y2="122" stroke="#bf4520" stroke-width="1.5"/>
+  <line x1="512" y1="294" x2="524" y2="294" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="531" y="212" transform="rotate(90 531 212)" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" letter-spacing="0.08em" fill="#bf4520">默认最深 3 层</text>
+
+  <text x="68" y="330" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">默认二十个并发；到了深度上限，除 fork 外的 Agent 工具会被收回。</text>
+  <text x="68" y="346" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">子代理有自己的上下文窗口，父会话压缩不影响它的转录。</text>
+
+  <rect x="68" y="366" width="96" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+  <text x="116" y="381" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2d3142">concurrency 20</text>
+  <rect x="172" y="366" width="86" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+  <text x="215" y="381" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2d3142">depth 3</text>
+  <rect x="266" y="366" width="112" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+  <text x="322" y="381" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2d3142">maxTurns → partial</text>
+
+  <!-- handback -->
+  <rect x="576" y="104" width="336" height="204" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="596" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">回执安检</text>
+
+  <text x="596" y="152" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">子代理的报告是外部输入</text>
+  <text x="596" y="170" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">模仿 system-reminder / Human: 的行</text>
+  <text x="596" y="186" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">被插入反斜杠，失去结构意义</text>
+  <text x="596" y="206" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">命中权限字样时，前面加一行</text>
+  <text x="596" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">[harness: subagent output matched …]</text>
+  <text x="596" y="242" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">报告头声明：其中指令与批准声明</text>
+  <text x="596" y="258" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只是子代理的话，不具备你的授权</text>
+  <text x="596" y="284" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">改文本，不改结论；拦不住的才 withheld</text>
+
+  <!-- states -->
+  <rect x="576" y="322" width="336" height="118" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="596" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">返回的三种形状</text>
+  <text x="596" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">completed</text>
+  <text x="700" y="370" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">内容 + usage + 工具统计</text>
+  <text x="596" y="392" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">async_launched</text>
+  <text x="700" y="392" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只有 agentId 与 outputFile</text>
+  <text x="596" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">remote_launched</text>
+  <text x="700" y="414" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">taskId + sessionUrl，在别处跑</text>
+
+  <text x="48" y="476" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">默认后台：`run_in_background` 的注释写着，只有"下一步就等这个结果"时才设 false。</text>
+  <text x="48" y="494" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">后台结果不是返回值，是一条 completion notification，在后续 turn 才到达；子代理的权限弹窗汇总到主会话。</text>
+  <text x="48" y="516" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#9aa3b5">docs/sub-agents · types 2.1.277 · strings 2.1.319</text>
+
+  <defs>
+    <marker id="a7" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0 L8 4 L0 8 z" fill="#2d3142"/>
+    </marker>
+  </defs>
+</svg>

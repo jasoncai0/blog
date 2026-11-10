@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d4-title d4-desc">
+  <title id="d4-title">上下文预算与三级压缩</title>
+  <desc id="d4-desc">上方是一条上下文占用条，标出自动压缩阈值。下方三张卡片分别是 microcompact 清工具结果、auto-compact 摘要历史、手动 compact 指定压缩点。最底部列出压缩后重新注入的内容。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">L2 · CONTEXT BUDGET</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">循环真正的稀缺资源是上下文，不是时间</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">每转一圈，工具结果都留在历史里；压缩不是可选项，是循环的一部分</text>
+
+  <!-- gauge -->
+  <rect x="48" y="106" width="864" height="146" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">一次请求实际发出去的东西</text>
+
+  <rect x="68" y="146" width="824" height="34" rx="4" fill="#f0eeea"/>
+  <rect x="68" y="146" width="230" height="34" rx="4" fill="#e4e0da"/>
+  <rect x="298" y="146" width="280" height="34" fill="#dcd7cf"/>
+  <rect x="578" y="146" width="148" height="34" fill="rgba(191,69,32,0.28)"/>
+  <rect x="726" y="146" width="166" height="34" rx="4" fill="#f0eeea"/>
+
+  <text x="78" y="167" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#2d3142">系统提示 · 工具表 · CLAUDE.md</text>
+  <text x="308" y="167" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#2d3142">对话消息</text>
+  <text x="588" y="167" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#8f2f14">工具结果</text>
+  <text x="736" y="167" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8" fill="#5a6580">剩余空间</text>
+
+  <line x1="790" y1="136" x2="790" y2="190" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="790" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">autocompact 阈值</text>
+  <line x1="892" y1="136" x2="892" y2="190" stroke="#2d3142" stroke-width="1"/>
+  <text x="892" y="132" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2d3142">模型窗口</text>
+
+  <text x="68" y="204" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">阈值 = min(设置值, 模型窗口)；`/autocompact 500k` 可以调</text>
+  <text x="68" y="222" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">工具结果是可以丢的那部分：它们能被重新读出来，对话本身不能</text>
+  <text x="68" y="240" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">每转一圈都检查一次：涨得最快的通常不是谁说的话，而是命令的输出</text>
+
+  <!-- tiers -->
+  <rect x="48" y="272" width="272" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">① MICROCOMPACT</text>
+  <text x="68" y="318" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">只清工具结果，不动对话</text>
+  <text x="68" y="340" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">按 tool_use_id 落盘，留下句柄</text>
+  <text x="68" y="356" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">保留最近 keepRecent 条不动</text>
+  <text x="68" y="372" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">插一条 boundary，模型知道清过</text>
+  <text x="68" y="394" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">代价最小，频率最高</text>
+
+  <rect x="344" y="272" width="272" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="364" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">② AUTO-COMPACT</text>
+  <text x="364" y="318" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">把中间那段交给模型重写</text>
+  <text x="364" y="340" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">过阈值时触发，一次请求前</text>
+  <text x="364" y="356" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">摘要取代旧历史，然后重建</text>
+  <text x="364" y="372" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">连续几次压不下去就停手报错</text>
+  <text x="364" y="394" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">会丢细节，抖动几次就放弃</text>
+
+  <rect x="640" y="272" width="272" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="660" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">③ 手动 · 指定点</text>
+  <text x="660" y="318" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">人知道哪段可以不要</text>
+  <text x="660" y="340" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">/compact focus on 那件事</text>
+  <text x="660" y="356" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">/rewind：从这里 / 到这里的摘要</text>
+  <text x="660" y="372" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">可以顺手把工作树也退回去</text>
+  <text x="660" y="394" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">最贵，但方向最准</text>
+
+  <!-- re-injection chips -->
+  <text x="48" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#5a6580">压缩后重新注入</text>
+  <g font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8">
+    <rect x="188" y="438" width="76" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+    <text x="226" y="453" text-anchor="middle" fill="#2d3142">系统提示</text>
+    <rect x="272" y="438" width="88" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+    <text x="316" y="453" text-anchor="middle" fill="#2d3142">output style</text>
+    <rect x="368" y="438" width="104" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+    <text x="420" y="453" text-anchor="middle" fill="#2d3142">根 CLAUDE.md</text>
+    <rect x="480" y="438" width="92" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+    <text x="526" y="453" text-anchor="middle" fill="#2d3142">auto memory</text>
+    <rect x="580" y="438" width="80" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+    <text x="620" y="453" text-anchor="middle" fill="#2d3142">skill 描述</text>
+    <rect x="668" y="438" width="80" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+    <text x="708" y="453" text-anchor="middle" fill="#2d3142">git status</text>
+    <rect x="756" y="438" width="52" height="22" rx="11" fill="#ffffff" stroke="#c9c2bb"/>
+    <text x="782" y="453" text-anchor="middle" fill="#2d3142">plan</text>
+  </g>
+
+  <text x="48" y="490" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">没进白名单的东西按需重载：path-scoped 规则、子目录 CLAUDE.md、最多 5 个最近改过的文件（>5000 tokens 只留路径）。</text>
+  <text x="48" y="506" font-family="'Geist','PingFang SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">压缩不是摘要聊天记录，是重建一个"还能继续干活"的最小现场。</text>
+</svg>
