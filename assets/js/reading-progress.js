@@ -1,17 +1,17 @@
 import {
   STORAGE_KEY,
-  DONE_THRESHOLD,
   progressFromScroll,
+  scrollForProgress,
   isDone,
   parseStore,
   serializeStore,
   writeEntry,
+  readEntry,
+  shouldResume,
 } from "./progress-core.mjs";
 
-// 浏览器自带的滚动恢复会和续读打架，先接管。
-history.scrollRestoration = "manual";
-
 const FLUSH_MS = 1000;
+const HINT_MS = 2500;
 
 function readRaw() {
   try {
@@ -96,6 +96,46 @@ function boot() {
     frame = requestAnimationFrame(update);
   }
 
+  function navType() {
+    const [nav] = performance.getEntriesByType("navigation");
+    return nav ? nav.type : "navigate";
+  }
+
+  function showHint(percent) {
+    const hint = document.createElement("div");
+    hint.className = "rp-hint";
+    hint.setAttribute("role", "status");
+    hint.textContent = `从 ${percent}% 继续`;
+    document.body.append(hint);
+    setTimeout(() => {
+      hint.classList.add("is-out");
+      setTimeout(() => hint.remove(), 400);
+    }, HINT_MS);
+  }
+
+  // 续读：只在「干净地打开这一页」时接手。锚点、后退/前进、浏览器已经恢复过
+  // 滚动位置（scrollY !== 0）这三种情况都不抢——浏览器比我们知道得更多。
+  function maybeResume() {
+    if (location.hash) return;
+    if (navType() === "back_forward") return;
+    if (window.scrollY !== 0) return;
+    const entry = readEntry(parseStore(readRaw() || ""), slug);
+    if (!shouldResume(entry)) return;
+
+    metrics = measure();
+    const target = Math.max(
+      0,
+      Math.round(scrollForProgress(entry.p, window.innerHeight, metrics.top, metrics.height)),
+    );
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto"; // 站点的 smooth 会让续读变成慢慢滑下去
+    window.scrollTo(0, target);
+    root.style.scrollBehavior = previous;
+    showHint(entry.p);
+    onScroll();
+  }
+
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", () => {
     metrics = measure();
@@ -107,6 +147,13 @@ function boot() {
   });
 
   paint();
+
+  const resume = () => requestAnimationFrame(() => requestAnimationFrame(maybeResume));
+  if (document.readyState === "complete") {
+    resume();
+  } else {
+    window.addEventListener("load", resume, { once: true });
+  }
 }
 
 if (document.readyState === "loading") {

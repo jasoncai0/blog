@@ -2,7 +2,7 @@
 """文章页阅读进度的浏览器测试。
 
 先 `hugo --minify` 生成 public，再跑本脚本；脚本自己起 http.server，
-用 Chromium 打开文章页，检查进度条、胶囊文字与 localStorage 落盘。
+用 Chromium 打开文章页，检查进度条、胶囊文字、续读与 localStorage 落盘。
 """
 
 import json
@@ -31,6 +31,10 @@ def wait_for_server(url, timeout=15.0):
             last = exc
             time.sleep(0.2)
     raise RuntimeError(f"服务器没起来: {url}: {last}")
+
+
+def preset(context, entries):
+    context.add_init_script(f"localStorage.setItem({KEY!r}, {json.dumps(json.dumps(entries))})")
 
 
 def read_store(page):
@@ -82,10 +86,72 @@ def test_two_pages_merge(context, base):
     assert store["hello"]["p"] == 100 and store["ot-crdt-lww"]["p"] == 100
 
 
+def test_resume_scrolls_and_hints(context, base):
+    # hello 太短（40% 只落在 51px），换成长文
+    preset(context, {"ot-crdt-lww": {"p": 40, "t": 0, "d": False}})
+    page = context.new_page()
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.wait_for_timeout(800)
+    assert page.evaluate("window.scrollY") > 2000, "应当自动滚到 40% 的位置"
+    hint = page.locator(".rp-hint")
+    assert hint.count() == 1, "应当出现续读提示"
+    assert "从 40% 继续" in hint.inner_text()
+
+
+def test_anchor_wins_over_resume(context, base):
+    preset(context, {"ot-crdt-lww": {"p": 40, "t": 0, "d": False}})
+    page = context.new_page()
+    page.goto(base + "/posts/ot-crdt-lww.html#d1t")
+    page.wait_for_timeout(800)
+    assert page.locator(".rp-hint").count() == 0, "带锚点时不该续读"
+
+
+def test_bfcache_does_not_double_scroll(context, base):
+    page = context.new_page()
+    page.goto(base + "/posts/hello.html")
+    page.wait_for_selector(".rp-bar")
+    page.evaluate("window.scrollTo(0, 1200)")
+    page.wait_for_timeout(300)
+    before = page.evaluate("window.scrollY")
+    page.goto(base + "/")
+    page.wait_for_timeout(200)
+    page.go_back()
+    page.wait_for_timeout(800)
+    assert page.locator(".rp-hint").count() == 0, "后退回来不该再续读"
+    after = page.evaluate("window.scrollY")
+    assert abs(after - before) <= 50, f"滚动位置被脚本动过: {before} -> {after}"
+
+
+CASES = [
+    (test_article_scroll_records_progress, False),
+    (test_chip_appears_after_scrolling, False),
+    (test_two_pages_merge, True),
+    (test_resume_scrolls_and_hints, True),
+    (test_anchor_wins_over_resume, True),
+    (test_bfcache_does_not_double_scroll, True),
+]
+
+
 def free_port():
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
         return sock.getsockname()[1]
+
+
+def run_case(browser, fn, base, needs_context):
+    ctx = browser.new_context(viewport={"width": 900, "height": 800})
+    try:
+        if needs_context:
+            fn(ctx, base)
+        else:
+            fn(ctx.new_page(), base)
+        print(f"PASS {fn.__name__}")
+        return True
+    except Exception as exc:
+        print(f"FAIL {fn.__name__}: {exc}")
+        return False
+    finally:
+        ctx.close()
 
 
 def main():
@@ -96,38 +162,20 @@ def main():
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
-    failures = []
+    failures = 0
     try:
         wait_for_server(base + "/posts/hello.html")
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
-            page_tests = [test_article_scroll_records_progress, test_chip_appears_after_scrolling]
-            for fn in page_tests:
-                ctx = browser.new_context(viewport={"width": 900, "height": 800})
-                page = ctx.new_page()
-                try:
-                    fn(page, base)
-                    print(f"PASS {fn.__name__}")
-                except Exception as exc:
-                    failures.append(fn.__name__)
-                    print(f"FAIL {fn.__name__}: {exc}")
-                finally:
-                    ctx.close()
-            ctx = browser.new_context(viewport={"width": 900, "height": 800})
-            try:
-                test_two_pages_merge(ctx, base)
-                print("PASS test_two_pages_merge")
-            except Exception as exc:
-                failures.append("test_two_pages_merge")
-                print(f"FAIL test_two_pages_merge: {exc}")
-            finally:
-                ctx.close()
+            for fn, needs_context in CASES:
+                if not run_case(browser, fn, base, needs_context):
+                    failures += 1
             browser.close()
     finally:
         server.terminate()
         server.wait(timeout=5)
     if failures:
-        print(f"{len(failures)} 个用例失败")
+        print(f"{failures} 个用例失败")
         sys.exit(1)
     print("全部通过")
 
