@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="690" viewBox="0 0 960 690" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">设计 Agent 的五层记忆</title>
+  <desc id="d1-desc">自上而下：M0 工作记忆、M1 情节记忆、M2 语义记忆、M3 程序记忆、M4 资产与品牌记忆。只有 M0 在模型上下文里，其余四层都由上下文编译器按需搬入。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">MEMORY PLANES · DESIGN AGENT</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">五层记忆：只有 M0 在上下文里，其余都是被编译进来的</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">同一套运行时事件，喂出五种寿命、五种读写节奏完全不同的记忆</text>
+  <rect x="48" y="104" width="864" height="42" rx="6" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="66" y="129" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">RUNTIME</text>
+  <rect x="150" y="114" width="66.96000000000001" height="22" rx="11" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="183.48000000000002" y="128.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">session.start</text>
+  <rect x="224.96" y="114" width="70.88000000000002" height="22" rx="11" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="260.40000000000003" y="128.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">turn.pre_model</text>
+  <rect x="303.84000000000003" y="114" width="66.96000000000001" height="22" rx="11" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="337.32000000000005" y="128.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">step.pre_tool</text>
+  <rect x="378.80000000000007" y="114" width="66.96000000000001" height="22" rx="11" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="412.2800000000001" y="128.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">canvas.commit</text>
+  <rect x="453.7600000000001" y="114" width="51.28000000000001" height="22" rx="11" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="479.4000000000001" y="128.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">turn.post</text>
+  <rect x="513.0400000000001" y="114" width="59.12000000000001" height="22" rx="11" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="542.6000000000001" y="128.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">session.end</text>
+  <rect x="48" y="160" width="820" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <rect x="48" y="160" width="3" height="84" rx="1.5" fill="#bf4520"/>
+  <text x="68" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#bf4520" letter-spacing="0.1em">M0</text>
+  <text x="96" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">· WORKING SET</text>
+  <text x="68" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">工作记忆</text>
+  <text x="236" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">当前画布聚焦子图、最近 6 轮原文、本轮召回的</text>
+  <text x="236" y="207" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">3–5 张记忆卡、待执行计划与已固定的约束</text>
+  <text x="236" y="228" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">写 每轮重建 · 读 每次模型调用 · 存 进程内，不落库</text>
+  <rect x="48" y="252" width="820" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="68" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">M1</text>
+  <text x="96" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">· EPISODIC</text>
+  <text x="68" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">情节记忆</text>
+  <text x="236" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">turn、工具调用、画布 op 批次、提交快照、</text>
+  <text x="236" y="299" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">反馈信号；只追加，不修改，可回放到任意一版</text>
+  <text x="236" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">写 commit / turn.post · 读 回放、先例检索 · 存 事件日志 + 对象存储</text>
+  <rect x="48" y="344" width="820" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="68" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">M2</text>
+  <text x="96" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">· SEMANTIC</text>
+  <text x="68" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">语义记忆</text>
+  <text x="236" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">从情节里蒸馏出的命题：偏好、事实、禁令、</text>
+  <text x="236" y="391" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">关系；每条带置信度、证据链和失效时间</text>
+  <text x="236" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">写 异步巩固 · 读 常驻摘要 + 检索 · 存 关系库 + 向量索引</text>
+  <rect x="48" y="436" width="820" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="68" y="458" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">M3</text>
+  <text x="96" y="458" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">· PROCEDURAL</text>
+  <text x="68" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">程序记忆</text>
+  <text x="236" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">技能：触发条件、步骤、参数、约束，以及</text>
+  <text x="236" y="483" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">「这个用户习惯怎么做」的适配覆盖层</text>
+  <text x="236" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">写 挖掘 / 编辑 / 灰度 · 读 任务开始时匹配 · 存 版本库</text>
+  <rect x="48" y="528" width="820" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="68" y="550" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">M4</text>
+  <text x="96" y="550" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">· ASSET &amp; BRAND</text>
+  <text x="68" y="574" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">资产与品牌</text>
+  <text x="236" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">品牌 token 与硬规则、组件模板、素材、画布</text>
+  <text x="236" y="575" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" text-anchor="start" fill="#4f5d75">场景图，以及从产物统计出的「风格指纹」</text>
+  <text x="236" y="596" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">写 导入 / 提交时 · 读 图查询 + 向量 · 存 图库 + 对象存储</text>
+  <path d="M880,252 L888,252 L888,612 L880,612" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="906" y="432.0" transform="rotate(-90 906 432.0)" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">上下文之外 · 按需编译</text>
+  <text x="48" y="662" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.12em">图例</text>
+  <rect x="100" y="648" width="71.4" height="18" rx="9" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="135.7" y="660.5" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="middle" fill="#bf4520">M0：常驻上下文</text>
+  <rect x="181.4" y="648" width="114.0" height="18" rx="9" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="238.4" y="660.5" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="middle" fill="#4f5d75">M1–M4：外部存储，按需检索</text>
+  <text x="912" y="660.5" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="end" fill="#5a6580">预算示例：32k 上下文 / 单轮</text>
+</svg>

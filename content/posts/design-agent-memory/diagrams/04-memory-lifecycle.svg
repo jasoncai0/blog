@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="d3-title d3-desc">
+  <defs>
+    <marker id="arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+  </defs>
+  <title id="d3-title">一条记忆的生命周期</title>
+  <desc id="d3-desc">记忆从候选进入生效，被新证据强化或被新值取代，长期未命中则归档，遇到反证则进入冲突，最终可被删除。读取路径只取生效状态。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">MEMORY ITEM · STATE MACHINE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">一条记忆不是一行事实，是一个会被推翻、会过期的状态机</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">写入只产生候选；提升、取代、归档都由后台巩固器判定，热路径不参与</text>
+  <rect x="90" y="190" width="156" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="168.0" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">候选</text>
+  <text x="168.0" y="237" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.2" font-weight="400" text-anchor="middle" fill="#5a6580" letter-spacing="0.1em">CANDIDATE</text>
+  <rect x="350" y="190" width="156" height="72" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="428.0" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">生效</text>
+  <text x="428.0" y="237" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.2" font-weight="400" text-anchor="middle" fill="#5a6580" letter-spacing="0.1em">ACTIVE</text>
+  <rect x="620" y="104" width="160" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="700.0" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">被取代</text>
+  <text x="700.0" y="151" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.2" font-weight="400" text-anchor="middle" fill="#5a6580" letter-spacing="0.1em">SUPERSEDED</text>
+  <rect x="620" y="196" width="160" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="700.0" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">已归档</text>
+  <text x="700.0" y="243" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.2" font-weight="400" text-anchor="middle" fill="#5a6580" letter-spacing="0.1em">ARCHIVED</text>
+  <rect x="620" y="300" width="160" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="700.0" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">冲突</text>
+  <text x="700.0" y="347" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.2" font-weight="400" text-anchor="middle" fill="#5a6580" letter-spacing="0.1em">CONTRADICTED</text>
+  <rect x="840" y="196" width="76" height="64" rx="6" fill="#ececec" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="878.0" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#4f5d75">删除</text>
+  <text x="878.0" y="243" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.2" font-weight="400" text-anchor="middle" fill="#5a6580" letter-spacing="0.1em">TOMBSTONE</text>
+  <path d="M246,226 L350,226" fill="none" stroke="#2d3142" stroke-width="1.3" marker-end="url(#arrow-m)"/>
+  <rect x="262.2" y="213.0" width="71.5" height="10.0" fill="#f5f5f5"/>
+  <text x="298" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" text-anchor="middle" fill="#2d3142">证据 ≥2 / 显式确认</text>
+  <path d="M382,190 L382.0,164.0 Q382,158 388.0,158.0 L416.0,158.0 Q422,158 422.0,164.0 L422,190" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <text x="402" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">新证据 ±conf</text>
+  <path d="M506,214 L554.0,214.0 Q562,214 562.0,206.0 L562.0,144.0 Q562,136 570.0,136.0 L620,136" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="574.0" y="123.0" width="34.0" height="10.0" fill="#f5f5f5"/>
+  <text x="591" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">新值更强</text>
+  <path d="M506,226 L620,226" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="538.2" y="213.0" width="49.7" height="10.0" fill="#f5f5f5"/>
+  <text x="563" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">180 天未命中</text>
+  <path d="M506,238 L554.0,238.0 Q562,238 562.0,246.0 L562.0,324.0 Q562,332 570.0,332.0 L620,332" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="575.1" y="319.0" width="31.8" height="10.0" fill="#f5f5f5"/>
+  <text x="591" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" text-anchor="middle" fill="#4f5d75">反证 ≥2</text>
+  <path d="M780,136 L794.0,136.0 Q800,136 800.0,142.0 L800.0,204.0 Q800,210 806.0,210.0 L840,210" fill="none" stroke="#5a6580" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-m)"/>
+  <path d="M780,228 L840,228" fill="none" stroke="#5a6580" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-m)"/>
+  <path d="M780,332 L814.0,332.0 Q820,332 820.0,326.0 L820.0,248.0 Q820,242 826.0,242.0 L840,242" fill="none" stroke="#5a6580" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-m)"/>
+  <text x="428" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" text-anchor="middle" fill="#bf4520">读路径只取 active</text>
+  <text x="428" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#5a6580">superseded 留链，用来回答「以前为什么那样」</text>
+  <text x="90" y="322" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.14em">WHY CANDIDATE</text>
+  <text x="90" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" font-weight="400" text-anchor="start" fill="#4f5d75">模型抽出来的东西默认不可信。</text>
+  <text x="90" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" font-weight="400" text-anchor="start" fill="#4f5d75">只有被第二条独立证据或用户明确确认过，</text>
+  <text x="90" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" font-weight="400" text-anchor="start" fill="#4f5d75">才允许升到 active、进入常驻上下文。</text>
+  <text x="48" y="460" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">删除是异步的三步：写墓碑 → 重建索引 → 用检索测试验证不再召回；tombstone 永不参与召回。</text>
+  <text x="48" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">候选 7 天没有第二条证据自动清理；置信度只由证据数、来源可靠度和时间衰减三者决定，模型不能自评。</text>
+</svg>

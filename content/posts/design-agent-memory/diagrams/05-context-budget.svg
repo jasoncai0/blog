@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="d5-title d5-desc">
+  <defs>
+    <marker id="arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5d75"/></marker>
+  </defs>
+  <title id="d5-title">上下文编译与预算分配</title>
+  <desc id="d5-desc">上排是编译的四步：组 query、召回、重排、打包。下排是把 32k 窗口切成四段，并把 9.4k 的记忆块放大成六个槽位。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">CONTEXT COMPILER · BUDGET</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">记忆不是「塞进上下文」，是在 32k 里抢六个槽位</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">编译器每一步都可解释；哪段被裁掉、为什么被裁，都要能回放</text>
+  <rect x="48" y="148" width="190" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="62" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">组 query</text>
+  <text x="62" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.3" font-weight="400" text-anchor="start" fill="#4f5d75">意图 · 画布焦点 · 任务类型 · 时间</text>
+  <path d="M238,180 L263,180" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="263" y="148" width="190" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="277" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">召回</text>
+  <text x="277" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.3" font-weight="400" text-anchor="start" fill="#4f5d75">BM25 ∥ 向量 ∥ 图扩展，各取 40</text>
+  <path d="M453,180 L478,180" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="478" y="148" width="190" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="492" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">重排</text>
+  <text x="492" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.3" font-weight="400" text-anchor="start" fill="#4f5d75">小模型打分，品牌硬约束直通</text>
+  <path d="M668,180 L693,180" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <rect x="693" y="148" width="190" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="707" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#2d3142">打包</text>
+  <text x="707" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.3" font-weight="400" text-anchor="start" fill="#4f5d75">预算内做 MMR，约束不参与裁切</text>
+  <text x="48" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.12em">上下文窗口 32k</text>
+  <g transform="translate(0,284)">
+  <rect x="48" y="0" width="162.0" height="36" rx="0" fill="#ededed" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="129.0" y="15" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" text-anchor="middle" fill="#2d3142">系统 + 工具</text>
+  <text x="129.0" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" text-anchor="middle" fill="#2d3142">6.0k</text>
+  <rect x="210.0" y="0" width="253.8" height="36" rx="0" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="336.9" y="15" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" text-anchor="middle" fill="#bf4520">记忆块</text>
+  <text x="336.9" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" text-anchor="middle" fill="#bf4520">9.4k</text>
+  <rect x="463.8" y="0" width="216.0" height="36" rx="0" fill="#ededed" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="571.8" y="15" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" text-anchor="middle" fill="#2d3142">工具结果</text>
+  <text x="571.8" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" text-anchor="middle" fill="#2d3142">8.0k</text>
+  <rect x="679.8" y="0" width="232.2" height="36" rx="0" fill="#ededed" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="795.9" y="15" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" text-anchor="middle" fill="#2d3142">生成余量</text>
+  <text x="795.9" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" text-anchor="middle" fill="#2d3142">8.6k</text>
+  </g>
+  <text x="480" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#5a6580">记忆块 9.4k 放大为六个槽位</text>
+  <g transform="translate(0,362)">
+  <rect x="48" y="0" width="82.72340425531915" height="40" rx="0" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="89.36170212765958" y="17" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="600" text-anchor="middle" fill="#2d3142">品牌硬约束</text>
+  <text x="89.36170212765958" y="31" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="middle" fill="#5a6580">0.9k</text>
+  <rect x="130.72340425531917" y="0" width="238.97872340425533" height="40" rx="0" fill="#f7f7f7" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="250.21276595744683" y="17" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="600" text-anchor="middle" fill="#2d3142">画布聚焦</text>
+  <text x="250.21276595744683" y="31" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="middle" fill="#5a6580">2.6k</text>
+  <rect x="369.7021276595745" y="0" width="101.10638297872342" height="40" rx="0" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="420.2553191489362" y="17" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="600" text-anchor="middle" fill="#2d3142">偏好摘要</text>
+  <text x="420.2553191489362" y="31" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="middle" fill="#5a6580">1.1k</text>
+  <rect x="470.8085106382979" y="0" width="137.87234042553192" height="40" rx="0" fill="#f7f7f7" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="539.7446808510639" y="17" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="600" text-anchor="middle" fill="#2d3142">先例 2–3 条</text>
+  <text x="539.7446808510639" y="31" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="middle" fill="#5a6580">1.5k</text>
+  <rect x="608.6808510638298" y="0" width="45.95744680851064" height="40" rx="0" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="631.6595744680851" y="17" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="600" text-anchor="middle" fill="#2d3142">技能</text>
+  <text x="631.6595744680851" y="31" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="middle" fill="#5a6580">0.5k</text>
+  <rect x="654.6382978723404" y="0" width="257.36170212765956" height="40" rx="0" fill="#f7f7f7" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="783.3191489361702" y="17" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="600" text-anchor="middle" fill="#2d3142">最近轮次</text>
+  <text x="783.3191489361702" y="31" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.4" font-weight="400" text-anchor="middle" fill="#5a6580">2.8k</text>
+  </g>
+  <text x="48" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">· 硬约束不参与打分，直接拼在系统提示后面；它不占召回名额，也不允许被裁掉。</text>
+  <text x="48" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">· 召回不够就空着，把空位留给工具结果——记忆块的空缺不补满，补满只会稀释注意力。</text>
+  <text x="48" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">· 每段都带来源标记，模型可以引用「按你上次的偏好」，用户也能点开看是哪一条。</text>
+  <text x="48" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" text-anchor="start" fill="#5a6580">这是默认权重，不是常数：快环每轮在 3 种配比里选一个（偏好优先 / 先例优先 / 最近优先），用接受率更新。</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="d7-title d7-desc">
+  <defs>
+    <marker id="arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5d75"/></marker>
+    <marker id="arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+  </defs>
+  <title id="d7-title">自演进回路与三级变速</title>
+  <desc id="d7-desc">左侧六站闭环：信号、候选、回放、影子、灰度、监控；右侧是三种速度的变更：每 turn、每天、每版。越往下越慢，也越难回滚。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">EVOLUTION LOOP · THREE SPEEDS</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">自演进不是「让模型改自己」，是六个站点转一圈</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">每一圈都要能被回放、被影子对比、被灰度证伪；转不动的圈不算进化</text>
+  <rect x="264.0" y="137.0" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="330.0" y="161.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="middle" fill="#2d3142">信号</text>
+  <text x="330.0" y="178.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#4f5d75">接受 · 纠正 · 撤销</text>
+  <rect x="409.4922678357857" y="221.0" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="475.4922678357857" y="245.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="middle" fill="#2d3142">候选</text>
+  <text x="475.4922678357857" y="262.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#4f5d75">抽取 / 挖掘 / 调参</text>
+  <rect x="409.4922678357857" y="389.0" width="132" height="54" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="475.4922678357857" y="413.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="middle" fill="#2d3142">回放</text>
+  <text x="475.4922678357857" y="430.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#4f5d75">历史 turn 重跑</text>
+  <rect x="264.0" y="473.0" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="330.0" y="497.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="middle" fill="#2d3142">影子</text>
+  <text x="330.0" y="514.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#4f5d75">与线上并跑</text>
+  <rect x="118.5077321642143" y="389.0" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="184.5077321642143" y="413.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="middle" fill="#2d3142">灰度</text>
+  <text x="184.5077321642143" y="430.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#4f5d75">1% → 10% → 全量</text>
+  <rect x="118.5077321642143" y="221.0" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="184.5077321642143" y="245.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="middle" fill="#2d3142">监控</text>
+  <text x="184.5077321642143" y="262.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#4f5d75">指标跌就回滚</text>
+  <path d="M376.8,191.0 L428.7,221.0" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M475.5,275.0 L475.5,389.0" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M428.7,443.0 L376.8,473.0" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M283.2,473.0 L231.3,443.0" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M184.5,389.0 L184.5,275.0" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow-m)"/>
+  <path d="M231.3,221.0 L283.2,191.0" fill="none" stroke="#bf4520" stroke-width="1.2" marker-end="url(#arrow-a)"/>
+  <rect x="596" y="150" width="316" height="360" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="618" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="400" text-anchor="start" fill="#5a6580" letter-spacing="0.14em">三级变速</text>
+  <line x1="618" y1="194" x2="890" y2="194" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="618" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#2d3142">快 · 每 turn</text>
+  <text x="618" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" text-anchor="start" fill="#4f5d75">检索配比、写入门控</text>
+  <text x="618" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#5a6580">只调权重，不改内容；错了丢一个 turn</text>
+  <line x1="618" y1="280" x2="890" y2="280" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="618" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#2d3142">慢 · 每天</text>
+  <text x="618" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" text-anchor="start" fill="#4f5d75">巩固、消解冲突、挖技能</text>
+  <text x="618" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#5a6580">产出候选，不动线上</text>
+  <line x1="618" y1="368" x2="890" y2="368" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="618" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#bf4520">元 · 每版</text>
+  <text x="618" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" text-anchor="start" fill="#4f5d75">抽取提示、检索器、schema</text>
+  <text x="618" y="438" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#5a6580">必须过门禁、影子、灰度</text>
+  <text x="618" y="476" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#5a6580">越往下越慢，因为越往下改的东西</text>
+  <text x="618" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="start" fill="#5a6580">越难回滚：快环错一个 turn，元环错所有人。</text>
+  <text x="48" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" text-anchor="start" fill="#4f5d75">自演进的判据不是「系统改了」，是「同一批回放里，旧策略赢不了新策略」；赢不了就回滚，把这一版写进审计日志。</text>
+  <text x="48" y="576" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" text-anchor="start" fill="#5a6580">没有回放与影子，这套东西不叫自演进，叫自污染：模型把自己的输出当证据，几轮之后所有人都长一个样。</text>
+</svg>
