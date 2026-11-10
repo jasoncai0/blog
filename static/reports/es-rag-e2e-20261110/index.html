@@ -55,11 +55,11 @@ ul{padding-left:22px} li{margin:5px 0}
 <main class="wrap">
 <p class="eyebrow">E2E Report · Internal / Unlisted</p>
 <h1>ES RAG 资产检索端侧测试报告</h1>
-<p class="deck">用真实 Elasticsearch 8.15.3、真实 BGE-small-zh-v1.5 和本地 OpenAI 兼容服务，跑通资产录入、chunk 向量索引、带租户/ACL 过滤的 kNN 搜索、RAG 引用与更新删除生命周期。LLM 是确定性 mock，报告只对检索与引用链路负责。</p>
+<p class="deck">用真实 Elasticsearch 8.15.3、真实 BGE-small-zh-v1.5 和本地 OpenAI 兼容服务，跑通资产录入、chunk 向量索引、带租户/ACL 过滤的 dense + BM25 hybrid 检索、RAG 引用与更新删除生命周期。LLM 是确定性 mock，报告只对检索与引用链路负责。</p>
 <div class="meta">
   <span class="pill">2026-11-10</span>
   <span class="pill">23 assets · 28 queries</span>
-  <span class="pill">29 chunks</span>
+  <span class="pill">29 chunks · 400/80</span>
   <span class="pill red">UNLISTED · noindex</span>
 </div>
 
@@ -74,14 +74,15 @@ ul{padding-left:22px} li{margin:5px 0}
   <div class="card metric"><div class="k">MRR / nDCG@5</div><div class="v">1.000 / 0.995</div><div class="s">名次与排序质量</div></div>
   <div class="card metric"><div class="k">ACL / 租户泄漏</div><div class="v">0</div><div class="s">2/2 条负例通过</div></div>
 </div>
-<p>最终 29 条 chunk 与 29 个预期 chunk 对齐；6 条 RAG 用例引用全部有效；更新后旧尾部 chunk 被删掉，删除后文档计数归零。搜索 p50 <b>30.1 ms</b>、p95 <b>40.5 ms</b>；录入 p50 <b>153.4 ms</b>、p95 <b>362.1 ms</b>（含首次冷启动）。</p>
+<p>最终 29 条 chunk 与 29 个预期 chunk 对齐；6 条 RAG 用例引用全部有效；更新后旧尾部 chunk 被删掉，删除后文档计数归零。搜索 p50 <b>30.9 ms</b>、p95 <b>38.0 ms</b>；录入 p50 <b>97.1 ms</b>、p95 <b>201.5 ms</b>（含首次冷启动）。</p>
 
 <h2>二、测试环境与数据</h2>
 <table>
 <tr><th>项目</th><th>配置</th></tr>
-<tr><td>Elasticsearch</td><td>Elasticsearch 8.15.3 (single node, 1 GB heap, security disabled)；索引 <code>assets_e2e_20261110</code></td></tr>
+<tr><td>Elasticsearch</td><td>Elasticsearch 8.15.3 (single node, 1 GB heap, security disabled)；索引 <code>assets_e2e_hybrid_20261110</code></td></tr>
 <tr><td>应用</td><td>Spring Boot 3.3.5 / Java 23 runtime, target Java 17；Spring Boot 3.3.5</td></tr>
 <tr><td>Embedding</td><td>BAAI/bge-small-zh-v1.5 via fastembed/ONNX, 512 dims, local CPU；查询加中文检索指令，文档不加</td></tr>
+<tr><td>检索</td><td>hybrid (dense kNN + BM25, RRF rank_constant=60)；400 字 / 80 overlap；dense 与 lexical 共用 tenant/ACL filter</td></tr>
 <tr><td>LLM</td><td>deterministic extractive mock (OpenAI-compatible endpoint)；只验证 prompt 组装、引用编号和 ACL，不评价生成质量</td></tr>
 <tr><td>语料</td><td>23 个合成资产、8,263 字、2 个租户；28 条 query（26 条有标注 + 2 条 ACL 负例）</td></tr>
 <tr><td>切块</td><td>400 字 / 80 overlap；6 个资产切成 2 chunk，其余 17 个 1 chunk，共 29 chunk</td></tr>
@@ -96,53 +97,53 @@ ul{padding-left:22px} li{margin:5px 0}
 <tr><td>nDCG@5</td><td class="num">0.995</td><td>二值相关性；q02 的第二个相关资产排在后面，因此不是 1.0</td></tr>
 <tr><td>ACL 负例</td><td class="num">2 / 2</td><td>无权限资产不得出现在结果中</td></tr>
 <tr><td>越权返回</td><td class="num">0</td><td>所有 query 合计</td></tr>
-<tr><td>搜索延迟</td><td class="num">30.1 / 40.5 ms</td><td>p50 / p95，含 query embedding + kNN + 聚合</td></tr>
-<tr><td>录入延迟</td><td class="num">153.4 / 362.1 ms</td><td>p50 / p95，含 embedding、bulk、尾部删除与 refresh</td></tr>
+<tr><td>搜索延迟</td><td class="num">30.9 / 38.0 ms</td><td>p50 / p95，含 query embedding + kNN + 聚合</td></tr>
+<tr><td>录入延迟</td><td class="num">97.1 / 201.5 ms</td><td>p50 / p95，含 embedding、bulk、尾部删除与 refresh</td></tr>
 </table>
 <p class="note">延迟是单机、空载、单次串行请求的样本，不是压测结论；首条录入包含 ONNX 模型冷启动，约 1.07 s。</p>
 
 <h2>四、逐条结果</h2>
 <table>
 <tr><th>ID</th><th>类型</th><th>Query</th><th>Top-1</th><th>R@1</th><th>R@5</th><th>nDCG@5</th><th>ms</th><th>判定</th></tr>
-<tr><td class=mono>q01</td><td>semantic</td><td class=q>第四季度收入增长主要由哪个市场带动</td><td class=mono>asset-1001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>33.8</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q02</td><td>multi-relevant</td><td class=q>毛利率下降的原因是什么</td><td class=mono>asset-1001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>0.877</td><td class=num>31.7</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q03</td><td>exact</td><td class=q>供应商付款账期是多少天</td><td class=mono>asset-1003</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>63.8</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q04</td><td>policy</td><td class=q>收到可疑钓鱼邮件应该怎么处理</td><td class=mono>asset-1005</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>33.4</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q05</td><td>semantic</td><td class=q>在家办公如何连接公司内网</td><td class=mono>asset-1006</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>22.1</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q06</td><td>exact</td><td class=q>客户手机号属于哪个数据级别</td><td class=mono>asset-1007</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>39.2</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q07</td><td>incident</td><td class=q>支付超时事故的根本原因</td><td class=mono>asset-1008</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>33.1</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q08</td><td>exact</td><td class=q>API 网关采用什么限流算法</td><td class=mono>asset-1009</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>40.5</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q09</td><td>hr</td><td class=q>员工满意度得分是多少</td><td class=mono>asset-1010</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>33.6</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q10</td><td>hr</td><td class=q>调薪从什么时候开始生效</td><td class=mono>asset-1011</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>32.9</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q11</td><td>policy</td><td class=q>劳动合同续签需要提前多久</td><td class=mono>asset-1012</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>21.9</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q12</td><td>semantic</td><td class=q>海外市场重点进入哪些国家</td><td class=mono>asset-1013</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>26.2</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q13</td><td>exact</td><td class=q>商标在哪些国家注册</td><td class=mono>asset-1014</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>23.0</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q14</td><td>policy</td><td class=q>数据出境需要做哪些合规评估</td><td class=mono>asset-1015</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>26.2</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q15</td><td>manual</td><td class=q>资产录入需要填哪些字段</td><td class=mono>asset-1016</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>30.1</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q16</td><td>evaluation</td><td class=q>召回率评估用什么指标</td><td class=mono>asset-1017</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>23.3</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q17</td><td>exact</td><td class=q>第一季度收入增长多少</td><td class=mono>asset-1018</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>31.0</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q18</td><td>exact</td><td class=q>预算什么时候提交</td><td class=mono>asset-1002</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>29.2</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q19</td><td>causal</td><td class=q>芯片采购成本为什么上升</td><td class=mono>asset-1004</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>23.9</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q20</td><td>exact</td><td class=q>采购超过 500 万需要谁审批</td><td class=mono>asset-1019</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>38.0</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q21</td><td>exact</td><td class=q>客户合同归档多久内完成</td><td class=mono>asset-1020</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>37.7</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q22</td><td>tenant-isolation</td><td class=q>Q4 财务分析报告</td><td class=mono>asset-2001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>32.0</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q23</td><td>acl-negative</td><td class=q>员工满意度</td><td class=mono>asset-1018</td><td class=num>—</td><td class=num>—</td><td class=num>negative</td><td class=num>35.2</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q24</td><td>acl-negative</td><td class=q>供应商付款账期</td><td class=mono>asset-1016</td><td class=num>—</td><td class=num>—</td><td class=num>negative</td><td class=num>25.6</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q25</td><td>tenant-isolation</td><td class=q>供应商付款账期</td><td class=mono>asset-2002</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>18.9</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q26</td><td>tenant-isolation</td><td class=q>员工满意度</td><td class=mono>asset-2003</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>17.2</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q27</td><td>tenant-isolation</td><td class=q>2024 年 Q4 财务分析报告</td><td class=mono>asset-1001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>26.4</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q28</td><td>exact-id</td><td class=q>asset-1015</td><td class=mono>asset-1015</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>20.0</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q01</td><td>semantic</td><td class=q>第四季度收入增长主要由哪个市场带动</td><td class=mono>asset-1001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>38.0</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q02</td><td>multi-relevant</td><td class=q>毛利率下降的原因是什么</td><td class=mono>asset-1001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>0.877</td><td class=num>31.2</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q03</td><td>exact</td><td class=q>供应商付款账期是多少天</td><td class=mono>asset-1003</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>37.8</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q04</td><td>policy</td><td class=q>收到可疑钓鱼邮件应该怎么处理</td><td class=mono>asset-1005</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>24.6</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q05</td><td>semantic</td><td class=q>在家办公如何连接公司内网</td><td class=mono>asset-1006</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>36.2</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q06</td><td>exact</td><td class=q>客户手机号属于哪个数据级别</td><td class=mono>asset-1007</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>31.1</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q07</td><td>incident</td><td class=q>支付超时事故的根本原因</td><td class=mono>asset-1008</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>30.9</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q08</td><td>exact</td><td class=q>API 网关采用什么限流算法</td><td class=mono>asset-1009</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>31.3</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q09</td><td>hr</td><td class=q>员工满意度得分是多少</td><td class=mono>asset-1010</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>32.3</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q10</td><td>hr</td><td class=q>调薪从什么时候开始生效</td><td class=mono>asset-1011</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>28.2</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q11</td><td>policy</td><td class=q>劳动合同续签需要提前多久</td><td class=mono>asset-1012</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>33.2</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q12</td><td>semantic</td><td class=q>海外市场重点进入哪些国家</td><td class=mono>asset-1013</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>32.7</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q13</td><td>exact</td><td class=q>商标在哪些国家注册</td><td class=mono>asset-1014</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>27.3</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q14</td><td>policy</td><td class=q>数据出境需要做哪些合规评估</td><td class=mono>asset-1015</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>33.3</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q15</td><td>manual</td><td class=q>资产录入需要填哪些字段</td><td class=mono>asset-1016</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>29.0</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q16</td><td>evaluation</td><td class=q>召回率评估用什么指标</td><td class=mono>asset-1017</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>45.0</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q17</td><td>exact</td><td class=q>第一季度收入增长多少</td><td class=mono>asset-1018</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>36.1</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q18</td><td>exact</td><td class=q>预算什么时候提交</td><td class=mono>asset-1002</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>32.1</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q19</td><td>causal</td><td class=q>芯片采购成本为什么上升</td><td class=mono>asset-1004</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>34.4</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q20</td><td>exact</td><td class=q>采购超过 500 万需要谁审批</td><td class=mono>asset-1019</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>29.5</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q21</td><td>exact</td><td class=q>客户合同归档多久内完成</td><td class=mono>asset-1020</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>30.9</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q22</td><td>tenant-isolation</td><td class=q>Q4 财务分析报告</td><td class=mono>asset-2001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>25.8</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q23</td><td>acl-negative</td><td class=q>员工满意度</td><td class=mono>asset-1018</td><td class=num>—</td><td class=num>—</td><td class=num>negative</td><td class=num>26.5</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q24</td><td>acl-negative</td><td class=q>供应商付款账期</td><td class=mono>asset-1016</td><td class=num>—</td><td class=num>—</td><td class=num>negative</td><td class=num>23.4</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q25</td><td>tenant-isolation</td><td class=q>供应商付款账期</td><td class=mono>asset-2002</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>28.2</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q26</td><td>tenant-isolation</td><td class=q>员工满意度</td><td class=mono>asset-2003</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>26.1</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q27</td><td>tenant-isolation</td><td class=q>2024 年 Q4 财务分析报告</td><td class=mono>asset-1001</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>30.4</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q28</td><td>exact-id</td><td class=q>asset-1015</td><td class=mono>asset-1015</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>18.6</td><td><span class="ok">PASS</span></td></tr>
 </table>
 
 <h2>五、ACL 与租户隔离</h2>
 <table>
 <tr><th>ID</th><th>租户</th><th>principals</th><th>禁止资产</th><th>实际返回</th><th>泄漏</th><th>判定</th></tr>
 <tr><td class=mono>q22</td><td>t2</td><td class=mono>tenant:t2, group:finance</td><td class=mono>asset-1001</td><td class=mono>asset-2001, asset-2002</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q23</td><td>t1</td><td class=mono>tenant:t1, group:finance</td><td class=mono>asset-1010, asset-1011, asset-1012</td><td class=mono>asset-1018, asset-1005, asset-1001, asset-1016, asset-1002</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q23</td><td>t1</td><td class=mono>tenant:t1, group:finance</td><td class=mono>asset-1010, asset-1011, asset-1012</td><td class=mono>asset-1018, asset-1001, asset-1005, asset-1016, asset-1002</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
 <tr><td class=mono>q24</td><td>t1</td><td class=mono>tenant:t1</td><td class=mono>asset-1003</td><td class=mono>asset-1016, asset-1005, asset-1006</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
 <tr><td class=mono>q25</td><td>t2</td><td class=mono>tenant:t2, group:finance</td><td class=mono>asset-1003</td><td class=mono>asset-2002, asset-2001</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
 <tr><td class=mono>q26</td><td>t2</td><td class=mono>tenant:t2, group:hr</td><td class=mono>asset-1010</td><td class=mono>asset-2003</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
-<tr><td class=mono>q27</td><td>t1</td><td class=mono>tenant:t1, group:finance</td><td class=mono>asset-2001</td><td class=mono>asset-1001, asset-1002, asset-1018, asset-1016, asset-1004</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
+<tr><td class=mono>q27</td><td>t1</td><td class=mono>tenant:t1, group:finance</td><td class=mono>asset-2001</td><td class=mono>asset-1001, asset-1002, asset-1018, asset-1016, asset-1008</td><td class=num>0</td><td><span class="ok">PASS</span></td></tr>
 </table>
 <div class="callout">
 <b>首轮的真实问题：</b>最初的 fixture 给每个资产都加了 <code>tenant:t1</code>，而 ACL 是 <code>terms</code> OR 语义——只要 principal 里有 tenant，所有同租户资产都通过，group 限制被短路。q23/q24 因此泄漏了 3 个资产。把受限资产改成 group-only 后，负例和隔离用例全部通过。这个坑不是 ES 的，是 ACL 模型没有先定义清楚“public / tenant / group”三种可见性。
@@ -168,7 +169,50 @@ ul{padding-left:22px} li{margin:5px 0}
     </div>
 <p class="note">这里的回答由 extractive mock 生成，只用于验证“检索结果 → 编号上下文 → 带引用回答”的链路；不能用来评价真实 LLM 的答案质量。生产还应做答案与引用的后验一致性校验。</p>
 
-<h2>七、写入生命周期</h2>
+<h2>七、调优实验</h2>
+<p>这一节记录 chunk、hybrid 和 query instruction 三组对照。语料是 23 个合成资产、28 条 query、8,263 字、2 个租户；BGE-small-zh-v1.5 512 维，ES 8.15.3 单节点 1 GB，单机串行。数字用于说明方法和失败模式，不是生产 benchmark。</p>
+
+<h3>7.1 chunk：200 / 400 / 600</h3>
+<table>
+<tr><th>chunk / overlap</th><th>chunk 数</th><th>索引 store</th><th>Recall@1</th><th>Recall@5</th><th>MRR</th><th>nDCG@5</th></tr>
+<tr><td class=mono>200 / 40</td><td class=num>64</td><td class=num>680,903 B</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>0.9968</td></tr>
+<tr><td class=mono>400 / 80</td><td class=num>31</td><td class=num>451,523 B</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.000</td><td class=num>0.9951</td></tr>
+<tr><td class=mono>600 / 80</td><td class=num>24</td><td class=num>366,482 B</td><td class=num>96.00%</td><td class=num>100.00%</td><td class=num>0.980</td><td class=num>0.9820</td></tr>
+</table>
+<p class="note">27 条 base query，排除 exact-ID q28，避免把主键查询混进 chunk 质量对比。200 与 400 召回打平，但 200 的 chunk 数和存储接近翻倍；600 省存储但 Recall@1 掉 4pp。</p>
+<div class="callout">
+<b>边界用例：</b>一篇 559 字的资产，关键代码 <code>ZX-9917</code> 在约第 531 字。200/400 都把目标排第 1，600 排第 2；把全文和“只取前 512 字”分别做 embedding，余弦为 <b>1.0</b>——窗口外的文字对向量没有任何贡献。ES 里有全文，不代表向量里有全文。默认保留 400/80。
+</div>
+
+<h3>7.2 dense / BM25 / hybrid</h3>
+<p>两路各取 top-50，套同一套 tenant/ACL filter，用 RRF 融合，<code>rank_constant=60</code>。先看 28 条 base query：</p>
+<table>
+<tr><th>检索方式</th><th>Recall@1</th><th>Recall@5</th><th>MRR</th><th>nDCG@5</th></tr>
+<tr><td>dense</td><td class=num>96.15%</td><td class=num>96.15%</td><td class=num>0.9615</td><td class=num>0.9568</td></tr>
+<tr><td>BM25</td><td class=num>23.08%</td><td class=num>23.08%</td><td class=num>0.2308</td><td class=num>0.2308</td></tr>
+<tr><td>hybrid</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.0000</td><td class=num>0.9953</td></tr>
+</table>
+<p>BM25 在 base 上只有 23.08%，主要因为 ES 默认 standard analyzer 对中文按单字切分，再叠加 <code>operator=AND</code>；它不是“BM25 没用”，而是这条 lexical 通道不负责语义复述。换到 11 条 lexical probes（资产编号、PIPL、500 万、23 分钟、Token Bucket、MFA/USB、90 天、30 天、4.1 分、asset-1018、asset-1003）后：</p>
+<table>
+<tr><th>检索方式</th><th>Recall@1</th><th>Recall@5</th><th>MRR</th><th>nDCG@5</th></tr>
+<tr><td>dense</td><td class=num>72.73%</td><td class=num>90.91%</td><td class=num>0.7909</td><td class=num>0.8198</td></tr>
+<tr><td>BM25</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.0000</td><td class=num>1.0000</td></tr>
+<tr><td>hybrid</td><td class=num>100.00%</td><td class=num>100.00%</td><td class=num>1.0000</td><td class=num>1.0000</td></tr>
+</table>
+<p>hybrid 在两组上都保持 100% 召回，说明 dense 的语义覆盖和 BM25 的字面精确是互补的。代价是多一路查询和融合；本次 E2E 搜索 p50 30.95 ms，和上一轮 dense 的 30.13 ms 基本同一水平，不能据此说 hybrid 更快。</p>
+
+<h3>7.3 query instruction 消融</h3>
+<table>
+<tr><th>query instruction</th><th>Recall@1</th><th>nDCG@5</th></tr>
+<tr><td class=mono>加</td><td class=num>100.00%</td><td class=num>0.9951</td></tr>
+<tr><td class=mono>不加</td><td class=num>100.00%</td><td class=num>0.9968</td></tr>
+</table>
+<p class="note">27 条 base query，dense 400。加与不加都保持 100% Recall@1，nDCG 差异 0.0017，属于噪声；本数据集不能证明指令有害或有用。v1.5 的指令主要面向“短 query → 长 passage”，M3 不需要指令。</p>
+
+<h3>7.4 最终配置</h3>
+<p>默认 <code>CHUNK_MAX_CHARS=400</code>、<code>CHUNK_OVERLAP=80</code>、<code>SEARCH_MODE=hybrid</code>；RRF <code>rank_constant=60</code>；exact-ID 仍在融合前短路。调优顺序是“先确认输入没被截断，再看召回通道是否覆盖 query 类型，最后才动 instruction / rerank / prompt”。</p>
+
+<h2>八、写入生命周期</h2>
 <table>
 <tr><th>步骤</th><th>结果</th><th>判定</th></tr>
 <tr><td>初始录入（长文，含 marker）</td><td>2 chunk，marker 可被检索到</td><td><span class="ok">PASS</span></td></tr>
@@ -177,7 +221,7 @@ ul{padding-left:22px} li{margin:5px 0}
 </table>
 <p class="note">更新测试的第一版断言是“marker query 不再返回该 assetId”，但 kNN 永远会返回 top-k，短文本仍可能以低分出现。正确断言是“旧 chunk 的文本不再出现”且“文档数等于新 chunk 数”，这也是报告里修正后的写法。</p>
 
-<h2>八、这次踩到的坑</h2>
+<h2>九、这次踩到的坑</h2>
 <h3>1. Spring RestClient 默认发 chunked body</h3>
 <p>mock 只读 <code>Content-Length</code>，收到空 body，于是 embedding 请求变成 <code>input=[]</code>，应用报 <code>embedding response size mismatch</code>。修复是让 mock 解析 <code>Transfer-Encoding: chunked</code>。生产网关和自建 OpenAI 兼容服务要确认支持 chunked，否则同样会“请求体消失”。</p>
 <h3>2. ACL 的 tenant baseline 会短路 group 限制</h3>
@@ -187,16 +231,16 @@ ul{padding-left:22px} li{margin:5px 0}
 <h3>4. 用“资产是否出现”判断旧 chunk 是否删除</h3>
 <p>kNN 总会返回 top-k，旧资产可能因为语义相近而继续出现。应检查 snippet 文本、chunk id 和 ES 文档计数，而不是仅看 assetId 是否在结果里。</p>
 
-<h2>九、限制与下一步</h2>
+<h2>十、限制与下一步</h2>
 <ul>
 <li>LLM 是 mock，只覆盖检索、上下文组装和引用编号；真实生成质量、幻觉率、引用忠实度未测。</li>
 <li>数据是 23 个合成资产、28 条 query，规模不足以证明生产召回；需要真实业务黄金集和更难的同义/多跳/否定 query。</li>
 <li>单机 ES、1 GB heap、单线程串行请求，没有并发、段合并、缓存和故障注入。</li>
-<li>只测了 dense kNN；没有 BM25、hybrid、rerank、MCLS 长文和多向量。</li>
-<li>exact-ID 是 demo 快捷通道，不是通用 lexical 检索；生产应使用独立 keyword 字段与 hybrid 融合。</li>
+<li>没有测 reranker、真实 LLM、MCLS 长文、多向量和并发/故障注入；hybrid 只验证了一组 RRF 参数。</li>
+<li>exact-ID 是 demo 快捷通道，不是通用 lexical 检索；生产应使用独立 keyword 字段与 hybrid 融合，并补 rerank。</li>
 </ul>
 
-<h2>十、复现</h2>
+<h2>十一、复现</h2>
 <pre><code># ES
 docker run -d --name es-rag-e2e -p 9201:9200 \
   -e discovery.type=single-node -e xpack.security.enabled=false \
@@ -207,7 +251,7 @@ docker run -d --name es-rag-e2e -p 9201:9200 \
 python e2e/mock_services.py
 
 # app（target/asset-rag-0.0.1-SNAPSHOT.jar）
-ES_URI=http://127.0.0.1:9201 ES_INDEX=assets_e2e_20261110 \
+ES_URI=http://127.0.0.1:9201 ES_INDEX=assets_e2e_hybrid_20261110   SEARCH_MODE=hybrid CHUNK_MAX_CHARS=400 CHUNK_OVERLAP=80 \
 EMBEDDING_BASE_URL=http://127.0.0.1:8000 EMBEDDING_MODEL=bge-small-zh-v1.5 \
 EMBEDDING_DIM=512 LLM_BASE_URL=http://127.0.0.1:8000 \
 java -jar target/asset-rag-0.0.1-SNAPSHOT.jar

@@ -531,6 +531,38 @@ ACORN（arXiv 2403.04871）针对这个问题提出 predicate subgraph traversal
 
 **规避**：建自己的评测集：从真实日志采样 query，人工标注相关性，覆盖短 query、长 query、多语言、带过滤、否定/数字等难例；按任务看分，不只看平均；新模型先 shadow / 小流量 A/B，再全量。公开 benchmark 只用来筛候选，不用来做最终决策。
 
+### 5.16 chunk 超过模型窗口，ES 里是全文，向量里只有前半段
+
+**症状**：文档 559 字，关键代码在 531 字；ES 的 `_source` 里明明有全文，召回却只命中前半段。把 chunk 从 400 调到 600，Recall@1 反而掉了 4 个百分点。
+
+**根因**：embedding 模型按 token 截断，不按字符截断；BGE v1.5 的 512 token 是硬上限，超出的部分不会报错。实测同一篇文档，全文 embedding 与“只取前 512 字符”的 embedding 余弦为 **1.0**，说明尾部对向量完全没有贡献。chunk 越大，这个“看不见的尾巴”越长。
+
+**规避**：用模型的 tokenizer 统计长度，不要用字符数猜；给 token 上限留 10%–20% 余量（400 字符只是这套中文语料的经验值，不是通用常数）。把标题、编号、日期等关键字段放在 chunk 前部，或单独建 keyword 字段。对“答案在文末”的文档做专门回归，别只测开头就有答案的样本。
+
+### 5.17 把资产编号交给 embedding
+
+**症状**：query 就是 `asset-1015`，Top-5 里没有它；换更大的 embedding 模型仍然不稳定。
+
+**根因**：dense 向量被训练来压语义，不保证逐字匹配；稀有 token、数字、主键在向量里很容易被“平滑”掉。用语义模型查主键，方向就错了。
+
+**规避**：`assetId`、订单号、错误码走 keyword/`term` 字段，与向量做 hybrid；查询解析阶段识别出编号后，甚至可以走 exact-match 短路。不要用“换更大模型”解决主键检索，成本高且不可靠。
+
+### 5.18 hybrid 把两路分数直接相加
+
+**症状**：dense 余弦是 0–1，BM25 是 0–几十；直接 `score = dense + bm25` 后，BM25 永远主导。改成归一化相加，长文档又因为词频高而占优。
+
+**根因**：两路分数不同量纲、不同校准，不能直接比大小。`min-max` 归一化依赖当次候选集，跨 query 不稳定。
+
+**规避**：用 RRF 按名次融合，`score(d) = Σ 1/(k + rank_i(d))`，`k=60` 起步；或者用标注数据学习融合权重。过滤条件要同时下推到 dense 和 lexical 两路，不能先融合再在应用层过滤。
+
+### 5.19 在合成集上刷到 100% 就收工
+
+**症状**：26 条合成 query 全部命中，团队认为检索没问题；上线后“查编号、查文末、查否定、查同义”仍然失败。
+
+**根因**：合成 query 和 chunk 的用词高度重叠，测的是“复述”而不是“检索”；平均分掩盖了长尾失败模式。
+
+**规避**：按失败模式切片建评测集：语义、编号、数字、时间、否定、多跳、长文尾部、ACL 负例，每类至少 10 条；同时看 Recall@1、MRR、nDCG 和“证据是否真的在返回的 chunk 里”。合成集只做回归，不做上线结论。
+
 ## 六、面试向：从原理到系统设计
 
 面试官通常不是要你背公式，而是看你能否把公式和工程后果连起来。下面按“BGE 基础 → 索引 → 系统设计”三组整理，答案尽量给到“为什么”，而不是只给结论。
@@ -618,13 +650,97 @@ Faiss 的 HNSW 不支持 `remove_ids`，只能重建或在外层做过滤；hnsw
 | 低命中率优先 pre-filter / 分区 | post-filter 的 `k/hit_rate` 会爆炸 |
 | recall@k 要对精确 top-k 测 | 用 ANN 测 ANN 是循环论证 |
 
-## 七、上线前检查清单
+## 七、实测调优：chunk、hybrid 与 query instruction
+
+这一节来自一次真实的端测，不是 benchmark 复读。为了避免“调参表演”，先把评测口径固定下来：
+
+- 语料：23 个合成资产、8,263 字、2 个租户；28 条 query（26 条有标注 + 2 条 ACL 负例），其中 6 个资产会切成 2 个 chunk。
+- 模型：`BAAI/bge-small-zh-v1.5`，512 维，ONNX/CPU；ES 8.15.3 单节点，1 GB heap；Spring Boot demo；LLM 是确定性 mock，只验证检索与引用链路。
+- 指标：资产级 Recall@1/5、MRR、nDCG@5；必要时看“证据是否在返回的 chunk 里”。
+- 局限：合成语料、单机、串行请求。下面的数字用于说明方法和失败模式，不能外推成生产结论。
+
+### 7.1 chunk 不是越大越省，窗口外的文字等于不存在
+
+先固定 400 字 / 80 overlap，再分别跑 200/40、400/80、600/80 三组。为了只比较 chunk 质量，这一组排除 exact-ID 查询 q28（它由后面的 lexical 通道处理）：
+
+| chunk / overlap | chunk 数 | 索引 store | Recall@1 | Recall@5 | MRR | nDCG@5 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 200 / 40 | 64 | 680,903 B | 1.000 | 1.000 | 1.000 | 0.9968 |
+| 400 / 80 | 31 | 451,523 B | 1.000 | 1.000 | 1.000 | 0.9951 |
+| 600 / 80 | 24 | 366,482 B | 0.960 | 1.000 | 0.980 | 0.982 |
+
+只看这张表，200 和 400 的召回打平，600 开始掉点。真正解释原因的是边界用例：一篇 559 字的资产，关键代码 `ZX-9917` 在约第 531 字，前半段是无关的餐厅运营内容。查询“`ZX-9917` 的上线截止日期是哪天”：
+
+- 200/40 和 400/80 都把目标资产排在第 1；
+- 600/80 排在第 2（单条 query 的 MRR 为 0.5）；
+- 把 559 字全文和“只取前 512 字”分别做 embedding，余弦为 **1.0**——尾部文字对向量没有任何贡献。
+
+600 的 chunk 看起来只多了 200 字，但 BGE v1.5 的 512 token 窗口已经把 `ZX-9917` 截掉了；ES 里能搜到全文，向量里却没有这段语义。这不是“模型效果差”，是输入在进入模型前就丢了。
+
+最后选 **400/80** 作为默认：200 的召回没有更好，但 chunk 数和索引存储大约翻倍（+51%）；600 省了约 19% 存储，却丢了 4 个百分点的 Recall@1，而且尾部事实不可见。单机 p50 在 16–31 ms 之间波动，样本不足以拿延迟做决策。
+
+还要注意：400 是**字符数**，不是 token 数。中文、代码、英文缩写混排时，400 字符仍可能超过 512 token；生产应该用模型 tokenizer 统计，并给关键字段（标题、编号、日期）留出前部位置。换模型、换语言、换文档结构，这组参数都要重测。
+
+### 7.2 hybrid 的收益在 dense 的盲区，不在平均分
+
+chunk 固定 400/80 后，比较三条检索路径：dense kNN、BM25、以及 RRF 融合的 hybrid。两路都套同一套 tenant/ACL filter，候选各取 top-50，RRF 的 `k=60`。
+
+先看 28 条 base query：
+
+| 检索方式 | Recall@1 | Recall@5 | MRR | nDCG@5 |
+| --- | ---: | ---: | ---: | ---: |
+| dense | 0.9615 | 0.9615 | 0.9615 | 0.9568 |
+| BM25 | 0.2308 | 0.2308 | 0.2308 | 0.2308 |
+| hybrid | **1.000** | **1.000** | **1.000** | **0.9953** |
+
+BM25 在 base 上很差，不是“BM25 没用”，而是 ES 默认 standard analyzer 对中文按单字切分，再加上 `operator=AND`，长 query 几乎匹配不到完整词序列；换成 `ik_smart` 或词级 analyzer、放宽 operator，结果会好很多。它真正擅长的是下面这组 11 条 lexical probes：资产编号、`PIPL`、`500 万`、`23 分钟`、`Token Bucket`、`MFA/USB`、`90 天`、`30 天`、`4.1 分`、`asset-1018`、`asset-1003`。
+
+| 检索方式 | Recall@1 | Recall@5 | MRR | nDCG@5 |
+| --- | ---: | ---: | ---: | ---: |
+| dense | 0.7273 | 0.9091 | 0.7909 | 0.8198 |
+| BM25 | **1.000** | **1.000** | **1.000** | **1.000** |
+| hybrid | **1.000** | **1.000** | **1.000** | **1.000** |
+
+这就是 hybrid 的价值：dense 负责“意思相近”，BM25 负责“字面精确”，RRF 负责把两种排名合起来。融合公式不需要分数校准：
+
+```text
+score(d) = Σ_i 1 / (60 + rank_i(d))
+```
+
+只看名次，不看原始分数，避免“余弦 0.7 + BM25 12.3”这种量纲灾难。Java demo 里 `SEARCH_MODE=hybrid` 已是默认：`buildLexicalQuery` 用 `term assetId`、`match_phrase name/chunkText`、`multi_match chunkText^2/name^2/description operator=AND`，与 dense 共用 `buildFilter`；exact-ID 仍然在融合前短路。
+
+切换后重跑完整 E2E：29 chunk，Recall@1/5 = 1.0/1.0，nDCG@5 = 0.9953，ACL 泄漏 0，RAG 引用 6/6，更新/删除生命周期通过；搜索 p50 30.95 ms，和上一轮 dense 的 30.13 ms 基本同一水平。**不要说 hybrid 更快**——延迟差异在单机噪声内；它的收益是 ID、数字、专有名词这些 dense 的盲区，代价是多一路查询和融合。如果业务里几乎没有这类 query，hybrid 可能只是多花开销。
+
+### 7.3 query instruction 不是“加了就赚”
+
+BGE v1.5 的检索指令是为“短 query → 长 passage”准备的。在这套域内 query 上做消融（27 条 base，dense 400）：
+
+| query instruction | Recall@1 | nDCG@5 |
+| --- | ---: | ---: |
+| 加 | 1.000 | 0.9951 |
+| 不加 | 1.000 | 0.9968 |
+
+差异只有 0.0017，不能说明“指令有害”，也不能说明“指令有用”；在这个分布上它是噪声。结论应该窄一点：v1.5 不加指令也能工作，域内 query 不必盲加；短 query 找长 passage、跨分布检索仍建议加；M3 不需要指令。换数据集要重新 A/B，不要把某一次消融当成通用规律。
+
+### 7.4 这次实际改了什么
+
+- `AssetIngestionService` 把写死的 400/80 改成 `CHUNK_MAX_CHARS` / `CHUNK_OVERLAP` 配置，默认仍是 400/80。
+- `AssetSearchService` 增加 `SEARCH_MODE`，默认 `hybrid`；RRF `rank_constant=60`；dense 和 lexical 共用同一套过滤条件。
+- exact-ID 保留为独立短路，不参与 chunk 质量对比；它解决的是“主键查询”，不是“语义检索”。
+- 端测报告同步更新为 hybrid + 400/80 的最终结果，并保留 chunk、hybrid、instruction 三组实验数据。
+
+调优顺序也很重要：**先看输入有没有被截断，再看召回通道是否覆盖 query 类型，最后才调 instruction、rerank 和 prompt**。反过来做，很容易在一个已经丢字的输入上反复换模型。
+
+## 八、上线前检查清单
 
 把上面的内容压成一张可执行的清单。不是每条都要做到满分，但每一条都要有明确答案。
 
 - [ ] 索引 metadata 记录了模型名、revision、维度、归一化、instruction、max_length、metric。
 - [ ] 统计过 token 长度分布和截断率；超过 512 的文档有切块或换 M3 的策略。
+- [ ] 用 tokenizer 抽检过 chunk 不越窗（字符数上限只是近似）；有“答案在文末”的回归用例。
 - [ ] 切块按结构做，表格/代码/问答对没有被切断；有 overlap 或 parent-child。
+- [ ] 资产编号/订单号/错误码有 keyword 或 lexical 通道，不指望 embedding 记住主键。
+- [ ] 如果上 hybrid，融合用 RRF 或学习权重，不直接加不同量纲的分数；过滤同时下推到两路。
 - [ ] query 和 passage 走不同的编码入口，文档侧没有 instruction。
 - [ ] 用 Flat 精确检索建了 recall@k 基线，ANN 参数是在真实数据上调的。
 - [ ] 带真实过滤条件测过 recall@k，知道命中率和 pre/post-filter 的切换点。
@@ -632,7 +748,7 @@ Faiss 的 HNSW 不支持 `remove_ids`，只能重建或在外层做过滤；hnsw
 - [ ] 多租户有隔离方案，缓存 key 含租户和权限版本。
 - [ ] 监控了 p50/p95/p99、QPS、内存、构建时间、召回漂移。
 - [ ] 模型/索引升级有蓝绿或双写方案，能回滚，能全量重建。
-- [ ] 有业务评测集，不只依赖 C-MTEB / MTEB 平均分。
+- [ ] 有业务评测集，不只依赖 C-MTEB / MTEB 平均分；评测按编号/数字/否定/长文尾部/ACL 切片。
 - [ ] 知道当前系统的召回上限卡在哪：embedding、切块、索引，还是过滤。
 
 最后用一句话收束：**BGE 决定“这段语义能不能被表示出来”，ANN 决定“这个表示能不能被快速找到”，rerank 决定“找到的候选怎么排”。** 三件事的优化顺序不能反：先保证语义覆盖和切块合理，再调索引召回，最后才轮到 rerank 和 prompt。反过来做，通常是在给一个已经漏水的桶刷漆。
@@ -647,3 +763,7 @@ Faiss 的 HNSW 不支持 `remove_ids`，只能重建或在外层做过滤；hnsw
 - hnswlib（`ALGO_PARAMS.md`，M / efConstruction / efSearch 的实践建议），https://github.com/nmslib/hnswlib
 - FlagEmbedding（BGE 推理与微调代码），https://github.com/FlagOpen/FlagEmbedding
 - BGE v1.5 / BGE-M3 模型卡，https://huggingface.co/BAAI
+- Anthropic, Contextual Retrieval，https://platform.claude.com/cookbook/capabilities-contextual-embeddings-guide
+- Pinecone, Chunking Strategies，https://www.pinecone.io/learn/chunking-strategies/
+- Elastic, RRF retriever，https://www.elastic.co/docs/reference/elasticsearch/rest-apis/retrievers/rrf-retriever
+- BGE reranker v2-m3 模型卡，https://huggingface.co/BAAI/bge-reranker-v2-m3
