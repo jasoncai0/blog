@@ -20,11 +20,11 @@
  "bge-ann-vector-retrieval": {
   "figure": 6,
   "h1": 1,
-  "h2": 9,
-  "h3": 42,
+  "h2": 11,
+  "h3": 55,
   "hr": 0,
-  "pre": 22,
-  "table": 11
+  "pre": 27,
+  "table": 16
  },
  "claude-code-harness-layers": {
   "figure": 10,
