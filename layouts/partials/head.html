@@ -16,5 +16,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#2d3142">
 <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="{{ "/rss.xml" | relURL }}">
+{{- if or .IsHome .IsPage }}
+{{- $js := resources.Get "js/reading-progress.js" | js.Build (dict "minify" true) }}
+<script type="module" src="{{ $js.RelPermalink }}" defer></script>
+{{- end }}
 {{- $css := resources.Get "css/site.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">

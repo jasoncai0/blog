@@ -8,5 +8,7 @@
 <nav class="toc" aria-label="目录"><div class="toc-title">Contents</div>{{ . }}</nav>
 {{- end }}
 {{ end }}
+<div class="post-body" data-progress-post="{{ .File.ContentBaseName }}">
 {{ .Content }}
+</div>
 {{ end }}

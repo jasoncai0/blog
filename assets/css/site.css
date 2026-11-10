@@ -255,3 +255,35 @@ ul.posts .post-tags { margin: 8px 0 0; }
 @media (max-width: 720px) {
   ul.posts li { flex-direction: column; gap: 4px; }
 }
+
+/* 阅读进度：顶部细条 + 右下角胶囊（T5 再补排版细节） */
+.rp-bar {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 2px;
+  z-index: 60;
+  pointer-events: none;
+}
+.rp-bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.12s linear;
+}
+.rp-chip {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.rp-chip[hidden] { display: none; }
