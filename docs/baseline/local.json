@@ -8,6 +8,24 @@
   "pre": 0,
   "table": 3
  },
+ "bge-ann-vector-retrieval": {
+  "figure": 6,
+  "h1": 1,
+  "h2": 8,
+  "h3": 33,
+  "hr": 0,
+  "pre": 20,
+  "table": 6
+ },
+ "claude-code-harness-layers": {
+  "figure": 8,
+  "h1": 1,
+  "h2": 9,
+  "h3": 12,
+  "hr": 0,
+  "pre": 7,
+  "table": 3
+ },
  "harness-orchestration-compare": {
   "figure": 5,
   "h1": 1,
@@ -16,6 +34,15 @@
   "hr": 0,
   "pre": 9,
   "table": 8
+ },
+ "harness-skill-compare": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 10,
+  "h3": 12,
+  "hr": 0,
+  "pre": 7,
+  "table": 6
  },
  "hello": {
   "figure": 0,

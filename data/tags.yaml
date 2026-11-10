@@ -37,3 +37,12 @@ meta:
 harness:
   name: Harness
   description: Agent harness 的执行模型、循环与编排对照
+rag:
+  name: RAG
+  description: 检索增强生成与检索链路
+embedding:
+  name: Embedding
+  description: 文本向量、对比学习与语义表示
+ann:
+  name: ANN
+  description: 向量索引、近似最近邻与召回
