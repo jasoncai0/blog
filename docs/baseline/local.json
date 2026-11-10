@@ -8,14 +8,23 @@
   "pre": 0,
   "table": 3
  },
+ "asset-tree-progressive-retrieval": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 11,
+  "h3": 13,
+  "hr": 0,
+  "pre": 6,
+  "table": 13
+ },
  "bge-ann-vector-retrieval": {
   "figure": 6,
   "h1": 1,
   "h2": 9,
-  "h3": 41,
+  "h3": 42,
   "hr": 0,
-  "pre": 21,
-  "table": 10
+  "pre": 22,
+  "table": 11
  },
  "claude-code-harness-layers": {
   "figure": 10,
@@ -25,6 +34,24 @@
   "hr": 0,
   "pre": 9,
   "table": 4
+ },
+ "design-agent-memory": {
+  "figure": 10,
+  "h1": 1,
+  "h2": 16,
+  "h3": 18,
+  "hr": 0,
+  "pre": 6,
+  "table": 12
+ },
+ "grill-resume-agent-arch": {
+  "figure": 0,
+  "h1": 1,
+  "h2": 8,
+  "h3": 20,
+  "hr": 0,
+  "pre": 6,
+  "table": 2
  },
  "harness-orchestration-compare": {
   "figure": 5,
@@ -178,5 +205,14 @@
   "hr": 1,
   "pre": 0,
   "table": 6
+ },
+ "vector-engine-milvus-es-pg": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 10,
+  "h3": 7,
+  "hr": 0,
+  "pre": 1,
+  "table": 5
  }
 }

@@ -309,9 +309,57 @@ memory ≈ 4d + 8M + 4 字节/向量
 
 其中 `4d` 是原始向量，`8M` 是图边（每条约 8 字节），`4` 是元数据。1024 维、M=16 时，一条向量约 `4096 + 128 + 4 ≈ 4.2 KB`；100 万条约 4.3 GB。这个数字很关键：HNSW 不是“免费的低延迟”，它是用内存换的。如果内存放不下，要么降 M、要么上 PQ、要么换 DiskANN。
 
-HNSW 的删除是另一个坑。Faiss 的 HNSW 不支持 `remove_ids`；hnswlib 支持 `mark_deleted`，但只是打墓碑，节点和边还占着内存，搜索时跳过。频繁删改会让图越来越“空心”，召回和延迟都退化，最终还是要重建。生产上更稳的做法是**不可变段 + 定期合并**：新数据写新段，删除写墓碑，查询跨段合并，后台 compaction 重建。
+HNSW 的删除和 Upsert 是另一个坑：它不是“删数组元素”，而是拆图。下面单独拆。
 
-### 3.5 怎么选：先算内存，再看更新
+### 3.5 删除与 Upsert：逻辑替换，不是原地改向量
+
+HNSW 的删除难点不在“定位节点”，而在“拆掉节点之后，图还连不连得通”。
+
+每个节点维护一张邻接表，但没有独立的入边索引。物理删除一个节点，至少要：
+
+1. 找到所有指向它的入边；
+2. 从邻居的邻接表里删掉这些边；
+3. 给受影响的邻居重新找替代连接。
+
+第 1 步就不便宜：没有反向索引时，要知道谁指向它，只能扫全图。第 3 步更麻烦：删掉一个 hub 节点，可能把原本连通的两个簇切开，长程导航断了，recall 会明显掉。所以工业实现通常不做“立即硬删除”，而是先给节点打墓碑（tombstone）：
+
+- `mark_deleted(label)` 只是标记删除，节点和边还留在图里，查询时不再返回；
+- 内存没有立刻释放，墓碑多了，图会越来越“空心”；
+- 后台 compaction/rebuild 时，才把墓碑节点真正清掉，重新建图。
+
+hnswlib 还提供 `replace_deleted`，让新元素复用被删元素的位置；它解决的是内存复用，不是“删除变成免费”。Faiss 的 HNSW 更直接：不支持 `remove_ids`，要删只能重建，或者在外层做逻辑过滤。
+
+不同操作的代价可以放在一张表里：
+
+| 操作 | HNSW 物理动作 | 主要成本 |
+| --- | --- | --- |
+| 改 metadata | 原地改 payload，不碰图 | 低 |
+| 改向量 | 旧节点打墓碑 + 新节点插入、重新建边 | 写放大 |
+| 删除 | `mark_deleted`，节点和边还在 | 当下便宜，长期 compaction |
+| Upsert | 墓碑旧版 + 插入新版 | 写放大、旧版本短期共存 |
+
+所以 **Upsert 不是“把旧向量原地覆盖掉”**，而是一次逻辑替换：
+
+```text
+on upsert:
+  tombstone(old_version)   # 旧版不可见
+  insert(new_version)      # 重新建边
+  schedule_compaction()    # 比例高时重建
+```
+
+为什么不直接改向量？因为 HNSW 的边编码的是旧向量周围的几何关系。新向量可能已经跑到另一个区域，但邻居的边还指向旧位置；只改向量、不改边，查询会沿着过时的边走，recall 会掉。hnswlib 允许相同 label 再 `add` 一次来更新特征，但文档也说明：更新比插入新元素慢，只是更省内存、查询更省。它仍然要做图维护，不是免费的原地修改。
+
+那 HNSW 方便实现“更新效果”吗？分情况：
+
+- **只改 metadata/tag/ACL**：方便，这些是 payload，不参与图结构；
+- **低频改向量、读多写少**：可以接受，用墓碑 + 定期重建，监控墓碑比例；
+- **高频改向量、频繁 Upsert**：不合适。每次更新都要重新建边，墓碑越积越多，延迟和召回都会漂移；更稳的是不可变段 + 后台合并，或者换 IVF 这类倒排结构。
+
+Milvus 是典型的“逻辑删除 + 后台压缩”：`upsert` 在语义上就是 delete + insert；底层 segment 不可变，删除先记 delete log/tombstone，查询时过滤，compaction 时重写 segment，HNSW 索引也随新 segment 重建。这也解释了一个常见现象：刚删除/更新后，磁盘和内存没立刻下降，过一段 compaction 才降。
+
+**一句话：HNSW 不是不能删，而是不愿意立刻真删；Upsert 逻辑上是 Delete + Insert，物理上是“墓碑 + 新节点 + 后台重建”。**
+
+### 3.6 怎么选：先算内存，再看更新
 
 把上面的约束落成一张决策表：
 
@@ -487,7 +535,7 @@ ACORN（arXiv 2403.04871）针对这个问题提出 predicate subgraph traversal
 
 **症状**：删除接口调用后，搜索结果里还能看到已删除文档；或者删除越频繁，延迟越高、recall 越低。
 
-**根因**：Faiss 的 HNSW 不支持 `remove_ids`；很多封装会“假装删除”，要么重建整个索引，要么只删元数据、向量还留在图里。hnswlib 的 `mark_deleted` 也只是墓碑，节点和边还在，搜索时跳过；墓碑多了，图会被“空心化”。
+**根因**：Faiss 的 HNSW 不支持 `remove_ids`；很多封装会“假装删除”，要么重建整个索引，要么只删元数据、向量还留在图里。hnswlib 的 `mark_deleted` 也只是墓碑，节点和边还在，搜索时跳过；墓碑多了，图会被“空心化”。Upsert 也是一样：旧版本必须失效，新版本要重新插入；把 Upsert 当成原地覆盖，旧邻居关系仍可能把 query 带回旧内容。
 
 **规避**：删除走“墓碑 + 查询过滤 + 定期 compaction”；频繁删改的场景用不可变段，新数据写新段，后台合并；或者换支持删除的索引/引擎。权限删除（用户撤权）必须保证向量和缓存都失效，不能只删业务表。上线前专门测“删除后是否还能被召回”。
 
@@ -607,9 +655,11 @@ PQ 把 d 维切成 M 段，每段用 256 个质心（8 bit）编码，一条向�
 
 HNSW 是多层图：上层节点少、边长，负责跳远；下层节点多、边短，负责精搜。查询从顶层入口贪心下降到第 0 层，每层只访问少量邻居，层数按指数衰减，所以期望是 O(log N)。`M` 是每层邻居数，决定图的连通性和内存；`efConstruction` 是建图束宽，决定图的质量；`efSearch` 是查询束宽，决定召回和延迟。`efSearch` 必须 ≥ k；建完图用 `ef=efConstruction` 测 recall，低于 0.9 就加大 `efConstruction` 重建。
 
-**Q10：HNSW 怎么删除？Faiss 和 hnswlib 有什么区别？**
+**Q10：HNSW 怎么删除和 Upsert？Faiss、hnswlib、Milvus 有什么区别？**
 
-Faiss 的 HNSW 不支持 `remove_ids`，只能重建或在外层做过滤；hnswlib 支持 `mark_deleted`，但只是墓碑，节点和边还占内存，搜索时跳过。墓碑多了，图会空心化，召回和延迟都退化。生产上更稳的是不可变段 + 墓碑 + 定期 compaction：新数据写新段，删除写墓碑，查询跨段合并，后台重建。权限删除还要让缓存失效，不能只删向量。
+HNSW 的删除难点在拆图，不在找节点：每个节点只有邻接表，没有独立入边索引；硬删除要扫表找回边、断边、重连，删掉 hub 还可能把图切断。Faiss 的 HNSW 原生不支持 `remove_ids`，只能重建或外层过滤；hnswlib 支持 `mark_deleted`，但只是墓碑，节点和边还占内存，搜索时不返回，墓碑多了会空心化，还要靠 compaction 重建。`replace_deleted` 只是复用墓碑位置，不是免费删除。
+
+Upsert 也一样：逻辑上是“删除旧版本 + 插入新版本”，物理上通常是“旧节点打墓碑 + 新向量重新插入建边”，不是原地改向量。Milvus 就是这种模型：upsert 语义等于 delete + insert，底层 segment 不可变，删除记 delete log，查询过滤，compaction 时重写 segment 并重建 HNSW。高频改向量不适合单张 HNSW；读多写少可以墓碑 + 定期重建，写多就上不可变段或 IVF。
 
 **Q11：带过滤的检索有哪几种做法？低命中率怎么选？**
 
@@ -745,6 +795,7 @@ BGE v1.5 的检索指令是为“短 query → 长 passage”准备的。在这�
 - [ ] 用 Flat 精确检索建了 recall@k 基线，ANN 参数是在真实数据上调的。
 - [ ] 带真实过滤条件测过 recall@k，知道命中率和 pre/post-filter 的切换点。
 - [ ] 删除、撤权、缓存失效有端到端测试；删除后不会被召回。
+- [ ] Upsert 后旧版本不再被召回；监控墓碑比例，定期 compaction/rebuild。
 - [ ] 多租户有隔离方案，缓存 key 含租户和权限版本。
 - [ ] 监控了 p50/p95/p99、QPS、内存、构建时间、召回漂移。
 - [ ] 模型/索引升级有蓝绿或双写方案，能回滚，能全量重建。
@@ -763,6 +814,7 @@ BGE v1.5 的检索指令是为“短 query → 长 passage”准备的。在这�
 - hnswlib（`ALGO_PARAMS.md`，M / efConstruction / efSearch 的实践建议），https://github.com/nmslib/hnswlib
 - FlagEmbedding（BGE 推理与微调代码），https://github.com/FlagOpen/FlagEmbedding
 - BGE v1.5 / BGE-M3 模型卡，https://huggingface.co/BAAI
+- Milvus Upsert / Delete 语义与 compaction，https://milvus.io/docs/upsert-entity.md
 - Anthropic, Contextual Retrieval，https://platform.claude.com/cookbook/capabilities-contextual-embeddings-guide
 - Pinecone, Chunking Strategies，https://www.pinecone.io/learn/chunking-strategies/
 - Elastic, RRF retriever，https://www.elastic.co/docs/reference/elasticsearch/rest-apis/retrievers/rrf-retriever
