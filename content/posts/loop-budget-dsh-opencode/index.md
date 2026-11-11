@@ -99,7 +99,7 @@ R = 0.16 × (200,000 − 8,000) = 30,720
 
 ### 2.2 输出上限：截断就是 turn 的终点
 
-DSH 的 `maxTokens` 是单请求输出上限。流结束时如果 `finish.kind === "max-tokens"`，`step()` 返回 `{ kind: "max-tokens" }`，turn 结束。
+DSH 的 `maxTokens` 是单请求输出上限。流结束时如果 `finish.kind === "max-tokens"`，`step()` 返回 `{ kind: "max-tokens" }`，turn 被标记为收尾；除非 inbox 里还有新的 steering 消息，否则下一步就 break。
 
 它没有“输出被截断，发一条 synthetic 消息让模型接着写”的机制。好处是语义简单：一次回答没写完就是没写完，不会在一个 step 里偷偷续命；代价是长回答必须靠模型自己分段，或者靠用户再发一条消息。
 
@@ -266,7 +266,7 @@ OpenCode 的 goal 插件：`MAX_OBJECTIVE = 4,000`、`MAX_ROUNDS = 50`、`MAX_ST
 
 1. **DSH 的“停不下来”不是 bug，是设计。** 它的失控保护在 turn 之外：要么宿主在 `agent/turn-stopping` 取消，要么靠 goal/Ralph 的轮次上限，要么靠用户中断。
 2. **DSH 压缩更早，单步更便宜，但跑得更久。** 60 步累计 4.58M，平均每步约 76k；OpenCode 40 步累计 3.33M，平均每步约 83k。早压缩把每次请求的 history 压低了，但没有 step 上限，总账还是可能更大。
-3. **输出上限的语义完全不同。** 把“单步输出”拉到 `O` 以上：DSH 第一次 `finish: max-tokens` 就结束 turn；OpenCode 会续写两次，第三次才报 `output-limit`。
+3. **输出上限的语义完全不同。** 把“单步输出”拉到 `O` 以上：DSH 第一次 `finish: max-tokens` 就进入收尾；OpenCode 会续写两次，第三次才报 `output-limit`。
 4. **压缩次数不等于压缩成本。** 每次压缩本身也是一次模型请求（summary），只是模拟器没有把 summary 请求计入“累计输入”。
 
 ## 5. 预算到底影响了哪些步骤
@@ -285,7 +285,7 @@ OpenCode 的 goal 插件：`MAX_OBJECTIVE = 4,000`、`MAX_ROUNDS = 50`、`MAX_ST
 
 **模型调用。** DSH 的 `maxTokens` 是单请求输出上限，未配置时用 adapter 默认；OpenCode 在这一步检查 `step >= agent.steps`，到点把 `toolChoice` 设为 `none`，并追加 `MAX_STEPS_PROMPT`。**这是 OpenCode 唯一会因为“步数”而拒绝工具的硬停点。**
 
-**流结束。** DSH 遇到 `max-tokens` 直接结束 turn，不续写；OpenCode 遇到 `length` 发 synthetic 续写，连续 3 次才失败。同一个“输出被截断”，一个是终点，一个是两次缓刑。
+**流结束。** DSH 把 `max-tokens` 记为 turn 的结束原因，不做自动续写（有 steering 才继续）；OpenCode 遇到 `length` 发 synthetic 续写，连续 3 次才失败。同一个“输出被截断”，一个是终点，一个是两次缓刑。
 
 **工具执行。** DSH 用 head-tail / spill / `maxInlineTokens` 控制结果体量；OpenCode 用全局 2,000 行 / 50 KiB 上限 + `tool-output` 落盘。两者都不让工具结果无限膨胀，但都不是精确 token 预算。
 
@@ -299,7 +299,7 @@ OpenCode 的 goal 插件：`MAX_OBJECTIVE = 4,000`、`MAX_ROUNDS = 50`、`MAX_ST
 
 **软预算 vs 硬预算。** DSH 把“停”交给上下文压缩和宿主扩展点，Loop 本身不判断“该不该继续”；OpenCode 把“停”内建为 `agent.steps`，到点一定关工具。前者灵活，但默认没有上限；后者可预测，但需要用户显式配置 `steps`，不配就是无限。
 
-**输出截断的两种语义。** DSH 的 `max-tokens` 结束 turn，适合“一次回答必须完整”的场景；OpenCode 的续写适合“长文/长代码，允许分段”的场景，但续写会吃 step，且第三次失败会把这一步判死。没有哪种更好，取决于产品希望“截断”是错误还是正常路径。
+**输出截断的两种语义。** DSH 的 `max-tokens` 以收尾结束 turn，适合“一次回答必须完整”的场景；OpenCode 的续写适合“长文/长代码，允许分段”的场景，但续写会吃 step，且第三次失败会把这一步判死。没有哪种更好，取决于产品希望“截断”是错误还是正常路径。
 
 **压缩频率与断层深度。** DSH 更早压缩、保留更多，压缩更频繁但每次丢得少；OpenCode 更晚压缩、保留更少，压缩次数少但单次断层更深。`thresholdRatio` / `retainRatio` / `headroom` 和 `buffer` / `keep` 就是调这个权衡的旋钮。
 

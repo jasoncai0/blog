@@ -60,8 +60,8 @@
     <rect x="166" y="332" width="4" height="50" fill="#bf4520"/>
     <text x="52" y="353" font-size="9.5" font-weight="600" fill="#2d3142">流结束</text>
     <text x="52" y="368" font-size="7.5" fill="#5a6580">finish 原因</text>
-    <text x="180" y="352" font-size="9" font-weight="600" fill="#bf4520">max-tokens 直接结束 turn</text>
-    <text x="180" y="368" font-size="7.8" fill="#5a6580">不续写；下一次用户输入重开</text>
+    <text x="180" y="352" font-size="9" font-weight="600" fill="#bf4520">max-tokens 收尾</text>
+    <text x="180" y="368" font-size="7.8" fill="#5a6580">不自动续写；无 steering 时结束</text>
     <text x="554" y="352" font-size="9" fill="#2d3142">length 允许 2 次续写</text>
     <text x="554" y="368" font-size="7.8" fill="#5a6580">第 3 次连续 length 抛 output-limit</text>
 
