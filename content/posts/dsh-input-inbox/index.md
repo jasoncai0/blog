@@ -392,6 +392,36 @@ private async kick(): Promise<void> {
 
 **自己搭时**：把「启动」与「执行」拆成两个函数。启动函数只做所有权转移——判断、换句柄、迁移状态、同步拉起执行体；执行体是一个独立的 async 循环，自己决定何时结束，并在唯一的收尾点兑现待办。别让启动函数 await 执行体，也别让执行体在结束时递归调用启动函数而不经过状态检查。
 
+### 状态机：三个 kind，六类事件
+
+图 5 画的是唤醒在收敛点的选择。把正常退出、维护进出和取消放在一起，`phase` 是一台只有三个 `kind` 的小机器；`aborted` 不是第四个 `kind`，它是当前状态上 signal 的属性，`disposed` 也不是状态，是取消原因。
+
+| 事件 | 当前状态 | 守卫 | 结果 |
+| --- | --- | --- | --- |
+| `wakeDriver()` | idle | — | → running；新句柄、新 controller，`turn` 取 `lastTurn`、`step` 归零，同步 `kick()` |
+| `wakeDriver()` | maintenance | 取消原因 ≠ disposed | 状态不变，`wakeRequested = true` |
+| `wakeDriver()` | running，signal 已 abort | 取消原因 ≠ disposed 且 `wakeAfterAbort` | 状态不变，`wakeRequested = true` |
+| `wakeDriver()` | running，live | — | 不做事，活 driver 下一轮自己 claim |
+| `turn()` 返回 `true` | running | 队列还有活 | 自环：`turn/end`、换 controller、清 `wakeRequested`、`step = 0` |
+| `turn()` 返回 `false` | running | 队列排空，或被 reject / 空批次提前收尾 | → idle；`kick` 的 finally 再按闩锁决定是否 replay |
+| `turn()` 抛出 | running | 取消或错误 | 先写 `turn/end`（aborted / error），再由 `kick` 的 finally 收成 idle |
+| `cancel(cause)` | running / maintenance | `kind !== 'idle'` | 清 inbox（`keepInbox` 除外）、清闩锁，`abort(cause)`；kind 与 status 都不变 |
+| `runMaintenance` | idle | 否则抛错 | → maintenance；`activityDone` 换新句柄，public status 仍是 idle |
+| 维护结束 | maintenance | — | → idle；取消原因不是 disposed 且闩锁有活时 replay；句柄 resolve |
+| `dispose()` | 任意 | — | `cancel({ kind: 'disposed' })` 后 `await whenIdle()`；不闩锁、不 replay |
+
+`phase.kind` 只由四个 `setPhase` 调用点改写：`wakeDriver()` 的 idle 分支、`runMaintenance()` 的进出各一处、`kick()` 的 finally。`cancel()` 不改 kind；对非 idle 状态，它清完队列与闩锁后让当前 signal 死掉——这正是图 5 里「running · aborted」和「running · live」是同一个 kind 的原因。
+
+几条不变量：
+
+- **同一时刻至多一个 driver。** 唯一的创建点是 `wakeDriver()` 的 idle 分支，而「判断 + `setPhase(running)`」在同一段同步代码里，没有 await。
+- **`wakeRequested` 只存在于 running / maintenance。** `cancel()` 清（`keepInbox` 时保留），`turn()` 自环清，兑现后随状态一起丢弃。
+- **public status 是投影，不是状态本身。** idle 与 maintenance 都报 idle，running（含 aborted）都报 running；`setPhase()` 只在投影变化时发 `agent/status`。
+- **`lastTurn` 只在回到 idle 时写。** `turn` 在 `turn/start` 时写；`step` 在每个 turn 开始时归零，第一步的编号是 1。
+- **`activityDone` 每个活动一个句柄。** driver 与 maintenance 都会替换它，`whenIdle()` 等的始终是「当前活动」而不是「idle 这个布尔值」。
+
+图 5 是这台机器在唤醒上的投影；这张表把正常退出、维护进出和取消放进同一张转移表。两者都没有第四个状态：取消是 signal 的属性，disposal 是取消的原因。
+
 ## 9. 为什么 `AgentStatus` 只有两个值
 
 公开的 status 只有 `idle` 与 `running`（`agent.ts:156`）：
@@ -479,6 +509,7 @@ do-while 的比较是引用相等：如果 await 返回后 `activityDone` 已经
 - `packages/core/agent-loop/src/agent.ts:170` — `send()` 的四步顺序，含 `wakingAfterAbort` 的插入前捕获。
 - `packages/core/agent-loop/src/agent.ts:179` — 三种投递只是两个参数的组合。
 - `packages/core/agent-loop/src/agent.ts:191` — `cancel()` 清队列、清闩锁、abort 的顺序。
+- `packages/core/agent-loop/src/agent.ts:199` — `runMaintenance()` 的 idle 前置、maintenance phase 与 finally replay。
 - `packages/core/agent-loop/src/agent.ts:230` — `wakeDriver` 的 idle/maintenance/aborted 三分支与 disposed 例外。
 - `packages/core/agent-loop/src/agent.ts:241` — idle 分支的四条启动语句：句柄、phase、同步 `kick()`。
 - `packages/core/agent-loop/src/agent.ts:250` — `withInitiator` 同步启动 `kick()`，并把完成信号接到句柄。
