@@ -49,3 +49,6 @@ ann:
 memory:
   name: 记忆
   description: Agent 记忆的分层、写入、检索与演进
+llm-training:
+  name: 模型训练
+  description: 预训练、后训练、微调与对齐的机制和取舍
