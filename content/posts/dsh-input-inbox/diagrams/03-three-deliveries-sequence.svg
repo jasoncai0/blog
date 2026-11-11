@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="840" viewBox="0 0 960 840" role="img" aria-labelledby="f03-seq-title f03-seq-desc">
   <title id="f03-seq-title">三种投递在同一次运行中的时序：followup 独占下一轮，steer 与 inject 并入下一个 step</title>
-  <desc id="f03-seq-desc">四条生命线是调用方、agent 门面、inbox 与日志、driver。三条消息都在 turn T 的 step 1 运行期间到达：inject 写入 next-step，wakeup 为 false，不调用 wakeDriver；steer 写入 next-step，wakeDriver 因为 driver 还活着而直接返回；followup 写入 next-turn，唤醒同样直接返回。step 1 结束且模型没有再发工具调用，但 next-step 非空，轮次不收尾，driver 在 step 2 的 pre-step 里把 inject 与 steer 按插入顺序整批 claim，两条一起进入同一次请求。step 2 结束后 next-step 为空，turn/end 记 completed；因为 next-turn 还有 followup，同一个 driver 换 controller 续跑，turn/start(T+1) 后 claim 一条，followup 成为新轮唯一一条普通消息。</desc>
+  <desc id="f03-seq-desc">四条生命线是调用方、agent 门面、inbox 与日志、driver。三条消息都在 turn T 的 step 1 运行期间到达：inject 写入 next-step，wakeup 为 false，不调用 wakeDriver；steer 写入 next-step，wakeDriver 因为 driver 还活着而直接返回；followup 写入 next-turn，唤醒同样直接返回。step 1 结束且模型没有再发工具调用，但 next-step 非空，轮次不收尾，driver 在 step 2 的 pre-step 里把 inject 与 steer 按插入顺序整批 claim，两条一起进入同一次请求。step 2 结束、不再调工具且 next-step 为空，turn/end 记 completed；因为 next-turn 还有 followup，同一个 driver 换 controller 续跑，turn/start(T+1) 后 claim 一条，followup 成为新轮唯一一条普通消息。</desc>
   <defs>
     <marker id="f03-seq-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
