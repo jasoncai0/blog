@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="d1-title d1-desc">
+  <title id="d1-title">计划可以停留在四个位置</title>
+  <desc id="d1-desc">手稿、清单、文件、判词四种载体，越往右越持久、越不依赖当前这次对话，也越难被模型随手改写。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">FOUR CARRIERS</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">计划不是一个对象，是四张纸</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">越往右，越不依赖当前这次对话；也越不容易被模型顺手改掉</text>
+
+  <!-- card 1 -->
+  <rect x="48" y="112" width="204" height="330" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="64" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">IN THE CONTEXT</text>
+  <text x="64" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">手稿</text>
+  <text x="64" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">对话里的一段自然语言</text>
+
+  <text x="64" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁写</text>
+  <text x="64" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">模型自己，想到哪写到哪</text>
+  <text x="64" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁读</text>
+  <text x="64" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">下一次请求的它自己</text>
+  <text x="64" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">怎么失效</text>
+  <text x="64" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">压缩摘要、回滚、换人</text>
+
+  <text x="64" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">不需要任何设施</text>
+  <text x="64" y="411" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">也留不下任何证据</text>
+
+  <!-- card 2 -->
+  <rect x="268" y="112" width="204" height="330" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="284" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">IN THE TRANSCRIPT</text>
+  <text x="284" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">清单</text>
+  <text x="284" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">一次工具调用的参数</text>
+
+  <text x="284" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁写</text>
+  <text x="284" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">模型调用工具时整份覆盖</text>
+  <text x="284" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁读</text>
+  <text x="284" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">界面渲染给人看</text>
+  <text x="284" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">怎么失效</text>
+  <text x="284" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">没有任何人校验它</text>
+
+  <text x="284" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">进度是自报的</text>
+  <text x="284" y="411" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">可以永远不更新</text>
+
+  <!-- card 3 -->
+  <rect x="488" y="112" width="204" height="330" rx="8" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="504" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">ON DISK</text>
+  <text x="504" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">文件</text>
+  <text x="504" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">plans/ 下的一份 markdown</text>
+
+  <text x="504" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁写</text>
+  <text x="504" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">模型，在只读期被特许写它</text>
+  <text x="504" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁读</text>
+  <text x="504" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">人、审批、验证者、下个会话</text>
+  <text x="504" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">怎么失效</text>
+  <text x="504" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">没人改它，它自己腐化</text>
+
+  <text x="504" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">能审批、能交接</text>
+  <text x="504" y="411" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">也能和执行悄悄分叉</text>
+
+  <!-- card 4 -->
+  <rect x="708" y="112" width="204" height="330" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="724" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">OUTSIDE THE AGENT</text>
+  <text x="724" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">判词</text>
+  <text x="724" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">另一个模型的一句话裁决</text>
+
+  <text x="724" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁写</text>
+  <text x="724" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">评审模型，每轮一次</text>
+  <text x="724" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">谁读</text>
+  <text x="724" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">调度器，决定要不要再跑</text>
+  <text x="724" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">怎么失效</text>
+  <text x="724" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">判一次就作废，下轮重判</text>
+
+  <text x="724" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">它不描述计划</text>
+  <text x="724" y="411" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">只回答"还该不该继续"</text>
+
+  <!-- axis -->
+  <line x1="48" y1="472" x2="912" y2="472" stroke="#c9ccc6" stroke-width="1"/>
+  <text x="48" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">依赖当前对话</text>
+  <text x="866" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">独立于当前对话</text>
+  <line x1="48" y1="512" x2="912" y2="512" stroke="#c9ccc6" stroke-width="1"/>
+  <text x="48" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">模型随手可改</text>
+  <text x="866" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">需要显式动作才能改</text>
+
+  <text x="48" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">四种载体可以同时存在。真正决定一条 agent 好不好用的，往往不是它用哪一种，而是它有没有在两种之间对齐。</text>
+</svg>

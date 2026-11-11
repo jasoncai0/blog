@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="d2-title d2-desc">
+  <title id="d2-title">进入规划：一边是模式开关，一边是两道门</title>
+  <desc id="d2-desc">OpenCode 靠切换 agent 进入规划态，没有批准环节；Claude Code 用 EnterPlanMode 与 ExitPlanMode 两道需要用户同意的门，把规划期和实期隔开。</desc>
+
+  <defs>
+    <marker id="d2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">ENTERING PLAN MODE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一边是模式开关，一边是两道门</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同样的"先别改"，一个靠配置切换，一个靠人点头</text>
+
+  <!-- ============ left: OpenCode ============ -->
+  <text x="48" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#5a6580">OPENCODE · AGENT SWITCH</text>
+
+  <rect x="48" y="142" width="384" height="316" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="66" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">会话（历史是唯一的事实源）</text>
+
+  <rect x="66" y="188" width="348" height="96" rx="6" fill="#f7f3f0" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="82" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">权限门禁：edit / write / patch 被 deny</text>
+  <text x="82" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">例外只有 ~/.opencode/plan/*</text>
+  <text x="82" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">shell 未被拦截：bash 仍可改文件</text>
+  <text x="82" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a8f9c">它拦的是三个编辑工具，不是整个系统</text>
+
+  <line x1="240" y1="284" x2="240" y2="312" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <rect x="66" y="316" width="348" height="58" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="82" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">一条 system-reminder 写进历史</text>
+  <text x="82" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">"讨论而不是修改；要改就请用户切 agent"</text>
+
+  <line x1="240" y1="374" x2="240" y2="400" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <rect x="66" y="404" width="348" height="52" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="82" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">每个 Step 的 context 钩子重新对账</text>
+  <text x="82" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">压缩、回滚会把提醒冲掉，缺了就补一条</text>
+
+  <text x="48" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">进入 = 切 agent。没有批准、没有计划产物、没有退出条件。</text>
+  <text x="48" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">边界靠"模型看见提醒后愿意遵守"兜底。</text>
+
+  <!-- ============ right: Claude Code ============ -->
+  <text x="504" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">CLAUDE CODE · TWO APPROVAL GATES</text>
+
+  <rect x="504" y="142" width="408" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="522" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">EnterPlanMode</text>
+  <text x="522" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">工具描述原文：REQUIRES user approval；只在主会话可用</text>
+  <text x="522" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">子 agent 上下文里直接抛错，进不去</text>
+
+  <line x1="708" y1="214" x2="708" y2="238" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <rect x="504" y="242" width="408" height="112" rx="6" fill="#f7f3f0" stroke="#bf4520" stroke-width="1"/>
+  <text x="522" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">只读区：探索 → 设计 → 写计划文件</text>
+  <text x="522" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">提示词原文：MUST NOT edit / run non-readonly tools /</text>
+  <text x="522" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">change configs or commits</text>
+  <text x="522" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">唯一例外：计划文件本身（with the exception of the plan file）</text>
+  <text x="522" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">默认是五阶段工作流；可用 --plan-mode-instructions 换中间那段</text>
+
+  <line x1="708" y1="354" x2="708" y2="378" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d2-arrow)"/>
+
+  <rect x="504" y="382" width="408" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+  <text x="522" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">ExitPlanMode</text>
+  <text x="522" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">原文：inherently requests user approval of your plan</text>
+  <text x="522" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">批准 → "plan mode restrictions have been lifted"</text>
+
+  <text x="504" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">进入和退出都要人点头，中间产出一份可读的计划文件。</text>
+  <text x="504" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">边界靠工具的 permission 交接，不靠模型自觉。</text>
+
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">两者都还是同一个循环：规划期是一次只读的 ReAct，计划是探索完之后写下的文字。</text>
+  <text x="48" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">区别只在"谁有权说开始"和"计划以什么形态离开这次对话"。</text>
+</svg>
