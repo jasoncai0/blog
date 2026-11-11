@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loop 预算模拟器 · DSH / OpenCode</title>
+<style>
+  :root{
+    --paper:#f5f5f5; --paper2:#ececec; --card:#faf9f6;
+    --ink:#2d3142; --muted:#4f5d75; --muted2:#5a6580;
+    --accent:#bf4520; --accent-soft:rgba(191,69,32,.12);
+    --rule:rgba(45,49,66,.14); --rule-soft:rgba(45,49,66,.08);
+    --mono:'Geist Mono','SF Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Geist','PingFang SC','Noto Sans SC','Hiragino Sans GB',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans)}
+  body{padding:28px 26px 40px;max-width:1180px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--muted2);text-transform:uppercase}
+  h1{font-size:27px;line-height:1.2;margin:8px 0 8px;letter-spacing:-.01em}
+  .sub{font-size:13px;line-height:1.7;color:var(--muted);max-width:880px;margin:0}
+  .sub code{font-family:var(--mono);font-size:11px;background:var(--paper2);padding:1px 4px;border-radius:2px}
+  .topline{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;border-bottom:1px solid var(--rule);padding-bottom:18px}
+  .backlink{font-family:var(--mono);font-size:10px;color:var(--accent);text-decoration:none;white-space:nowrap;border-bottom:1px solid rgba(191,69,32,.35);padding-bottom:2px;margin-top:6px}
+  .backlink:hover{color:var(--ink);border-color:var(--ink)}
+
+  .controls{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;margin:22px 0 18px;padding:16px 18px;background:var(--card);border:1px solid var(--rule)}
+  .ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:11px;color:var(--muted);margin-bottom:7px}
+  .ctl output{font-family:var(--mono);font-size:11px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .ctl input[type=range]{width:100%;accent-color:var(--accent);margin:0;height:16px;background:transparent}
+  .ctl .hint{font-family:var(--mono);font-size:8.5px;color:var(--muted2);margin-top:5px;letter-spacing:.01em}
+  .actions{display:flex;align-items:center;gap:10px;margin:0 0 20px;flex-wrap:wrap}
+  button{font-family:var(--sans);font-size:12px;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:8px 16px;cursor:pointer;transition:background .15s,color .15s}
+  button:hover{background:var(--ink);color:var(--paper)}
+  button.primary{background:var(--ink);color:var(--paper)}
+  button.primary:hover{background:var(--accent);border-color:var(--accent)}
+  button:disabled{opacity:.35;cursor:not-allowed}
+  .speed{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:10px;color:var(--muted)}
+  .speed input{width:90px;accent-color:var(--accent)}
+  .speed output{font-family:var(--mono);font-size:10px;color:var(--ink)}
+
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .panel{background:var(--card);border:1px solid var(--rule);padding:18px 18px 14px;min-width:0}
+  .panel.dsh{border-top:3px solid var(--ink)}
+  .panel.oc{border-top:3px solid var(--accent)}
+  .phead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
+  .pname{font-size:16px;font-weight:650;letter-spacing:-.01em}
+  .pname span{font-family:var(--mono);font-size:9px;font-weight:400;letter-spacing:.14em;color:var(--muted2);display:block;margin-top:4px;text-transform:uppercase}
+  .pill{font-family:var(--mono);font-size:9px;letter-spacing:.04em;padding:4px 8px;border:1px solid var(--rule);color:var(--muted);white-space:nowrap}
+  .pill.running{color:var(--accent);border-color:rgba(191,69,32,.4);background:var(--accent-soft)}
+  .pill.stopped{color:var(--ink);border-color:var(--ink);background:var(--paper2)}
+  .pill.error{color:#fff;background:var(--accent);border-color:var(--accent)}
+  .ptag{font-size:10.5px;line-height:1.55;color:var(--muted);margin:2px 0 14px;min-height:32px}
+
+  .barlabel{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--muted2);letter-spacing:.02em;margin-bottom:5px}
+  .barwrap{position:relative;height:34px;margin-bottom:8px;background:#e7e5e0;border:1px solid var(--rule-soft);overflow:visible}
+  .bar{position:absolute;inset:0;display:flex;overflow:hidden}
+  .seg{height:100%;flex:none;transition:width .35s cubic-bezier(.4,0,.2,1)}
+  .seg.base{background:#9aa0ae}
+  .seg.hist{background:var(--ink)}
+  .seg.new{background:var(--accent)}
+  .threshold{position:absolute;top:-7px;bottom:-7px;width:0;border-left:1.5px dashed var(--accent);z-index:3;transition:left .35s}
+  .threshold::after{content:'';position:absolute;top:0;left:-3.5px;border-left:3.5px solid transparent;border-right:3.5px solid transparent;border-top:5px solid var(--accent)}
+  .thlabel{position:absolute;top:-24px;transform:translateX(-50%);font-family:var(--mono);font-size:8px;letter-spacing:.03em;color:var(--accent);white-space:nowrap;background:var(--card);padding:1px 3px}
+  .ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--muted2);margin-top:2px}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:8px;color:var(--muted2);margin:7px 0 12px}
+  .legend i{display:inline-block;width:8px;height:8px;margin-right:4px;vertical-align:-1px}
+  .legend .b{background:#9aa0ae}.legend .h{background:var(--ink)}.legend .n{background:var(--accent)}
+
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft);padding:10px 0;margin-bottom:10px}
+  .metric{padding:0 8px;border-right:1px solid var(--rule-soft)}
+  .metric:first-child{padding-left:0}
+  .metric:last-child{border-right:0}
+  .metric .k{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--muted2);text-transform:uppercase;white-space:nowrap}
+  .metric .v{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;margin-top:3px;letter-spacing:-.02em}
+  .metric .v small{font-size:9px;color:var(--muted2);letter-spacing:0}
+
+  .outrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin:0 0 12px}
+  .outbar{position:relative;height:5px;background:#e7e5e0;margin-top:5px}
+  .outbar span{position:absolute;left:0;top:0;bottom:0;background:var(--muted);transition:width .25s}
+  .outbar.over span{background:var(--accent)}
+  .outmeta{font-family:var(--mono);font-size:8.5px;color:var(--muted2);white-space:nowrap}
+  .outmeta strong{color:var(--ink);font-weight:500}
+
+  .log{border-top:1px solid var(--rule-soft);padding-top:8px;min-height:138px}
+  .logtitle{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--muted2);text-transform:uppercase;margin-bottom:5px}
+  .log ul{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:9.5px;line-height:1.55;color:var(--muted)}
+  .log li{display:flex;gap:7px;padding:2.5px 0;border-bottom:1px dotted rgba(45,49,66,.07)}
+  .log li:last-child{border-bottom:0}
+  .log .t{color:var(--muted2);min-width:38px;flex:none}
+  .log .m{min-width:0}
+  .log .m b{font-weight:500;color:var(--ink)}
+  .log li.c .m b{color:var(--accent)}
+  .log .empty{color:var(--muted2);font-size:9px}
+
+  .note{margin-top:24px;border-top:1px solid var(--rule);padding-top:16px;display:grid;grid-template-columns:1.15fr 1fr;gap:26px}
+  .note h3{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin:0 0 8px;font-weight:500}
+  .note p{font-size:11.5px;line-height:1.75;color:var(--muted);margin:0 0 8px}
+  .formula{font-family:var(--mono);font-size:10.5px;line-height:1.9;color:var(--ink);background:var(--paper2);padding:10px 12px;border-left:2px solid var(--ink)}
+  .formula em{font-style:normal;color:var(--accent)}
+  .formula span{color:var(--muted2)}
+  .warn{font-size:10px;color:var(--accent);font-family:var(--mono);min-height:14px;margin-top:6px}
+  footer{margin-top:26px;border-top:1px solid var(--rule);padding-top:12px;font-family:var(--mono);font-size:8.5px;color:var(--muted2);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  @media (max-width:900px){
+    body{padding:20px 14px 30px}
+    .controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .panels{grid-template-columns:1fr}
+    .note{grid-template-columns:1fr}
+    .topline{flex-direction:column}
+    .speed{margin-left:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .seg,.threshold,.outbar span{transition:none}
+  }
+</style>
+</head>
+<body>
+  <div class="topline">
+    <div>
+      <div class="eyebrow">Interactive · Loop Budget</div>
+      <h1>Loop 预算模拟器</h1>
+      <p class="sub">同一场“工具调用停不下来”的 turn，分别放进 DSH 与 OpenCode 的预算规则里。调节窗口、输出上限和步长，观察<strong>压缩阈值、step 上限、输出续写</strong>谁先接管。数值是教学用简化模型，不是 provider 账单。</p>
+    </div>
+    <a class="backlink" href="/posts/loop-budget-dsh-opencode.html" target="_top">← 回到正文</a>
+  </div>
+
+  <div class="controls">
+    <div class="ctl">
+      <label for="win">上下文窗口 W <output id="winOut">200k</output></label>
+      <input id="win" type="range" min="120000" max="1000000" step="10000" value="200000">
+      <div class="hint">DSH / OpenCode 共用</div>
+    </div>
+    <div class="ctl">
+      <label for="outcap">单请求输出上限 O <output id="outcapOut">8k</output></label>
+      <input id="outcap" type="range" min="1000" max="32000" step="1000" value="8000">
+      <div class="hint">DSH maxTokens / OpenCode model output</div>
+    </div>
+    <div class="ctl">
+      <label for="growth">每步新增上下文 <output id="growthOut">6k</output></label>
+      <input id="growth" type="range" min="1000" max="20000" step="500" value="6000">
+      <div class="hint">assistant + tool result</div>
+    </div>
+    <div class="ctl">
+      <label for="steps">OpenCode 步数 <output id="stepsOut">40</output></label>
+      <input id="steps" type="range" min="5" max="80" step="1" value="40">
+      <div class="hint">agent.steps；DSH 无此上限</div>
+    </div>
+    <div class="ctl">
+      <label for="outtok">单步输出 tokens <output id="outtokOut">1.5k</output></label>
+      <input id="outtok" type="range" min="500" max="24000" step="500" value="1500">
+      <div class="hint">超过 O 时触发输出预算</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="run" class="primary">运行</button>
+    <button id="reset">重置</button>
+    <div class="speed">
+      <label for="speed" style="margin:0">速度</label>
+      <input id="speed" type="range" min="90" max="700" step="10" value="260">
+      <output id="speedOut">260ms</output>
+    </div>
+  </div>
+
+  <div class="panels">
+    <section class="panel dsh">
+      <div class="phead">
+        <div class="pname">DSH<span>DeepSeek Harness · agent loop</span></div>
+        <div class="pill" id="dshPill">idle</div>
+      </div>
+      <p class="ptag">没有 step/turn 硬预算。只要模型继续调工具，turn 就可以继续；唯一的常驻刹车是上下文压缩。</p>
+
+      <div class="barlabel"><span>CONTEXT SURFACE</span><span id="dshAbs">18k / 200k</span></div>
+      <div class="barwrap" id="dshBarWrap" role="img" aria-label="DSH 上下文预算条">
+        <div class="bar">
+          <div class="seg base" id="dshBase"></div>
+          <div class="seg hist" id="dshHist"></div>
+        </div>
+        <div class="threshold" id="dshTh"><div class="thlabel" id="dshThLabel">T 126.5k</div></div>
+      </div>
+      <div class="ticks"><span>0</span><span id="dshMid">100k</span><span id="dshEnd">200k</span></div>
+      <div class="legend"><span><i class="b"></i>system + tools</span><span><i class="h"></i>history</span><span style="color:var(--accent)">┆ 压缩阈值 T</span></div>
+
+      <div class="metrics">
+        <div class="metric"><div class="k">Step</div><div class="v" id="dshStep">0</div></div>
+        <div class="metric"><div class="k">压缩</div><div class="v" id="dshComp">0</div></div>
+        <div class="metric"><div class="k">累计输入</div><div class="v" id="dshCost">0<small></small></div></div>
+        <div class="metric"><div class="k">保留 R</div><div class="v" id="dshRetain">30.7k</div></div>
+      </div>
+
+      <div class="outrow">
+        <div>
+          <div class="outmeta">输出 <strong id="dshOutTok">1.5k</strong> / cap <span id="dshCap">8k</span></div>
+          <div class="outbar" id="dshOutBar"><span id="dshOutFill"></span></div>
+        </div>
+        <div class="outmeta" id="dshOutNote">未触顶</div>
+      </div>
+
+      <div class="log"><div class="logtitle">Event log</div><ul id="dshLog"><li class="empty">等待运行…</li></ul></div>
+    </section>
+
+    <section class="panel oc">
+      <div class="phead">
+        <div class="pname">OpenCode<span>Session runner · agent.steps</span></div>
+        <div class="pill" id="ocPill">idle</div>
+      </div>
+      <p class="ptag">有 step 硬上限：第 <code>steps</code> 步起 <code>toolChoice:"none"</code>，工具被拒，只允许文本收尾；输出截断另有 2 次续写。</p>
+
+      <div class="barlabel"><span>CONTEXT SURFACE</span><span id="ocAbs">18k / 200k</span></div>
+      <div class="barwrap" id="ocBarWrap" role="img" aria-label="OpenCode 上下文预算条">
+        <div class="bar">
+          <div class="seg base" id="ocBase"></div>
+          <div class="seg hist" id="ocHist"></div>
+        </div>
+        <div class="threshold" id="ocTh"><div class="thlabel" id="ocThLabel">C 170k</div></div>
+      </div>
+      <div class="ticks"><span>0</span><span id="ocMid">100k</span><span id="ocEnd">200k</span></div>
+      <div class="legend"><span><i class="b"></i>system + tools</span><span><i class="h"></i>history</span><span style="color:var(--accent)">┆ 压缩阈值 C</span></div>
+
+      <div class="metrics">
+        <div class="metric"><div class="k">Step</div><div class="v" id="ocStep">0</div></div>
+        <div class="metric"><div class="k">压缩</div><div class="v" id="ocComp">0</div></div>
+        <div class="metric"><div class="k">累计输入</div><div class="v" id="ocCost">0<small></small></div></div>
+        <div class="metric"><div class="k">保留 K</div><div class="v" id="ocRetain">15k</div></div>
+      </div>
+
+      <div class="outrow">
+        <div>
+          <div class="outmeta">输出 <strong id="ocOutTok">1.5k</strong> / cap <span id="ocCap">8k</span></div>
+          <div class="outbar" id="ocOutBar"><span id="ocOutFill"></span></div>
+        </div>
+        <div class="outmeta" id="ocOutNote">未触顶</div>
+      </div>
+
+      <div class="log"><div class="logtitle">Event log</div><ul id="ocLog"><li class="empty">等待运行…</li></ul></div>
+    </section>
+  </div>
+
+  <div class="note">
+    <div>
+      <h3>怎么读这张图</h3>
+      <p>两个面板共享同一个窗口 W：DSH 的阈值是 <code>min(0.8W, W−O−65,536)</code>，OpenCode 的阈值是 <code>W−max(0.15W, 16k)</code>。把 W 调到 20 万，DSH 会在约 12.6 万就压缩，OpenCode 等到 17 万；DSH 压完保留约 3 万，OpenCode 只留 1.5 万。</p>
+      <p>“累计输入”把每次请求的 <code>system + tools + history</code> 相加。它说明上下文预算同时是成本预算：压缩越早，后续每一步重复发送的 token 越少。DSH 的 Loop 不会因为 step 数停下，OpenCode 会在第 <code>steps</code> 步强制文本回复。</p>
+      <p>把“单步输出”拉到输出上限以上：DSH 以 <code>max-tokens</code> 结束 turn；OpenCode 会续写，连续三次 <code>finish:"length"</code> 才抛 <code>output-limit</code> 错误。</p>
+      <div class="warn" id="configWarn"></div>
+    </div>
+    <div>
+      <h3>简化模型</h3>
+      <div class="formula">
+        <span># DSH · compaction-basic</span><br>
+        T = min(0.8·W, <em>W − O − 65,536</em>)<br>
+        R = 0.16·(W − O)<br>
+        <span># OpenCode · session/compaction</span><br>
+        C = W − max(0.15·W, 16,000)<br>
+        K = 15,000<br>
+        <span># 每步请求</span><br>
+        input = 12,000 + history
+      </div>
+      <p style="margin-top:10px">真实实现里 system/tools/history 的计量、压缩范围选择和 provider 缓存都更细；这里只保留决定“谁先触发”的主项。DSH 的 O 取请求头的 <code>maxTokens</code> 或 adapter 默认值。</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>DSH: dsh-compaction-basic · dsh-agent-loop ／ OpenCode: session/compaction.ts · runner/llm.ts</span>
+    <span>教学模拟 · 非账单预测</span>
+  </footer>
+
+<script>
+(function(){
+  const BASE = 12000;
+  const HEADROOM = 65536;
+  const OC_RESERVE_MIN = 16000;
+  const OC_KEEP = 15000;
+
+  const $ = (sel) => document.querySelector(sel.startsWith('#') ? sel : '#' + sel);
+  const clamp = (n,a,b) => Math.min(b, Math.max(a,n));
+  const fmt = (n) => n >= 1000000 ? (n/1000000).toFixed(2)+'M' : n >= 1000 ? Math.round(n/1000)+'k' : String(Math.round(n));
+  const fmt1 = (n) => n >= 1000000 ? (n/1000000).toFixed(2)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'k' : String(Math.round(n));
+
+  const cfg = { W:200000, O:8000, growth:6000, steps:40, outTok:1500, speed:260 };
+
+  function dshSpec(){
+    const messageBudget = cfg.W - cfg.O;
+    const pressureBudget = messageBudget - HEADROOM;
+    const threshold = Math.floor(Math.min(cfg.W * 0.8, pressureBudget));
+    const retain = Math.floor(messageBudget * 0.16);
+    return { threshold, retain, valid: pressureBudget > 0 && retain < threshold, messageBudget, pressureBudget };
+  }
+  function ocSpec(){
+    const buffer = Math.max(Math.floor(cfg.W * 0.15), cfg.W >= 32000 ? OC_RESERVE_MIN : 0);
+    return { ceiling: cfg.W - buffer, keep: OC_KEEP, buffer };
+  }
+
+  const empty = () => ({ history:0, steps:0, compactions:0, cost:0, status:'idle', done:false, logs:[], outStreak:0, turnEnded:false });
+  let sim = { dsh:empty(), oc:empty() };
+  let timer = null, running = false;
+
+  function reset(){
+    stop();
+    sim = { dsh:empty(), oc:empty() };
+    document.querySelectorAll('.log ul').forEach(ul => { ul.innerHTML = '<li class="empty">等待运行…</li>'; });
+    ['dsh','oc'].forEach(k => {
+      $('#'+k+'Pill').className = 'pill';
+      $('#'+k+'Pill').textContent = 'idle';
+    });
+    render(true);
+  }
+
+  function stop(paused){
+    running = false;
+    if (timer) { clearInterval(timer); timer = null; }
+    $('run').textContent = paused ? '继续' : '运行';
+    if (paused){
+      if (!sim.dsh.done) setStatus('dsh','paused','');
+      if (!sim.oc.done) setStatus('oc','paused','');
+    }
+  }
+
+  function log(panel, text, cls){
+    const s = sim[panel];
+    s.logs.unshift({ step:s.steps, text, cls:cls||'' });
+    s.logs = s.logs.slice(0,8);
+  }
+
+  function addLog(panel){
+    const ul = $('#'+panel+'Log');
+    const s = sim[panel];
+    if (!s.logs.length){ ul.innerHTML = '<li class="empty">等待运行…</li>'; return; }
+    ul.innerHTML = s.logs.map(l => `<li class="${l.cls}"><span class="t">${l.step ? 's'+String(l.step).padStart(2,'0') : '--'}</span><span class="m">${l.text}</span></li>`).join('');
+  }
+
+  function setStatus(panel, label, cls){
+    const p = $('#'+panel+'Pill');
+    p.textContent = label;
+    p.className = 'pill' + (cls ? ' '+cls : '');
+  }
+
+  function bar(panel){
+    const s = sim[panel], spec = panel === 'dsh' ? dshSpec() : ocSpec();
+    const total = BASE + s.history;
+    const pw = (v) => (clamp(v,0,cfg.W) / cfg.W * 100).toFixed(2) + '%';
+    s.total = total;
+    $('#'+panel+'Base').style.width = pw(BASE);
+    $('#'+panel+'Hist').style.width = pw(s.history);
+    const th = panel === 'dsh' ? spec.threshold : spec.ceiling;
+    const thp = clamp(th / cfg.W * 100, 0, 100);
+    const marker = $('#'+panel+'Th');
+    marker.style.left = thp + '%';
+    $('#'+panel+'ThLabel').textContent = (panel === 'dsh' ? 'T ' : 'C ') + fmt1(th);
+    const label = $('#'+panel+'ThLabel');
+    label.style.left = thp > 82 ? 'auto' : '0';
+    label.style.right = thp > 82 ? '4px' : 'auto';
+    label.style.transform = thp > 82 ? 'none' : 'translateX(-50%)';
+
+    $('#'+panel+'Abs').textContent = fmt(total) + ' / ' + fmt(cfg.W);
+    $('#'+panel+'Mid').textContent = fmt(cfg.W/2);
+    $('#'+panel+'End').textContent = fmt(cfg.W);
+    $('#'+panel+'Step').textContent = String(s.steps);
+    $('#'+panel+'Comp').textContent = String(s.compactions);
+    $('#'+panel+'Cost').innerHTML = fmt1(s.cost) + '<small> tok</small>';
+    $('#'+panel+'Retain').textContent = fmt1(panel === 'dsh' ? spec.retain : spec.keep);
+
+    const outPct = clamp(cfg.outTok / cfg.O * 100, 0, 100);
+    const over = cfg.outTok > cfg.O;
+    $('#'+panel+'OutTok').textContent = fmt1(cfg.outTok);
+    $('#'+panel+'Cap').textContent = fmt(cfg.O);
+    $('#'+panel+'OutFill').style.width = outPct + '%';
+    $('#'+panel+'OutBar').classList.toggle('over', over);
+    $('#'+panel+'OutNote').textContent = over
+      ? (panel === 'dsh' ? '触顶 → turn 结束' : `触顶 · 续写 ${s.outStreak}/2`)
+      : '未触顶';
+  }
+
+  function render(){
+    bar('dsh'); bar('oc');
+    addLog('dsh'); addLog('oc');
+
+    const ds = dshSpec(), os = ocSpec();
+    $('configWarn').textContent = ds.valid ? '' : 'DSH 配置非法：W − O − headroom ≤ 0 或 retain ≥ threshold；真实实现会抛 TargetPressureConfigError。';
+    if (!running && sim.dsh.done) setStatus('dsh', sim.dsh.status, sim.dsh.status === 'error' ? 'error' : 'stopped');
+    if (!running && sim.oc.done) setStatus('oc', sim.oc.status, sim.oc.status === 'error' ? 'error' : 'stopped');
+    if (running){
+      setStatus('dsh', sim.dsh.done ? sim.dsh.status : 'running', sim.dsh.done ? 'stopped' : 'running');
+      setStatus('oc', sim.oc.done ? sim.oc.status : 'running', sim.oc.done ? 'stopped' : 'running');
+    }
+  }
+
+  function compact(panel, spec){
+    const s = sim[panel];
+    const target = panel === 'dsh' ? spec.retain : spec.keep;
+    const after = Math.max(0, target - BASE);
+    const before = BASE + s.history;
+    s.history = after;
+    s.compactions++;
+    log(panel, `压缩：<b>${fmt(before)} → ${fmt(BASE+after)}</b>，保留 ${fmt1(target)}`, 'c');
+  }
+
+  function dshStep(){
+    const s = sim.dsh, spec = dshSpec();
+    if (s.done) return;
+    s.total = BASE + s.history;
+    if (!spec.valid){ s.done = true; s.status='config error'; log('dsh','配置非法：无 pressure budget'); return; }
+    if (s.total >= spec.threshold) compact('dsh', spec);
+    s.steps++;
+    s.history += cfg.growth;
+    s.cost += BASE + s.history;
+    if (cfg.outTok > cfg.O){
+      s.done = true; s.status = 'turn 结束'; s.turnEnded = true;
+      log('dsh', `输出 ${fmt(cfg.outTok)} &gt; maxTokens ${fmt(cfg.O)}：<b>finish=max-tokens</b>，turn 结束`, 'c');
+      return;
+    }
+    if (s.steps >= 60){
+      s.done = true; s.status = '无 step 上限';
+      log('dsh', `第 60 步：<b>没有 step 上限</b>，只是模拟停在这里`);
+    }
+  }
+
+  function ocStep(){
+    const s = sim.oc, spec = ocSpec();
+    if (s.done) return;
+    s.total = BASE + s.history;
+    if (s.total >= spec.ceiling) compact('oc', spec);
+    const thisStep = s.steps + 1;
+    const limit = thisStep >= cfg.steps;
+    s.steps = thisStep;
+    s.history += cfg.growth;
+    s.cost += BASE + s.history;
+
+    if (cfg.outTok > cfg.O){
+      s.outStreak++;
+      if (s.outStreak >= 3){
+        s.done = true; s.status = 'output-limit';
+        log('oc', `连续 3 次 finish=length：<b>output-limit</b> 抛错`, 'c');
+        return;
+      }
+      log('oc', `输出截断：续写 ${s.outStreak}/2（synthetic 提示 + 新 assistant）`, 'c');
+    } else {
+      s.outStreak = 0;
+    }
+
+    if (limit){
+      s.done = true; s.status = 'steps 上限';
+      log('oc', `第 ${thisStep} 步 ≥ steps=${cfg.steps}：<b>toolChoice="none"</b>，工具被拒，强制文本收尾`, 'c');
+      return;
+    }
+    if (thisStep >= 80){
+      s.done = true; s.status = '模拟上限';
+    }
+  }
+
+  function tick(){
+    if (!running) return;
+    if (!sim.dsh.done) dshStep();
+    if (!sim.oc.done) ocStep();
+    render();
+    if (sim.dsh.done && sim.oc.done) stop();
+  }
+
+  function start(){
+    if (running){ stop(true); return; }
+    if (sim.dsh.done || sim.oc.done) reset();
+    running = true;
+    $('run').textContent = '暂停';
+    setStatus('dsh','running','running');
+    setStatus('oc','running','running');
+    timer = setInterval(tick, cfg.speed);
+    tick();
+  }
+
+  function syncInputs(){
+    cfg.W = +$('win').value;
+    cfg.O = +$('outcap').value;
+    cfg.growth = +$('growth').value;
+    cfg.steps = +$('steps').value;
+    cfg.outTok = +$('outtok').value;
+    cfg.speed = +$('speed').value;
+    $('winOut').textContent = fmt(cfg.W);
+    $('outcapOut').textContent = fmt(cfg.O);
+    $('growthOut').textContent = fmt(cfg.growth);
+    $('stepsOut').textContent = String(cfg.steps);
+    $('outtokOut').textContent = fmt1(cfg.outTok);
+    $('speedOut').textContent = cfg.speed + 'ms';
+  }
+
+  ['win','outcap','growth','steps','outtok'].forEach(id => {
+    $(id).addEventListener('input', () => { syncInputs(); reset(); });
+  });
+  $('speed').addEventListener('input', () => {
+    cfg.speed = +$('speed').value;
+    $('speedOut').textContent = cfg.speed + 'ms';
+    if (running){ clearInterval(timer); timer = setInterval(tick, cfg.speed); }
+  });
+  $('run').addEventListener('click', start);
+  $('reset').addEventListener('click', reset);
+
+  window.__getSim = () => sim;
+  syncInputs();
+  reset();
+  const demo = new URLSearchParams(location.search).get('demo');
+  if (demo){
+    const n = Math.max(1, Math.min(80, +demo || 40));
+    for (let i=0;i<n;i++){
+      if (!sim.dsh.done) dshStep();
+      if (!sim.oc.done) ocStep();
+    }
+    render();
+    setStatus('dsh', sim.dsh.done ? sim.dsh.status : 'running', sim.dsh.done ? 'stopped' : 'running');
+    setStatus('oc', sim.oc.done ? sim.oc.status : 'running', sim.oc.done ? 'stopped' : 'running');
+  }
+})();
+</script>
+</body>
+</html>

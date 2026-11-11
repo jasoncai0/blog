@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f4t f4d">
+  <title id="f4t">预算影响的步骤：DSH 与 OpenCode 逐阶段对照</title>
+  <desc id="f4d">对照表列出 turn 进入、pre-step、组装请求、模型调用、流结束、工具执行、step 收尾、turn 收尾与外围轮次九个阶段，两套实现各自的预算检查与硬停点。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">BUDGET × PHASE · DSH VS OPENCODE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">预算到底改变了哪些步骤</text>
+  <text x="920" y="62" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">软预算：压缩 / 截断　硬停：拒绝继续</text>
+
+  <!-- header -->
+  <rect x="40" y="86" width="120" height="34" fill="#e9e6df"/>
+  <rect x="166" y="86" width="368" height="34" fill="#2d3142"/>
+  <rect x="540" y="86" width="380" height="34" fill="#bf4520"/>
+  <text x="52" y="107" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#4f5d75">PHASE</text>
+  <text x="180" y="107" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#f5f5f5">DSH · agent loop</text>
+  <text x="554" y="107" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#f5f5f5">OpenCode · session runner</text>
+
+  <!-- rows -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+    <!-- 1 -->
+    <rect x="40" y="124" width="880" height="50" fill="#faf9f6"/>
+    <text x="52" y="145" font-size="9.5" font-weight="600" fill="#2d3142">turn 进入</text>
+    <text x="52" y="160" font-size="7.5" fill="#5a6580">谁决定继续</text>
+    <text x="180" y="144" font-size="9" fill="#2d3142">没有入环预算</text>
+    <text x="180" y="160" font-size="7.8" fill="#5a6580">steering 可继续；没有 turn 数量上限</text>
+    <text x="554" y="144" font-size="9" fill="#2d3142">新输入把 step 复位为 1</text>
+    <text x="554" y="160" font-size="7.8" fill="#5a6580">continuation 从持久化的 step 继续</text>
+
+    <!-- 2 -->
+    <rect x="40" y="176" width="880" height="50" fill="#f1efe9"/>
+    <text x="52" y="197" font-size="9.5" font-weight="600" fill="#2d3142">pre-step</text>
+    <text x="52" y="212" font-size="7.5" fill="#5a6580">请求前检查</text>
+    <text x="180" y="196" font-size="9" fill="#2d3142">上下文压缩（软预算）</text>
+    <text x="180" y="212" font-size="7.8" fill="#bf4520">T = min(0.8W, W − O − 65,536)</text>
+    <text x="554" y="196" font-size="9" fill="#2d3142">auto compaction（请求前）</text>
+    <text x="554" y="212" font-size="7.8" fill="#bf4520">C = W − max(0.15W, 16,000)</text>
+
+    <!-- 3 -->
+    <rect x="40" y="228" width="880" height="50" fill="#faf9f6"/>
+    <text x="52" y="249" font-size="9.5" font-weight="600" fill="#2d3142">组装请求</text>
+    <text x="52" y="264" font-size="7.5" fill="#5a6580">输入成本</text>
+    <text x="180" y="248" font-size="9" fill="#2d3142">全量重发 system + tools + history</text>
+    <text x="180" y="264" font-size="7.8" fill="#5a6580">token meter 按 4 chars/token 估算</text>
+    <text x="554" y="248" font-size="9" fill="#2d3142">summary + 最近 keep 消息</text>
+    <text x="554" y="264" font-size="7.8" fill="#5a6580">keep 默认 15k；压缩后基线下降</text>
+
+    <!-- 4 -->
+    <rect x="40" y="280" width="880" height="50" fill="#f1efe9"/>
+    <rect x="540" y="280" width="4" height="50" fill="#bf4520"/>
+    <text x="52" y="301" font-size="9.5" font-weight="600" fill="#2d3142">模型调用</text>
+    <text x="52" y="316" font-size="7.5" fill="#5a6580">单次请求</text>
+    <text x="180" y="300" font-size="9" fill="#2d3142">单请求输出上限 maxTokens</text>
+    <text x="180" y="316" font-size="7.8" fill="#5a6580">未配置时用 adapter 默认值</text>
+    <text x="554" y="300" font-size="9" font-weight="600" fill="#bf4520">steps 硬上限：toolChoice = none</text>
+    <text x="554" y="316" font-size="7.8" fill="#bf4520">step &gt;= agent.steps 时强制文本</text>
+
+    <!-- 5 -->
+    <rect x="40" y="332" width="880" height="50" fill="#faf9f6"/>
+    <rect x="166" y="332" width="4" height="50" fill="#bf4520"/>
+    <text x="52" y="353" font-size="9.5" font-weight="600" fill="#2d3142">流结束</text>
+    <text x="52" y="368" font-size="7.5" fill="#5a6580">finish 原因</text>
+    <text x="180" y="352" font-size="9" font-weight="600" fill="#bf4520">max-tokens 直接结束 turn</text>
+    <text x="180" y="368" font-size="7.8" fill="#5a6580">不续写；下一次用户输入重开</text>
+    <text x="554" y="352" font-size="9" fill="#2d3142">length 允许 2 次续写</text>
+    <text x="554" y="368" font-size="7.8" fill="#5a6580">第 3 次连续 length 抛 output-limit</text>
+
+    <!-- 6 -->
+    <rect x="40" y="384" width="880" height="50" fill="#f1efe9"/>
+    <text x="52" y="405" font-size="9.5" font-weight="600" fill="#2d3142">工具执行</text>
+    <text x="52" y="420" font-size="7.5" fill="#5a6580">结果体量</text>
+    <text x="180" y="404" font-size="9" fill="#2d3142">截断 / spill 双预算</text>
+    <text x="180" y="420" font-size="7.8" fill="#5a6580">head-tail、maxInlineTokens、落盘 locator</text>
+    <text x="554" y="404" font-size="9" fill="#2d3142">截断 + 落盘（tool-output）</text>
+    <text x="554" y="420" font-size="7.8" fill="#5a6580">默认 2,000 行 / 50 KiB；只留头部，全文落盘</text>
+
+    <!-- 7 -->
+    <rect x="40" y="436" width="880" height="50" fill="#faf9f6"/>
+    <text x="52" y="457" font-size="9.5" font-weight="600" fill="#2d3142">step 收尾</text>
+    <text x="52" y="472" font-size="7.5" fill="#5a6580">是否继续</text>
+    <text x="180" y="456" font-size="9" fill="#2d3142">step++，没有上限</text>
+    <text x="180" y="472" font-size="7.8" fill="#5a6580">有 tool call 就回到 pre-step，turn 不重置</text>
+    <text x="554" y="456" font-size="9" fill="#2d3142">step++；压缩本身不增 step</text>
+    <text x="554" y="472" font-size="7.8" fill="#5a6580">压缩后换 assistantMessageID 并 continue</text>
+
+    <!-- 8 -->
+    <rect x="40" y="488" width="880" height="50" fill="#f1efe9"/>
+    <text x="52" y="509" font-size="9.5" font-weight="600" fill="#2d3142">turn 收尾</text>
+    <text x="52" y="524" font-size="7.5" fill="#5a6580">谁叫停</text>
+    <text x="180" y="508" font-size="9" fill="#2d3142">turn-stopping 扩展点</text>
+    <text x="180" y="524" font-size="7.8" fill="#5a6580">宿主策略可取消，不是内置预算</text>
+    <text x="554" y="508" font-size="9" fill="#2d3142">强制文本收尾</text>
+    <text x="554" y="524" font-size="7.8" fill="#5a6580">工具禁用直到下一条用户消息</text>
+
+    <!-- 9 -->
+    <rect x="40" y="540" width="880" height="50" fill="#faf9f6"/>
+    <text x="52" y="561" font-size="9.5" font-weight="600" fill="#2d3142">外层轮次</text>
+    <text x="52" y="576" font-size="7.5" fill="#5a6580">跨 turn</text>
+    <text x="180" y="560" font-size="9" fill="#2d3142">goal 256 轮 / Ralph 256 轮</text>
+    <text x="180" y="576" font-size="7.8" fill="#5a6580">只数轮次，不计 token、钱、墙钟</text>
+    <text x="554" y="560" font-size="9" fill="#2d3142">goal 50 轮 / stall 3 / wait 30m</text>
+    <text x="554" y="576" font-size="7.8" fill="#5a6580">连续停滞或等待过久会 pause</text>
+  </g>
+
+  <text x="40" y="616" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">红条 = 会直接中止当前 turn/step 的硬预算；其余为软预算：先压缩、截断或续写，只在失败时才升级为错误。</text>
+</svg>
