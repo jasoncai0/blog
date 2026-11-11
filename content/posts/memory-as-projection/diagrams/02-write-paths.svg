@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f2-ttl f2-desc">
+  <title id="f2-ttl">四条写入路径，一个装配结果</title>
+  <desc id="f2-desc">规则、技能、模型记忆与系统摘要，最终都汇入下一次请求的 surface；差别在写入者、粒度与可逆性。</desc>
+  <style>
+    text { font-family: 'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif; fill:#2d3142; }
+    .mono { font-family:'Geist Mono','SF Mono',ui-monospace,monospace; }
+    .k { font-size:8px; letter-spacing:.16em; fill:#5a6580; }
+    .h { font-size:16px; font-weight:600; }
+    .s { font-size:9px; fill:#5a6580; }
+    .b { font-size:9px; fill:#5a6580; }
+    .ttl { font-size:10px; font-weight:600; }
+    .lbl { font-size:7.5px; fill:#5a6580; }
+    .tag { font-size:7.5px; letter-spacing:.06em; }
+  </style>
+  <defs>
+    <marker id="f2-ai" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f2-aa" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f2-at" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f6f6b"/></marker>
+    <marker id="f2-am" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text class="k mono" x="48" y="38">MEMORY · DEEPSEEK HARNESS × CLAUDE CODE</text>
+  <text class="h" x="48" y="66">四条写入路径，一个装配结果</text>
+  <text class="s" x="48" y="86">规则可编辑、技能可替换、摘要是追加的；旧版本是否还在，决定了这套记忆能不能被审计</text>
+  <rect x="792" y="112" width="128" height="424" rx="8" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="856" y="138" text-anchor="middle">下一次请求</text>
+  <text class="ttl" x="856" y="154" text-anchor="middle">的 surface</text>
+  <rect x="806" y="180" width="100" height="56" rx="5" fill="#f7f8fa" stroke="#c9ced8"/>
+  <text class="ttl" x="856" y="204" text-anchor="middle" font-size="9px">system 0</text>
+  <text class="lbl" x="856" y="221" text-anchor="middle">系统提示词</text>
+  <rect x="806" y="264" width="100" height="56" rx="5" fill="#f7f8fa" stroke="#c9ced8"/>
+  <text class="ttl" x="856" y="288" text-anchor="middle" font-size="9px">user 基线</text>
+  <text class="lbl" x="856" y="305" text-anchor="middle">规则 / 技能目录</text>
+  <rect x="806" y="348" width="100" height="56" rx="5" fill="#f7f8fa" stroke="#c9ced8"/>
+  <text class="ttl" x="856" y="372" text-anchor="middle" font-size="9px">summary</text>
+  <text class="lbl" x="856" y="389" text-anchor="middle">压缩检查点</text>
+  <rect x="806" y="432" width="100" height="56" rx="5" fill="#f7f8fa" stroke="#c9ced8"/>
+  <text class="ttl" x="856" y="456" text-anchor="middle" font-size="9px">history</text>
+  <text class="lbl" x="856" y="473" text-anchor="middle">保留的近期消息</text>
+  <rect x="40" y="124" width="128" height="80" rx="6" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="54" y="146" fill="#bf4520">① 人写规则</text>
+  <text class="tag" x="54" y="166" fill="#5a6580">规则</text>
+  <rect x="186" y="124" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="200" y="142" fill="#2d3142" font-size="10px">AGENTS.md / CLAUDE.md</text>
+  <text class="b" x="200" y="166">仓库里的事实，可提交、可 diff</text>
+  <path d="M366,164 L382,164" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="382" y="124" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="396" y="142" fill="#2d3142" font-size="10px">发现与预算</text>
+  <text class="b" x="396" y="166">根→cwd 链；子目录懒加载；64KiB</text>
+  <path d="M562,164 L578,164" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="578" y="124" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="592" y="142" fill="#2d3142" font-size="10px">作为 user 消息</text>
+  <text class="b" x="592" y="166">基线注入；不是 system prompt</text>
+  <path d="M758,164 L792,164" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f2-at)"/>
+  <rect x="40" y="222" width="128" height="80" rx="6" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="54" y="244" fill="#2d3142">② 人写技能</text>
+  <text class="tag" x="54" y="264" fill="#5a6580">程序</text>
+  <rect x="186" y="222" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="200" y="240" fill="#2d3142" font-size="10px">SKILL.md</text>
+  <text class="b" x="200" y="264">name / description / 正文</text>
+  <path d="M366,262 L382,262" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="382" y="222" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="396" y="240" fill="#2d3142" font-size="10px">目录投影</text>
+  <text class="b" x="396" y="264">只注入 name + desc（≤500 字符）</text>
+  <path d="M562,262 L578,262" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="578" y="222" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="592" y="240" fill="#2d3142" font-size="10px">按需载入正文</text>
+  <text class="b" x="592" y="264">skill 工具，或显式 /name 调用</text>
+  <path d="M758,262 L792,262" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f2-at)"/>
+  <rect x="40" y="320" width="128" height="80" rx="6" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="54" y="342" fill="#2d3142">③ 模型写记忆</text>
+  <text class="tag" x="54" y="362" fill="#5a6580">自动</text>
+  <rect x="186" y="320" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="200" y="338" fill="#2d3142" font-size="10px">Claude：auto memory</text>
+  <text class="b" x="200" y="362">user / feedback / project / reference</text>
+  <path d="M366,360 L382,360" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="382" y="320" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="396" y="338" fill="#2d3142" font-size="10px">MEMORY.md 索引</text>
+  <text class="b" x="396" y="362">前 200 行或 25KB；主题按需读</text>
+  <path d="M562,360 L578,360" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="578" y="320" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="592" y="338" fill="#2d3142" font-size="10px">DSH：会话 + 文件</text>
+  <text class="b" x="592" y="362">模型可编辑 AGENTS.md；@ 引用旧会话</text>
+  <path d="M758,360 L792,360" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f2-at)"/>
+  <rect x="40" y="418" width="128" height="80" rx="6" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="54" y="440" fill="#2d3142">④ 系统写摘要</text>
+  <text class="tag" x="54" y="460" fill="#5a6580">回收</text>
+  <rect x="186" y="418" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="200" y="436" fill="#2d3142" font-size="10px">旧区间</text>
+  <text class="b" x="200" y="460">消息 + 工具结果 + 旧摘要</text>
+  <path d="M366,458 L382,458" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="382" y="418" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="396" y="436" fill="#2d3142" font-size="10px">压缩器</text>
+  <text class="b" x="396" y="460">8 节摘要；保护工具配对；加锁</text>
+  <path d="M562,458 L578,458" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f2-am)"/>
+  <rect x="578" y="418" width="180" height="80" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <text class="ttl" x="592" y="436" fill="#2d3142" font-size="10px">summary user 消息</text>
+  <text class="b" x="592" y="460">surface replace；日志保留原文</text>
+  <path d="M758,458 L792,458" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f2-at)"/>
+  <line x1="48" y1="560" x2="912" y2="560" stroke="#c9ced8"/>
+  <text class="b" x="48" y="580">同样叫「记忆」，语义完全不同：规则是承诺，技能是接口，自动记忆是模型的主张，摘要是系统的有损投影。</text>
+</svg>

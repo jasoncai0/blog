@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f7-ttl f7-desc">
+  <title id="f7-ttl">ACP 的块层级：把散文当 LSM 树来压实</title>
+  <desc id="f7-desc">消息折成 tier-1 块，块再折成 tier-2，tier-2 再折成 tier-3；每次折叠保留一份摘要与完整血统。</desc>
+  <style>
+    text { font-family: 'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif; fill:#2d3142; }
+    .mono { font-family:'Geist Mono','SF Mono',ui-monospace,monospace; }
+    .k { font-size:8px; letter-spacing:.16em; fill:#5a6580; }
+    .h { font-size:16px; font-weight:600; }
+    .s { font-size:9px; fill:#5a6580; }
+    .b { font-size:9px; fill:#5a6580; }
+    .ttl { font-size:10px; font-weight:600; }
+    .lbl { font-size:7.5px; fill:#5a6580; }
+    .tag { font-size:7.5px; letter-spacing:.06em; }
+  </style>
+  <defs>
+    <marker id="f7-ai" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f7-aa" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f7-at" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f6f6b"/></marker>
+    <marker id="f7-am" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text class="k mono" x="48" y="38">MEMORY · ACP BLOCK LSM</text>
+  <text class="h" x="48" y="66">ACP 的块层级：把散文当 LSM 树来压实</text>
+  <text class="s" x="48" y="86">active 的块进入上下文；inactive 的块留在存储里，仍可被 decompress 重新激活</text>
+  <text class="ttl" x="48" y="410">tier 1</text>
+  <text class="lbl" x="48" y="426">4 块 · 每块 3 条消息</text>
+  <rect x="190" y="390" width="150" height="44" rx="5" fill="#f2f3f5" stroke="#b9bdc5" stroke-dasharray="4 3"/>
+  <text class="ttl" x="202" y="410" fill="#5a6580" font-size="9px">tier1 #1</text>
+  <text class="lbl" x="202" y="426" fill="#5a6580">m1–m3 · 1.2K</text>
+  <rect x="350" y="390" width="150" height="44" rx="5" fill="#f2f3f5" stroke="#b9bdc5" stroke-dasharray="4 3"/>
+  <text class="ttl" x="362" y="410" fill="#5a6580" font-size="9px">tier1 #2</text>
+  <text class="lbl" x="362" y="426" fill="#5a6580">m4–m6 · 1.2K</text>
+  <rect x="510" y="390" width="150" height="44" rx="5" fill="#f2f3f5" stroke="#b9bdc5" stroke-dasharray="4 3"/>
+  <text class="ttl" x="522" y="410" fill="#5a6580" font-size="9px">tier1 #3</text>
+  <text class="lbl" x="522" y="426" fill="#5a6580">m7–m9 · 1.2K</text>
+  <rect x="670" y="390" width="150" height="44" rx="5" fill="#f2f3f5" stroke="#b9bdc5" stroke-dasharray="4 3"/>
+  <text class="ttl" x="682" y="410" fill="#5a6580" font-size="9px">tier1 #4</text>
+  <text class="lbl" x="682" y="426" fill="#5a6580">m10–m12 · 1.2K</text>
+  <text class="ttl" x="48" y="300">tier 2</text>
+  <text class="lbl" x="48" y="316">2 块 · 每块 2 个 tier-1</text>
+  <rect x="250" y="280" width="220" height="48" rx="5" fill="#f2f3f5" stroke="#b9bdc5" stroke-dasharray="4 3"/>
+  <text class="ttl" x="262" y="300" fill="#5a6580" font-size="9px">tier2 #5</text>
+  <text class="lbl" x="262" y="316" fill="#5a6580">t1 #1–#2 · 8K</text>
+  <rect x="490" y="280" width="220" height="48" rx="5" fill="#e9f2f1" stroke="#1f6f6b"/>
+  <text class="ttl" x="502" y="300" fill="#2d3142" font-size="9px">tier2 #6</text>
+  <text class="lbl" x="502" y="316" fill="#5a6580">t1 #3–#4 · 9K</text>
+  <text class="ttl" x="48" y="190">tier 3</text>
+  <text class="lbl" x="48" y="206">1 块 · 保留最高层摘要</text>
+  <rect x="350" y="170" width="260" height="52" rx="5" fill="#e9f2f1" stroke="#bf4520"/>
+  <text class="ttl" x="362" y="190" fill="#2d3142" font-size="9px">tier3 #9</text>
+  <text class="lbl" x="362" y="206" fill="#5a6580">t2 #5–#6 · 40K</text>
+  <text class="ttl" x="48" y="512">原始消息</text>
+  <text class="lbl" x="48" y="528">12 条 · 稳定引用 id</text>
+  <rect x="182" y="500" width="46" height="34" rx="4" fill="#e9f2f1" stroke="#1f6f6b"/>
+  <text class="mono" x="205" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m1</text>
+  <rect x="232" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="255" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m2</text>
+  <rect x="282" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="305" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m3</text>
+  <rect x="332" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="355" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m4</text>
+  <rect x="382" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="405" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m5</text>
+  <rect x="432" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="455" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m6</text>
+  <rect x="482" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="505" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m7</text>
+  <rect x="532" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="555" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m8</text>
+  <rect x="582" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="605" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m9</text>
+  <rect x="632" y="500" width="46" height="34" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="655" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m10</text>
+  <rect x="682" y="500" width="46" height="34" rx="4" fill="#f8e3da" stroke="#bf4520"/>
+  <text class="mono" x="705" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m11</text>
+  <rect x="732" y="500" width="46" height="34" rx="4" fill="#f8e3da" stroke="#bf4520"/>
+  <text class="mono" x="755" y="522" text-anchor="middle" fill="#5a6580" font-size="7px">m12</text>
+  <path d="M265,500 L265,434" fill="none" stroke="#5a6580" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#f7-am)"/>
+  <path d="M425,500 L425,434" fill="none" stroke="#5a6580" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#f7-am)"/>
+  <path d="M585,500 L585,434" fill="none" stroke="#5a6580" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#f7-am)"/>
+  <path d="M745,500 L745,434" fill="none" stroke="#5a6580" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#f7-am)"/>
+  <path d="M365,390 L365,328" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f7-at)"/>
+  <text class="lbl" x="372" y="362" fill="#1f6f6b">fold</text>
+  <path d="M605,390 L605,328" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f7-at)"/>
+  <text class="lbl" x="612" y="362" fill="#1f6f6b">fold</text>
+  <path d="M430,280 L430,222" fill="none" stroke="#bf4520" stroke-width="1.3" marker-end="url(#f7-aa)"/>
+  <text class="lbl" x="437" y="254" fill="#bf4520">fold</text>
+  <path d="M540,280 L540,222" fill="none" stroke="#bf4520" stroke-width="1.3" marker-end="url(#f7-aa)"/>
+  <text class="lbl" x="547" y="254" fill="#bf4520">fold</text>
+  <path d="M690,280 C760,280 760,390 690,390" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#f7-aa)"/>
+  <text class="lbl" x="770" y="336" fill="#bf4520">decompress</text>
+  <line x1="48" y1="556" x2="912" y2="556" stroke="#c9ced8" stroke-width="1"/>
+  <text class="ttl" x="48" y="552">上下文渲染（active 块按序展开）</text>
+  <rect x="48" y="568" width="120" height="20" rx="3" fill="#e9f2f1" stroke="#1f6f6b"/>
+  <text class="lbl" x="108" y="582" text-anchor="middle" fill="#1f6f6b">保护头：首条 user</text>
+  <rect x="172" y="568" width="520" height="20" rx="3" fill="#f8e3da" stroke="#bf4520"/>
+  <text class="lbl" x="432" y="582" text-anchor="middle" fill="#bf4520">tier3 #9 摘要 + tier2 #6 摘要（active）</text>
+  <rect x="696" y="568" width="216" height="20" rx="3" fill="#f6efdf" stroke="#9a6b1f"/>
+  <text class="lbl" x="804" y="582" text-anchor="middle" fill="#9a6b1f">保护尾：最近若干条</text>
+  <text class="b" x="48" y="612">实线 = active，进入请求；虚线 = inactive，仅保留血统；tier-1 每段内容一生只折一次。</text>
+</svg>

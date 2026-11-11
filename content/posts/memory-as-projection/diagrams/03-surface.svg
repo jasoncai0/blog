@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="f3-ttl f3-desc">
+  <title id="f3-ttl">日志是事实，surface 是投影</title>
+  <desc id="f3-desc">15 条事件中，第 5 到第 10 条被一次 replace 遮蔽；第 15 条是携带摘要的新 user 消息。模型只看到下排的 9 个节点。</desc>
+  <style>
+    text { font-family: 'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif; fill:#2d3142; }
+    .mono { font-family:'Geist Mono','SF Mono',ui-monospace,monospace; }
+    .k { font-size:8px; letter-spacing:.16em; fill:#5a6580; }
+    .h { font-size:16px; font-weight:600; }
+    .s { font-size:9px; fill:#5a6580; }
+    .b { font-size:9px; fill:#5a6580; }
+    .ttl { font-size:10px; font-weight:600; }
+    .lbl { font-size:7.5px; fill:#5a6580; }
+    .tag { font-size:7.5px; letter-spacing:.06em; }
+  </style>
+  <defs>
+    <marker id="f3-ai" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f3-aa" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f3-at" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f6f6b"/></marker>
+    <marker id="f3-am" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text class="k mono" x="48" y="38">MEMORY · SESSION LOG → SURFACE</text>
+  <text class="h" x="48" y="66">日志是事实，surface 是投影</text>
+  <text class="s" x="48" y="86">压缩不删除任何事件：它只在派生视图上盖住一段区间，并追加一条摘要消息</text>
+  <text class="ttl" x="48" y="132">Session 日志（仅追加）</text>
+  <text class="b" x="920" y="124" text-anchor="end">一条 replace 只改视图</text>
+  <rect x="48" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="76.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">1</text>
+  <text class="mono" x="76.0" y="184" text-anchor="middle" fill="#6b4f8a" font-size="8px">sys</text>
+  <rect x="107" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="135.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">2</text>
+  <text class="mono" x="135.0" y="184" text-anchor="middle" fill="#1f6f6b" font-size="8px">usr</text>
+  <rect x="166" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="194.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">3</text>
+  <text class="mono" x="194.0" y="184" text-anchor="middle" fill="#2d3142" font-size="8px">asst</text>
+  <rect x="225" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="253.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">4</text>
+  <text class="mono" x="253.0" y="184" text-anchor="middle" fill="#9a6b1f" font-size="8px">tool</text>
+  <rect x="284" y="150" width="56" height="46" rx="4" fill="#e9e5dd" stroke="#b8b1a5" stroke-dasharray="4 3"/>
+  <text class="mono" x="312.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">5</text>
+  <text class="mono" x="312.0" y="184" text-anchor="middle" fill="#1f6f6b" font-size="8px">usr</text>
+  <rect x="343" y="150" width="56" height="46" rx="4" fill="#e9e5dd" stroke="#b8b1a5" stroke-dasharray="4 3"/>
+  <text class="mono" x="371.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">6</text>
+  <text class="mono" x="371.0" y="184" text-anchor="middle" fill="#2d3142" font-size="8px">asst</text>
+  <rect x="402" y="150" width="56" height="46" rx="4" fill="#e9e5dd" stroke="#b8b1a5" stroke-dasharray="4 3"/>
+  <text class="mono" x="430.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">7</text>
+  <text class="mono" x="430.0" y="184" text-anchor="middle" fill="#9a6b1f" font-size="8px">tool</text>
+  <rect x="461" y="150" width="56" height="46" rx="4" fill="#e9e5dd" stroke="#b8b1a5" stroke-dasharray="4 3"/>
+  <text class="mono" x="489.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">8</text>
+  <text class="mono" x="489.0" y="184" text-anchor="middle" fill="#1f6f6b" font-size="8px">usr</text>
+  <rect x="520" y="150" width="56" height="46" rx="4" fill="#e9e5dd" stroke="#b8b1a5" stroke-dasharray="4 3"/>
+  <text class="mono" x="548.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">9</text>
+  <text class="mono" x="548.0" y="184" text-anchor="middle" fill="#2d3142" font-size="8px">asst</text>
+  <rect x="579" y="150" width="56" height="46" rx="4" fill="#e9e5dd" stroke="#b8b1a5" stroke-dasharray="4 3"/>
+  <text class="mono" x="607.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">10</text>
+  <text class="mono" x="607.0" y="184" text-anchor="middle" fill="#9a6b1f" font-size="8px">tool</text>
+  <rect x="638" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="666.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">11</text>
+  <text class="mono" x="666.0" y="184" text-anchor="middle" fill="#1f6f6b" font-size="8px">usr</text>
+  <rect x="697" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="725.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">12</text>
+  <text class="mono" x="725.0" y="184" text-anchor="middle" fill="#2d3142" font-size="8px">asst</text>
+  <rect x="756" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="784.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">13</text>
+  <text class="mono" x="784.0" y="184" text-anchor="middle" fill="#1f6f6b" font-size="8px">usr</text>
+  <rect x="815" y="150" width="56" height="46" rx="4" fill="#fff" stroke="#c9ced8"/>
+  <text class="mono" x="843.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">14</text>
+  <text class="mono" x="843.0" y="184" text-anchor="middle" fill="#2d3142" font-size="8px">asst</text>
+  <rect x="874" y="150" width="56" height="46" rx="4" fill="#f8ddd4" stroke="#bf4520"/>
+  <text class="mono" x="902.0" y="167" text-anchor="middle" fill="#5a6580" font-size="7px">15</text>
+  <text class="mono" x="902.0" y="184" text-anchor="middle" fill="#bf4520" font-size="8px">sum</text>
+  <path d="M284,204 L284,210 L635,210 L635,204" fill="none" stroke="#5a6580" stroke-width="1"/>
+  <text class="lbl" x="459.5" y="226" text-anchor="middle">被遮蔽：仍留在日志，deriveMessages 不再返回</text>
+  <text class="lbl" x="920" y="140" text-anchor="end" fill="#bf4520">第 15 条：摘要 + replace 操作</text>
+  <path d="M480,240 L480,296" fill="none" stroke="#2d3142" stroke-width="1.3" marker-end="url(#f3-ai)"/>
+  <text class="lbl" x="492" y="270">deriveMessages() 按 surface 顺序投影</text>
+  <text class="ttl" x="48" y="320">Surface：模型实际看到的消息序列</text>
+  <rect x="48" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="91.0" y="358" text-anchor="middle" fill="#6b4f8a" font-size="9px">system 0</text>
+  <text class="mono" x="91.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 1</text>
+  <rect x="144" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="187.0" y="358" text-anchor="middle" fill="#1f6f6b" font-size="9px">user</text>
+  <text class="mono" x="187.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 2</text>
+  <rect x="240" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="283.0" y="358" text-anchor="middle" fill="#2d3142" font-size="9px">assistant</text>
+  <text class="mono" x="283.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 3</text>
+  <rect x="336" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="379.0" y="358" text-anchor="middle" fill="#9a6b1f" font-size="9px">tool</text>
+  <text class="mono" x="379.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 4</text>
+  <rect x="432" y="336" width="86" height="54" rx="5" fill="#f8ddd4" stroke="#bf4520"/>
+  <text class="ttl" x="475.0" y="358" text-anchor="middle" fill="#bf4520" font-size="9px">summary</text>
+  <text class="mono" x="475.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 15</text>
+  <rect x="528" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="571.0" y="358" text-anchor="middle" fill="#1f6f6b" font-size="9px">user</text>
+  <text class="mono" x="571.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 11</text>
+  <rect x="624" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="667.0" y="358" text-anchor="middle" fill="#2d3142" font-size="9px">assistant</text>
+  <text class="mono" x="667.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 12</text>
+  <rect x="720" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="763.0" y="358" text-anchor="middle" fill="#1f6f6b" font-size="9px">user</text>
+  <text class="mono" x="763.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 13</text>
+  <rect x="816" y="336" width="86" height="54" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="859.0" y="358" text-anchor="middle" fill="#2d3142" font-size="9px">assistant</text>
+  <text class="mono" x="859.0" y="376" text-anchor="middle" fill="#5a6580" font-size="7px">seq 14</text>
+  <path d="M48,398 L48,404 L902,404 L902,398" fill="none" stroke="#c9ced8" stroke-width="1"/>
+  <text class="lbl" x="478" y="420" text-anchor="middle">9 个节点；摘要节点是 user 角色，排在保留区之前</text>
+  <text class="ttl" x="48" y="442">KV 前缀复用</text>
+  <rect x="48" y="452" width="390" height="18" rx="4" fill="#dceceb" stroke="#1f6f6b"/>
+  <text class="lbl" x="243" y="465" text-anchor="middle" fill="#1f6f6b">可复用：seq 1–4 的 token 前缀</text>
+  <rect x="438" y="452" width="464" height="18" rx="4" fill="#f3e2dc" stroke="#bf4520"/>
+  <text class="lbl" x="670" y="465" text-anchor="middle" fill="#bf4520">从第一条被改写消息起失效：摘要请求要重新建立缓存</text>
+  <line x1="48" y1="502" x2="912" y2="502" stroke="#c9ced8"/>
+  <text class="b" x="48" y="524">· 替换只接受 { op:&#x27;replace&#x27;, startSeq, endSeq }，闭区间，按当前 surface 顺序解释；重复回放结果确定。</text>
+  <text class="b" x="48" y="546">· compaction/start、compaction/summary、compaction/end 都只写日志，永远不出现在 surface 上。</text>
+  <text class="b" x="48" y="568">· 因此「压缩后模型看到什么」可被日志完整重建：一条摘要消息 + 未被遮蔽的节点。</text>
+</svg>

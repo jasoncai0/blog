@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="f8-ttl f8-desc">
+  <title id="f8-ttl">一轮里的三个注入点：装配、回收、投影</title>
+  <desc id="f8-desc">记忆不是「读一次存起来」，而是在 turn/step 的固定位置被重新装配；三处位置决定它能活多久。</desc>
+  <style>
+    text { font-family: 'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif; fill:#2d3142; }
+    .mono { font-family:'Geist Mono','SF Mono',ui-monospace,monospace; }
+    .k { font-size:8px; letter-spacing:.16em; fill:#5a6580; }
+    .h { font-size:16px; font-weight:600; }
+    .s { font-size:9px; fill:#5a6580; }
+    .b { font-size:9px; fill:#5a6580; }
+    .ttl { font-size:10px; font-weight:600; }
+    .lbl { font-size:7.5px; fill:#5a6580; }
+    .tag { font-size:7.5px; letter-spacing:.06em; }
+  </style>
+  <defs>
+    <marker id="f8-ai" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f8-aa" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f8-at" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f6f6b"/></marker>
+    <marker id="f8-am" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text class="k mono" x="48" y="38">MEMORY · TURN ASSEMBLY</text>
+  <text class="h" x="48" y="66">一轮里的三个注入点：装配、回收、投影</text>
+  <text class="s" x="48" y="86">规则在 pre-step 刷新，历史在 pre-step 回收，消息在请求前投影；工具结果回来后再走下一步</text>
+  <rect x="36" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="88.0" y="160" text-anchor="middle" font-size="9px">user/message</text>
+  <text class="lbl" x="88.0" y="178" text-anchor="middle">新输入</text>
+  <path d="M140,165 L148,165" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f8-am)"/>
+  <rect x="148" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="200.0" y="160" text-anchor="middle" font-size="9px">turn/start</text>
+  <text class="lbl" x="200.0" y="178" text-anchor="middle">开一轮</text>
+  <path d="M252,165 L260,165" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f8-am)"/>
+  <rect x="260" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="312.0" y="160" text-anchor="middle" font-size="9px">pre-step</text>
+  <text class="lbl" x="312.0" y="178" text-anchor="middle">规则 + 压缩</text>
+  <path d="M364,165 L372,165" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f8-am)"/>
+  <rect x="372" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="424.0" y="160" text-anchor="middle" font-size="9px">request/header</text>
+  <text class="lbl" x="424.0" y="178" text-anchor="middle">封装快照</text>
+  <path d="M476,165 L484,165" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f8-am)"/>
+  <rect x="484" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="536.0" y="160" text-anchor="middle" font-size="9px">surface</text>
+  <text class="lbl" x="536.0" y="178" text-anchor="middle">deriveMessages</text>
+  <path d="M588,165 L596,165" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f8-am)"/>
+  <rect x="596" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="648.0" y="160" text-anchor="middle" font-size="9px">LLM</text>
+  <text class="lbl" x="648.0" y="178" text-anchor="middle">模型请求</text>
+  <path d="M700,165 L708,165" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f8-am)"/>
+  <rect x="708" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="760.0" y="160" text-anchor="middle" font-size="9px">assistant</text>
+  <text class="lbl" x="760.0" y="178" text-anchor="middle">消息/工具</text>
+  <path d="M812,165 L820,165" fill="none" stroke="#5a6580" stroke-width="1.3" marker-end="url(#f8-am)"/>
+  <rect x="820" y="136" width="104" height="58" rx="5" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="872.0" y="160" text-anchor="middle" font-size="9px">tool/result</text>
+  <text class="lbl" x="872.0" y="178" text-anchor="middle">观察</text>
+  <path d="M872,194 C872,250 312,250 312,194" fill="none" stroke="#5a6580" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#f8-am)"/>
+  <text class="lbl" x="600" y="270" text-anchor="middle">step/end → 下一步（同一轮）</text>
+  <rect x="36" y="300" width="280" height="112" rx="6" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="52" y="324">① 装配持久规则</text>
+  <text class="b" x="52" y="348">· AGENTS.md / CLAUDE.md 链</text>
+  <text class="b" x="52" y="368">· 技能目录（name + desc）</text>
+  <text class="b" x="52" y="388">· 子目录触达后增量刷新</text>
+  <rect x="340" y="300" width="280" height="112" rx="6" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="356" y="324">② 回收历史</text>
+  <text class="b" x="356" y="348">· token meter 给 envelope 计价</text>
+  <text class="b" x="356" y="368">· ≥ min(0.8W, W−O−B) 触发</text>
+  <text class="b" x="356" y="388">· 锁 + 平衡边界 + 摘要 replace</text>
+  <rect x="644" y="300" width="280" height="112" rx="6" fill="#fff" stroke="#c9ced8"/>
+  <text class="ttl" x="660" y="324">③ 投影成请求</text>
+  <text class="b" x="660" y="348">· system 节点 0 永在</text>
+  <text class="b" x="660" y="368">· 摘要节点 + 保留尾部</text>
+  <text class="b" x="660" y="388">· 被遮蔽事件不再返回</text>
+  <line x1="88" y1="194" x2="176" y2="300" stroke="#5a6580" stroke-dasharray="3 3"/>
+  <line x1="312" y1="194" x2="480" y2="300" stroke="#5a6580" stroke-dasharray="3 3"/>
+  <line x1="536" y1="194" x2="784" y2="300" stroke="#5a6580" stroke-dasharray="3 3"/>
+  <rect x="36" y="446" width="888" height="56" rx="6" fill="#f7f8fa" stroke="#c9ced8"/>
+  <text class="ttl" x="52" y="468">checkpoint 三屏障（失败即不运行）</text>
+  <text class="b" x="52" y="490">模型流开始前 / 顶层工具执行前 / 每个 pre-step 边界；未持久化的状态不会先运行。</text>
+</svg>

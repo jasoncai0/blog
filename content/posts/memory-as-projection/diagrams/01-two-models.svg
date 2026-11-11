@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="650" viewBox="0 0 960 650" role="img" aria-labelledby="f1-ttl f1-desc">
+  <title id="f1-ttl">两种记忆模型：事件日志 vs 文件拼装</title>
+  <desc id="f1-desc">左侧 DeepSeek Harness 从仅追加的会话日志派生上下文；右侧 Claude Code 从磁盘上的规则、自动记忆与 transcript 拼装上下文。</desc>
+  <style>
+    text { font-family: 'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif; fill:#2d3142; }
+    .mono { font-family:'Geist Mono','SF Mono',ui-monospace,monospace; }
+    .k { font-size:8px; letter-spacing:.16em; fill:#5a6580; }
+    .h { font-size:16px; font-weight:600; }
+    .s { font-size:9px; fill:#5a6580; }
+    .b { font-size:9px; fill:#5a6580; }
+    .ttl { font-size:10px; font-weight:600; }
+    .lbl { font-size:7.5px; fill:#5a6580; }
+    .tag { font-size:7.5px; letter-spacing:.06em; }
+  </style>
+  <defs>
+    <marker id="f1-ai" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f1-aa" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f1-at" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f6f6b"/></marker>
+    <marker id="f1-am" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text class="k mono" x="48" y="38">MEMORY · DEEPSEEK HARNESS × CLAUDE CODE</text>
+  <text class="h" x="48" y="66">两种记忆模型：一个从日志派生，一个从磁盘拼装</text>
+  <text class="s" x="48" y="86">同一条记忆链，五个层次；差别在于「什么是事实」以及「谁在什么时候改写视图」</text>
+  <rect x="40" y="108" width="430" height="480" rx="8" fill="#fbfbfc" stroke="#c9ced8"/>
+  <rect x="490" y="108" width="430" height="480" rx="8" fill="#fbfbfc" stroke="#c9ced8"/>
+  <rect x="40" y="108" width="430" height="3" rx="1.5" fill="#1f6f6b"/>
+  <rect x="490" y="108" width="430" height="3" rx="1.5" fill="#bf4520"/>
+  <text class="tag mono" x="56" y="134" fill="#1f6f6b">DEEPSEEK HARNESS</text>
+  <text class="b" x="56" y="150">日志是事实，surface 是投影</text>
+  <text class="tag mono" x="506" y="134" fill="#bf4520">CLAUDE CODE</text>
+  <text class="b" x="506" y="150">磁盘是事实，上下文是拼装结果</text>
+  <rect x="56" y="166" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="56" y="166" width="3" height="64" rx="1.5" fill="#1f6f6b"/>
+  <text class="ttl" x="70" y="184" fill="#2d3142" font-size="10px">L1  持久层</text>
+  <text class="b" x="70" y="200">Session 日志：仅追加、zstd JSONL</text>
+  <text class="b" x="70" y="213">AGENTS.md / CLAUDE.md / SKILL.md</text>
+  <text class="b" x="70" y="226">session-query 的 FTS 索引</text>
+  <rect x="506" y="166" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="506" y="166" width="3" height="64" rx="1.5" fill="#bf4520"/>
+  <text class="ttl" x="520" y="184" fill="#2d3142" font-size="10px">L1  持久层</text>
+  <text class="b" x="520" y="200">transcript JSONL：~/.claude/projects</text>
+  <text class="b" x="520" y="213">CLAUDE.md：managed / user / project / local</text>
+  <text class="b" x="520" y="226">auto memory：MEMORY.md + 主题文件</text>
+  <path d="M255,230 L255,245" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f1-at)"/>
+  <path d="M705,230 L705,245" fill="none" stroke="#bf4520" stroke-width="1.3" marker-end="url(#f1-aa)"/>
+  <rect x="56" y="248" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="56" y="248" width="3" height="64" rx="1.5" fill="#1f6f6b"/>
+  <text class="ttl" x="70" y="266" fill="#2d3142" font-size="10px">L2  装配层</text>
+  <text class="b" x="70" y="282">agent-instructions：根→cwd 链、64KiB</text>
+  <text class="b" x="70" y="295">skill-filesystem：rank 100–600</text>
+  <text class="b" x="70" y="308">session-reference：跨会话快照</text>
+  <rect x="506" y="248" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="506" y="248" width="3" height="64" rx="1.5" fill="#bf4520"/>
+  <text class="ttl" x="520" y="266" fill="#2d3142" font-size="10px">L2  装配层</text>
+  <text class="b" x="520" y="282">启动加载 + @import（≤4 跳）</text>
+  <text class="b" x="520" y="295">skill 目录：name + description</text>
+  <text class="b" x="520" y="308">MEMORY.md 前 200 行或 25KB</text>
+  <path d="M255,312 L255,327" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f1-at)"/>
+  <path d="M705,312 L705,327" fill="none" stroke="#bf4520" stroke-width="1.3" marker-end="url(#f1-aa)"/>
+  <rect x="56" y="330" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="56" y="330" width="3" height="64" rx="1.5" fill="#1f6f6b"/>
+  <text class="ttl" x="70" y="348" fill="#2d3142" font-size="10px">L3  上下文层</text>
+  <text class="b" x="70" y="364">system 节点 0：渲染后的系统提示词</text>
+  <text class="b" x="70" y="377">user 基线：指令、技能目录、引用</text>
+  <text class="b" x="70" y="390">summary 节点：压缩检查点</text>
+  <rect x="506" y="330" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="506" y="330" width="3" height="64" rx="1.5" fill="#bf4520"/>
+  <text class="ttl" x="520" y="348" fill="#2d3142" font-size="10px">L3  上下文层</text>
+  <text class="b" x="520" y="364">system prompt + output style</text>
+  <text class="b" x="520" y="377">CLAUDE.md 作为一条 user 消息</text>
+  <text class="b" x="520" y="390">工具结果、文件读取、skills 正文</text>
+  <path d="M255,394 L255,409" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f1-at)"/>
+  <path d="M705,394 L705,409" fill="none" stroke="#bf4520" stroke-width="1.3" marker-end="url(#f1-aa)"/>
+  <rect x="56" y="412" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="56" y="412" width="3" height="64" rx="1.5" fill="#1f6f6b"/>
+  <text class="ttl" x="70" y="430" fill="#2d3142" font-size="10px">L4  回收层</text>
+  <text class="b" x="70" y="446">compaction seam：日志锁 + 平衡边界</text>
+  <text class="b" x="70" y="459">basic：0.8 阈值、16% 保留、8 节摘要</text>
+  <text class="b" x="70" y="472">ACP：wire 层增量折叠（本会话）</text>
+  <rect x="506" y="412" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="506" y="412" width="3" height="64" rx="1.5" fill="#bf4520"/>
+  <text class="ttl" x="520" y="430" fill="#2d3142" font-size="10px">L4  回收层</text>
+  <text class="b" x="520" y="446">auto-compact（接近上限时）</text>
+  <text class="b" x="520" y="459">/compact、/rewind summarize</text>
+  <text class="b" x="520" y="472">idle compaction：1h TTL 内压掉</text>
+  <path d="M255,476 L255,491" fill="none" stroke="#1f6f6b" stroke-width="1.3" marker-end="url(#f1-at)"/>
+  <path d="M705,476 L705,491" fill="none" stroke="#bf4520" stroke-width="1.3" marker-end="url(#f1-aa)"/>
+  <rect x="56" y="494" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="56" y="494" width="3" height="64" rx="1.5" fill="#1f6f6b"/>
+  <text class="ttl" x="70" y="512" fill="#2d3142" font-size="10px">L5  检索层</text>
+  <text class="b" x="70" y="528">deriveMessages / fork（前缀复制）</text>
+  <text class="b" x="70" y="541">session-query：search / trace</text>
+  <text class="b" x="70" y="554">decompress：块重新激活</text>
+  <rect x="506" y="494" width="398" height="64" rx="6" fill="#ffffff" stroke="#c9ced8"/>
+  <rect x="506" y="494" width="3" height="64" rx="1.5" fill="#bf4520"/>
+  <text class="ttl" x="520" y="512" fill="#2d3142" font-size="10px">L5  检索层</text>
+  <text class="b" x="520" y="528">/resume、/rewind、/branch</text>
+  <text class="b" x="520" y="541">按需读取 memory 主题文件</text>
+  <text class="b" x="520" y="554">cleanupPeriodDays 清理 transcript</text>
+  <line x1="48" y1="600" x2="912" y2="600" stroke="#c9ced8"/>
+  <text class="b" x="48" y="682">DSH：模型可见 ⇒ 已记录；压缩是 surface 上的一次 replace。Claude Code：文件在磁盘上，压缩后还要把规则重新读回来。</text>
+</svg>
