@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520" role="img" aria-labelledby="f1t f1d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f1t">Agent 循环的统一骨架</title>
+<desc id="f1d">上下文送入 LLM 生成 tool_use，harness 执行工具后把 tool_result 作为 observation 回灌上下文，进入下一次调用；没有 tool_use 时直接返回文本。</desc>
+<defs>
+  <marker id="f1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2d3142"/></marker>
+  <marker id="f1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#bf4520"/></marker>
+</defs>
+<rect width="960" height="520" fill="#f5f5f5"/>
+
+<text x="56" y="44" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">AGENT LOOP / ONE SKELETON</text>
+<text x="56" y="70" font-size="16" font-weight="600" fill="#2d3142">统一骨架：生成 → 执行 → 回灌</text>
+<text x="56" y="90" font-size="10.5" fill="#5a6580">三家 harness 的差异在宿主与持久化，不在循环形状</text>
+
+<rect x="96" y="238" width="790" height="238" rx="6" fill="none" stroke="#5a6580" stroke-width="1" stroke-dasharray="5 5" opacity="0.55"/>
+<text x="878" y="256" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9" fill="#bf4520">while (true)</text>
+
+<!-- context -->
+<rect x="110" y="130" width="300" height="80" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="126" y="152" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9" letter-spacing="0.8" fill="#5a6580">context / messages[]</text>
+<text x="126" y="174" font-size="9.5" fill="#2d3142">system · user · assistant(tool_use)</text>
+<text x="126" y="192" font-size="9.5" fill="#5a6580">tool_result · summary · …</text>
+
+<!-- LLM -->
+<rect x="110" y="250" width="300" height="80" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="126" y="276" font-size="13" font-weight="600" fill="#2d3142">LLM 生成</text>
+<text x="126" y="296" font-size="9.5" fill="#2d3142">thinking / text + tool_use</text>
+<text x="126" y="314" font-size="9.5" fill="#5a6580">一次调用，输入是整个 context</text>
+
+<line x1="260" y1="210" x2="260" y2="244" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f1a)"/>
+<text x="270" y="232" font-size="9" fill="#5a6580">prompt</text>
+
+<!-- decision -->
+<path d="M500 244 L546 290 L500 336 L454 290 Z" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="500" y="294" text-anchor="middle" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#2d3142">tool_use?</text>
+
+<line x1="410" y1="290" x2="448" y2="290" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f1a)"/>
+
+<!-- exit -->
+<rect x="640" y="262" width="200" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="656" y="285" font-size="11.5" font-weight="600" fill="#2d3142">return text</text>
+<text x="656" y="302" font-size="9" fill="#5a6580">end_turn / 无工具调用</text>
+<line x1="546" y1="290" x2="632" y2="290" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f1a)"/>
+<text x="580" y="282" font-size="9" fill="#5a6580">no</text>
+
+<!-- tools -->
+<rect x="110" y="380" width="300" height="80" rx="3" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+<text x="126" y="406" font-size="13" font-weight="600" fill="#2d3142">执行工具</text>
+<text x="126" y="426" font-size="9.5" fill="#2d3142">权限门 · 超时 · 幂等 · 沙箱</text>
+<text x="126" y="444" font-size="9.5" fill="#5a6580">harness 的副作用边界</text>
+
+<path d="M500 336 L500 420 L418 420" fill="none" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f1a)"/>
+<text x="510" y="366" font-size="9" fill="#5a6580">yes</text>
+
+<!-- observation back -->
+<path d="M110 420 L70 420 L70 170 L102 170" fill="none" stroke="#bf4520" stroke-width="1.6" marker-end="url(#f1m)"/>
+<text transform="rotate(-90 44 300)" x="44" y="300" text-anchor="middle" font-size="9" fill="#bf4520">observation 回灌</text>
+
+<!-- invariants -->
+<text x="640" y="140" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.4" fill="#5a6580">INVARIANTS</text>
+<text x="640" y="170" font-size="9.8" fill="#2d3142"><tspan font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" fill="#bf4520">01</tspan>  无状态：记忆只在 messages 里</text>
+<text x="640" y="198" font-size="9.8" fill="#2d3142"><tspan font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" fill="#bf4520">02</tspan>  每个 tool_use 都要有终态结果</text>
+<text x="640" y="226" font-size="9.8" fill="#2d3142"><tspan font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" fill="#bf4520">03</tspan>  终止条件是没有 tool_use</text>
+
+<text x="110" y="500" font-size="10.5" fill="#5a6580">回灌不是可选项：不写回，下一次调用看到的世界与上一次完全相同。</text>
+</svg>

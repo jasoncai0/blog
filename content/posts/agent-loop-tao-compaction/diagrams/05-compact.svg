@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" role="img" aria-labelledby="f5t f5d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f5t">compact 的四个步骤</title>
+<desc id="f5d">先按最近保留量切出边界并对齐到 assistant 消息，把原文归档，再抽取 pin 事实并写摘要，最后用摘要加尾部替换窗口并重估 token。</desc>
+<defs>
+  <marker id="f5a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2d3142"/></marker>
+  <marker id="f5r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#bf4520"/></marker>
+</defs>
+<rect width="960" height="400" fill="#f5f5f5"/>
+
+<text x="56" y="44" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">COMPACT() / FOUR STEPS</text>
+<text x="56" y="70" font-size="16" font-weight="600" fill="#2d3142">一次压缩的四个动作</text>
+<text x="56" y="90" font-size="10.5" fill="#5a6580">顺序不能换：先切边界，再归档，再摘要，最后才替换窗口</text>
+
+<!-- step 1 -->
+<rect x="60" y="112" width="190" height="120" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="76" y="138" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9" fill="#bf4520">01</text>
+<text x="98" y="138" font-size="11" font-weight="600" fill="#2d3142">切边界</text>
+<text x="76" y="164" font-size="9" fill="#2d3142">尾部回溯 keep=200 tok</text>
+<text x="76" y="184" font-size="9" fill="#5a6580">cut 对齐 assistant</text>
+<text x="76" y="204" font-size="9" fill="#5a6580">不切开 tool_call/result</text>
+
+<!-- step 2 -->
+<rect x="280" y="112" width="190" height="120" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="296" y="138" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9" fill="#bf4520">02</text>
+<text x="318" y="138" font-size="11" font-weight="600" fill="#2d3142">归档</text>
+<text x="296" y="164" font-size="9" fill="#2d3142">原文逐条写 JSONL</text>
+<text x="296" y="184" font-size="9" fill="#5a6580">runs/archive-&lt;mode&gt;.jsonl</text>
+<text x="296" y="204" font-size="9" fill="#5a6580">原始观察仍可回读</text>
+
+<!-- step 3 -->
+<rect x="500" y="112" width="190" height="120" rx="3" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+<text x="516" y="138" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9" fill="#bf4520">03</text>
+<text x="538" y="138" font-size="11" font-weight="600" fill="#2d3142">pin + 摘要</text>
+<text x="516" y="164" font-size="9" fill="#2d3142">正则抓 Error / path:line</text>
+<text x="516" y="184" font-size="9" fill="#5a6580">目标 · 已做 · 事实 · 状态</text>
+<text x="516" y="204" font-size="9" fill="#5a6580">pin 确定性抽取，不靠模型</text>
+
+<!-- step 4 -->
+<rect x="720" y="112" width="190" height="120" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="736" y="138" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9" fill="#bf4520">04</text>
+<text x="758" y="138" font-size="11" font-weight="600" fill="#2d3142">换窗口</text>
+<text x="736" y="164" font-size="9" fill="#2d3142">[system, summary] + tail</text>
+<text x="736" y="184" font-size="9" fill="#5a6580">记 keepID，重估 tokens</text>
+<text x="736" y="204" font-size="9" fill="#5a6580">前缀缓存失效，重付一次</text>
+
+<line x1="250" y1="172" x2="274" y2="172" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f5a)"/>
+<line x1="470" y1="172" x2="494" y2="172" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f5a)"/>
+<line x1="690" y1="172" x2="714" y2="172" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f5a)"/>
+
+<!-- read back -->
+<path d="M595 232 L595 310 L375 310 L375 238" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#f5r)"/>
+<text x="485" y="330" text-anchor="middle" font-size="9" fill="#bf4520">read_archive：摘要丢了事实时回读原文</text>
+
+<text x="736" y="300" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="10.5" fill="#bf4520">1609 → 342 tok</text>
+<text x="736" y="318" font-size="9" fill="#5a6580">demo 的 pinned 轨迹</text>
+
+<text x="60" y="376" font-size="10.5" fill="#5a6580">先归档再改写：改写一旦发生，摘要就是二手记忆，原始观察只剩归档里那一份。</text>
+</svg>

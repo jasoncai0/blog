@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="960" height="420" role="img" aria-labelledby="f3t f3d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f3t">一次性回答与循环的区别</title>
+<desc id="f3d">一次性回答从问题直接到答案，没有测量点；循环在执行动作后把观察回灌给模型，错误在每一轮被外部事实截断。</desc>
+<defs>
+  <marker id="f3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2d3142"/></marker>
+  <marker id="f3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#bf4520"/></marker>
+</defs>
+<rect width="960" height="420" fill="#f5f5f5"/>
+
+<text x="56" y="44" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">OPEN LOOP / CLOSED LOOP</text>
+<text x="56" y="70" font-size="16" font-weight="600" fill="#2d3142">开环与闭环：差别是有没有测量点</text>
+<text x="56" y="90" font-size="10.5" fill="#5a6580">多一轮循环不自动更可靠；只有观察真的能证伪，误差才会被截断</text>
+
+<!-- row 1 -->
+<text x="60" y="118" font-size="11" font-weight="600" fill="#2d3142">一次性回答（开环）</text>
+<rect x="60" y="130" width="140" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="130" y="163" text-anchor="middle" font-size="10.5" fill="#2d3142">问题</text>
+<rect x="230" y="130" width="140" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="300" y="163" text-anchor="middle" font-size="10.5" font-weight="600" fill="#2d3142">LLM</text>
+<rect x="400" y="130" width="140" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="470" y="163" text-anchor="middle" font-size="10.5" fill="#2d3142">答案</text>
+<rect x="570" y="130" width="140" height="56" rx="3" fill="none" stroke="#5a6580" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="640" y="163" text-anchor="middle" font-size="10.5" fill="#5a6580">世界</text>
+
+<line x1="200" y1="158" x2="224" y2="158" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f3a)"/>
+<line x1="370" y1="158" x2="394" y2="158" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f3a)"/>
+<line x1="540" y1="158" x2="564" y2="158" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f3a)"/>
+<text x="716" y="158" font-size="9" fill="#5a6580">✕ 没有回流</text>
+
+<text x="60" y="212" font-size="9.8" fill="#5a6580">错误在生成时就被封存：没有测量点，事后自评与生成同分布，拿不到新信息。</text>
+
+<!-- row 2 -->
+<text x="60" y="256" font-size="11" font-weight="600" fill="#2d3142">循环（闭环）</text>
+<rect x="60" y="268" width="140" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="130" y="301" text-anchor="middle" font-size="10.5" fill="#2d3142">问题</text>
+<rect x="230" y="268" width="140" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="300" y="301" text-anchor="middle" font-size="10.5" font-weight="600" fill="#2d3142">LLM</text>
+<rect x="400" y="268" width="140" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="470" y="301" text-anchor="middle" font-size="10.5" fill="#2d3142">动作</text>
+<rect x="570" y="268" width="140" height="56" rx="3" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+<text x="640" y="301" text-anchor="middle" font-size="10.5" fill="#2d3142">世界</text>
+<rect x="740" y="268" width="140" height="56" rx="3" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+<text x="810" y="301" text-anchor="middle" font-size="10.5" font-weight="600" fill="#bf4520">观察</text>
+
+<line x1="200" y1="296" x2="224" y2="296" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f3a)"/>
+<line x1="370" y1="296" x2="394" y2="296" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f3a)"/>
+<line x1="540" y1="296" x2="564" y2="296" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f3a)"/>
+<line x1="710" y1="296" x2="734" y2="296" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f3a)"/>
+
+<path d="M810 324 L810 366 L300 366 L300 326" fill="none" stroke="#bf4520" stroke-width="1.6" marker-end="url(#f3r)"/>
+<text x="330" y="358" font-size="9.5" fill="#bf4520">observation 回灌：测量 + 改计划</text>
+
+<text x="60" y="402" font-size="10.5" fill="#5a6580">闭环的关键不是多画一条箭头，而是这条箭头进入了下一次调用的 messages。</text>
+</svg>
