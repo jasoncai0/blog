@@ -80,6 +80,15 @@
   "pre": 1,
   "table": 0
  },
+ "llm-training-pipeline": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 8,
+  "h3": 1,
+  "hr": 0,
+  "pre": 0,
+  "table": 4
+ },
  "opencode-architecture": {
   "figure": 4,
   "h1": 1,
