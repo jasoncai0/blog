@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="r8-title r8-desc">
+  <title id="r8-title">验证反思价值的 2×2</title>
+  <desc id="r8-desc">证据与反思两个因素各取有无，四个臂；B 与 D 的差距才是反思文本的增量。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">ABLATION</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">验证反思价值的 2×2</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">只测 A 和 D，会把重试的功劳记在反思头上</text>
+  <defs>
+    <marker id="f8-0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5d75"/></marker>
+    <marker id="f8-1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f8-2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+  </defs>
+  <line x1="210" y1="500" x2="880" y2="500" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#f8-0)"/>
+  <line x1="210" y1="500" x2="210" y2="140" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#f8-0)"/>
+  <rect x="210" y="320.0" width="335.0" height="180.0" rx="0" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="232" y="350.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" text-anchor="start" fill="#5a6580" letter-spacing="0.1em">A</text>
+  <text x="232" y="374.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">不重试、不反思</text>
+  <text x="232" y="394.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">单次生成的通过率</text>
+  <text x="232" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" font-weight="500" text-anchor="start" fill="#5a6580">基线</text>
+  <rect x="545.0" y="320.0" width="335.0" height="180.0" rx="0" fill="rgba(61,90,128,0.08)" stroke="#3d5a80" stroke-width="1"/>
+  <text x="567.0" y="350.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" text-anchor="start" fill="#3d5a80" letter-spacing="0.1em">B</text>
+  <text x="567.0" y="374.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">重试 + 证据</text>
+  <text x="567.0" y="394.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">失败输出与 diff 直接回灌</text>
+  <text x="567.0" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" font-weight="500" text-anchor="start" fill="#3d5a80">通常显著提升</text>
+  <rect x="210" y="140" width="335.0" height="180.0" rx="0" fill="rgba(191,69,32,0.07)" stroke="#bf4520" stroke-width="1"/>
+  <text x="232" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" text-anchor="start" fill="#bf4520" letter-spacing="0.1em">C</text>
+  <text x="232" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">反思，不给新证据</text>
+  <text x="232" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">「请你复盘一下」</text>
+  <text x="232" y="302.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" font-weight="500" text-anchor="start" fill="#bf4520">≈ 基线，可能更差</text>
+  <rect x="545.0" y="140" width="335.0" height="180.0" rx="0" fill="rgba(61,90,128,0.08)" stroke="#3d5a80" stroke-width="1"/>
+  <text x="567.0" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" text-anchor="start" fill="#3d5a80" letter-spacing="0.1em">D</text>
+  <text x="567.0" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" text-anchor="start" fill="#2d3142">完整回路</text>
+  <text x="567.0" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">证据 + 裁决 + 归因 + 修补</text>
+  <text x="567.0" y="302.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" font-weight="500" text-anchor="start" fill="#3d5a80">略高于 B，或持平</text>
+  <text x="377.5" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="middle" fill="#5a6580">无证据</text>
+  <text x="712.5" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="middle" fill="#5a6580">有证据</text>
+  <text x="0" y="0" transform="translate(186,160) rotate(-90)" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" text-anchor="end">有反思</text>
+  <text x="0" y="0" transform="translate(186,480) rotate(-90)" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" text-anchor="start">无反思</text>
+  <text x="0" y="0" transform="translate(168,320.0) rotate(-90)" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580" text-anchor="middle" letter-spacing="0.12em">REFLECTION</text>
+  <rect x="210" y="534" width="670" height="38" rx="6" fill="rgba(191,69,32,0.07)" stroke="#c9c2bb" stroke-width="1"/>
+  <text x="228" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" text-anchor="start" fill="#bf4520">先测 B，再测 D。B 已解释大部分提升时，反思文本只是装饰。</text>
+  <text x="228" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.8" font-weight="400" text-anchor="start" fill="#5a6580">C 通常最差：它花了钱，还可能把对的判断说服成错的。</text>
+</svg>

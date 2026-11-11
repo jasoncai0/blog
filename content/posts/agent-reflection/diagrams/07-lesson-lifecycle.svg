@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="r7-title r7-desc">
+  <title id="r7-title">经验的六个站与一条污染路径</title>
+  <desc id="r7-desc">从候选到退役：去重、定域、回放、消费记录；绕过前三站的自我叙述会变成教条。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">LESSON LIFECYCLE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">经验的六个站与一条污染路径</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">经验不是事实，是带证据、范围和失效期的假设</text>
+  <defs>
+    <marker id="f7-0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5d75"/></marker>
+    <marker id="f7-1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f7-2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+  </defs>
+  <rect x="48" y="150" width="128" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="112" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">候选</text>
+  <text x="112" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">只从已验证结果写</text>
+  <text x="112" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">测试绿 / 用户接受</text>
+  <line x1="176" y1="191" x2="190" y2="191" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#f7-0)"/>
+  <rect x="196" y="150" width="128" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="260" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">去重</text>
+  <text x="260" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">同一 when+do 合并</text>
+  <text x="260" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">支持数 ≥ 2 才升级</text>
+  <line x1="324" y1="191" x2="338" y2="191" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#f7-0)"/>
+  <rect x="344" y="150" width="128" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="408" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">定域</text>
+  <text x="408" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">repo / 语言 / 工具版本</text>
+  <text x="408" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">没有域就会乱用</text>
+  <line x1="472" y1="191" x2="486" y2="191" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#f7-0)"/>
+  <rect x="492" y="150" width="128" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="556" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">回放</text>
+  <text x="556" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">历史失败集上重跑</text>
+  <text x="556" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">不许弄坏别的</text>
+  <line x1="620" y1="191" x2="634" y2="191" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#f7-0)"/>
+  <rect x="640" y="150" width="128" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="704" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">消费</text>
+  <text x="704" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">记录 id 与胜负</text>
+  <text x="704" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">区分有用与被读过</text>
+  <line x1="768" y1="191" x2="782" y2="191" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#f7-0)"/>
+  <rect x="788" y="150" width="128" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="852" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2d3142">退役</text>
+  <text x="852" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">升级 / 两次失败</text>
+  <text x="852" y="223" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" font-weight="400" text-anchor="middle" fill="#5a6580">隔离或删除</text>
+  <path d="M852,232 L852,286 Q852,294 844,294 L120,294 Q112,294 112,286 L112,238" fill="none" stroke="#4f5d75" stroke-width="1.1" stroke-dasharray="4,4" marker-end="url(#f7-0)"/>
+  <text x="480" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" font-weight="400" text-anchor="middle" fill="#5a6580">新证据回流</text>
+  <text x="56" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="500" text-anchor="start" fill="#bf4520" letter-spacing="0.14em">污染路径</text>
+  <rect x="48" y="380" width="198" height="68" rx="6" fill="rgba(191,69,32,0.07)" stroke="#bf4520" stroke-width="1"/>
+  <text x="147" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" text-anchor="middle" fill="#bf4520">未验证的自述</text>
+  <text x="147" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">「我觉得问题是…」</text>
+  <line x1="246" y1="414" x2="264" y2="414" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f7-1)"/>
+  <rect x="270" y="380" width="198" height="68" rx="6" fill="rgba(191,69,32,0.07)" stroke="#bf4520" stroke-width="1"/>
+  <text x="369" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" text-anchor="middle" fill="#bf4520">跳过前三站</text>
+  <text x="369" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">没有回放，没有定域</text>
+  <line x1="468" y1="414" x2="486" y2="414" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f7-1)"/>
+  <rect x="492" y="380" width="198" height="68" rx="6" fill="rgba(191,69,32,0.07)" stroke="#bf4520" stroke-width="1"/>
+  <text x="591" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" text-anchor="middle" fill="#bf4520">反复检索</text>
+  <text x="591" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">越用越像真的</text>
+  <line x1="690" y1="414" x2="708" y2="414" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f7-1)"/>
+  <rect x="714" y="380" width="198" height="68" rx="6" fill="rgba(191,69,32,0.07)" stroke="#bf4520" stroke-width="1"/>
+  <text x="813" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" text-anchor="middle" fill="#bf4520">教条</text>
+  <text x="813" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#4f5d75">系统性地错</text>
+  <path d="M813,448 L813,492 Q813,500 805,500 L599,500 Q591,500 591,492 L591,456" fill="none" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="4,4" marker-end="url(#f7-1)"/>
+  <text x="702" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" font-weight="400" text-anchor="middle" fill="#bf4520">支持数 +1</text>
+  <line x1="48" y1="556" x2="912" y2="556" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="56" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" font-weight="400" text-anchor="start" fill="#4f5d75">只认外部证据、设支持数门槛、留失效期；两次应用失败就隔离。</text>
+  <text x="56" y="598" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" font-weight="400" text-anchor="start" fill="#5a6580">最贵的一次错误，是把一条只出现过一次的巧合，写成了全局规则。</text>
+</svg>

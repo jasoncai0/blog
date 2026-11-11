@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660" role="img" aria-labelledby="r5-title r5-desc">
+  <title id="r5-title">批判者的信息食谱</title>
+  <desc id="r5-desc">生成者的自述与置信度被挡在门外，只有验收标准、产物和原始证据能过闸；输出是裁决而不是重写。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.16em">CRITIC'S DIET</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" text-anchor="start" fill="#2d3142">批判者的信息食谱</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" text-anchor="start" fill="#5a6580">批判者的输入，一半决定了它的输出</text>
+  <defs>
+    <marker id="f5-0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5d75"/></marker>
+    <marker id="f5-1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f5-2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+  </defs>
+  <rect x="48" y="110" width="412" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="66" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="500" text-anchor="start" fill="#5a6580" letter-spacing="0.12em">ACTOR 能提供的</text>
+  <rect x="64" y="150" width="380" height="40" rx="5" fill="rgba(61,90,128,0.08)" stroke="none" stroke-width="1"/>
+  <text x="78" y="167" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="500" text-anchor="start" fill="#2d3142">验收标准原文</text>
+  <text x="78" y="181" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="start" fill="#5a6580">不是 agent 的转述</text>
+  <rect x="64" y="202" width="380" height="40" rx="5" fill="rgba(61,90,128,0.08)" stroke="none" stroke-width="1"/>
+  <text x="78" y="219" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="500" text-anchor="start" fill="#2d3142">产物：diff / 文件 / 输出</text>
+  <text x="78" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="start" fill="#5a6580">可被直接检查</text>
+  <rect x="64" y="254" width="380" height="40" rx="5" fill="rgba(61,90,128,0.08)" stroke="none" stroke-width="1"/>
+  <text x="78" y="271" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="500" text-anchor="start" fill="#2d3142">证据：失败测试、报错尾部</text>
+  <text x="78" y="285" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="start" fill="#5a6580">原文，不总结</text>
+  <rect x="500" y="110" width="412" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="518" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="500" text-anchor="start" fill="#bf4520" letter-spacing="0.12em">不进入批判者</text>
+  <rect x="516" y="150" width="380" height="40" rx="5" fill="rgba(191,69,32,0.07)" stroke="none" stroke-width="1"/>
+  <text x="530" y="167" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="500" text-anchor="start" fill="#2d3142">自我辩护：「我这样做是因为」</text>
+  <text x="530" y="181" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="start" fill="#5a6580">锚定，接受作者的框架</text>
+  <rect x="516" y="202" width="380" height="40" rx="5" fill="rgba(191,69,32,0.07)" stroke="none" stroke-width="1"/>
+  <text x="530" y="219" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="500" text-anchor="start" fill="#2d3142">置信度：「我很确定」</text>
+  <text x="530" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="start" fill="#5a6580">谄媚的入口</text>
+  <rect x="516" y="254" width="380" height="40" rx="5" fill="rgba(191,69,32,0.07)" stroke="none" stroke-width="1"/>
+  <text x="530" y="271" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="500" text-anchor="start" fill="#2d3142">上一轮批评全文</text>
+  <text x="530" y="285" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="start" fill="#5a6580">沿旧框架找问题</text>
+  <rect x="48" y="334" width="412" height="58" rx="6" fill="rgba(191,69,32,0.07)" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="66" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#bf4520">证据闸</text>
+  <text x="66" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#4f5d75">可被反驳 · 指向具体位置 · 原文</text>
+  <line x1="254" y1="310" x2="254" y2="328" stroke="#3d5a80" stroke-width="1.2" marker-end="url(#f5-2)"/>
+  <rect x="500" y="334" width="412" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="518" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" text-anchor="start" fill="#5a6580">丢弃</text>
+  <text x="518" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" text-anchor="start" fill="#5a6580">三条都不带信息，只带立场</text>
+  <line x1="706" y1="310" x2="706" y2="328" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#f5-1)"/>
+  <line x1="254" y1="392" x2="254" y2="428" stroke="#3d5a80" stroke-width="1.2" marker-end="url(#f5-2)"/>
+  <rect x="48" y="428" width="864" height="128" rx="6" fill="#ffffff" stroke="#3d5a80" stroke-width="1.2"/>
+  <text x="66" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="500" text-anchor="start" fill="#3d5a80" letter-spacing="0.12em">CRITIC 看到的</text>
+  <text x="66" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#2d3142">验收标准 · 产物 · 原始证据 · 约束（不许改测试、预算）</text>
+  <text x="66" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" font-weight="400" text-anchor="start" fill="#5a6580">没有：作者自述、置信度、上一轮的完整批评、参考答案</text>
+  <text x="66" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" font-weight="400" text-anchor="start" fill="#4f5d75">因此它能说「没找到」，但必须交代检查了哪些边界。</text>
+  <text x="66" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" font-weight="400" text-anchor="start" fill="#5a6580">Panickssery 等：模型能识别并偏好自己的生成；藏掉作者身份，偏好会下降。</text>
+  <rect x="48" y="576" width="864" height="44" rx="6" fill="rgba(191,69,32,0.07)" stroke="#c9c2bb" stroke-width="1"/>
+  <text x="66" y="596" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" text-anchor="start" fill="#bf4520">输出：verdict + evidence 指针 + 可证伪的 prediction</text>
+  <text x="66" y="611" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.8" font-weight="400" text-anchor="start" fill="#5a6580">不是重写，也不是一段 800 字的评价。</text>
+</svg>
