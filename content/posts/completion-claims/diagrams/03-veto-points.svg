@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600">
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="52" font-family="'Geist Mono','SF Mono',monospace" font-size="9" letter-spacing="2.4" fill="#8a8f9c">CLAUDE CODE · FOUR PLACES TO SAY NO</text>
+  <text x="48" y="88" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">"做完"可以被四个位置驳回</text>
+  <text x="48" y="113" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" fill="#5a6580">注意力从"跑没跑"移到了"谁有权不信"</text>
+
+  <!-- timeline -->
+  <line x1="60" y1="164" x2="900" y2="164" stroke="#c9ccd4" stroke-width="1"/>
+  <text x="60" y="152" font-family="'Geist Mono','SF Mono',monospace" font-size="9" fill="#8a8f9c">PLAN</text>
+  <text x="290" y="152" font-family="'Geist Mono','SF Mono',monospace" font-size="9" fill="#8a8f9c">EXECUTE</text>
+  <text x="520" y="152" font-family="'Geist Mono','SF Mono',monospace" font-size="9" fill="#8a8f9c">STOP</text>
+  <text x="748" y="152" font-family="'Geist Mono','SF Mono',monospace" font-size="9" fill="#8a8f9c">AFTER</text>
+
+  <circle cx="60" cy="164" r="4" fill="#2d3142"/>
+  <circle cx="300" cy="164" r="4" fill="#2d3142"/>
+  <circle cx="536" cy="164" r="4" fill="#2d3142"/>
+  <circle cx="772" cy="164" r="4" fill="#bf4520"/>
+
+  <!-- card 1 -->
+  <rect x="48" y="196" width="212" height="150" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="64" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">计划里必须写验证方法</text>
+  <text x="64" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">ExitPlanMode 的计划要求里</text>
+  <text x="64" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">明确列了一条：</text>
+  <text x="64" y="286" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">"Include a verification section</text>
+  <text x="64" y="300" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">describing how to test the</text>
+  <text x="64" y="314" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">changes end-to-end"</text>
+  <text x="64" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520">在动手之前就固定了"怎么算成了"</text>
+
+  <!-- card 2 -->
+  <rect x="288" y="196" width="212" height="150" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="304" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">主动性档位改写收尾</text>
+  <text x="304" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">proactive 档：</text>
+  <text x="304" y="264" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">"run the tests and fix what</text>
+  <text x="304" y="278" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">fails, fix lint and type errors"</text>
+  <text x="304" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">default 档：</text>
+  <text x="304" y="314" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">"run the checks the task needs"</text>
+  <text x="304" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520">同一件事，三个档位三种默认值</text>
+
+  <!-- card 3 -->
+  <rect x="528" y="196" width="212" height="150" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="544" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">Hook 能把结束挡回去</text>
+  <text x="544" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">Stop hook 可以拒绝这一轮结束：</text>
+  <text x="544" y="266" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">"A hook blocked the turn</text>
+  <text x="544" y="280" font-family="'Geist Mono','SF Mono',monospace" font-size="8.5" fill="#2d3142">from ending"</text>
+  <text x="544" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">有上限与防重入：</text>
+  <text x="544" y="314" font-family="'Geist Mono','SF Mono',monospace" font-size="7.5" fill="#2d3142">STOP_HOOK_BLOCK_CAP + stop_hook_active</text>
+  <text x="544" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520">唯一能"强制模型继续"的一层</text>
+
+  <!-- card 4 -->
+  <rect x="768" y="196" width="144" height="150" rx="6" fill="#faf0ec" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="782" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">事后挑错</text>
+  <text x="782" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">研究子系统里有一组</text>
+  <text x="782" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">对抗验证代理：</text>
+  <text x="782" y="282" font-family="'Geist Mono','SF Mono',monospace" font-size="8" fill="#2d3142">finders → single-vote</text>
+  <text x="782" y="296" font-family="'Geist Mono','SF Mono',monospace" font-size="8" fill="#2d3142">verify</text>
+  <text x="782" y="316" font-family="'Geist Mono','SF Mono',monospace" font-size="8" fill="#2d3142">claims refuted by</text>
+  <text x="782" y="330" font-family="'Geist Mono','SF Mono',monospace" font-size="8" fill="#2d3142">adversarial verification</text>
+
+  <!-- bottom note -->
+  <rect x="48" y="384" width="864" height="120" rx="6" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+  <text x="66" y="410" font-family="'Geist Mono','SF Mono',monospace" font-size="9" letter-spacing="2" fill="#8a8f9c">WHAT EACH LAYER CAN AND CANNOT DO</text>
+  <text x="66" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">计划里的验证方法是承诺，不是执行；主动性档位是提示，模型可以绕；</text>
+  <text x="66" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">Stop hook 是强制，但它只能要求"继续"，不能判断"对不对"；对抗验证器只活在一个子系统里。</text>
+  <text x="66" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#bf4520">四层加起来，仍然没有一层能回答"这次改动是否正确"——它们只能回答"有没有检查过"。</text>
+
+  <text x="48" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#5a6580">顺带一句原文：「Finishing a task is not confirmation.」——任务做完，不等于授权提交。</text>
+  <text x="48" y="574" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#5a6580">完成与授权被拆成两个独立判断，这是这套设计里最容易被忽略的一处。</text>
+</svg>
