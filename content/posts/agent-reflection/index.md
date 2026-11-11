@@ -1,7 +1,7 @@
 ---
 title: "反思不是再想一遍：Agent 反思机制的证据、归因与沉淀"
 date: "2026-11-11T16:51:00+08:00"
-summary: "把 agent 的 reflection 拆成三问：看到了什么新证据、错在哪一层、留下了什么。讨论 oracle 谱系、归因诊断、批判者的信息食谱、结构化裁决、回路预算与经验污染，附十张图、一段可落地伪代码、一张上线检查清单，以及 OpenCode 源码里的五个接缝。"
+summary: "把 agent 的 reflection 拆成三问：看到了什么新证据、错在哪一层、留下了什么。讨论 oracle 谱系、归因诊断、批判者的信息食谱、结构化裁决、回路预算与经验污染，附十二张图、一段可落地伪代码、一张上线检查清单，以及 OpenCode 源码里的五个接缝。"
 description: "Agent 反思机制的工程拆解：证据、归因、沉淀三问，对照 OpenCode 源码看真实 harness 的接缝与缺口。"
 tags: ["agent", "architecture", "planning", "harness"]
 slug: "agent-reflection"
@@ -513,6 +513,11 @@ if (llmFailure && llmError && retry?.retry && !recorded.outputStarted) {
 
 这就是「反思改变控制流」的最小实现：一个枚举、一个 `match`、三个守卫。它不判断「实现错还是计划错」，但它保证不同的失败不会走同一条路。
 
+把时间顺序展开，就是下面这张图。
+
+{{< fig "diagrams/11-attempt-sequence.svg" "一次 attempt 从请求到出口的时序。上半段是正常路径：模型流、工具调用、结果写回；下半段只分叉最容易被混为一谈的两条失败路径——未产出时重跑整个 step，已产出时保留半截、发 synthetic 继续。其他四个出口走同一张分诊台。" >}}
+
+
 ### 15.3 上下文失败：compaction 是另一种修复
 
 `Compacted` 修的不是任务，是上下文。它的触发条件很具体：provider 拒绝请求，且这次 attempt 还没产出任何 token。没产出才敢压，产出了就得保留。
@@ -579,6 +584,11 @@ if (restore.size) yield* snapshot.restore({ files: restore })
 这时消息还在，文件已经回到边界，用户可以反悔。`commit` 才真正丢分支：`projector.ts:1131` 会删掉边界及之后的 message、inbox，释放 blob，并回退 instruction 与文件引用。`clear` 则撤销文件恢复，把 revert 置空。
 
 两阶段做得干净：`stage` 可逆，`commit` 不可逆，中间有一次人工确认的机会。但它没有为被删的轨迹留证据——`commit` 之后，失败过程只存在于日志和快照里。要落实「丢分支、留证据」，得在 commit 前把证据写到外部。机制只做了前半句。
+
+把这两个阶段展开，就是下面这张图。
+
+{{< fig "diagrams/12-revert-sequence.svg" "revert 的两阶段时序。stage 先恢复文件、记录边界，消息仍在，可以反悔；commit 才删除边界及之后的 message 与 inbox、释放 blob；clear 则撤销文件恢复、清掉 revert。stage 与 commit 之间是唯一的人工确认窗口。" >}}
+
 
 ### 15.6 刹车：max steps 与 restart attempts
 
