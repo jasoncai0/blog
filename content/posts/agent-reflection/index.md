@@ -1,13 +1,13 @@
 ---
 title: "反思不是再想一遍：Agent 反思机制的证据、归因与沉淀"
 date: "2026-11-11T16:51:00+08:00"
-summary: "把 agent 的 reflection 拆成三问：看到了什么新证据、错在哪一层、留下了什么。讨论 oracle 谱系、归因诊断、批判者的信息食谱、结构化裁决、回路预算与经验污染，附八个判断框架、一段可落地伪代码和一张上线检查清单。"
-description: "Agent 反思机制的工程拆解：证据、归因、沉淀三问，以及让反思从剧场变成实验的接线方式。"
+summary: "把 agent 的 reflection 拆成三问：看到了什么新证据、错在哪一层、留下了什么。讨论 oracle 谱系、归因诊断、批判者的信息食谱、结构化裁决、回路预算与经验污染，附十张图、一段可落地伪代码、一张上线检查清单，以及 OpenCode 源码里的五个接缝。"
+description: "Agent 反思机制的工程拆解：证据、归因、沉淀三问，对照 OpenCode 源码看真实 harness 的接缝与缺口。"
 tags: ["agent", "architecture", "planning", "harness"]
 slug: "agent-reflection"
 ---
 
-> 这不是一篇论文综述，它讨论一个具体的工程问题：agent 在一轮里失败了，怎么让下一轮真的不一样。文中引用 Reflexion、Self-Refine、CRITIC 这些工作，只取它们的机制与作者报告的数字，不做横向排名；所有阈值都是默认值，不是实测最优。
+> 这不是一篇论文综述，它讨论一个具体的工程问题：agent 在一轮里失败了，怎么让下一轮真的不一样。文中引用 Reflexion、Self-Refine、CRITIC 这些工作，只取它们的机制与作者报告的数字，不做横向排名；所有阈值都是默认值，不是实测最优。后半段拿 OpenCode 的源码做对照，看这些机制在真实 harness 里长什么样。
 
 ## 0. 先说结论
 
@@ -409,6 +409,224 @@ def run_task(task, max_rounds=3):
 10. 有没有测过「只重试、不反思」这一臂？
 
 反思的价值不在那一刻的自我批评，而在它是否改变了下一个动作、下一次尝试、下一类任务。三者一个都没变，那段文字就只是让日志更长。
+
+## 15. 代码里的反思：OpenCode 的五个接缝
+
+> 这一节是文章发出来之后补的。前面的框架是归纳；这一节找一套真实源码做对照。样本是 [OpenCode](https://github.com/anomalyco/opencode/tree/a687c047afc78771fbe96bb4dca99a60fea42a2c)（commit `a687c047`），只读机制，不评价产品；路径都相对于 `packages/core/src/`。
+
+### 15.1 先修正一个分类：反思不是 TAO 的第四个格子
+
+一个常见的误解，是把反思画成 ReAct 循环里的第四个格子：
+
+`Thought → Action → Observation → Reflection`
+
+这样画很顺，但会把实现带偏：好像只要在 observation 后面加一段「请你复盘」，反思就接上了。
+
+更准确的画法是两层。一阶是 TAO，负责把事做完；二阶消费一阶的轨迹和证据，产出对下一轮 T/A/O 的修改。反思不是第四个格子，是套在循环外面的那层回路。
+
+{{< fig "diagrams/09-tao-meta.svg" "反思与 TAO 的关系。上面是一阶任务循环，下面是二阶反思循环；证据从 Observation 分叉，裁决改写控制流，再回到 Thought 或 Action。OpenCode 的代码实现的是下面这条回路，而且「沉淀」那一格是虚线：它有压缩摘要，没有经验库。" >}}
+
+落到实现，它可能出现在五个地方：
+
+| 落点 | 形态 | 例子 |
+| --- | --- | --- |
+| Thought | 模型在同一个上下文里自我批评 | 「等等，这个假设不成立」 |
+| Action | 调一个 critic / verifier 工具 | 跑测试、读文档、开子会话 |
+| Observation | 环境返回的失败信号 | 报错、diff、退出码 |
+| Harness | 不改模型，直接改控制流 | 重试、压缩、回滚、停止 |
+| Offline | 跨任务改策略 | 改 prompt、改工具、改流程 |
+
+所以「反思是 action 的一种实践」只覆盖了第二行。OpenCode 的代码里，这五个落点都能找到影子；但没有一个函数叫 `reflect`。它把反思拆成了接缝。
+
+### 15.2 一次 attempt 的出口是一个代数类型
+
+先看 `runner/step.ts:30`。一次 attempt 结束，返回的不是一段文本，而是一个六选一的类型：
+
+```ts
+export type Outcome = Data.TaggedEnum<{
+  Completed: { readonly needsContinuation: boolean }
+  Retry: { readonly error: SessionError.Error; readonly decision: SessionRunnerRetry.Decision }
+  Continue: {
+    readonly error: SessionError.Error
+    readonly decision: SessionRunnerRetry.Decision
+  }
+  RecoverFull: {}
+  Compacted: {}
+  OutputLimit: { readonly needsContinuation: boolean }
+}>
+```
+
+`attempt` 覆盖一次模型流，以及它派生出来的工具调用。六个出口的含义：
+
+| Outcome | 触发条件 | 执行 |
+| --- | --- | --- |
+| `Completed` | 没有 failure | 需要就继续下一 step，否则回 idle |
+| `Retry` | 可重试失败，且尚未产出 | 退避后重跑同一个 step |
+| `Continue` | 可重试失败，且已经产出 | 保留半截，发「继续」，新建 assistant message |
+| `RecoverFull` | Transport 失败，`recovery` 为 `retry-full` 或 `rotate-and-retry-full`，且尚未产出 | 下一圈整请求重发 |
+| `Compacted` | provider 报 context overflow，尚未产出，压缩成功 | 带压缩后的上下文重跑 |
+| `OutputLimit` | `finish = length` | 续写两次仍截断就失败，否则续写 |
+
+处理在 `runner/llm.ts:318` 的 `$match` 里。每个分支改的东西不一样：`Retry` 只等退避，不新建 message；`Continue` 会发一条 synthetic 的「继续」，并新建 message；`Compacted` 关掉 overflow 恢复，新建 message；`RecoverFull` 关掉 continuation 恢复，让下一圈整请求重发；`OutputLimit` 续写两次仍截断就抛 `output-limit`；`Completed` 在回 idle 前还会预计算下一次压缩摘要。
+
+{{< fig "diagrams/10-outcomes.svg" "一次 attempt 的六个出口。分类发生在写任何修补之前：先判断有没有失败、失败属于哪一类、失败前有没有产出，再决定重跑、续跑、压缩还是收尾。图里的条件都来自 runner/step.ts；不满足任何分支的失败直接上抛。" >}}
+
+分支不是拍脑袋的。源码里有三个守卫：
+
+```ts
+if (
+  !publisher.record().outputStarted &&
+  isContextOverflowFailure(streamFailure) &&
+  (yield* restore(input.recoverOverflow))
+) {
+  // provider rejected the request as too long; compact and retry
+  return Outcome.Compacted()
+}
+
+if (
+  input.recoverContinuation &&
+  llmFailure?.reason._tag === "Transport" &&
+  (llmFailure.reason.recovery === "retry-full" ||
+    llmFailure.reason.recovery === "rotate-and-retry-full") &&
+  !recorded.outputStarted
+)
+  return Outcome.RecoverFull()
+
+const retry =
+  llmFailure && llmError && !isContextOverflowFailure(llmFailure)
+    ? yield* restore(
+        input.retry(
+          llmFailure,
+          llmError,
+          SessionRunnerRetry.isRetryable(llmFailure) ||
+            (recorded.outputStarted && isInterruptedStream(llmFailure)),
+        ),
+      )
+    : undefined
+if (llmFailure && llmError && retry?.retry && !recorded.outputStarted) {
+  yield* publisher.startAssistant()
+  return Outcome.Retry({ error: llmError, decision: retry })
+}
+```
+
+三个判断决定了分支：有没有失败、失败属于哪一类、失败前有没有产出。最值得抄的是 `outputStarted`：它把「重跑」分成两种——没产出就重跑整个 step，已经产出就保留半截续跑。没有这个布尔值，重试要么丢掉有用的半截，要么把半截和重跑叠在一起，上下文里出现两份互相矛盾的回答。
+
+这就是「反思改变控制流」的最小实现：一个枚举、一个 `match`、三个守卫。它不判断「实现错还是计划错」，但它保证不同的失败不会走同一条路。
+
+### 15.3 上下文失败：compaction 是另一种修复
+
+`Compacted` 修的不是任务，是上下文。它的触发条件很具体：provider 拒绝请求，且这次 attempt 还没产出任何 token。没产出才敢压，产出了就得保留。
+
+压缩的参数都是硬编码的：
+
+```ts
+const RESERVE_MIN = 16_000
+const RESERVE_SHARE = 0.15
+const PRECOMPUTE_LEAD = 60_000
+const PRECOMPUTED_TAIL_SHARE = 0.4
+const PRECOMPUTE_MAX_FAILURES = 2
+```
+
+翻成中文：给模型的窗口至少留 15%，且不少于 16K；离上限还有 60K 时就在后台写摘要；摘要换入时最多保留 40% 的尾巴；后台摘要连续失败两次就不再启动。被 provider 拒绝后，下一次尝试按 `0.85 / 0.7 / 0.5 / 0.35` 逐级缩小请求。它甚至看 prompt cache 的剩余寿命：只有最近一次响应的缓存还剩 30 秒以上，才启动后台摘要。
+
+摘要提示词里有一条很关键：
+
+```text
+- Do not mention the summary process or that context was compacted.
+```
+
+这是一个信息屏障。如果让 actor 知道「你刚被压缩过」，它会开始表演记忆：复述摘要、猜自己忘了什么、要求重读文件。压缩本来是为了让它继续干活，不是让它意识到自己失忆。所以摘要 prompt 还要求「不要继续任务、不要调用工具、只返回结构化摘要」。
+
+这一段不是任务反思，但它和反思共用一套接线：触发条件、预算、保留区、失败上限、信息屏障。把这套接线搬到任务失败上，就是 §8 的预算与停止；搬到经验上，就是 §9 的写入门槛。
+
+它缺的也很明显：压缩只知道「太长」，不知道「为什么长」。是工具输出太大、读文件太多，还是计划本身在绕路？它修症状，不修原因。这是后面「归因缺口」的一半。
+
+证据侧还有一个很小的机制。`tool-output.ts` 把超过 2000 行或 50 KiB 的工具输出截断，原文落盘，模型看到的是：
+
+```ts
+const marker = `[showing ${shown} of ${lines.length}; full output saved to ${file}]`
+```
+
+这是「原文 + 指针」，不是「摘要」。摘要会丢证据；指针让模型知道去哪拿全文。反思要的是后者。
+
+### 15.4 独立视角：subagent 是 critic 的原语，不是 critic
+
+OpenCode 的核心代码里没有内建的 critic agent。它提供的是 `subagent`：在子会话里跑另一个 agent。工具描述里有一句关键的话：
+
+```ts
+"New child sessions start with fresh context, so include all relevant context and instructions when you don't pass a sessionID.",
+```
+
+「fresh context」是 critic 的第一价值：不是更聪明，是没看过 actor 的自我辩护。同一个上下文里的第二次表态，通常只是第一次表态的加强版；换一个干净上下文，至少有机会问出不同的问题。
+
+但它也把责任推给了调用方：证据、问题、裁决格式都要自己给。原语有了，信息食谱没做，多 agent 评审就会退化成「另一个模型也说不错」。这正好对应 §7：critic 的输入，一半决定了它的输出。
+
+### 15.5 状态：revert 把回滚做成两阶段
+
+`session/revert.ts` 的 `stage` 做三件事：算边界、恢复文件、记下 revert。
+
+```ts
+const original = input.session.revert?.snapshot ?? (yield* snapshot.capture())
+const next = yield* plan(database.db, { sessionID: input.session.id, messageID: input.messageID })
+const restore = new Map<RelativePath, Snapshot.ID>()
+if (original) {
+  for (const file of input.session.revert?.files ?? []) restore.set(RelativePath.make(file.file), original)
+}
+if (input.files !== false) for (const [file, tree] of next) restore.set(file, tree)
+if (restore.size) yield* snapshot.restore({ files: restore })
+```
+
+这时消息还在，文件已经回到边界，用户可以反悔。`commit` 才真正丢分支：`projector.ts:1131` 会删掉边界及之后的 message、inbox，释放 blob，并回退 instruction 与文件引用。`clear` 则撤销文件恢复，把 revert 置空。
+
+两阶段做得干净：`stage` 可逆，`commit` 不可逆，中间有一次人工确认的机会。但它没有为被删的轨迹留证据——`commit` 之后，失败过程只存在于日志和快照里。要落实「丢分支、留证据」，得在 commit 前把证据写到外部。机制只做了前半句。
+
+### 15.6 刹车：max steps 与 restart attempts
+
+两个很小的机制，决定了反思会不会跑到改坏为止。
+
+`runner/max-steps.ts` 在步数用完时注入一段提示：工具禁用，要求总结已完成、未完成和建议，最后一句是「任何工具调用都是 critical violation」。它不是建议，是硬闸。
+
+`session/execution/restart.ts` 给每个 turn 一个持久化的重启预算：`DEFAULT_MAX_ATTEMPTS = 10`。一个 turn 被恢复超过 10 次，就直接终止，返回「Execution was interrupted repeatedly and will not be resumed automatically.」。计数器只有在收到 terminal event 时才重置，所以一个不断崩溃的 turn 不能靠重启刷预算。
+
+再加上前面工具输出的 2000 行 / 50 KiB 上限，三件事凑齐了反思的边界：步数有上限、重启有上限、证据有上限。没有这三条，反思的默认结局是跑到改坏为止。
+
+### 15.7 五个接缝，四件事，两个缺口
+
+把 OpenCode 的机制对回 §2 的四件事：
+
+| 接缝 | 对象 | 证据 | 归因 | 沉淀 |
+| --- | --- | --- | --- | --- |
+| Step Outcome | 失败类型 | 强：`finish`、`failure`、`outputStarted` | 弱：传输 / 上下文 / 可重试 | 无 |
+| Compaction | 上下文 | 中：token 估算 + overflow | 弱：只知道「太长」 | 中：摘要留在历史里 |
+| Subagent | 委派任务 | 由调用方给 | 无内建 | 弱：子会话历史 |
+| Snapshot / Revert | 文件与分支 | 强：快照 diff | 无 | 无 |
+| Budget | 步数与重启 | 强：持久化计数 | 无 | 无 |
+
+两个缺口：
+
+1. **归因**：OpenCode 分的是「传输 / 上下文 / 可重试」，不是「实现 / 计划 / 环境」。后者仍由模型在 loop 里做。harness 提供了证据和控制流，但没有把归因变成一个可校验的对象。
+2. **沉淀**：没有经验库、没有回放、没有回归闸。压缩摘要会留在历史里，但那是「这次怎么继续」，不是「下次怎么做得更好」。
+
+所以，判断一个 harness 有没有反思，不看它有没有 critic 工具，看三件事：
+
+- 失败后控制流有没有分叉；
+- 分叉前有没有拿到原始证据；
+- 分叉后有没有状态可回、沉淀可写。
+
+OpenCode 前两件做得扎实，第三件只做了一半：状态有 revert，沉淀没有 lesson store。
+
+### 15.8 如果你要补一个 critic，最小改动在哪
+
+不需要重写 loop。四个接口就够：
+
+1. **入口**：在任务收尾时（`Completed && !needsContinuation`，模型已给出完成回答、即将回 idle）开一个子会话（`subagent` 已经是现成的）；step 失败后也可以提前跑。输入原始证据：失败的 tool output、diff、测试输出。不要输入 actor 的自述。
+2. **出口**：要求结构化 verdict：`layer`（实现 / 计划 / 环境）、`evidence`（指针）、`prediction`（可证伪）、`scope`（域）、`confidence`。没有 evidence 指针的 verdict 直接丢。
+3. **映射**：把 verdict 映射到已有的 Outcome。实现错走 `Retry` / `Continue`；计划错走重新规划（OpenCode 需要在 Outcome 外再加一条分支）；环境错直接停；不确定就问人。
+4. **沉淀**：只有 oracle 验证通过的修补才写经验；先做回归闸，再做经验库。
+
+这也是 §11 里 H2 的位置：`Completed` 且 `needsContinuation = false`，就是任务即将收尾、oracle 已经能给出结论的时刻。在这里插一个 verdict，控制流已经在了，不需要另造一套反思框架。
+
+一句话：harness 的反思不是一段更严厉的 prompt，是把失败变成类型、状态和下一次尝试。类型让分支存在，状态让分支可回，证据让分支不瞎。
 
 ## 附：文中提到的论文
 
