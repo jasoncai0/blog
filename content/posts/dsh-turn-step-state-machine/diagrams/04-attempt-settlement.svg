@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="f04-s4-title f04-s4-desc">
+  <title id="f04-s4-title">一次模型调用的结算分支</title>
+  <desc id="f04-s4-desc">流结束后按「有无可见内容」和「是否被中断」分成三条路：有内容且中断写带 interrupted 标记的 assistant/message；有内容正常写 assistant/message；无内容写 assistant/attempt。结算本身失败时抛 AggregateError。</desc>
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+    <marker id="f04-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f04-ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4a7c59"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">ATTEMPT / SETTLEMENT</text>
+  <text x="40" y="56" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">每一次尝试都必须留下一条记录</text>
+  <text x="40" y="76" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">没有「什么都不写」的路径：模型可见的写 message，不可见的写 attempt</text>
+
+  <!-- root -->
+  <rect x="40" y="250" width="150" height="64" rx="32" fill="#2d3142"/>
+  <text x="115" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#ffffff" text-anchor="middle">流结束</text>
+  <text x="115" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#9aa3b5" text-anchor="middle">start → chunk* → end</text>
+
+  <!-- level 2 -->
+  <rect x="250" y="186" width="170" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="264" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" fill="#2d3142">有可见内容？</text>
+  <text x="264" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">text / reasoning 至少一段</text>
+
+  <rect x="250" y="330" width="170" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="264" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" fill="#2d3142">无内容</text>
+  <text x="264" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">空回复 / 立刻失败 / 中断于首帧前</text>
+
+  <!-- level 3 -->
+  <rect x="480" y="120" width="210" height="64" rx="6" fill="#fff8f2" stroke="#bf4520"/>
+  <text x="494" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">ABORTED + CONTENT</text>
+  <text x="494" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" fill="#2d3142">assistant/message</text>
+  <text x="494" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a4a30">interrupted: true</text>
+
+  <rect x="480" y="212" width="210" height="64" rx="6" fill="#eef5ef" stroke="#4a7c59"/>
+  <text x="494" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4a7c59">SUCCESS</text>
+  <text x="494" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" fill="#2d3142">assistant/message</text>
+  <text x="494" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4a7c59">stream + usage 内嵌</text>
+
+  <rect x="480" y="330" width="210" height="64" rx="6" fill="#f4f5f7" stroke="#8a93a6"/>
+  <text x="494" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">NO SURFACE MESSAGE</text>
+  <text x="494" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" fill="#2d3142">assistant/attempt</text>
+  <text x="494" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">stream 内嵌，不进历史</text>
+
+  <rect x="480" y="430" width="210" height="56" rx="6" fill="#fff5f2" stroke="#bf4520"/>
+  <text x="494" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">SETTLEMENT THROWS</text>
+  <text x="494" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" fill="#2d3142">AggregateError</text>
+
+  <!-- branches -->
+  <path d="M190,272 L246,220" stroke="#5a6580" stroke-width="1.1" fill="none" marker-end="url(#f04-a)"/>
+  <text x="196" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4a7c59">yes</text>
+  <path d="M190,290 L246,352" stroke="#5a6580" stroke-width="1.1" fill="none" marker-end="url(#f04-a)"/>
+  <text x="196" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#8a93a6">no</text>
+
+  <path d="M420,200 L476,160" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f04-ao)"/>
+  <text x="428" y="166" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#bf4520">aborted</text>
+  <path d="M420,220 L476,240" stroke="#4a7c59" stroke-width="1.2" fill="none" marker-end="url(#f04-ag)"/>
+  <text x="428" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4a7c59">normal</text>
+  <path d="M420,356 L476,360" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-a)"/>
+
+  <!-- side explanation -->
+  <rect x="720" y="120" width="200" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="736" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" font-weight="600" fill="#2d3142">为什么中断要丢 tool call</text>
+  <text x="736" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">提供方要求 tool_call 与</text>
+  <text x="736" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">tool_result 成对出现。</text>
+  <text x="736" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">保留一个没有结果的 call，</text>
+  <text x="736" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">下一次请求会被直接拒绝。</text>
+
+  <text x="736" y="236" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">所以：宁可丢掉「想做但</text>
+  <text x="736" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">没做成」的意图，也不能</text>
+  <text x="736" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">让历史变成非法形态。</text>
+
+  <text x="736" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">prefix stays, calls drop</text>
+  <text x="736" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">interrupted: true 不是错误标记</text>
+
+  <!-- bottom rules -->
+  <rect x="40" y="440" width="400" height="96" rx="6" fill="#2d3142"/>
+  <text x="56" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#e0a184">THREE INVARIANTS</text>
+  <text x="56" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">① 每次 attempt 恰好结算一次，不会两次。</text>
+  <text x="56" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">② attempt 事件永远不产生模型消息。</text>
+  <text x="56" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">③ 结算失败不能吞掉原始错误：两个一起抛。</text>
+
+  <text x="40" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">「有内容但被中断」是最容易写错的分支：它不是失败，也不是成功，而是一条打了标记的正式消息。</text>
+</svg>

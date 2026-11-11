@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">inbox 的两条队列、两个消费边界与一条消息的四种归宿</title>
+  <desc id="f01-d1-desc">上半部分画出 followup 进入 next-turn、steer 与 inject 进入 next-step；轮次边界从 next-turn 领一条，step 边界把 next-step 整批领走，两路汇入同一个 step 批次。下半部分是一条消息的状态机：pending 被 claim 后进入 user/message 并随 turn/end 结算；被删除时进入 discarded；被 claim 但 pre-step reject 或活动 abort 时停在 claimed，既不发 user/message，也不算丢弃。</desc>
+  <defs>
+    <marker id="f01-d1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-d1-a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">INBOX · TWO QUEUES</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">消息在哪里等，就在哪里被领走</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">next-turn 一次领一条，next-step 整批领走；claim 是纯删除，不是丢弃</text>
+
+  <!-- lane 1 -->
+  <text x="48" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">NEXT-TURN</text>
+  <text x="48" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">独占一轮</text>
+  <rect x="190" y="100" width="430" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="204" y="108" width="118" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="214" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">M1 · followup</text>
+  <rect x="334" y="108" width="118" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="344" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">M2 · followup</text>
+
+  <!-- lane 2 -->
+  <text x="48" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">NEXT-STEP</text>
+  <text x="48" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">并入下一步</text>
+  <rect x="190" y="168" width="430" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="204" y="178" width="104" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="214" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">M3 · steer</text>
+  <rect x="320" y="178" width="112" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="330" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">M4 · inject</text>
+  <rect x="444" y="178" width="112" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="454" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">M5 · steer</text>
+
+  <!-- boundaries -->
+  <rect x="680" y="100" width="232" height="48" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="696" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">turn 边界：claim 1 条</text>
+  <text x="696" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">next-turn[0] + 全部 next-step</text>
+
+  <rect x="680" y="168" width="232" height="52" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="696" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">step 边界：claim 全部</text>
+  <text x="696" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">next-turn 原地不动</text>
+
+  <path d="M 620 124 L 680 124" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 620 194 L 680 194" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+
+  <!-- shared batch -->
+  <path d="M 912 124 H 936 V 286 H 912" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 820 220 V 260" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <rect x="680" y="260" width="232" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="696" y="281" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">decision.messages</text>
+  <text x="696" y="297" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">pre-step 可以改写或 reject</text>
+
+  <!-- lifecycle -->
+  <text x="48" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">MESSAGE LIFECYCLE</text>
+
+  <rect x="48" y="360" width="160" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">pending</text>
+  <text x="64" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">inbox 两条队列</text>
+
+  <rect x="270" y="360" width="160" height="64" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="286" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">claimed</text>
+  <text x="286" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">已移出队列</text>
+
+  <rect x="500" y="360" width="180" height="64" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="516" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">user/message</text>
+  <text x="516" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">进入模型可见历史</text>
+
+  <rect x="740" y="360" width="172" height="64" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="756" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">turn/end</text>
+  <text x="756" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">completed / blocked</text>
+
+  <path d="M 208 392 L 270 392" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <text x="211" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">claim</text>
+  <path d="M 430 392 L 500 392" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <text x="433" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">enter</text>
+  <path d="M 680 392 L 740 392" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+
+  <!-- discarded -->
+  <rect x="48" y="480" width="160" height="56" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="64" y="503" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#bf4520">discarded</text>
+  <text x="64" y="520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">outcome: canceled</text>
+  <path d="M 128 424 V 480" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a-accent)"/>
+  <text x="136" y="456" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">remove / clear / cancel</text>
+
+  <!-- dropped -->
+  <rect x="270" y="480" width="190" height="56" rx="6" fill="#ffffff" stroke="#8a93a6" stroke-dasharray="4 3"/>
+  <text x="286" y="503" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#4f5d75">停在 claimed</text>
+  <text x="286" y="520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">reject / abort：不再发出</text>
+  <path d="M 350 424 V 480" stroke="#8a93a6" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#f01-d1-a)"/>
+
+  <path d="M 796 312 V 342 H 350 V 360" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <text x="812" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">claim()</text>
+
+  <text x="48" y="574" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">claimed 与 discarded 是两种语义：一个表示「被取走」，一个表示「不要了」；日志里都不含「为什么」。</text>
+</svg>

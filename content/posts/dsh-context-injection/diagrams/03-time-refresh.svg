@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d18c-title f03-d18c-desc">
+  <title id="f03-d18c-title">时间上下文的刷新时机</title>
+  <desc id="f03-d18c-desc">时间轴横跨两个 turn 的多个 step。实心点表示真正注入了时间快照，空心点表示被 10 分钟节流窗口跳过；turn 切换不会重置计时。下方四张卡片说明采样点、节流、请求时区与 elapsed 基准。</desc>
+  <defs>
+    <marker id="f03-m18c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">CONTEXT / TIME</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">时间注入：按间隔补发，不按 turn 重置</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具跑了很久、用户隔了半小时才回话——时间快照应该反映「现在」，而不是 turn 开始的那一刻</text>
+
+  <!-- turn brackets -->
+  <line x1="90" y1="150" x2="420" y2="150" stroke="#d8d8d8" stroke-width="1.2"/>
+  <line x1="90" y1="145" x2="90" y2="155" stroke="#d8d8d8" stroke-width="1.2"/>
+  <line x1="420" y1="145" x2="420" y2="155" stroke="#d8d8d8" stroke-width="1.2"/>
+  <text x="90" y="138" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">TURN 1</text>
+
+  <line x1="470" y1="150" x2="880" y2="150" stroke="#d8d8d8" stroke-width="1.2"/>
+  <line x1="470" y1="145" x2="470" y2="155" stroke="#d8d8d8" stroke-width="1.2"/>
+  <line x1="880" y1="145" x2="880" y2="155" stroke="#d8d8d8" stroke-width="1.2"/>
+  <text x="470" y="138" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">TURN 2</text>
+
+  <!-- axis -->
+  <line x1="60" y1="240" x2="900" y2="240" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-m18c)"/>
+  <text x="60" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">t = 0</text>
+  <text x="866" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">now</text>
+
+  <!-- step marks -->
+  <line x1="120" y1="180" x2="120" y2="240" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="120" cy="240" r="5" fill="#2f6f5e"/>
+  <text x="120" y="176" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">T1S1 · 0m</text>
+  <text x="120" y="284" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">注入</text>
+
+  <line x1="220" y1="180" x2="220" y2="240" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="220" cy="240" r="5" fill="#f5f5f5" stroke="#8a93a6" stroke-width="1.4"/>
+  <text x="220" y="176" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">T1S2 · 2m</text>
+  <text x="220" y="284" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">跳过</text>
+
+  <line x1="330" y1="180" x2="330" y2="240" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="330" cy="240" r="5" fill="#2f6f5e"/>
+  <text x="330" y="176" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">T1S3 · 11m</text>
+  <text x="330" y="284" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">注入</text>
+
+  <line x1="500" y1="180" x2="500" y2="240" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="500" cy="240" r="5" fill="#f5f5f5" stroke="#8a93a6" stroke-width="1.4"/>
+  <text x="500" y="176" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">T2S1 · 13m</text>
+  <text x="500" y="284" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">跳过</text>
+
+  <line x1="620" y1="180" x2="620" y2="240" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="620" cy="240" r="5" fill="#2f6f5e"/>
+  <text x="620" y="176" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">T2S2 · 24m</text>
+  <text x="620" y="284" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">注入</text>
+
+  <line x1="740" y1="180" x2="740" y2="240" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="740" cy="240" r="5" fill="#f5f5f5" stroke="#8a93a6" stroke-width="1.4"/>
+  <text x="740" y="176" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">T2S3 · 26m</text>
+  <text x="740" y="284" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">跳过</text>
+
+  <!-- throttle bands -->
+  <rect x="220" y="300" width="110" height="6" fill="#e6e2dc"/>
+  <text x="275" y="318" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">间隔 &lt; 600s</text>
+  <rect x="500" y="300" width="120" height="6" fill="#e6e2dc"/>
+  <text x="560" y="318" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">turn 切换不重置</text>
+
+  <!-- cards -->
+  <rect x="40" y="344" width="210" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">采样点</text>
+  <text x="56" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">pre-step 末尾，prepend</text>
+  <text x="56" y="405" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">监听器先 await next()，</text>
+  <text x="56" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">看到的是最终 decision。</text>
+
+  <rect x="265" y="344" width="210" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="281" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">节流</text>
+  <text x="281" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">默认 600_000 ms；</text>
+  <text x="281" y="405" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">0 = 每个 eligible step。</text>
+  <text x="281" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">turn 开始不强制注入。</text>
+
+  <rect x="490" y="344" width="210" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="506" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">请求时区</text>
+  <text x="506" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">clientTimeZone 随请求；</text>
+  <text x="506" y="405" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">resolved / mixed / missing，</text>
+  <text x="506" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">混合或缺失要求澄清。</text>
+
+  <rect x="715" y="344" width="210" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="731" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">elapsed 基准</text>
+  <text x="731" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">首步：上一条模型可见消息；</text>
+  <text x="731" y="405" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">后续：上一次时间注入。</text>
+  <text x="731" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">没有基准就写 unavailable。</text>
+
+  <text x="40" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">时间消息里的「现在」必须来自采样点，不能来自 turn 开始。长工具、等待用户、自动重试都会让 turn 内的时间漂移。</text>
+  <text x="40" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">进程时区是部署细节：容器里通常是 UTC。用户说「明天」时，指的是他浏览器所在时区的明天。</text>
+  <text x="40" y="548" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">SAMPLE AT PRE-STEP · THROTTLE 600s · ZONE PER REQUEST</text>
+</svg>

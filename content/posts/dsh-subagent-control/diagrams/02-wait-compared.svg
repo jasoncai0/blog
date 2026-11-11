@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">轮询与 park 的时序对比</title>
+  <desc id="f02-d2-desc">左栏是四次轮询，每次检查之间只有空转；右栏是一次 wait_agent 挂起，消息到达后工具返回，下一步消息进入上下文。底部是宿主侧的 join 条件。</desc>
+  <defs>
+    <marker id="f02-arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f02-arwr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f02-arwg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.16em">WAIT, COMPARED</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="start">同样是等，一个烧推理，一个只烧时间</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" fill="#5a6580" text-anchor="start">左边每次检查都是一次完整的模型 turn；右边一次工具调用挂起整段等待</text>
+<rect x="48" y="120" width="420" height="410" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<rect x="492" y="120" width="420" height="410" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="72" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="start">轮询</text>
+<text x="72" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">每次查询都是一次推理</text>
+<line x1="88" y1="180" x2="88" y2="500" stroke="#c9ccc6" stroke-width="1"/>
+<rect x="104" y="182" width="330" height="30" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="116" y="201" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">turn 1：list_agents → 三个 running</text>
+<text x="108" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#8a93a6" text-anchor="start">空转，等模型下一次开口</text>
+<rect x="104" y="272" width="330" height="30" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="116" y="291" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">turn 2：list_agents → 三个 running</text>
+<text x="108" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#8a93a6" text-anchor="start">空转</text>
+<rect x="104" y="362" width="330" height="30" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="116" y="381" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">turn 3：list_agents → 三个 running</text>
+<text x="108" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#8a93a6" text-anchor="start">空转</text>
+<text x="108" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#8a93a6" text-anchor="start">turn 4 …</text>
+<text x="104" y="510" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#bf4520" text-anchor="start">4 次推理，0 条新信息</text>
+<text x="516" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="start">park</text>
+<text x="516" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">一次工具调用挂起整段等待</text>
+<line x1="560" y1="180" x2="560" y2="500" stroke="#c9ccc6" stroke-width="1"/>
+<rect x="576" y="182" width="300" height="34" rx="4" fill="#ffffff" stroke="#2f6f5e" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="588" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#2f6f5e" text-anchor="start">wait_agent 挂起，turn 停在这一步</text>
+<text x="576" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">计时：setTimeout（工具自己持有）</text>
+<text x="576" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">取消：exec.signal / lifetime</text>
+<text x="646" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#bf4520" text-anchor="start">inbox 事件结束等待</text>
+<line x1="880" y1="320" x2="646" y2="320" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#f02-arwr)"/>
+<rect x="576" y="336" width="300" height="34" rx="4" fill="#ffffff" stroke="#2f6f5e" stroke-width="1"/>
+<text x="588" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#2f6f5e" text-anchor="start">工具返回 { timedOut: false }</text>
+<rect x="576" y="384" width="300" height="34" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="588" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">下一步：那条消息进 prompt</text>
+<text x="576" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#2f6f5e" text-anchor="start">整段等待只花一次工具调用的时间</text>
+<rect x="48" y="548" width="864" height="56" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="64" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">宿主侧：await whenIdle → waitForTreeWork → 比较 session.seq → 三者都满足才允许退出</text>
+<text x="64" y="590" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">第二个条件里，idle 且 parked 的成员不阻塞；第三个条件封住「刚判断完又被叫醒」的窗口</text>
+</svg>

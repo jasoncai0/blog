@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">控制面的四个动作</title>
+  <desc id="f01-d1-desc">父 agent 居中，四个动作分布在四个角：发现、等待、打断、通信。每个动作标注了输入输出与失败形态，任何返回值都不包含子代理的输出。</desc>
+  <defs>
+    <marker id="f01-arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f01-arwr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f01-arwg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.16em">CONTROL SURFACE</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="start">四个动作，四个问题</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" fill="#5a6580" text-anchor="start">每个动作的返回都被压到最小：没有一个是子的输出</text>
+<rect x="60" y="150" width="300" height="112" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="76" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.12em">DISCOVER</text>
+<text x="76" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142" text-anchor="start">list_agents</text>
+<text x="76" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">树上有谁，谁在跑</text>
+<text x="76" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#2d3142" text-anchor="start">→ name · status</text>
+<text x="76" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#8a93a6" text-anchor="start">诊断条目：corrupt</text>
+<rect x="600" y="150" width="300" height="112" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="616" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.12em">WAIT</text>
+<text x="616" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142" text-anchor="start">wait_agent</text>
+<text x="616" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">下一步有新输入吗</text>
+<text x="616" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#2d3142" text-anchor="start">→ { timedOut }</text>
+<text x="616" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#8a93a6" text-anchor="start">超时 10s–1h，默认 30s</text>
+<rect x="60" y="370" width="300" height="112" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="76" y="392" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.12em">INTERRUPT</text>
+<text x="76" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142" text-anchor="start">interrupt_agent</text>
+<text x="76" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">让某个子停下</text>
+<text x="76" y="456" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#2d3142" text-anchor="start">→ { accepted }</text>
+<text x="76" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#8a93a6" text-anchor="start">解析不到名字即失败</text>
+<rect x="600" y="370" width="300" height="112" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="616" y="392" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.12em">MESSAGE</text>
+<text x="616" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142" text-anchor="start">send_message</text>
+<text x="616" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">给某个子送话</text>
+<text x="616" y="456" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#2d3142" text-anchor="start">→ { messageId }</text>
+<text x="616" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#8a93a6" text-anchor="start">AGENT_NAME_NOT_FOUND</text>
+<rect x="390" y="272" width="180" height="60" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="480" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">父 agent</text>
+<text x="480" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#8a93a6" text-anchor="middle">这一次 turn</text>
+<line x1="360" y1="206" x2="392" y2="272" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<line x1="600" y1="206" x2="568" y2="272" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<line x1="360" y1="426" x2="392" y2="332" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<line x1="600" y1="426" x2="568" y2="332" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<text x="48" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">四个动作都不返回子的输出。输出只从结算通知或 send_message 的回信里来。</text>
+<text x="48" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">四个都注册在工具层：可被审批、可进日志、模型能自己组合。</text>
+</svg>

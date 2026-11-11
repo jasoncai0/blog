@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">keepInbox 的决策表</title>
+  <desc id="f04-d4-desc">cancel 的 keepInbox 参数决定是否清空队列与闩锁；活动仍然 abort；保留队列不等于自动续跑，需要下一次唤醒。</desc>
+  <defs>
+    <marker id="f04-d4-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">CANCEL · KEEP INBOX</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">保留队列，不等于继续执行</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">keepInbox 只跳过两步：不清队列、不清闩锁。活动仍然 abort。</text>
+
+  <!-- table header -->
+  <rect x="48" y="126" width="864" height="40" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="151" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">场景</text>
+  <text x="348" y="151" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">keepInbox</text>
+  <text x="468" y="151" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">inbox</text>
+  <text x="658" y="151" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">活动</text>
+  <text x="778" y="151" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">之后的走向</text>
+
+  <!-- row 1 -->
+  <rect x="48" y="166" width="864" height="70" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">默认：用户按停止</text>
+  <text x="64" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">队列里可能还有没跑的话</text>
+  <text x="348" y="199" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#8a93a6">false</text>
+  <text x="468" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">清空</text>
+  <text x="468" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">逐条 discarded</text>
+  <text x="658" y="199" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">abort</text>
+  <text x="778" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">收敛到 idle</text>
+  <text x="778" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">队列空，什么都不剩</text>
+
+  <!-- row 2 -->
+  <rect x="48" y="236" width="864" height="70" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">停当前动作，保留排队的话</text>
+  <text x="64" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">没有既有闩锁</text>
+  <text x="348" y="269" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2f6f5e">true</text>
+  <text x="468" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">原样保留</text>
+  <text x="468" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">消息与 id 都不变</text>
+  <text x="658" y="269" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">abort</text>
+  <text x="778" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">停在队列</text>
+  <text x="778" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">等下一次 followup / steer</text>
+
+  <!-- row 3 -->
+  <rect x="48" y="306" width="864" height="70" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">停当前动作，且已有闩锁</text>
+  <text x="64" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">维护中或已 abort 的 activity</text>
+  <text x="348" y="339" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2f6f5e">true</text>
+  <text x="468" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">原样保留</text>
+  <text x="468" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">wakeRequested 不清</text>
+  <text x="658" y="339" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">abort</text>
+  <text x="778" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">收敛点 replay</text>
+  <text x="778" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">开新轮，领走保留的队列</text>
+
+  <!-- row 4 -->
+  <rect x="48" y="376" width="864" height="70" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">已经 idle 时取消</text>
+  <text x="64" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">没有 driver 可 abort</text>
+  <text x="348" y="409" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#8a93a6">任意</text>
+  <text x="468" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">按参数</text>
+  <text x="468" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">true 保留 / false 清空</text>
+  <text x="658" y="409" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">无</text>
+  <text x="778" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只动队列</text>
+  <text x="778" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">不武装后续工作</text>
+
+  <!-- guidance -->
+  <rect x="48" y="474" width="864" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="64" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">HOW TO CHOOSE</text>
+  <text x="64" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">默认选 false：用户按「停止」时，通常不希望下一句悄悄开始执行。需要保留时显式传 true，</text>
+  <text x="64" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">并在产品层面安排下一次唤醒——keepInbox 不会替你续跑。</text>
+
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">排除项：初始化失败时内部用 keepInbox: true，避免把排队输入放行成一个从未启动成功的轮次。</text>
+</svg>

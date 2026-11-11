@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">三个事件域与它们的消费者</title>
+  <desc id="f04-d4-desc">产生者把事实写进三个域：会话事件持久化并供模型历史、UI 与恢复消费；Agent 事件与能力事件只在进程内广播，供实时 UI 与策略使用。任何模型可见的东西都必须先落进会话事件，否则恢复后不存在。</desc>
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f04-ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7a5aa8"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">EVENT DOMAINS</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">三个事件域：谁持久，谁只是广播</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">分域不是为了好看：持久性、订阅者和导入方向三者都不同</text>
+
+  <!-- producers -->
+  <text x="40" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">PRODUCERS</text>
+  <rect x="40" y="122" width="220" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">事实的产生处</text>
+  <text x="56" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">人类输入</text>
+  <text x="56" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">followup / steer / inject</text>
+  <text x="56" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">审批与提问的回答</text>
+  <text x="56" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">ctx.approval / ctx.questions</text>
+  <text x="56" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">模型流与工具执行</text>
+  <text x="56" y="280" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">llm.stream / tools.execute</text>
+  <text x="56" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">子代理、定时器、goal</text>
+  <text x="56" y="324" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">agent/created · schedule</text>
+  <text x="56" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">它们不直接改 messages，</text>
+  <text x="56" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">只向某个域提交事实。</text>
+  <text x="56" y="404" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">no shared message array</text>
+
+  <!-- session domain -->
+  <rect x="310" y="122" width="330" height="118" rx="6" fill="#2d3142" stroke="#2d3142"/>
+  <text x="328" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#ffffff">会话事件 · 持久</text>
+  <text x="328" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#e0a184">SESSION EVENT MAP · 14</text>
+  <text x="328" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.8" fill="#d7dbe4">turn/start · step/start · user/message</text>
+  <text x="328" y="200" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.8" fill="#d7dbe4">assistant/message · tool/call · tool/result</text>
+  <text x="328" y="216" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.8" fill="#d7dbe4">request/header · request/context · …</text>
+  <text x="328" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#9aa3b5">写入即提交；恢复时唯一可用的证据</text>
+
+  <!-- agent domain -->
+  <rect x="310" y="256" width="330" height="86" rx="6" fill="#ffffff" stroke="#7a5aa8"/>
+  <text x="328" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">Agent 事件 · 进程内</text>
+  <text x="328" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#7a5aa8">agent/status · inbox/* · pre-step</text>
+  <text x="328" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#7a5aa8">agent/request · assistant-stream · turn-stopping</text>
+  <text x="328" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">携带活跃 Agent；订阅者按 scope 过滤</text>
+
+  <!-- capability domain -->
+  <rect x="310" y="358" width="330" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="328" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">能力事件 · 进程内</text>
+  <text x="328" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">fs/write-intent · tools/pre-execute</text>
+  <text x="328" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">telemetry/* · hook/invoked</text>
+
+  <!-- consumers -->
+  <text x="700" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">CONSUMERS</text>
+  <rect x="700" y="122" width="220" height="92" rx="6" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="716" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">deriveMessages()</text>
+  <text x="716" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">每次请求重新投影</text>
+  <text x="716" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">冻结后交给适配器</text>
+  <text x="716" y="200" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">the only model history</text>
+
+  <rect x="700" y="228" width="220" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="716" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">UI / SDK 投影</text>
+  <text x="716" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">流式卡片、状态、待办</text>
+  <text x="716" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">可以丢，可以重放</text>
+
+  <rect x="700" y="314" width="220" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="716" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">恢复 / fork / 压缩</text>
+  <text x="716" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">读同一份日志的不同区段</text>
+  <text x="716" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">fork 按事件序号切</text>
+  <text x="716" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">压缩按区域改写 surface</text>
+  <text x="716" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">replay &gt; memory</text>
+
+  <!-- arrows -->
+  <path d="M260,200 L306,180" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f04-a)"/>
+  <path d="M260,240 L306,290" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f04-a)"/>
+  <path d="M260,300 L306,382" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f04-a)"/>
+
+  <path d="M640,181 L696,168" stroke="#bf4520" stroke-width="1.3" fill="none" marker-end="url(#f04-ao)"/>
+  <text x="650" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">project</text>
+  <path d="M640,200 L696,250" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f04-a)"/>
+  <path d="M640,216 L696,340" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f04-a)"/>
+  <path d="M640,296 L696,268" stroke="#7a5aa8" stroke-width="1" stroke-dasharray="4 3" fill="none" marker-end="url(#f04-ap)"/>
+  <text x="648" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#7a5aa8">live</text>
+
+  <!-- warning -->
+  <rect x="310" y="452" width="610" height="66" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="328" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#bf4520">反例：绕过会话事件的「模型可见」</text>
+  <text x="328" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">把流式 chunk 直接塞进下一次请求，而不先落 assistant/message：当前进程看起来正常，</text>
+  <text x="328" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">但恢复、fork、压缩三条路径都会丢掉这段历史。这就是「模型可见 ⟺ 已记录」要禁止的事。</text>
+
+  <text x="40" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">域之间的唯一边界：</text>
+  <text x="40" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">持久事件 → 实时通知可以；</text>
+  <text x="40" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">反向不成立。</text>
+
+  <text x="40" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">三个域各自有独立的导入方向：fs 不需要 import tools 就能发写意图，tools 也不需要知道谁在听。</text>
+  <text x="40" y="578" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">session events (durable) · agent events (live) · capability events (seam-local)</text>
+</svg>

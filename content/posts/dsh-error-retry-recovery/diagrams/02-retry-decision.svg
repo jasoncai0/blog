@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f02-d02-title f02-d02-desc">
+  <title id="f02-d02-title">重试决策树</title>
+  <desc id="f02-d02-desc">从失败进入 request-error 开始，依次检查策略是否存在、失败码是否可重试、提供方 Retry-After 是否超上限、重试次数是否超预算，最后算出延迟并先落账再等待；每个判断的否定分支都交回下游或终止。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">RETRY DECISION / 08</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">五次判断，两次落账</text>
+
+  <!-- main column -->
+  <g>
+    <rect x="60" y="90" width="470" height="46" rx="5" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="60" y="156" width="470" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="60" y="218" width="470" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="60" y="280" width="470" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="60" y="342" width="470" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="60" y="404" width="470" height="42" rx="5" fill="#fbf1ec" stroke="#bf4520"/>
+    <rect x="60" y="466" width="470" height="42" rx="5" fill="#eef4ef" stroke="#5b8a5e"/>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9.5" fill="#2d3142">
+    <text x="76" y="110">agent/request-error 收到 failure（带 code / Retry-After）</text>
+    <text x="76" y="122" font-size="8" fill="#4f5d75">waterfall：插件按 code 认领，返回 retry 表示接管</text>
+    <text x="76" y="182">① 这个 provider 有 retryPolicy 吗？</text>
+    <text x="76" y="244">② normal 模式下，code 在 retryableCodes 里吗？</text>
+    <text x="76" y="306">③ 提供方的 Retry-After 是否超过 maxDelayMs？</text>
+    <text x="76" y="368">④ previousRetry &lt; maxRetries（normal 才有上限）？</text>
+    <text x="76" y="430">⑤ 算 delay → append('llm/retry') → 可取消等待</text>
+    <text x="76" y="492">append('llm/retry-started') → return { kind: 'retry' }</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#2d3142" stroke-width="1" fill="none" marker-end="url(#f02-a2)">
+    <path d="M295 136 V 152"/>
+    <path d="M295 198 V 214"/>
+    <path d="M295 260 V 276"/>
+    <path d="M295 322 V 338"/>
+    <path d="M295 384 V 400"/>
+    <path d="M295 446 V 462"/>
+  </g>
+
+  <!-- no labels -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">
+    <text x="304" y="150">有</text>
+    <text x="304" y="212">是 / always 跳过</text>
+    <text x="304" y="274">没有或未超</text>
+    <text x="304" y="336">未超预算</text>
+    <text x="304" y="398">是</text>
+    <text x="304" y="460">等待完成</text>
+  </g>
+
+  <!-- side exits -->
+  <g stroke="#bf4520" stroke-width="1" fill="none" stroke-dasharray="3 2" marker-end="url(#f02-a3)">
+    <path d="M530 177 H 636"/>
+    <path d="M530 239 H 636"/>
+    <path d="M530 301 H 636"/>
+    <path d="M530 363 H 636"/>
+    <path d="M530 487 H 636"/>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">
+    <text x="648" y="168">无策略 → next()</text>
+    <text x="648" y="182" font-size="7.5">交下游；无人接管则终止</text>
+    <text x="648" y="230">码不匹配 → next()</text>
+    <text x="648" y="244" font-size="7.5">鉴权、额度、参数错误不重试</text>
+    <text x="648" y="292">超上限 → normal 放弃</text>
+    <text x="648" y="306" font-size="7.5">always 退回本地退避</text>
+    <text x="648" y="354">超预算 → next()</text>
+    <text x="648" y="368" font-size="7.5">默认 5 次，按 step 重置</text>
+    <text x="648" y="478">等待被 abort → 不返回 retry</text>
+    <text x="648" y="492" font-size="7.5">保留原错误；retry-started 不写</text>
+  </g>
+
+  <!-- defaults -->
+  <rect x="60" y="528" width="840" height="52" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="548" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">DEFAULTS</text>
+  <text x="76" y="566" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">maxRetries 5 · initialDelay 500ms · maxDelay 10000ms · jitterRatio 0.1 · codes: EMPTY_RESPONSE, RATE_LIMIT, SERVER, TIMEOUT, TRANSPORT</text>
+
+  <defs>
+    <marker id="f02-a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#2d3142"/></marker>
+    <marker id="f02-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/></marker>
+  </defs>
+</svg>

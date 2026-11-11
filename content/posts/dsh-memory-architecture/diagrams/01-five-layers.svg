@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d17a-title f01-d17a-desc">
+  <title id="f01-d17a-title">五层记忆与它们的写入者、读取者</title>
+  <desc id="f01-d17a-desc">静态指令、会话日志、压缩工作集、检索、程序性记忆五层自上而下排列。每层标出写入者与读取者。右侧一列圆点表示该层是否真正进入模型请求：检索与控制面只在显式调用时可见。</desc>
+  <defs>
+    <marker id="f01-m17a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">MEMORY / FIVE LAYERS</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">五层记忆，五套写入者与失效方式</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">记忆不是一块存储：每一层都有自己的写者、读者与作废条件；共享的只有 seq</text>
+
+  <!-- layer 1 -->
+  <rect x="40" y="104" width="600" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">01</text>
+  <text x="82" y="127" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">静态指令</text>
+  <text x="82" y="145" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">STATIC INSTRUCTIONS</text>
+  <rect x="290" y="122" width="4" height="10" fill="#2f6f5e"/>
+  <text x="302" y="131" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">写：插件 section 注册 / 人改 AGENTS.md</text>
+  <rect x="290" y="146" width="4" height="10" fill="#7a5aa8"/>
+  <text x="302" y="155" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">读：assemble() / pre-step 的指令探测器</text>
+  <text x="56" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每次请求重新渲染；文件内容按 digest 判断是否重发</text>
+
+  <!-- layer 2 -->
+  <rect x="40" y="188" width="600" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="210" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">02</text>
+  <text x="82" y="211" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">会话日志</text>
+  <text x="82" y="229" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SESSION LOG · SOURCE OF TRUTH</text>
+  <rect x="290" y="206" width="4" height="10" fill="#2f6f5e"/>
+  <text x="302" y="215" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">写：loop / 工具 / agent.inject()</text>
+  <rect x="290" y="230" width="4" height="10" fill="#7a5aa8"/>
+  <text x="302" y="239" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">读：deriveMessages() / 检索 / fork</text>
+  <text x="56" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">只增长，不失效；压缩只是把旧节点移出 surface</text>
+
+  <!-- layer 3 -->
+  <rect x="40" y="272" width="600" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">03</text>
+  <text x="82" y="295" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">压缩工作集</text>
+  <text x="82" y="313" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">COMPACTED WORKING SET</text>
+  <rect x="290" y="290" width="4" height="10" fill="#2f6f5e"/>
+  <text x="302" y="299" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">写：压缩引擎（压力 / 溢出 / 手动）</text>
+  <rect x="290" y="314" width="4" height="10" fill="#7a5aa8"/>
+  <text x="302" y="323" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">读：下一次 deriveMessages()</text>
+  <text x="56" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">checkpoint 自己也会被下一次压缩遮蔽；模板要求合并旧摘要</text>
+
+  <!-- layer 4 -->
+  <rect x="40" y="356" width="600" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">04</text>
+  <text x="82" y="379" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">检索</text>
+  <text x="82" y="397" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">RETRIEVAL · ON DEMAND</text>
+  <rect x="290" y="374" width="4" height="10" fill="#2f6f5e"/>
+  <text x="302" y="383" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">写：索引器 / 检索工具的结果</text>
+  <rect x="290" y="398" width="4" height="10" fill="#7a5aa8"/>
+  <text x="302" y="407" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">读：模型显式调用 session_search 等工具</text>
+  <text x="56" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">没有自动召回；索引可丢、可重建，结果必须落回日志</text>
+
+  <!-- layer 5 -->
+  <rect x="40" y="440" width="600" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">05</text>
+  <text x="82" y="463" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">程序性记忆</text>
+  <text x="82" y="481" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">PROCEDURAL MEMORY · SKILLS</text>
+  <rect x="290" y="458" width="4" height="10" fill="#2f6f5e"/>
+  <text x="302" y="467" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">写：文件系统 / watcher / 运行时 provider</text>
+  <rect x="290" y="482" width="4" height="10" fill="#7a5aa8"/>
+  <text x="302" y="491" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">读：目录发布 / skill 工具 / 用户 /name</text>
+  <text x="56" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">目录常驻只有 name + description；正文加载后才进入上下文</text>
+
+  <!-- visibility dots -->
+  <line x1="672" y1="120" x2="672" y2="500" stroke="#d8d8d8" stroke-width="1.2"/>
+  <circle cx="672" cy="142" r="4" fill="#2f6f5e"/>
+  <text x="686" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">可见：system/message</text>
+  <circle cx="672" cy="226" r="4" fill="#2f6f5e"/>
+  <text x="686" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">可见：current surface</text>
+  <circle cx="672" cy="310" r="4" fill="#2f6f5e"/>
+  <text x="686" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">可见：替换后的摘要</text>
+  <circle cx="672" cy="394" r="4" fill="#f5f5f5" stroke="#8a93a6" stroke-width="1.2"/>
+  <text x="686" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">控制面：工具调用才可见</text>
+  <circle cx="672" cy="478" r="4" fill="#7a5aa8"/>
+  <text x="686" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">可见：目录 / 加载后正文</text>
+
+  <rect x="806" y="120" width="114" height="380" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="822" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">CONTROL</text>
+  <text x="822" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">token 计量</text>
+  <text x="822" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">surface 折叠</text>
+  <text x="822" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">digest 缓存</text>
+  <text x="822" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">检索索引</text>
+  <text x="822" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">技能 rank</text>
+  <text x="822" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">它们决定</text>
+  <text x="822" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">「带不带得动」，</text>
+  <text x="822" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">不进入文本。</text>
+
+  <text x="40" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">绿色 = 写入路径；紫色 = 读取路径。同一条消息可以既是某层的写、又是另一层的读。</text>
+  <text x="40" y="574" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">唯一不可替换的是第二层：其余四层要么是文件，要么是它的视图。</text>
+</svg>

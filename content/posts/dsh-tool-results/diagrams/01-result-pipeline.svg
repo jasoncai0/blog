@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">工具结果的投影与落账管线</title>
+  <desc id="f01-d1-desc">原始 value 依次经过 projectContent、post-execute、finalizeContent、物化与 tool/result；分支标出 post 替换 value、block、以及绕过 post 的失败路径，说明每条路径上 finalize 仍然运行。</desc>
+
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f01-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">12 / RESULT PIPELINE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一个 value，四次改写，一份权威结果</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">project 定模型文本，post 定最终留什么，finalize 收口，materialize 剥掉 value</text>
+
+  <!-- main chain -->
+  <rect x="40" y="120" width="176" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RAW</text>
+  <text x="56" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">工具返回值</text>
+  <text x="56" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">value + 待校验形状</text>
+  <text x="56" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">createSuccessResult</text>
+
+  <line x1="218" y1="163" x2="244" y2="163" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="246" y="120" width="176" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="262" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">① PROJECT</text>
+  <text x="262" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">projectContent</text>
+  <text x="262" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">工具作者解释自己的值</text>
+  <text x="262" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">exec 开始时捕获</text>
+
+  <line x1="424" y1="163" x2="450" y2="163" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="452" y="120" width="176" height="86" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="468" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">② POST</text>
+  <text x="468" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">tools/post-execute</text>
+  <text x="468" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">accept content / value / block</text>
+  <text x="468" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">策略拥有最后一次改写</text>
+
+  <line x1="630" y1="163" x2="656" y2="163" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="658" y="120" width="176" height="86" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="674" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#2f6f5e">③ FINALIZE</text>
+  <text x="674" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">finalizeContent</text>
+  <text x="674" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同步、恰好一次、不抛错</text>
+  <text x="674" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">对完整结果施加边界</text>
+
+  <line x1="836" y1="163" x2="862" y2="163" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="864" y="120" width="56" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="874" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">④</text>
+  <text x="872" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">物化</text>
+  <text x="870" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">去 value</text>
+
+  <!-- down to result -->
+  <line x1="892" y1="208" x2="892" y2="250" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="640" y="252" width="280" height="64" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="656" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">TOOL/RESULT</text>
+  <text x="656" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">{ content, isError, error?, meta?, additionalContexts? }</text>
+  <text x="656" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">冻结 exec + 结果；观察者返回值被丢弃</text>
+
+  <line x1="780" y1="318" x2="780" y2="352" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="640" y="354" width="132" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="656" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">模型 content</text>
+  <text x="656" y="392" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">下一轮请求</text>
+
+  <rect x="788" y="354" width="132" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="804" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">UI meta</text>
+  <text x="804" y="392" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">presentResult 重放</text>
+
+  <line x1="706" y1="318" x2="706" y2="352" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <!-- branches -->
+  <text x="40" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">BRANCHES</text>
+
+  <rect x="40" y="262" width="270" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">post 替换 value</text>
+  <text x="56" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">重新 schema 校验 + render + meta</text>
+  <text x="56" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">失败结果不可替换 value</text>
+
+  <rect x="40" y="338" width="270" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">post block</text>
+  <text x="56" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">content → feedback，isError = true</text>
+  <text x="56" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不是删除结果，而是改写结果</text>
+
+  <rect x="40" y="414" width="270" height="62" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">pipeline failure 绕过 post</text>
+  <text x="56" y="450" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">pre / guards / execute 抛错 → final-result</text>
+  <text x="56" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">但 finalize 仍然跑</text>
+
+  <path d="M 310 445 C 400 445 470 420 540 300" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f01-r)"/>
+
+  <!-- note -->
+  <rect x="340" y="252" width="268" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">ORDER IS CONTRACT</text>
+  <text x="356" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">project 在 post 前：策略看到的是</text>
+  <text x="356" y="309" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">模型将看到的内容。</text>
+  <text x="356" y="327" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">finalize 在 post 后：边界对最终结果</text>
+  <text x="356" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">施加，而不是对原始输出。</text>
+
+  <text x="40" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">被拒绝的调用也走 project 与 post：拒绝是一种结果，不是“没有结果”。</text>
+  <text x="40" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">观察者只能在 tool/result 上记录，不能改写；改写属于 post 的职责。</text>
+
+  <text x="40" y="588" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 12</text>
+</svg>

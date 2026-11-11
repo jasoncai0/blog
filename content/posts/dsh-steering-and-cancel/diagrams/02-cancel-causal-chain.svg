@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">cancel 的因果链</title>
+  <desc id="f02-d2-desc">cancel 同步清空队列、清掉闩锁并 abort；abort 把 cause 写进 signal.reason，之后各边界检查抛同一个对象，最终由 turn/end 持久化为 aborted。</desc>
+  <defs>
+    <marker id="f02-d2-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-d2-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">CANCEL · CAUSAL CHAIN</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">一次同步的 abort，一条单向的因果链</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">cancel 返回时，队列已经定了，activity 的 signal 已经死了；轮次要到 driver 收尾才关闭。</text>
+
+  <!-- row 1 -->
+  <rect x="60" y="150" width="170" height="56" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="74" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">cancel(cause)</text>
+  <text x="74" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">同步，不 await</text>
+
+  <rect x="270" y="150" width="160" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="284" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">inbox.clear()</text>
+  <text x="284" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">unless keepInbox</text>
+
+  <rect x="470" y="150" width="200" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="484" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">wakeRequested = false</text>
+  <text x="484" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">丢掉已排好的唤醒</text>
+
+  <rect x="710" y="150" width="190" height="56" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="724" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">abort(cause)</text>
+  <text x="724" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">signal.reason = 第一因</text>
+
+  <path d="M 230 178 H 270" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 430 178 H 470" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 670 178 H 710" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+
+  <!-- drop to row 2 -->
+  <path d="M 800 206 V 244" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-b)"/>
+
+  <!-- row 2, right to left -->
+  <rect x="700" y="244" width="200" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="714" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">throwIfAborted()</text>
+  <text x="714" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">turn / step / stream / tools</text>
+
+  <rect x="470" y="244" width="200" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="484" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">turn/end</text>
+  <text x="484" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">{ kind: 'aborted', reason }</text>
+
+  <rect x="260" y="244" width="180" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="274" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">kick finally</text>
+  <text x="274" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">setPhase(idle)</text>
+
+  <rect x="60" y="244" width="170" height="56" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="74" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">idle</text>
+  <text x="74" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2f6f5e">whenIdle 结算</text>
+
+  <path d="M 700 272 H 670" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 470 272 H 440" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 260 272 H 230" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+
+  <!-- callouts -->
+  <rect x="60" y="360" width="400" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <text x="74" y="382" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">FIRST CAUSE WINS</text>
+  <text x="74" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">AbortController 只认第一次 abort。第二个取消源</text>
+  <text x="74" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">到达时 signal 已死，只剩「队列已经清过」可做；</text>
+  <text x="74" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">turn/end 记录的仍是第一个 reason。</text>
+
+  <rect x="500" y="360" width="400" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <text x="514" y="382" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">WHAT SURVIVES</text>
+  <text x="514" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">流已启动且收到非空块 → assistant/message</text>
+  <text x="514" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">（interrupted: true）；什么都没收到 → assistant/attempt。</text>
+  <text x="514" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">attempt 是诊断记录，不进入模型历史。</text>
+
+  <text x="48" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6">如果 tool/call 已落盘而 tool/result 未落盘，恢复时 repair 补一条 TOOL_OUTCOME_UNKNOWN 的合成结果，再把 turn 闭合。</text>
+  <text x="48" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6">因果链的方向只有一个：cause 决定 signal，signal 决定落库的 reason；没有任何一步会反向修改 cause。</text>
+</svg>

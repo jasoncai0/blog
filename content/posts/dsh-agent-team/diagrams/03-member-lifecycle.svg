@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">成员生命周期与任务归属是两条时间线</title>
+  <desc id="f03-d3-desc">subagent 会经历创建、运行、空闲、唤醒与销毁，也可能本轮失败；任务归属只由任务动作改写。成员销毁之后 owner 仍然是它的会话 id，直到 Lead release 或 reassign。</desc>
+
+  <defs>
+    <marker id="f03-a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-a3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">MEMBER LIFECYCLE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">成员会死，归属不会自动消失</text>
+  <text x="48" y="88" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">上排由 subagent runtime 驱动，下排只由任务动作驱动；两排之间没有自动联动</text>
+
+  <!-- lane A -->
+  <text x="48" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SUBAGENT 生命周期</text>
+
+  <rect x="56" y="148" width="110" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="111" y="172" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">created</text>
+  <text x="111" y="190" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">新会话或 fork</text>
+
+  <rect x="206" y="148" width="120" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="266" y="172" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">running</text>
+  <text x="266" y="190" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">自己的轮次</text>
+
+  <rect x="366" y="148" width="100" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="416" y="172" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">idle</text>
+  <text x="416" y="190" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">等下一步输入</text>
+
+  <rect x="506" y="148" width="150" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="581" y="172" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">followup 唤醒</text>
+  <text x="581" y="190" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">同一个会话，新轮次</text>
+
+  <rect x="700" y="148" width="110" height="56" rx="6" fill="#f0f0f0" stroke="#8a93a6" stroke-dasharray="4 3"/>
+  <text x="755" y="172" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">disposed</text>
+  <text x="755" y="190" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">会话可能冷存</text>
+
+  <line x1="166" y1="176" x2="202" y2="176" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <line x1="326" y1="176" x2="362" y2="176" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <line x1="466" y1="176" x2="502" y2="176" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <line x1="656" y1="176" x2="696" y2="176" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <text x="676" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">中断 / 结束</text>
+
+  <rect x="206" y="240" width="120" height="46" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="266" y="260" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">failed</text>
+  <text x="266" y="277" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">本轮失败，会话未必消失</text>
+  <line x1="266" y1="204" x2="266" y2="236" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f03-a3b)"/>
+
+  <text x="366" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">注意：failed 不是终态，也不是任务状态</text>
+
+  <!-- lane B -->
+  <text x="48" y="356" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TASK OWNERSHIP</text>
+
+  <rect x="56" y="378" width="644" height="62" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="80" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">in_progress · ownerId = A</text>
+  <text x="80" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">revision 随任务动作 +1</text>
+
+  <rect x="704" y="378" width="200" height="62" rx="6" fill="#ffffff" stroke="#8a93a6" stroke-dasharray="4 3"/>
+  <text x="724" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">ownerId 仍是 A</text>
+  <text x="724" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">成员已不存在</text>
+
+  <line x1="111" y1="300" x2="111" y2="374" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="416" y1="300" x2="416" y2="374" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="755" y1="300" x2="755" y2="374" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <text x="126" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">成员销毁不写任务</text>
+
+  <!-- rewrite actions -->
+  <rect x="56" y="470" width="848" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">ONLY TWO WRITE PATHS</text>
+  <text x="76" y="511" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">release：owner 或 Lead，清空所有者并回到 pending</text>
+  <text x="470" y="511" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">reassign：仅 Lead，换人或清空</text>
+
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">归属寿命长于成员寿命，是这块板子能作为责任记录的根因。</text>
+  <text x="48" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6">代价：死掉的任务不会自己消失，Lead 必须读结果、做决定、写回任务。</text>
+</svg>

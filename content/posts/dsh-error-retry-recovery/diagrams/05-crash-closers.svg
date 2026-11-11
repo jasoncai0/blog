@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f05-d05-title f05-d05-desc">
+  <title id="f05-d05-title">崩溃后如何用合成事件收尾</title>
+  <desc id="f05-d05-desc">左侧是崩溃前已持久化的日志尾部，停在 tool/call；右侧是恢复时补写的合成事件：错误工具结果、step/end 与 turn/end interrupted。下方说明两种错误码与 fork 场景的差异。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">CRASH CLOSERS / 08</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">日志停在半路，也要能重新打开</text>
+
+  <!-- left log -->
+  <text x="40" y="100" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#4f5d75">已持久化（崩溃前）</text>
+  <g>
+    <rect x="40" y="112" width="450" height="30" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="40" y="148" width="450" height="30" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="40" y="184" width="450" height="30" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="40" y="220" width="450" height="30" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">
+    <text x="52" y="131">#12  turn/start 1</text>
+    <text x="52" y="167">#13  step/start 1</text>
+    <text x="52" y="203">#14  assistant/message · tool-call tc_1</text>
+    <text x="52" y="239">#15  tool/call tc_1</text>
+  </g>
+  <text x="40" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#bf4520">✕ 进程在这里被杀：没有 step/end，没有 turn/end，tc_1 没有结果</text>
+
+  <!-- right synthetic -->
+  <text x="530" y="100" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">恢复时补写（确定性）</text>
+  <g stroke-dasharray="5 3">
+    <rect x="530" y="112" width="390" height="30" rx="4" fill="#fbf1ec" stroke="#bf4520"/>
+    <rect x="530" y="148" width="390" height="30" rx="4" fill="#fbf1ec" stroke="#bf4520"/>
+    <rect x="530" y="184" width="390" height="30" rx="4" fill="#fbf1ec" stroke="#bf4520"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">
+    <text x="542" y="131">#16  tool/result tc_1 · isError</text>
+    <text x="542" y="167">#17  step/end 1</text>
+    <text x="542" y="203">#18  turn/end 1 · { interrupted }</text>
+  </g>
+  <g stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f05-a9)">
+    <path d="M494 127 H 526"/>
+    <path d="M494 163 H 526"/>
+    <path d="M494 199 H 526"/>
+  </g>
+
+  <!-- codes -->
+  <rect x="40" y="300" width="450" height="120" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="322" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">TWO LIFECYCLE FACTS</text>
+  <text x="56" y="344" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">TOOL_OUTCOME_UNKNOWN</text>
+  <text x="56" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">记了 tool/call，但没结果：可能已产生副作用</text>
+  <text x="56" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">TOOL_NOT_STARTED</text>
+  <text x="56" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">连 tool/call 都没记：可以放心重试</text>
+
+  <!-- model text -->
+  <rect x="510" y="300" width="410" height="120" rx="5" fill="#fbf1ec" stroke="#e8c9b8"/>
+  <text x="526" y="322" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">MODEL-VISIBLE GUIDANCE</text>
+  <text x="526" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#2d3142">「结果未知。依据工具语义判断是否重试：</text>
+  <text x="526" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#2d3142">只读或幂等才重试；可能有副作用就先核实</text>
+  <text x="526" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#2d3142">外部状态，或询问用户。不要盲目重试。」</text>
+  <text x="526" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a5a44">任务：让模型做决定，而不是让恢复器猜。</text>
+
+  <!-- determinism -->
+  <rect x="40" y="444" width="880" height="116" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="466" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">DETERMINISM RULES</text>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.8" fill="#2d3142">
+    <text x="56" y="488">· 合成事件复用最后一条真实事件的 time，绝不发明「未来时间」。</text>
+    <text x="56" y="510">· seq 从 last.seq + 1 连续递增；同一份日志，任何进程恢复出的收尾都逐字节相同。</text>
+    <text x="56" y="532">· 先补工具结果，再补 step/end，最后 turn/end：顺序反了，提供方会看到悬挂的工具调用。</text>
+  </g>
+  <text x="56" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a5a44">fork 切点也能落在父会话的开放轮次里：同一套收尾逻辑，cause 换成 forked，文案强调「父会话可能在切点后完成了它」。</text>
+
+  <defs>
+    <marker id="f05-a9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/></marker>
+  </defs>
+</svg>

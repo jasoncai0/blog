@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f06-d06-title f06-d06-desc">
+  <title id="f06-d06-title">工具可见性的四层过滤</title>
+  <desc id="f06-d06-desc">五条自上而下收窄的色带：全局注册、scope 遮蔽、restriction 交集、when 条件求值、本步 schema。右侧说明被过滤的工具既不出现于提示词也拒绝执行，且与不存在无法区分。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">TOOL ADMISSION / 07</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">工具不是「注册了就可见」：四层过滤，一步一次</text>
+
+  <!-- stage 1 -->
+  <rect x="40" y="92" width="880" height="66" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="114" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">01 · 全局注册</text>
+  <text x="56" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">所有插件贡献的工具名，未过滤</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">
+    <rect x="300" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="312" y="122">read</text>
+    <rect x="362" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="370" y="122">write</text>
+    <rect x="424" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="434" y="122">edit</text>
+    <rect x="486" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="498" y="122">bash</text>
+    <rect x="548" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="560" y="122">glob</text>
+    <rect x="610" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="622" y="122">grep</text>
+    <rect x="672" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="682" y="122">task</text>
+    <rect x="734" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="748" y="122">web</text>
+    <rect x="796" y="108" width="56" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="806" y="122">todo</text>
+  </g>
+
+  <!-- stage 2 -->
+  <rect x="100" y="166" width="760" height="66" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="116" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">02 · SCOPE 遮蔽</text>
+  <text x="116" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">最具体的注册胜出；子 agent 不继承父的 scoped 注册</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">
+    <rect x="400" y="182" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="410" y="196">read</text>
+    <rect x="482" y="182" width="76" height="20" rx="3" fill="#fbf1ec" stroke="#bf4520"/><text x="488" y="196" fill="#bf4520">bash（覆盖）</text>
+    <rect x="564" y="182" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="576" y="196">grep</text>
+    <rect x="646" y="182" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="658" y="196">task</text>
+    <rect x="728" y="182" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="744" y="196">web</text>
+  </g>
+
+  <!-- stage 3 -->
+  <rect x="160" y="240" width="640" height="66" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="176" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">03 · RESTRICTION</text>
+  <text x="176" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">scope 的 allow/deny 与全局工具取交集；只作用于全局工具名</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">
+    <rect x="500" y="256" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="516" y="270">read</text>
+    <rect x="582" y="256" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="598" y="270">grep</text>
+    <rect x="664" y="256" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="680" y="270">task</text>
+  </g>
+
+  <!-- stage 4 -->
+  <rect x="220" y="314" width="520" height="66" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="236" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">04 · WHEN</text>
+  <text x="236" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">每个拟议步骤求值一次；可以异步，必须观察 signal</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">
+    <rect x="560" y="330" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="576" y="344">read</text>
+    <rect x="642" y="330" width="76" height="20" rx="3" fill="#f7f7f7" stroke="#d8d8d8"/><text x="658" y="344">grep</text>
+  </g>
+
+  <!-- stage 5 -->
+  <rect x="280" y="388" width="400" height="66" rx="5" fill="#eef4ef" stroke="#5b8a5e"/>
+  <text x="296" y="410" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#3f6b42">05 · 本步 SCHEMA</text>
+  <text x="296" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#3f6b42">交给请求，同时固定执行器分区</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#3f6b42">
+    <rect x="540" y="404" width="60" height="20" rx="3" fill="#ffffff" stroke="#5b8a5e"/><text x="554" y="418">read</text>
+    <rect x="606" y="404" width="60" height="20" rx="3" fill="#ffffff" stroke="#5b8a5e"/><text x="620" y="418">grep</text>
+  </g>
+
+  <!-- right note -->
+  <rect x="700" y="388" width="220" height="66" rx="5" fill="#fbf1ec" stroke="#e8c9b8"/>
+  <text x="714" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".1em" fill="#bf4520">FILTERED = ABSENT</text>
+  <text x="714" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a5a44">不出现于提示词</text>
+  <text x="714" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a5a44">拒绝执行，且与不存在无法区分</text>
+
+  <!-- lifecycle -->
+  <rect x="40" y="476" width="880" height="88" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="498" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">RESOLVED TOOL SET LIFECYCLE</text>
+  <text x="56" y="520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">resolve({ agent, modelSelection, signal }) → ResolvedToolSet { dispose(), view(scope) }</text>
+  <text x="56" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">step/start 前解析，step/end 后 dispose；批次内每次调用（含 PTC 子调用）都走同一份准入。</text>
+  <text x="56" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">同名替换或新 restriction 只阻止尚未开始的调用：已发出的调用不会被静默取消，它们会带着自己的结果回来。</text>
+</svg>

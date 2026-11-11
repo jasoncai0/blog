@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">压缩的三个触发入口与同一个日志锁事务</title>
+  <desc id="f01-d1-desc">三个入口分别是每个 step 前的压力检查、请求被上下文窗口拒绝后的恢复、以及手动 /compact。三者都进入 compactSurfaceRegion 的同一段事务：校验、写 durable 锁、准备、摘要、提交并释放。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-COMPACTION / TRIGGERS</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">触发点不同，落的却是同一个事务</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">三个入口各自决定「现在要不要压、压到多少」，之后共用一套校验、加锁、摘要、提交与失败收尾。</text>
+
+  <rect x="40" y="104" width="280" height="220" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142">① 压力：每个 step 之前</text>
+  <text x="56" y="148" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">AGENT/PRE-STEP</text>
+  <text x="56" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">按已提交 header 的模型窗口计价</text>
+  <text x="56" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">measure 到阈值才进入</text>
+  <text x="56" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">先剪工具结果，再重新 measure</text>
+  <text x="56" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">仍超才选区间、调摘要模型</text>
+  <text x="56" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">失败只 logger.warn</text>
+  <text x="56" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">turn 不因压缩失败而中断</text>
+  <text x="56" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">compactionRetries 默认 1</text>
+
+  <rect x="340" y="104" width="280" height="220" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142">② 溢出：请求已被拒绝</text>
+  <text x="356" y="148" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">AGENT/REQUEST-ERROR</text>
+  <text x="356" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">只接 CONTEXT_WINDOW_EXCEEDED</text>
+  <text x="356" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">此时 surface 仍是失败前那一版</text>
+  <text x="356" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">prune → measure，retain 强制 0</text>
+  <text x="356" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">恢复动作是重发同一个 step</text>
+  <text x="356" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">只有 replaceGeneration 前进</text>
+  <text x="356" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">才计数并返回 retry</text>
+  <text x="356" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">maxOverflowRetries 默认 1</text>
+
+  <rect x="640" y="104" width="280" height="220" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="656" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142">③ 手动：/compact</text>
+  <text x="656" y="148" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">COMMAND-COMPACT</text>
+  <text x="656" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">跑在 agent.runMaintenance 里</text>
+  <text x="656" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">要求 idle，且没有 open turn</text>
+  <text x="656" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">写 turn:null 的独立括号</text>
+  <text x="656" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">retain 0，压到只剩成对边界</text>
+  <text x="656" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">6 个失败码要翻成人话</text>
+  <text x="656" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">flush 成功才算压完</text>
+  <text x="656" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">手动括号 turn: null</text>
+
+  <rect x="40" y="338" width="880" height="30" rx="6" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="56" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">第四个入口：<tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5">agent/request</tspan> 发现目标模型变了，先按新窗口压一次；失败就抛 MODEL_SWITCH_COMPACTION_FAILED，保留旧模型。</text>
+
+  <line x1="180" y1="368" x2="180" y2="396" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="480" y1="368" x2="480" y2="396" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="780" y1="368" x2="780" y2="396" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="40" y="398" width="880" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142">compactSurfaceRegion：一次只做一件事，做完才释放锁</text>
+
+  <rect x="56" y="438" width="156" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="68" y="457" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">validate</text>
+  <text x="68" y="473" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">两端成对、节点在 surface 内</text>
+  <text x="68" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">否则什么都不写</text>
+
+  <rect x="232" y="438" width="156" height="60" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="244" y="457" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">compaction/start</text>
+  <text x="244" y="473" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">校验后同步 append</text>
+  <text x="244" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">这条记录就是锁</text>
+
+  <rect x="408" y="438" width="156" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="420" y="457" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">prepare</text>
+  <text x="420" y="473" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">重测、定价、核对节点</text>
+  <text x="420" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">算出被遮蔽的 token 数</text>
+
+  <rect x="584" y="438" width="156" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="596" y="457" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">summarize</text>
+  <text x="596" y="473" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">一次真实模型调用</text>
+  <text x="596" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">失败可走 recovery waterfall</text>
+
+  <rect x="760" y="438" width="156" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="772" y="457" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">commit + end</text>
+  <text x="772" y="473" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">replace 落到 surface</text>
+  <text x="772" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">再写 end 释放锁</text>
+
+  <line x1="212" y1="468" x2="228" y2="468" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="388" y1="468" x2="404" y2="468" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="564" y1="468" x2="580" y2="468" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="740" y1="468" x2="756" y2="468" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <text x="56" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">失败只尝试一次 <tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8">compaction/end {error}</tspan>；连收尾都写不进去，就留下一条可被下次检查发现的 unmatched start，入口一律按 busy 拒绝。</text>
+  <text x="56" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">区别只在括号：自动压缩被 turn 包住，手动压缩自成一对；摘要与替换在两种括号里是同一段代码。</text>
+
+  <text x="40" y="576" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">packages/compaction/compaction-basic/src/index.ts · region.ts</text>
+</svg>

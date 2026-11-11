@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">DSH 的五个平面与日志脊柱</title>
+  <desc id="f01-d1-desc">模型位于中心，输入、控制、执行、组织、记忆五个平面围绕它。底部是只追加的会话日志：控制平面从日志派生请求，记忆平面把日志投影成上下文，组织平面通过作用域注册把子代理挂到同一个日志基底上。</desc>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH ANATOMY / FIVE PLANES</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">五个平面围绕一个模型，一条日志在底部兜底</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">每个平面都可以整体替换；只有会话日志不会被替换，它是恢复、压缩与 fork 的共同基底</text>
+
+  <!-- input plane -->
+  <rect x="40" y="120" width="250" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">输入平面</text>
+  <text x="56" y="160" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">INPUT</text>
+  <text x="56" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">inbox：next-turn / next-step</text>
+  <text x="56" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">followup · steer · inject</text>
+  <text x="56" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">审批 / 提问 / 人类命令</text>
+  <text x="56" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">取消、唤醒与投递语义</text>
+  <text x="56" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">被拒绝的输入留在队列里，不丢失</text>
+
+  <!-- control plane -->
+  <rect x="330" y="120" width="300" height="200" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="346" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">控制平面</text>
+  <text x="346" y="160" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">AGENT LOOP</text>
+  <rect x="376" y="176" width="208" height="96" rx="6" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="480" y="204" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">模型</text>
+  <text x="480" y="224" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">一次请求 = 系统提示 + 历史 + 工具 schema</text>
+  <text x="480" y="242" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">一次响应 = 文本 + tool_calls</text>
+  <text x="480" y="260" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">ctx.llm.stream()</text>
+  <text x="346" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">turn 排空一次输入；step = 一次请求 + 它的工具</text>
+  <text x="346" y="311" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">pre-step / request / stream / error 四个扩展点</text>
+
+  <!-- execution plane -->
+  <rect x="670" y="120" width="250" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="686" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">执行平面</text>
+  <text x="686" y="160" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TOOLS</text>
+  <text x="686" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">注册表 + 作用域遮蔽</text>
+  <text x="686" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">九段流水线 + 三道水闸</text>
+  <text x="686" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">沙箱 / 权限 / 一次性审批</text>
+  <text x="686" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">截断 · 落盘 · 调用配对</text>
+  <text x="686" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">模型看不到的工具，等于不存在</text>
+
+  <!-- organization plane -->
+  <rect x="40" y="360" width="250" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">组织平面</text>
+  <text x="56" y="400" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">ORCHESTRATION</text>
+  <text x="56" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">subagent：独立会话与作用域</text>
+  <text x="56" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">team：共享任务板 + 角色</text>
+  <text x="56" y="468" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">workflow：脚本 fan-out</text>
+  <text x="56" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">jobs / goal / schedule</text>
+
+  <!-- log -->
+  <rect x="330" y="360" width="300" height="150" rx="6" fill="#2d3142" stroke="#2d3142"/>
+  <text x="346" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#ffffff">会话日志</text>
+  <text x="346" y="400" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#e0a184">SESSION EVENT LOG</text>
+  <text x="346" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#d7dbe4">SessionEventMap · 14 个持久事件</text>
+  <text x="346" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#d7dbe4">JSONL，只追加，按代际发布</text>
+  <text x="346" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#d7dbe4">deriveMessages() 是唯一投影入口</text>
+  <text x="346" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#d7dbe4">压缩、fork、恢复都从这里读</text>
+  <text x="346" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">model-visible ⟺ recorded</text>
+
+  <!-- memory plane -->
+  <rect x="670" y="360" width="250" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="686" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">记忆平面</text>
+  <text x="686" y="400" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">MEMORY</text>
+  <text x="686" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">指令：AGENTS.md / skill</text>
+  <text x="686" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">会话：日志即短期记忆</text>
+  <text x="686" y="468" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工作集：压缩与重注入</text>
+  <text x="686" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">长期：检索 / 引用 / fork</text>
+
+  <!-- connections -->
+  <path d="M290,215 L326,215" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-a)"/>
+  <path d="M630,215 L666,215" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-a)"/>
+  <path d="M480,320 L480,356" stroke="#bf4520" stroke-width="1.4" fill="none" marker-start="url(#f01-ao)" marker-end="url(#f01-ao)"/>
+  <path d="M200,342 L795,342" stroke="#8a93a6" stroke-width="1" fill="none" opacity="0.7"/>
+  <path d="M200,342 L200,356" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-a)"/>
+  <path d="M795,342 L795,356" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-a)"/>
+
+  <text x="150" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">spawn / scope</text>
+  <text x="496" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">append / derive</text>
+  <text x="704" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">assemble / compact</text>
+
+  <text x="40" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">读法：输入 → 控制 → 执行构成一次 turn 的主干；组织平面把主干复制到子会话；记忆平面决定主干每次看到什么。</text>
+  <text x="40" y="574" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">DSH 0.2.2-rc.1 / 370 packages / 14 session events</text>
+</svg>

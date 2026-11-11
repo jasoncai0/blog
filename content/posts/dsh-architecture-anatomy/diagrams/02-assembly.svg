@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">从 profile 到插件树的组装过程</title>
+  <desc id="f02-d2-desc">一个 profile 选择一个有序的 bundle 列表；每个 bundle 提供一份 patch，叠加用户 home patch 与命令行 overlay，按 id 解析成最终配置行，再由 Loader 实例化成以 ctx 键为索引的插件树。</desc>
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">BOOT / ASSEMBLY</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">一次启动：三层 patch 叠成一棵插件树</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">没有「主配置文件」；每一行有唯一 id，后写的整条替换先写的</text>
+
+  <!-- profile -->
+  <rect x="40" y="112" width="190" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">profile: web</text>
+  <text x="56" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">dsh.profile.bundles</text>
+  <text x="56" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">有序列表，决定基础能力</text>
+
+  <!-- bundles -->
+  <text x="40" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">BUNDLES (ORDERED)</text>
+  <rect x="40" y="234" width="190" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">dsh-base</text>
+  <text x="54" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">99 行：核心能力全集</text>
+
+  <rect x="40" y="296" width="190" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">dsh-web-app</text>
+  <text x="54" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">HTTP 网关、会话控制器</text>
+
+  <rect x="40" y="358" width="190" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">dsh-web-client</text>
+  <text x="54" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">60 个 UI 插件</text>
+
+  <path d="M135,188 L135,230" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-a)"/>
+  <path d="M230,260 L258,260 L258,169 L284,169" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-a)"/>
+  <text x="196" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">load</text>
+
+  <!-- patch layers -->
+  <text x="288" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">PATCH LAYERS</text>
+  <rect x="288" y="140" width="304" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="304" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">bundle patch</text>
+  <text x="304" y="177" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">cordis.patch.yml：insert 行，含 !!js 条件</text>
+  <text x="304" y="191" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">disabled: !!js "!ctx.get('profileContext')"</text>
+
+  <rect x="288" y="210" width="304" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="304" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">home patch</text>
+  <text x="304" y="247" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">用户目录下的 cordis.patch.yml</text>
+  <text x="304" y="261" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">覆盖任意 id，不用改包</text>
+
+  <rect x="288" y="280" width="304" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="304" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">--patch overlay</text>
+  <text x="304" y="317" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">命令行临时层，调试与实验</text>
+  <text x="304" y="331" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">优先级最高，只影响本次进程</text>
+
+  <path d="M440,338 L440,368" stroke="#bf4520" stroke-width="1.4" fill="none" marker-end="url(#f02-ao)"/>
+  <text x="448" y="358" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">last write wins</text>
+
+  <rect x="288" y="372" width="304" height="72" rx="6" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="304" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">按 id 解析成最终行</text>
+  <text x="304" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">整条 config 替换，不做深合并；</text>
+  <text x="304" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">行顺序不承担加载语义，激活看服务可用性。</text>
+
+  <path d="M440,444 L440,470 L660,470" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-a)"/>
+  <text x="466" y="464" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">Loader</text>
+
+  <!-- plugin tree -->
+  <rect x="668" y="112" width="252" height="420" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="684" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">运行时的 ctx 树</text>
+  <text x="684" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SERVICES</text>
+
+  <text x="684" y="178" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">ctx</text>
+  <text x="684" y="200" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ llm            adapter</text>
+  <text x="684" y="220" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ sessions       journal</text>
+  <text x="684" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ tools          registry</text>
+  <text x="684" y="260" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ systemPrompt   assembly</text>
+  <text x="684" y="280" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ agents         registry</text>
+  <text x="684" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ agentLoop      driver</text>
+  <text x="684" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ fs / shell     seams</text>
+  <text x="684" y="340" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ sandbox        policy</text>
+  <text x="684" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">├─ approval       seam</text>
+  <text x="684" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">└─ commands       plane</text>
+
+  <path d="M684,398 L904,398" stroke="#d8d8d8" stroke-width="1" fill="none"/>
+  <text x="684" y="418" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">TOOLS AS DATA</text>
+  <text x="684" y="438" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">bash · read · write · edit</text>
+  <text x="684" y="456" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">glob · grep · task · web</text>
+  <text x="684" y="474" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">subagent · todo · goal …</text>
+  <text x="684" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每个叶子都可单独 disable</text>
+
+  <!-- rules -->
+  <rect x="40" y="466" width="600" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">三条容易踩的规则</text>
+  <text x="56" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">1. 只写差异等于把字段重置为默认，不是「保持原值」。</text>
+  <text x="56" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">2. patch 是程序：!!js 会在加载时求值，条件不满足整行不出现。</text>
+
+  <text x="40" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">代价：没有单一配置文件可读。好处：每一行只有一个主人，替换能力不需要改产品代码。</text>
+  <text x="40" y="578" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">profile → bundle → patch → Loader → ctx tree</text>
+</svg>

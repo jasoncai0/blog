@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">三个路径逃逸案例与各层反应</title>
+  <desc id="f04-d4-desc">目录穿越、符号链接、绝对路径三种输入，在 resolve、checkedTarget 与内核 confine 三层分别得到什么结果；说明判断对象必须是最终目标而不是模型给的字符串。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">11 / PATH ESCAPES</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">三种输入，一个判据：检查最终目标</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">字符串前缀、resolve 之前检查、只看输入——三种常见实现分别被下面三个案例绕过</text>
+
+  <!-- column headers -->
+  <text x="40" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">CASE</text>
+  <text x="248" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">RESOLVE</text>
+  <text x="504" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">CHECKEDTARGET</text>
+  <text x="804" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">OUTCOME</text>
+
+  <!-- row 1 -->
+  <rect x="40" y="134" width="880" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">1. 目录穿越</text>
+  <text x="56" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">../../etc/passwd</text>
+  <text x="56" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">看起来是相对路径</text>
+  <text x="56" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">前缀检查会放行</text>
+
+  <text x="248" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">规范化为绝对路径</text>
+  <text x="248" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">/etc/passwd</text>
+  <text x="248" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不跟随链接（目标不存在）</text>
+
+  <text x="504" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">重新 realpath，逐个可写根</text>
+  <text x="504" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">做 isPathUnder</text>
+  <text x="504" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">不在任何根下 → 拒绝</text>
+
+  <rect x="804" y="150" width="98" height="40" rx="4" fill="#fdf6f2" stroke="#bf4520"/>
+  <text x="818" y="167" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">FS_SANDBOX</text>
+  <text x="818" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">_DENIED</text>
+
+  <!-- row 2 -->
+  <rect x="40" y="238" width="880" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">2. 符号链接</text>
+  <text x="56" y="280" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">link/passwd</text>
+  <text x="56" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">工作区内放 link → /etc</text>
+  <text x="56" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">路径本身在根下</text>
+
+  <text x="248" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">跟随链接</text>
+  <text x="248" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">/etc/passwd</text>
+  <text x="248" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">目标已不是输入的路径</text>
+
+  <text x="504" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">再次 realpath（防中间换链）</text>
+  <text x="504" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">返回 fresh target 用于变更</text>
+  <text x="504" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">不在根下 → 拒绝</text>
+
+  <rect x="804" y="254" width="98" height="40" rx="4" fill="#fdf6f2" stroke="#bf4520"/>
+  <text x="818" y="271" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">FS_SANDBOX</text>
+  <text x="818" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">_DENIED</text>
+
+  <!-- row 3 -->
+  <rect x="40" y="342" width="880" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="366" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">3. 绝对路径</text>
+  <text x="56" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">/tmp/x</text>
+  <text x="56" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">明显越界，但最容易</text>
+  <text x="56" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">被“已挡住”的假设放过</text>
+
+  <text x="248" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">规范化为绝对路径</text>
+  <text x="248" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">/tmp/x</text>
+  <text x="248" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">/tmp 不在 additionalWritableRoots</text>
+
+  <text x="504" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">write：拒绝</text>
+  <text x="504" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">read-only：更早拒绝</text>
+  <text x="504" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">danger-full-access：直接放行</text>
+
+  <rect x="804" y="358" width="98" height="40" rx="4" fill="#fdf6f2" stroke="#bf4520"/>
+  <text x="810" y="375" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">FS_SANDBOX</text>
+  <text x="810" y="388" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">_DENIED</text>
+
+  <!-- bottom notes -->
+  <rect x="40" y="456" width="430" height="100" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="478" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">WHY FRESH TARGET</text>
+  <text x="56" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">检查返回布尔值 → 检查与写入之间还有一次替换机会；</text>
+  <text x="56" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">返回 fresh target → 检查的身份就是变更的身份。</text>
+  <text x="56" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">回归测试：换掉祖先链接后仍必须拒绝。</text>
+
+  <rect x="490" y="456" width="430" height="100" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="506" y="478" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">SYMLINK SOURCE ≠ SYMLINK TARGET</text>
+  <text x="506" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">写入目标的语义是“已跟随链接”，所以围栏看到最终目标；</text>
+  <text x="506" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">patch/delete/move 的源必须是普通文件，要在 resolve 前 lstat。</text>
+  <text x="506" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">这是两条不同的检查，不能合并成一个“路径检查”。</text>
+
+  <text x="40" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 11</text>
+</svg>

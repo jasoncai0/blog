@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">压缩失败后的四种结局与抖动刹车</title>
+  <desc id="f04-d4-desc">正常路径是触发、写锁、摘要、提交释放。失败分三类：摘要失败会闭合括号、提交失败可能只改了一半、进程崩溃留下未匹配的 start。底部是三条计数规则，决定什么时候还能重试。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-COMPACTION / FAILURE</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">失败不是异常，是一种要写进日志的状态</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">压缩改了模型看到的东西，所以它的失败必须可检测、可解释、可停下。否则一次压缩失败会变成一串压缩失败。</text>
+
+  <rect x="40" y="140" width="156" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">idle</text>
+  <text x="56" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">没有未闭合的括号</text>
+
+  <rect x="226" y="140" width="156" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="242" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">① 触发</text>
+  <text x="242" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">pressure / overflow / 手动</text>
+
+  <rect x="412" y="140" width="156" height="56" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="428" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">compaction/start</text>
+  <text x="428" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">同步写入的锁</text>
+
+  <rect x="598" y="140" width="156" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="614" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">② 摘要</text>
+  <text x="614" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">一次真实的模型调用</text>
+
+  <rect x="784" y="140" width="156" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="800" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">③ commit + end</text>
+  <text x="800" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">替换可见，锁释放</text>
+
+  <line x1="196" y1="168" x2="222" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="382" y1="168" x2="408" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="568" y1="168" x2="594" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="754" y1="168" x2="780" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <text x="40" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">任何一步失败，都会在日志里留下可区分的痕迹，而不是只抛一个异常给上层。</text>
+
+  <rect x="40" y="258" width="286" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">摘要失败：括号一定闭合</text>
+  <text x="56" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">compaction/end 带 error 落盘；</text>
+  <text x="56" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">surface 不动，恢复期的图片省略仍有效。</text>
+  <text x="56" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">manual → summary / changed</text>
+
+  <rect x="337" y="258" width="286" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="353" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">commit 失败：可能只改了一半</text>
+  <text x="353" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">summary 事件已写、replace 未落的窗口</text>
+  <text x="353" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">确实存在，所以这个码只报「可能」。</text>
+  <text x="353" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">manual → commit，别急着重试</text>
+
+  <rect x="634" y="258" width="286" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="650" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">崩溃：留下可检测的锁</text>
+  <text x="650" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">有 start 没有 end，日志里能看出来；</text>
+  <text x="650" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">下次入口按 busy 拒绝，而不是再压一次。</text>
+  <text x="650" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">更晚的 end-seed 会让旧 start 作废</text>
+
+  <rect x="40" y="374" width="880" height="188" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142">抖动刹车：三条计数规则决定「还能不能再试」</text>
+
+  <rect x="56" y="414" width="272" height="88" rx="6" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="70" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">计数只在 surface 真的变了时 +1</text>
+  <text x="70" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">压缩抛错但 replaceGeneration 前进：</text>
+  <text x="70" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">算一次有效恢复，可以重试。</text>
+  <text x="70" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">没前进：把原始错误还给调用方。</text>
+
+  <rect x="344" y="414" width="272" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="358" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">成功响应与空闲都会清零</text>
+  <text x="358" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">assistant/message 落盘即清零，</text>
+  <text x="358" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">即使同一 turn 后面还要调工具。</text>
+  <text x="358" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">idle 状态同样清零。</text>
+
+  <rect x="632" y="414" width="272" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="646" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">上限很小，而且分两个</text>
+  <text x="646" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">maxOverflowRetries 默认 1：溢出只恢复一次。</text>
+  <text x="646" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">compactionRetries 默认 1：一次压力最多两轮摘要。</text>
+  <text x="646" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">两个预算互不占用。</text>
+
+  <text x="56" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">图片 offload 是例外：它改写 surface 但不花 retry 预算，也不写 retry 事件。注释原话是「a durable surface repair, not a provider retry」。</text>
+  <text x="56" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">所以一次被图片撑爆的请求，可能连续走两三次「修复 → 重发」，但 overflow 计数只加一次。</text>
+
+  <text x="40" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">index.ts:213 agent/request-error · index.ts:387 summarizeCompaction · image-offload/src/index.ts:29</text>
+</svg>

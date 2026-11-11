@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">scope 与 agent 的生命周期</title>
+  <desc id="f02-d2-desc">从 createScope 创建 fiber 与标签，到 setup window 注册、agent/created 发布、running 每步解析，最后 dispose 时 quiesce 并逆序撤销 effect；模型可见性在发布点切换。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">09 / SCOPE LIFECYCLE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">scope 的生命周期：先存在，后发布，最后 quiesce</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">setup window 是唯一的「只注册、不驱动模型」时段；发布之后，每次解析都按 model step 冻结</text>
+
+  <!-- columns -->
+  <rect x="40" y="112" width="160" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">01 CREATE</text>
+  <text x="54" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">createScope()</text>
+  <text x="54" y="174" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">ctx.plugin(scope)</text>
+  <text x="54" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">新建 fiber</text>
+  <text x="54" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">kScope 打标签</text>
+  <text x="54" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">返回 ctx / dispose</text>
+  <text x="54" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">无 parent = 兄弟 scope</text>
+
+  <rect x="220" y="112" width="160" height="150" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="234" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">02 SETUP</text>
+  <text x="234" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">setup window</text>
+  <text x="234" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">register 工具</text>
+  <text x="234" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">restrict / sections</text>
+  <text x="234" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">agent/created 未触发</text>
+  <text x="234" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">首次提示词未组装</text>
+  <text x="234" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">只注册，不驱动</text>
+
+  <rect x="400" y="112" width="160" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="414" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">03 CREATED</text>
+  <text x="414" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">agent/created</text>
+  <text x="414" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">scope 对外可见</text>
+  <text x="414" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">观察者可读集合</text>
+  <text x="414" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">下一次请求带 schema</text>
+  <text x="414" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">父 scope 仍是兄弟</text>
+  <text x="414" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">可见性在这里翻转</text>
+
+  <rect x="580" y="112" width="160" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="594" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">04 RUNNING</text>
+  <text x="594" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">per-step resolve</text>
+  <text x="594" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">冻结 ToolSet</text>
+  <text x="594" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">with 条件逐个求值</text>
+  <text x="594" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">批次内不换表</text>
+  <text x="594" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">tools/change → 重组</text>
+  <text x="594" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">执行时复核，撤销生效</text>
+
+  <rect x="760" y="112" width="160" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="774" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">05 DISPOSE</text>
+  <text x="774" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">quiesceFiber</text>
+  <text x="774" y="174" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">fiber.dispose()</text>
+  <text x="774" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">while (inertia) await</text>
+  <text x="774" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">effect 逆序撤销</text>
+  <text x="774" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">tools/change 再触发</text>
+  <text x="774" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">layer 空了才回收</text>
+
+  <!-- timeline -->
+  <line x1="70" y1="292" x2="890" y2="292" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <line x1="120" y1="262" x2="120" y2="292" stroke="#8a93a6" stroke-width="1"/>
+  <line x1="300" y1="262" x2="300" y2="292" stroke="#bf4520" stroke-width="1"/>
+  <line x1="480" y1="262" x2="480" y2="292" stroke="#8a93a6" stroke-width="1"/>
+  <line x1="660" y1="262" x2="660" y2="292" stroke="#8a93a6" stroke-width="1"/>
+  <line x1="840" y1="262" x2="840" y2="292" stroke="#8a93a6" stroke-width="1"/>
+  <circle cx="120" cy="292" r="3.5" fill="#4f5d75"/>
+  <circle cx="300" cy="292" r="3.5" fill="#bf4520"/>
+  <circle cx="480" cy="292" r="3.5" fill="#4f5d75"/>
+  <circle cx="660" cy="292" r="3.5" fill="#4f5d75"/>
+  <circle cx="840" cy="292" r="3.5" fill="#4f5d75"/>
+
+  <text x="120" y="312" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">createScope</text>
+  <text x="300" y="312" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">setup</text>
+  <text x="480" y="312" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">created</text>
+  <text x="660" y="312" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">running</text>
+  <text x="840" y="312" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">dispose</text>
+
+  <!-- model visibility lane -->
+  <text x="40" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">MODEL VISIBILITY</text>
+  <rect x="200" y="364" width="190" height="52" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="214" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不可见</text>
+  <text x="214" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">首次提示词还没组装</text>
+
+  <rect x="410" y="364" width="230" height="52" rx="5" fill="rgba(47,111,94,0.08)" stroke="#2f6f5e"/>
+  <text x="424" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2f6f5e">可见（下一步请求起）</text>
+  <text x="424" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">schema 进 header，按 step 冻结</text>
+
+  <rect x="660" y="364" width="180" height="52" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="674" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不再可见</text>
+  <text x="674" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">scope 已关闭</text>
+
+  <line x1="300" y1="364" x2="300" y2="318" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="480" y1="364" x2="480" y2="318" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="840" y1="364" x2="840" y2="318" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- sibling scope -->
+  <rect x="40" y="452" width="360" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="5 4"/>
+  <text x="56" y="474" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">SIBLING SCOPE</text>
+  <text x="56" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">父 agent 的 scope 不在子 agent 的链上</text>
+  <text x="56" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">父层注册：子 agent 看不到</text>
+  <text x="56" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">父层 dispose：子 agent 不受影响</text>
+
+  <rect x="440" y="452" width="480" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="456" y="474" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">EXPLICIT PARENT</text>
+  <text x="456" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">只有显式 bindScopeParent(child, parent) 才会继承</text>
+  <text x="456" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">此时父层 restriction 也一起参与子层的 every 判定</text>
+  <text x="456" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">核心 agent 创建不绑定 parent，所以默认是兄弟</text>
+
+  <text x="40" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">dispose 不是「立刻删除」：它先关掉 fiber，再等所有进行中的 effect 停稳；这期间注册表已不可再解析新的调用。</text>
+</svg>

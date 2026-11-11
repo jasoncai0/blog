@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f03-d03-title f03-d03-desc">
+  <title id="f03-d03-title">Agent 成熟度阶梯 L0 到 L6</title>
+  <desc id="f03-d03-desc">七级阶梯，每级标注能力、验收标准与典型失败。L3 事件日志是最容易被跳过、也最贵的一级。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520">MATURITY LADDER</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="16" fill="#2d3142">L0 → L6：每一级都有验收标准</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">阶梯是单向的：L4 的取消依赖 L3 的日志，L5 的压缩依赖 L3 的 seq。跳级做出来的 demo，会在崩溃一次后暴露。</text>
+
+  <!-- blocks -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <!-- L0 -->
+    <rect x="40" y="426" width="116" height="70" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <rect x="40" y="426" width="116" height="3" fill="#c9ccd4"/>
+    <text x="52" y="446" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">L0</text>
+    <text x="52" y="464" font-size="10" fill="#2d3142">单轮问答</text>
+    <text x="52" y="480" font-size="8" fill="#4f5d75">能答，也能拒</text>
+
+    <!-- L1 -->
+    <rect x="168" y="382" width="116" height="114" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <rect x="168" y="382" width="116" height="3" fill="#c9ccd4"/>
+    <text x="180" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">L1</text>
+    <text x="180" y="420" font-size="10" fill="#2d3142">工具循环</text>
+    <text x="180" y="438" font-size="8" fill="#4f5d75">连续两次调用</text>
+    <text x="180" y="452" font-size="8" fill="#4f5d75">并收敛</text>
+    <text x="180" y="472" font-size="8" fill="#8a4b2a">✕ 死循环</text>
+
+    <!-- L2 -->
+    <rect x="296" y="338" width="116" height="158" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <rect x="296" y="338" width="116" height="3" fill="#c9ccd4"/>
+    <text x="308" y="358" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">L2</text>
+    <text x="308" y="376" font-size="10" fill="#2d3142">工具流水线</text>
+    <text x="308" y="394" font-size="8" fill="#4f5d75">拒绝 / 失败 / 超时</text>
+    <text x="308" y="408" font-size="8" fill="#4f5d75">都有明确结果</text>
+    <text x="308" y="428" font-size="8" fill="#8a4b2a">✕ 副作用已发生</text>
+    <text x="308" y="442" font-size="8" fill="#8a4b2a">  才审批</text>
+    <text x="308" y="462" font-size="8" fill="#4f5d75">pre → execute</text>
+    <text x="308" y="476" font-size="8" fill="#4f5d75">→ post → 记录</text>
+
+    <!-- L3 -->
+    <rect x="424" y="294" width="116" height="202" fill="#fff8f4" stroke="#e0a48d" rx="5"/>
+    <rect x="424" y="294" width="116" height="3" fill="#bf4520"/>
+    <text x="436" y="314" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">L3</text>
+    <text x="436" y="332" font-size="10" fill="#2d3142">事件日志</text>
+    <text x="436" y="350" font-size="8" fill="#4f5d75">重启后请求</text>
+    <text x="436" y="364" font-size="8" fill="#4f5d75">可重建</text>
+    <text x="436" y="384" font-size="8" fill="#8a4b2a">✕ 可见未记录</text>
+    <text x="436" y="398" font-size="8" fill="#8a4b2a">  （时间/随机）</text>
+    <text x="436" y="418" font-size="8" fill="#4f5d75">只追加，seq 只增</text>
+    <text x="436" y="432" font-size="8" fill="#4f5d75">投影是纯函数</text>
+    <text x="436" y="452" font-size="8" fill="#4f5d75">尾部不平衡 →</text>
+    <text x="436" y="466" font-size="8" fill="#4f5d75">补 turn/end</text>
+    <text x="436" y="486" font-size="8" fill="#bf4520">最易跳过、最贵</text>
+
+    <!-- L4 -->
+    <rect x="552" y="250" width="116" height="246" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <rect x="552" y="250" width="116" height="3" fill="#c9ccd4"/>
+    <text x="564" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">L4</text>
+    <text x="564" y="288" font-size="10" fill="#2d3142">取消与审批</text>
+    <text x="564" y="306" font-size="8" fill="#4f5d75">停即停，拒即不跑</text>
+    <text x="564" y="326" font-size="8" fill="#8a4b2a">✕ 停止后仍在跑</text>
+    <text x="564" y="340" font-size="8" fill="#8a4b2a">✕ 审批可绕过</text>
+    <text x="564" y="360" font-size="8" fill="#4f5d75">abort cause 要留</text>
+    <text x="564" y="374" font-size="8" fill="#4f5d75">steer 进 next-step</text>
+    <text x="564" y="388" font-size="8" fill="#4f5d75">inject 不唤醒</text>
+    <text x="564" y="408" font-size="8" fill="#4f5d75">缺失审批 = deny</text>
+    <text x="564" y="428" font-size="8" fill="#4f5d75">allow-always</text>
+    <text x="564" y="442" font-size="8" fill="#4f5d75">必须可撤销</text>
+    <text x="564" y="462" font-size="8" fill="#4f5d75">工具也要 abort</text>
+    <text x="564" y="482" font-size="8" fill="#4f5d75">不只是请求</text>
+
+    <!-- L5 -->
+    <rect x="680" y="206" width="116" height="290" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <rect x="680" y="206" width="116" height="3" fill="#c9ccd4"/>
+    <text x="692" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">L5</text>
+    <text x="692" y="244" font-size="10" fill="#2d3142">压缩与召回</text>
+    <text x="692" y="262" font-size="8" fill="#4f5d75">长会话不崩</text>
+    <text x="692" y="276" font-size="8" fill="#4f5d75">目标不丢</text>
+    <text x="692" y="296" font-size="8" fill="#8a4b2a">✕ 压完忘了在做啥</text>
+    <text x="692" y="316" font-size="8" fill="#4f5d75">只遮蔽，不删除</text>
+    <text x="692" y="330" font-size="8" fill="#4f5d75">replace 列出</text>
+    <text x="692" y="344" font-size="8" fill="#4f5d75">被遮蔽的 seq</text>
+    <text x="692" y="364" font-size="8" fill="#4f5d75">节点 0 不可遮蔽</text>
+    <text x="692" y="384" font-size="8" fill="#4f5d75">压完仍超限 →</text>
+    <text x="692" y="398" font-size="8" fill="#4f5d75">继续压，不放弃</text>
+    <text x="692" y="418" font-size="8" fill="#4f5d75">召回 = 可检索</text>
+    <text x="692" y="432" font-size="8" fill="#4f5d75">的补集</text>
+    <text x="692" y="452" font-size="8" fill="#8a4b2a">召回自身也</text>
+    <text x="692" y="466" font-size="8" fill="#8a4b2a">占预算</text>
+
+    <!-- L6 -->
+    <rect x="808" y="162" width="116" height="334" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <rect x="808" y="162" width="116" height="3" fill="#c9ccd4"/>
+    <text x="820" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">L6</text>
+    <text x="820" y="200" font-size="10" fill="#2d3142">多 agent</text>
+    <text x="820" y="218" font-size="8" fill="#4f5d75">隔离、可回收</text>
+    <text x="820" y="232" font-size="8" fill="#4f5d75">失败不扩散</text>
+    <text x="820" y="252" font-size="8" fill="#8a4b2a">✕ 子 agent 泄漏</text>
+    <text x="820" y="266" font-size="8" fill="#8a4b2a">✕ 上下文混合</text>
+    <text x="820" y="286" font-size="8" fill="#4f5d75">创建者持有</text>
+    <text x="820" y="300" font-size="8" fill="#4f5d75">dispose</text>
+    <text x="820" y="320" font-size="8" fill="#4f5d75">只回摘要 +</text>
+    <text x="820" y="334" font-size="8" fill="#4f5d75">产物路径</text>
+    <text x="820" y="354" font-size="8" fill="#4f5d75">子失败 =</text>
+    <text x="820" y="368" font-size="8" fill="#4f5d75">一条错误结果</text>
+    <text x="820" y="388" font-size="8" fill="#4f5d75">每个 agent</text>
+    <text x="820" y="402" font-size="8" fill="#4f5d75">一个会话</text>
+    <text x="820" y="422" font-size="8" fill="#4f5d75">父会话不因</text>
+    <text x="820" y="436" font-size="8" fill="#4f5d75">委派膨胀</text>
+    <text x="820" y="456" font-size="8" fill="#4f5d75">深度有上限</text>
+    <text x="820" y="476" font-size="8" fill="#4f5d75">（DSH 用</text>
+    <text x="820" y="490" font-size="8" fill="#4f5d75">delegationDepth）</text>
+  </g>
+
+  <!-- staircase silhouette along block tops -->
+  <polyline points="40,426 156,426 156,382 284,382 284,338 412,338 412,294 540,294 540,250 668,250 668,206 796,206 796,162 924,162" fill="none" stroke="#bf4520" stroke-width="2" stroke-linejoin="miter"/>
+  <text x="846" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">CAPABILITY →</text>
+
+  <!-- bottom notes -->
+  <rect x="40" y="504" width="560" height="72" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <text x="58" y="524" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">跳级的代价</text>
+  <text x="58" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">跳过 L3 直接做 L4/L5，功能都能演示；但取消之后「这轮到底算不算结束」、压缩之后「哪条被遮蔽」都没有答案。</text>
+  <text x="58" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">补 L3 不是加功能，是把「数组」换成「日志 + 投影」——这会重写每一个写历史的地方。</text>
+
+  <text x="40" y="592" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".1em" fill="#8a8f9c">03 / SEVEN LEVELS</text>
+</svg>

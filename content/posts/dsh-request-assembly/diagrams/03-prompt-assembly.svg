@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f03-d03-title f03-d03-desc">
+  <title id="f03-d03-title">系统提示词的组装管线</title>
+  <desc id="f03-d03-desc">上方是 PromptSection 与 PromptContext 两类注册；中间六步流水线依次为注册、按 order 与 name 排序、跑 assemble waterfall、求值动态文本、变量插值、过滤空段并用两个空行连接；下方标注 complete 段的接管规则与动态文本必须纯函数的约束。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">PROMPT ASSEMBLY / 07</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">系统提示词不是常量，是一条六步管线</text>
+
+  <!-- inputs -->
+  <rect x="40" y="92" width="410" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="113" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">PROMPT SECTION</text>
+  <text x="56" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">{ name, order, text, interpolate?, complete? }</text>
+  <text x="56" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">text 可以是函数，每次组装用当前 AssembleContext 求值</text>
+  <text x="56" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">→ 进入 system 段落</text>
+
+  <rect x="470" y="92" width="450" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="486" y="113" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">PROMPT CONTEXT</text>
+  <text x="486" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">{ name, order, text, interpolate?, required? }</text>
+  <text x="486" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">运行时上下文：时间、cwd、git 状态、技能清单</text>
+  <text x="486" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">→ 作为 user 角色的快照消息</text>
+
+  <!-- chain -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520" text-anchor="middle">
+    <text x="99" y="238">01</text>
+    <text x="241" y="238">02</text>
+    <text x="383" y="238">03</text>
+    <text x="525" y="238">04</text>
+    <text x="667" y="238">05</text>
+    <text x="809" y="238">06</text>
+  </g>
+  <g>
+    <rect x="40" y="248" width="118" height="76" rx="6" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="182" y="248" width="118" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="324" y="248" width="118" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="466" y="248" width="118" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="608" y="248" width="118" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="750" y="248" width="118" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9.5" fill="#2d3142" text-anchor="middle">
+    <text x="99" y="274">收集注册</text>
+    <text x="99" y="292" font-size="8" fill="#4f5d75">sections + contexts</text>
+    <text x="241" y="274">排序</text>
+    <text x="241" y="292" font-size="8" fill="#4f5d75">order 升序，同 order</text>
+    <text x="241" y="305" font-size="8" fill="#4f5d75">按 name 代码单元序</text>
+    <text x="383" y="274">assemble waterfall</text>
+    <text x="383" y="292" font-size="8" fill="#4f5d75">插件可增删改段</text>
+    <text x="525" y="274">求值 text()</text>
+    <text x="525" y="292" font-size="8" fill="#4f5d75">拿到 agent / scope / signal</text>
+    <text x="667" y="274">插值变量</text>
+    <text x="667" y="292" font-size="8" fill="#4f5d75">未知变量抛错</text>
+    <text x="809" y="274">过滤 + 连接</text>
+    <text x="809" y="292" font-size="8" fill="#4f5d75">空段丢弃</text>
+    <text x="809" y="305" font-size="8" fill="#4f5d75">"\n\n" 拼接</text>
+  </g>
+  <g stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f03-a2)">
+    <path d="M162 286 H 178"/>
+    <path d="M304 286 H 320"/>
+    <path d="M446 286 H 462"/>
+    <path d="M588 286 H 604"/>
+    <path d="M730 286 H 746"/>
+  </g>
+  <defs>
+    <marker id="f03-a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <!-- output -->
+  <rect x="40" y="356" width="330" height="72" rx="6" fill="#f7f7f7" stroke="#d8d8d8"/>
+  <text x="56" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">OUTPUT</text>
+  <text x="56" y="400" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">string（单个 system 段落）</text>
+  <text x="56" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">随后交给系统提示词投影决定写入哪条 surface 路由</text>
+
+  <!-- complete -->
+  <rect x="390" y="356" width="530" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="406" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">COMPLETE: TRUE</text>
+  <text x="406" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">waterfall 仍然跑完（让其他插件求值、解析工具），最后这一段恢复为唯一生效段落。</text>
+  <text x="406" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">两个以上生效的 complete 段 = 组装失败，不静默选一个。</text>
+
+  <!-- pitfalls -->
+  <rect x="40" y="452" width="880" height="100" rx="6" fill="#fbf1ec" stroke="#e8c9b8"/>
+  <text x="56" y="474" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">PITFALLS</text>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.8" fill="#2d3142">
+    <text x="56" y="496">· 动态 text() 里做 IO、读时钟、取随机数 → 同一份日志无法重建同一份提示词。</text>
+    <text x="56" y="516">· 两个 section 用同一个 order 却指望注册顺序 → 实际按 name 排序，profile 不同结果不同。</text>
+    <text x="56" y="536">· 把插值后的值再扫描一遍 → 变量里套变量等于给了注入面；DSH 只替换一次。</text>
+  </g>
+</svg>

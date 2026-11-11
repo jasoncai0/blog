@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">三种回忆路径：fork、reference、query 的成本与新鲜度</title>
+  <desc id="f01-d1-desc">fork 复制切点之前的事件前缀，零模型调用，内容冻结在切点；reference 读取另一个会话的 surface 并投影成文本注入当前请求；query 通过派生索引检索事件，再由宿主注入。三者的成本依次升高，新鲜度只在 query 上接近当前。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-RECALL / THREE PATHS</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">回忆不是一种操作，是三种代价</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一个问题「之前那次是怎么做的」，可以复制、可以引用、也可以检索。选哪条，取决于你要的是起点、是结论、还是位置。</text>
+
+  <rect x="40" y="100" width="280" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">FORK</text>
+  <text x="56" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">复制前缀，开一条新线</text>
+  <text x="56" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">取 boundary（含）之前的全部事件</text>
+  <text x="56" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">深克隆成 seed，补一条 end-seed</text>
+  <text x="56" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">新会话不设 parentSession</text>
+  <text x="56" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">cwd 照抄，delegationDepth 不带</text>
+  <text x="56" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">COST</text>
+  <text x="56" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">O(前缀事件) 拷贝，0 次模型调用</text>
+  <text x="56" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">FRESHNESS</text>
+  <text x="56" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">冻结在切点</text>
+  <text x="56" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">要的是「从哪继续」，不是「知道什么」</text>
+  <text x="56" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">最便宜，也最钝</text>
+
+  <rect x="340" y="100" width="280" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">REFERENCE</text>
+  <text x="356" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">把另一个会话借成背景</text>
+  <text x="356" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">mention 里带一个 dsh-session: URI</text>
+  <text x="356" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">按 capturedThroughSeq 读源 surface</text>
+  <text x="356" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">投影成纯文本，按字节预算收缩</text>
+  <text x="356" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">合进一条 user 消息的附加上下文</text>
+  <text x="356" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">COST</text>
+  <text x="356" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">一次 readSurface + 序列化 + token</text>
+  <text x="356" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">FRESHNESS</text>
+  <text x="356" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">冻结在 capturedThroughSeq</text>
+  <text x="356" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">要的是「那边的结论」，不是全部</text>
+  <text x="356" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">中等成本，可控截断</text>
+
+  <rect x="640" y="100" width="280" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="656" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">QUERY</text>
+  <text x="656" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">先检索，再决定注入什么</text>
+  <text x="656" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">SQLite 派生索引，FTS5 全文</text>
+  <text x="656" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">过滤器是数组内 AND、值内 OR</text>
+  <text x="656" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">结果按会话分组，带不透明 cursor</text>
+  <text x="656" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">宿主挑事件，再拼进下一轮请求</text>
+  <text x="656" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">COST</text>
+  <text x="656" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">索引维护 + 检索 + 注入的 token</text>
+  <text x="656" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">FRESHNESS</text>
+  <text x="656" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">到索引 generation 为止</text>
+  <text x="656" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">要的是「在哪」，不是「全部」</text>
+  <text x="656" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">最贵，但能跨几十个会话</text>
+
+  <rect x="40" y="416" width="880" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="438" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">COST × FRESHNESS</text>
+  <line x1="90" y1="534" x2="880" y2="534" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="90" y1="534" x2="90" y2="452" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <text x="838" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">成本</text>
+  <text x="56" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">新鲜</text>
+
+  <circle cx="200" cy="518" r="5" fill="#2f6f5e"/>
+  <text x="212" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">fork</text>
+  <text x="212" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">拷贝就完事</text>
+
+  <circle cx="400" cy="503" r="5" fill="#2f6f5e"/>
+  <text x="412" y="499" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">reference</text>
+  <text x="412" y="513" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">读一次 + 截断</text>
+
+  <circle cx="770" cy="470" r="5" fill="#bf4520"/>
+  <text x="782" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">query</text>
+  <text x="782" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">索引 + 检索 + 注入</text>
+
+  <text x="90" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">三条路都不删源日志；真正贵的是把读到的内容再塞回上下文。</text>
+
+  <text x="40" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">packages/core/session/src/fork.ts · packages/context/session-reference · packages/session-query</text>
+</svg>

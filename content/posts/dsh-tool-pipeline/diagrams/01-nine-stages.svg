@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">工具执行的九个阶段</title>
+  <desc id="f01-d1-desc">从 pre-execute 到 tools/result 的九段链路；pre 拒绝与 body 抛错仍然进入 project 与 post，而参数错误和 wrapper 抛错直接跳到 final-result，跳过 project 与 post。</desc>
+
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">10 / PIPELINE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次调用穿过九段，三种形状决定它跳过谁</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">allow 之后的四段执行；拒绝不是异常，而是 post-result —— 所以它仍然会被投影、被策略改写</text>
+
+  <!-- row 1 -->
+  <rect x="40" y="112" width="190" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">① PRE-EXECUTE</text>
+  <text x="56" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">allow / deny / cancel / ask</text>
+  <text x="56" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">唯一能发起审批的一段</text>
+
+  <line x1="232" y1="150" x2="260" y2="150" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="262" y="112" width="190" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="278" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">② GUARDS</text>
+  <text x="278" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">只返回第一个拒绝理由</text>
+  <text x="278" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不是 waterfall，没有 allow</text>
+
+  <line x1="454" y1="150" x2="482" y2="150" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="484" y="112" width="190" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="500" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">③ EXECUTE</text>
+  <text x="500" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">waterfall 包裹 body</text>
+  <text x="500" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">wrapper 只能追加取消</text>
+
+  <line x1="676" y1="150" x2="704" y2="150" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="706" y="112" width="214" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="722" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">④ TOOL BODY</text>
+  <text x="722" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">唯一碰得到副作用的地方</text>
+  <text x="722" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">fs intent / 进程 / 网络</text>
+
+  <!-- row 1 to row 2 -->
+  <line x1="813" y1="188" x2="813" y2="268" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <!-- row 2 (right to left) -->
+  <rect x="706" y="270" width="214" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="722" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">⑤ PROJECTCONTENT</text>
+  <text x="722" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">结构化值 → 模型文本</text>
+  <text x="722" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">deny 结果也走这里</text>
+
+  <line x1="704" y1="308" x2="676" y2="308" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="484" y="270" width="190" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="500" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">⑥ POST-EXECUTE</text>
+  <text x="500" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">accept content / value</text>
+  <text x="500" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">或 block：反馈变 isError</text>
+
+  <line x1="482" y1="308" x2="454" y2="308" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="262" y="270" width="190" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="278" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">⑦ NORMALIZE</text>
+  <text x="278" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">物化成合法结果</text>
+  <text x="278" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">JSON 快照 + 冻结</text>
+
+  <!-- row 2 to row 3 -->
+  <line x1="357" y1="346" x2="357" y2="426" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <!-- row 3 -->
+  <rect x="262" y="428" width="190" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="278" y="450" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">⑧ FINALIZECONTENT</text>
+  <text x="278" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">恰好一次的最后上界</text>
+  <text x="278" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">同步；返回 undefined 保留</text>
+
+  <line x1="260" y1="466" x2="232" y2="466" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="40" y="428" width="190" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="450" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">⑨ TOOLS/RESULT</text>
+  <text x="56" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">冻结后广播，只读</text>
+  <text x="56" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">返回值被丢弃</text>
+
+  <!-- bypass annotations -->
+  <path d="M 135 188 L 135 214 L 790 214 L 790 268" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f01-r)"/>
+  <text x="150" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">deny / guard deny → post-result：仍然投影、仍然可被 post 改写</text>
+
+  <text x="722" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">body 抛错 → 结果已存在，仍进 ⑤</text>
+
+  <text x="508" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">参数错 / pre 抛错 / wrapper 抛错 → final-result：跳过 ⑤⑥</text>
+
+  <text x="40" y="552" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">post-result = { content, isError, error?, meta?, additionalContexts? }</text>
+  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">两条旁路的差别不在「成功还是失败」，而在「结果是否已经存在」。</text>
+</svg>

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">job 的生命周期、detach 与输出环</title>
+  <desc id="f03-d3-desc">生产者调用 run 后由 registry 注册，job 进入 running；kill 先进 stopping，再以 completed、killed 或 failed 结算。输出环按绝对字节偏移服务模型游标与浏览器观察者，detach 只是观察者断开。</desc>
+
+  <defs>
+    <marker id="f03-a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-a3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="36" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">JOB LIFECYCLE</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">结算一次，观察者随便接</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">job 属于 owner 会话，不属于某个 controller；谁断开都不影响它继续跑</text>
+
+  <!-- producer -->
+  <rect x="48" y="150" width="176" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="136" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">producer</text>
+  <text x="136" y="196" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">run(job) → hooks</text>
+
+  <line x1="224" y1="182" x2="262" y2="182" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <text x="226" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">run()</text>
+
+  <!-- registry -->
+  <rect x="264" y="150" width="176" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="352" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">registry.start</text>
+  <text x="352" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">预检 owner / 并发 / controller</text>
+
+  <line x1="440" y1="182" x2="478" y2="182" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <text x="444" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">job id</text>
+
+  <!-- running -->
+  <rect x="480" y="150" width="150" height="64" rx="6" fill="#ffffff" stroke="#2f6f5e" stroke-width="1.2"/>
+  <text x="555" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">running</text>
+  <text x="555" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">append / progress</text>
+
+  <line x1="630" y1="182" x2="668" y2="182" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <text x="628" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">kill</text>
+
+  <!-- stopping -->
+  <rect x="670" y="150" width="150" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="745" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">stopping</text>
+  <text x="745" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">cancel 已发出，等 done</text>
+
+  <!-- settled -->
+  <rect x="480" y="264" width="340" height="86" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="650" y="288" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">settled — completed / killed / failed</text>
+  <text x="650" y="308" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">first-wins：终态之后晚到的生产者结果无效</text>
+  <text x="650" y="326" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">封环并裁到 settledRetainBytes，再释放 waiter</text>
+
+  <path d="M 555 214 L 555 260" fill="none" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <text x="562" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">done() resolve</text>
+
+  <path d="M 745 214 L 745 262" fill="none" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <text x="752" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">teardown</text>
+
+  <!-- output ring -->
+  <rect x="48" y="372" width="400" height="128" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="66" y="396" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">OUTPUT RING</text>
+  <text x="66" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">有界环，每字节有绝对偏移，裁剪只推进起点</text>
+
+  <path d="M 74 448 L 422 448" stroke="#8a93a6" stroke-width="1"/>
+  <path d="M 74 442 L 74 454" stroke="#8a93a6" stroke-width="1"/>
+  <path d="M 176 442 L 176 454" stroke="#8a93a6" stroke-width="1"/>
+  <path d="M 300 442 L 300 454" stroke="#8a93a6" stroke-width="1"/>
+  <path d="M 422 442 L 422 454" stroke="#8a93a6" stroke-width="1"/>
+  <text x="74" y="470" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">earliest</text>
+  <text x="176" y="470" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">cursor</text>
+  <text x="300" y="470" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">spill</text>
+  <text x="398" y="470" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">total</text>
+  <text x="66" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">spillPaths 是 job 元数据，读到文件丢失时撤回</text>
+
+  <!-- observers -->
+  <rect x="500" y="372" width="176" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="588" y="396" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">模型：job_output</text>
+  <text x="588" y="414" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">消耗式游标，读一次前进</text>
+
+  <rect x="700" y="372" width="176" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="788" y="396" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">浏览器：job.follow</text>
+  <text x="788" y="414" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">readAt(offset)，非消耗</text>
+
+  <line x1="448" y1="404" x2="496" y2="404" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a3)"/>
+  <path d="M 448 430 L 470 430 L 470 448 L 696 448 L 696 420" fill="none" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#f03-a3)"/>
+
+  <!-- detach note -->
+  <text x="500" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">detach：观察者断开，producer 与环都继续</text>
+  <text x="500" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">attach：新观察者从自己的游标接上</text>
+
+  <text x="48" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">轮次结束不表示 job 已停：job/settled 可能出现在 turn/end 之后，缺结算的区间就是不完整。</text>
+  <text x="48" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">job 没有会话、没有对话、没有工具调用；它只有身份、状态、输出环与一个 owner。</text>
+  <text x="48" y="578" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">SETTLED ONCE, OBSERVED MANY</text>
+</svg>

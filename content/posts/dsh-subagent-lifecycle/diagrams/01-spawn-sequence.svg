@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">一次 subagent 调用：受理、装配、执行、结算</title>
+  <desc id="f01-d1-desc">两条泳道上的十二个步骤。父在第三步拿回执后继续，子的会话在第四步才被创建，第十步才真正执行任务，第十二步结算通知才回到父的收件箱。</desc>
+  <defs>
+    <marker id="f01-arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f01-arwr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.16em">SPAWN SEQUENCE</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="start">一次调用，两条时间线</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" fill="#5a6580" text-anchor="start">父在 ③ 拿回执就继续跑；子要到自己那一列的第 ⑩ 步，才有第一段可交付的输出</text>
+<rect x="70" y="104" width="200" height="34" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="170.0" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="500" fill="#2d3142" text-anchor="middle">父 agent 的这一次 turn</text>
+<rect x="360" y="104" width="200" height="34" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="460.0" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="500" fill="#2d3142" text-anchor="middle">subagent 服务</text>
+<rect x="640" y="104" width="200" height="34" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="740.0" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="500" fill="#2d3142" text-anchor="middle">子 Session + Agent</text>
+<line x1="170" y1="138" x2="170" y2="600" stroke="#c9ccc6" stroke-width="1"/>
+<line x1="460" y1="138" x2="460" y2="600" stroke="#c9ccc6" stroke-width="1"/>
+<line x1="740" y1="138" x2="740" y2="600" stroke="#c9ccc6" stroke-width="1"/>
+<line x1="48" y1="140" x2="48" y2="592" stroke="#c9ccc6" stroke-width="1"/>
+<text x="52" y="556" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="400" fill="#8a93a6" text-anchor="start">时间</text>
+<circle cx="180" cy="170" r="7" fill="#bf4520"/><text x="180" y="172.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">1</text>
+<text x="315" y="163" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="middle">subagent(prompt, description)</text>
+<line x1="170" y1="170" x2="452" y2="170" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<circle cx="448" cy="206" r="7" fill="#bf4520"/><text x="448" y="208.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">2</text>
+<text x="474" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">② 快照：depth · descriptor · 策略</text>
+<line x1="460" y1="196" x2="460" y2="216" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<circle cx="448" cy="240" r="7" fill="#bf4520"/><text x="448" y="242.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">3</text>
+<text x="315" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#bf4520" text-anchor="middle">③ {kind: 'activation', name}</text>
+<line x1="460" y1="240" x2="178" y2="240" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f01-arwr)"/>
+<text x="912" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#bf4520" text-anchor="end">回执点：父继续</text>
+<circle cx="472" cy="283" r="7" fill="#bf4520"/><text x="472" y="285.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">4</text>
+<text x="600" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="middle">agents.create({ seed })</text>
+<line x1="460" y1="290" x2="732" y2="290" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<circle cx="740" cy="322" r="2.5" fill="#8a93a6"/>
+<text x="752" y="325" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">⑤ session/created</text>
+<circle cx="740" cy="352" r="2.5" fill="#8a93a6"/>
+<text x="752" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">⑥ setup：preset · descriptor · 策略 · cwd</text>
+<circle cx="740" cy="382" r="2.5" fill="#8a93a6"/>
+<text x="752" y="385" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">⑦ agent/created（发布点）</text>
+<circle cx="472" cy="405" r="7" fill="#bf4520"/><text x="472" y="407.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">8</text>
+<text x="600" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="middle">首条 prompt → inbox</text>
+<line x1="460" y1="412" x2="732" y2="412" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<text x="474" y="445" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">⑨ establishCatalogChild（最后）</text>
+<rect x="700" y="466" width="180" height="54" rx="6" fill="#ffffff" stroke="#2f6f5e" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="710" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2f6f5e" text-anchor="start">⑩ 子 turn</text>
+<text x="710" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">step → tool → step</text>
+<circle cx="728" cy="538" r="7" fill="#bf4520"/><text x="728" y="540.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">11</text>
+<text x="608" y="531" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="middle">turn/end → captureLocalResult</text>
+<line x1="740" y1="545" x2="468" y2="545" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<circle cx="448" cy="573" r="7" fill="#bf4520"/><text x="448" y="575.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">12</text>
+<text x="315" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="middle">subagent-settled 通知</text>
+<line x1="460" y1="580" x2="178" y2="580" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arw)"/>
+<text transform="rotate(-90 104 470)" x="104" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6" letter-spacing="0.08em">父的 turn 在这里继续，可能再开别的子</text>
+<text x="48" y="620" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">红色虚线是返回值；绿框是子唯一被观测到的活跃区间。⑫ 到达时父可能正在别的 turn 里，也可能已经 idle。</text>
+</svg>

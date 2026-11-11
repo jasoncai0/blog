@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">权限预设的作用点</title>
+  <desc id="f04-d4-desc">预设是用户看到的名字，落到 sandbox/mode 与 approval/policy 两个强制开关，再分别作用在 shell 执行点与工具准入点。custom 是派生值，auto 随集成生灭。</desc>
+  <defs>
+    <marker id="f04-d4-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">PERMISSION PRESETS</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">两个开关，一个选择</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">用户选的是档位；执行点读的是两个独立 knob。档位可以派生，派生值不落盘。</text>
+
+  <text x="48" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">PRESET</text>
+  <text x="380" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">KNOB</text>
+  <text x="680" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#8a93a6">ENFORCEMENT</text>
+
+  <!-- presets -->
+  <rect x="48" y="140" width="252" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="166" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">workspace-write</text>
+  <text x="64" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">沙箱 + ask</text>
+
+  <rect x="48" y="214" width="252" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">danger-full-access</text>
+  <text x="64" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">完全访问 + never</text>
+
+  <rect x="48" y="288" width="252" height="58" rx="6" fill="#ffffff" stroke="#8a93a6" stroke-dasharray="4 4"/>
+  <text x="64" y="314" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#8a93a6">custom</text>
+  <text x="64" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">派生值；不是切换目标</text>
+
+  <rect x="48" y="362" width="252" height="58" rx="6" fill="#ffffff" stroke="#7a5aa8" stroke-dasharray="4 4"/>
+  <text x="64" y="388" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#7a5aa8">auto</text>
+  <text x="64" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">运行时注册；dispose 即消失</text>
+
+  <!-- bus -->
+  <path d="M 300 169 H 344" stroke="#8a93a6" stroke-width="1.2" fill="none"/>
+  <path d="M 300 243 H 344" stroke="#8a93a6" stroke-width="1.2" fill="none"/>
+  <path d="M 300 317 H 344" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 4" fill="none"/>
+  <path d="M 300 391 H 344" stroke="#7a5aa8" stroke-width="1.2" stroke-dasharray="4 4" fill="none"/>
+  <path d="M 344 169 V 391" stroke="#8a93a6" stroke-width="1.2" fill="none"/>
+  <path d="M 344 222 H 380" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+  <path d="M 344 348 H 380" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+
+  <!-- knobs -->
+  <rect x="380" y="188" width="220" height="68" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="396" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">sandbox/mode</text>
+  <text x="396" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">文件与命令的隔离级别</text>
+
+  <rect x="380" y="314" width="220" height="68" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="396" y="340" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">approval/policy</text>
+  <text x="396" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">ask 或 never</text>
+
+  <path d="M 600 222 H 680" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+  <path d="M 600 348 H 680" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+
+  <!-- enforcement -->
+  <rect x="680" y="188" width="220" height="68" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="696" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">shell / fs</text>
+  <text x="696" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每次执行前读当前模式</text>
+
+  <rect x="680" y="314" width="220" height="68" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="696" y="340" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">tool gate</text>
+  <text x="696" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">pre-execute 的 ask 分支</text>
+
+  <!-- log event -->
+  <rect x="48" y="466" width="852" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="488" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#7a5aa8">permission/preset { preset }</text>
+  <text x="64" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">仅日志的用户意图，不进 transcript。先记选择，再写真正变化的 knob；重选当前预设不追加任何事件。</text>
+
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">为什么保留选择事件：两个预设可能共享同一组 knob，只有它能把「用户选的是哪一个」留住。</text>
+  <text x="48" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">为什么 custom 不可选：它是「当前组合不匹配任何预设」的派生结论，把它写回日志会制造一个假选择。</text>
+</svg>

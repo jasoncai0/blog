@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">审批的状态机</title>
+  <desc id="f01-d1-desc">request 写入 asked 后进入 requested，只有 allowed-once 放行；rejected、cancelled、unavailable 都按拒绝执行，没有 expired 结局。</desc>
+  <defs>
+    <marker id="f01-d1-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">APPROVAL · ONE SHOT</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">一次调用，一次授权</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">四种结局，只有一种放行；没有 expired，过期的语义由恢复流程承担。</text>
+
+  <!-- request -->
+  <rect x="56" y="258" width="190" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="72" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">request(req)</text>
+  <text x="72" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">turn 必须打开；先写 asked</text>
+
+  <path d="M 246 290 H 296" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+
+  <!-- requested -->
+  <rect x="296" y="244" width="190" height="92" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="312" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#bf4520">requested</text>
+  <text x="312" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">等人，或等机器应答者</text>
+  <text x="312" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">signal 可随时 abort</text>
+
+  <!-- bus -->
+  <path d="M 486 290 H 545" stroke="#8a93a6" stroke-width="1.2" fill="none"/>
+  <path d="M 545 152 V 428" stroke="#8a93a6" stroke-width="1.2" fill="none"/>
+  <path d="M 545 152 H 600" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 545 244 H 600" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 545 336 H 600" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 545 428 H 600" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+
+  <!-- allowed-once -->
+  <rect x="600" y="120" width="300" height="64" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="616" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2f6f5e">allowed-once</text>
+  <text x="616" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只授权这一次调用 → guards → execute</text>
+
+  <!-- rejected -->
+  <rect x="600" y="212" width="300" height="64" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="616" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#bf4520">rejected</text>
+  <text x="616" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">策略 never，或人工点了拒绝 → deny</text>
+
+  <!-- cancelled -->
+  <rect x="600" y="304" width="300" height="64" rx="6" fill="#ffffff" stroke="#8a93a6"/>
+  <text x="616" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#4f5d75">cancelled</text>
+  <text x="616" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">signal 已死；迟到的答案按构造丢弃</text>
+
+  <!-- unavailable -->
+  <rect x="600" y="396" width="300" height="64" rx="6" fill="#ffffff" stroke="#8a93a6" stroke-dasharray="4 4"/>
+  <text x="616" y="422" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#4f5d75">unavailable</text>
+  <text x="616" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">无应答者 / 监听器抛错 / 词汇表外的值</text>
+
+  <!-- no expired note -->
+  <rect x="56" y="474" width="844" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <text x="72" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">NO EXPIRED</text>
+  <text x="72" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">进程消失时，resume 的 repair 给未配对的 tool call 补一条合成结果（TOOL_OUTCOME_UNKNOWN / TOOL_NOT_STARTED）并闭合 turn；下一次执行重新发问。</text>
+  <text x="72" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">消费方只对 allowed-once 放行；其余三种在工具层一律 deny，并给出各自的原因。</text>
+
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">审计对 approval/asked + approval/decided 必须被 turn 包住；它们仅日志，不进模型 transcript。</text>
+</svg>

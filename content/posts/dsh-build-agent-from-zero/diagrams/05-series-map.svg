@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f05-d05-title f05-d05-desc">
+  <title id="f05-d05-title">系列二十一篇的四条阅读路径</title>
+  <desc id="f05-d05-desc">四条路径：地基（01→02→06→07）、输入与中断（03→04→05→08）、工具与多 agent（09→16）、记忆（17→20），最后由 21 汇合。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520">READING PATHS</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="16" fill="#2d3142">二十一篇，四条路径，一个汇合点</text>
+  <text x="40" y="82" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">不必按序号读。先选一条与你当前问题最近的路径，再横向补。</text>
+
+  <!-- lane labels -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".1em">
+    <text x="40" y="120" fill="#bf4520">PATH A · 地基</text>
+    <text x="40" y="212" fill="#bf4520">PATH B · 输入</text>
+    <text x="40" y="304" fill="#bf4520">PATH C · 工具</text>
+    <text x="40" y="396" fill="#bf4520">PATH D · 记忆</text>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9c">
+    <text x="40" y="136">先有全局图景</text>
+    <text x="40" y="228">先解决中断</text>
+    <text x="40" y="320">先做工具与委派</text>
+    <text x="40" y="412">先做记忆</text>
+  </g>
+
+  <!-- lane A -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="160" y="104" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="172" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">01</text>
+    <text x="172" y="140" font-size="9.5" fill="#2d3142">解剖：五平面</text>
+    <text x="172" y="152" font-size="7.5" fill="#8a8f9c">370 包 / 14 事件</text>
+
+    <rect x="340" y="104" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="352" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">02</text>
+    <text x="352" y="140" font-size="9.5" fill="#2d3142">事件溯源</text>
+    <text x="352" y="152" font-size="7.5" fill="#8a8f9c">日志 → surface</text>
+
+    <rect x="520" y="104" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="532" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">06</text>
+    <text x="532" y="140" font-size="9.5" fill="#2d3142">三层状态机</text>
+    <text x="532" y="152" font-size="7.5" fill="#8a8f9c">turn · step · attempt</text>
+
+    <rect x="700" y="104" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="712" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">07</text>
+    <text x="712" y="140" font-size="9.5" fill="#2d3142">请求组装</text>
+    <text x="712" y="152" font-size="7.5" fill="#8a8f9c">header · prompt</text>
+  </g>
+
+  <!-- lane B -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="160" y="196" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="172" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">03</text>
+    <text x="172" y="232" font-size="9.5" fill="#2d3142">收件箱</text>
+    <text x="172" y="244" font-size="7.5" fill="#8a8f9c">next-turn / next-step</text>
+
+    <rect x="340" y="196" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="352" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">04</text>
+    <text x="352" y="232" font-size="9.5" fill="#2d3142">steering 与取消</text>
+    <text x="352" y="244" font-size="7.5" fill="#8a8f9c">abort cause · 唤醒</text>
+
+    <rect x="520" y="196" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="532" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">05</text>
+    <text x="532" y="232" font-size="9.5" fill="#2d3142">人在环里</text>
+    <text x="532" y="244" font-size="7.5" fill="#8a8f9c">审批 · 提问</text>
+
+    <rect x="700" y="196" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="712" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">08</text>
+    <text x="712" y="232" font-size="9.5" fill="#2d3142">失败与恢复</text>
+    <text x="712" y="244" font-size="7.5" fill="#8a8f9c">重试 · closer</text>
+  </g>
+
+  <!-- lane C -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="160" y="288" width="82" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="168" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">09</text>
+    <text x="168" y="322" font-size="9" fill="#2d3142">注册表</text>
+    <text x="168" y="334" font-size="7" fill="#8a8f9c">scope 两层</text>
+
+    <rect x="250" y="288" width="82" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="258" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">10</text>
+    <text x="258" y="322" font-size="9" fill="#2d3142">流水线</text>
+    <text x="258" y="334" font-size="7" fill="#8a8f9c">pre · post</text>
+
+    <rect x="340" y="288" width="82" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="348" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">11</text>
+    <text x="348" y="322" font-size="9" fill="#2d3142">边界</text>
+    <text x="348" y="334" font-size="7" fill="#8a8f9c">沙箱 · 超时</text>
+
+    <rect x="430" y="288" width="82" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="438" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">12</text>
+    <text x="438" y="322" font-size="9" fill="#2d3142">结果</text>
+    <text x="438" y="334" font-size="7" fill="#8a8f9c">isError · 预算</text>
+
+    <rect x="520" y="288" width="82" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="528" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">13</text>
+    <text x="528" y="322" font-size="9" fill="#2d3142">子 agent</text>
+    <text x="528" y="334" font-size="7" fill="#8a8f9c">生命周期</text>
+
+    <rect x="610" y="288" width="82" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="618" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">14</text>
+    <text x="618" y="322" font-size="9" fill="#2d3142">控制</text>
+    <text x="618" y="334" font-size="7" fill="#8a8f9c">结果回收</text>
+
+    <rect x="700" y="288" width="82" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="708" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">15</text>
+    <text x="708" y="322" font-size="9" fill="#2d3142">team</text>
+    <text x="708" y="334" font-size="7" fill="#8a8f9c">任务板</text>
+
+    <rect x="790" y="288" width="110" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="798" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">16</text>
+    <text x="798" y="322" font-size="9" fill="#2d3142">外层机制</text>
+    <text x="798" y="334" font-size="7" fill="#8a8f9c">workflow · jobs · goal</text>
+  </g>
+
+  <!-- lane D -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="160" y="380" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="172" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">17</text>
+    <text x="172" y="416" font-size="9.5" fill="#2d3142">记忆架构</text>
+    <text x="172" y="428" font-size="7.5" fill="#8a8f9c">五层 · 写入即记录</text>
+
+    <rect x="340" y="380" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="352" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">18</text>
+    <text x="352" y="416" font-size="9.5" fill="#2d3142">上下文注入</text>
+    <text x="352" y="428" font-size="7.5" fill="#8a8f9c">每次重装配</text>
+
+    <rect x="520" y="380" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="532" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">19</text>
+    <text x="532" y="416" font-size="9.5" fill="#2d3142">压缩</text>
+    <text x="532" y="428" font-size="7.5" fill="#8a8f9c">遮蔽式替换</text>
+
+    <rect x="700" y="380" width="150" height="52" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="712" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">20</text>
+    <text x="712" y="416" font-size="9.5" fill="#2d3142">召回</text>
+    <text x="712" y="428" font-size="7.5" fill="#8a8f9c">索引与取回</text>
+  </g>
+
+  <!-- lane arrows -->
+  <g stroke="#b9bdc7" stroke-width="1" fill="none" marker-end="url(#f05-a5)">
+    <path d="M310 130 L336 130"/>
+    <path d="M490 130 L516 130"/>
+    <path d="M670 130 L696 130"/>
+    <path d="M310 222 L336 222"/>
+    <path d="M490 222 L516 222"/>
+    <path d="M670 222 L696 222"/>
+    <path d="M310 406 L336 406"/>
+    <path d="M490 406 L516 406"/>
+    <path d="M670 406 L696 406"/>
+  </g>
+  <defs>
+    <marker id="f05-a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#b9bdc7"/>
+    </marker>
+  </defs>
+
+  <!-- capstone -->
+  <rect x="160" y="470" width="740" height="72" fill="#fff8f4" stroke="#e0a48d" rx="6"/>
+  <text x="176" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">21 · 汇合点</text>
+  <text x="176" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11" fill="#2d3142">从零搭建一个 Agent：把四条路径的决策，按 L0→L6 的顺序重新排一遍</text>
+  <text x="176" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">六个阶段 · 十个决策 · 一张成熟度阶梯 · 十个坑。读完前二十篇再读它，或先读它再回头补。</text>
+
+  <text x="40" y="592" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".1em" fill="#8a8f9c">05 / SERIES MAP</text>
+</svg>

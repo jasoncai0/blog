@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f03-d2-title f03-d2-desc">
+  <title id="f03-d2-title">一次 followup 从 send 到 step/start 的时序：前八步在方法返回前同步完成</title>
+  <desc id="f03-d2-desc">四条生命线分别是调用方、agent 门面、inbox 与日志、driver。followup 进入 send 后依次完成 wakingAfterAbort 判定、splice 持久化、inserted 通知、wakeDriver 与 setPhase、turn/start、claim 与 claimed；这些全部发生在 followup 返回之前。第一个真正的挂起点是 pre-step 里的 tools.resolve，之后才是 pre-step waterfall 与 step/start。</desc>
+  <defs>
+    <marker id="f03-d2-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-d2-a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">FOLLOWUP · SEND TO TURN/START</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">返回 void 之前，轮次已经开了</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">kick() 被同步调用、跑到第一个 await；turn/start 与 claim 都在返回之前落盘</text>
+
+  <!-- lifelines -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" text-anchor="middle">
+    <text x="110" y="112">CALLER</text>
+    <text x="320" y="112">AGENT</text>
+    <text x="540" y="112">INBOX + LOG</text>
+    <text x="740" y="112">DRIVER</text>
+  </g>
+  <g stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4">
+    <path d="M 110 122 V 604"/>
+    <path d="M 320 122 V 604"/>
+    <path d="M 540 122 V 604"/>
+    <path d="M 740 122 V 604"/>
+  </g>
+
+  <!-- 1 -->
+  <path d="M 110 152 H 320" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d2-a)"/>
+  <text x="120" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">followup(msg)</text>
+
+  <!-- 2 -->
+  <rect x="332" y="176" width="200" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="342" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">wakingAfterAbort = false</text>
+  <text x="342" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">target = next-turn</text>
+  <path d="M 320 196 H 332" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+  <!-- 3 -->
+  <path d="M 320 248 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d2-a)"/>
+  <text x="330" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">splice → session.append('agent/inbox/spliced')</text>
+
+  <!-- 4 -->
+  <path d="M 540 284 H 320" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" fill="none" marker-end="url(#f03-d2-a-accent)"/>
+  <text x="330" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">emit inserted（提交之后才通知）</text>
+
+  <!-- 5 -->
+  <path d="M 320 320 H 740" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d2-a)"/>
+  <text x="330" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">wakeDriver(false)：换 activityDone → setPhase(running) → agent/status</text>
+
+  <!-- 6 -->
+  <rect x="752" y="332" width="188" height="46" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="762" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">withInitiator(kick)</text>
+  <text x="762" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">同步调用，跑到首个 await</text>
+  <path d="M 740 352 H 752" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+  <!-- 7 -->
+  <path d="M 740 386 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d2-a)"/>
+  <text x="550" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">turn/start</text>
+
+  <!-- 8 -->
+  <path d="M 740 426 H 540" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f03-d2-a-accent)"/>
+  <text x="550" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">claim(next-turn) → claimed</text>
+
+  <!-- return marker -->
+  <path d="M 96 462 H 928" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4" fill="none"/>
+  <text x="104" y="456" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">followup() 在这里返回 void：上面第 1–8 步已经全部同步完成</text>
+
+  <!-- 9 -->
+  <rect x="752" y="472" width="188" height="48" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="762" y="488" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">await tools.resolve</text>
+  <text x="762" y="502" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">assemble → agent/pre-step</text>
+  <text x="762" y="514" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">第一个挂起点</text>
+  <path d="M 740 492 H 752" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+  <!-- 10 -->
+  <path d="M 740 546 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d2-a)"/>
+  <text x="550" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">step/start → 请求组装</text>
+
+  <!-- step gutter -->
+  <text x="62" y="149" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">1</text>
+  <text x="62" y="193" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">2</text>
+  <text x="62" y="245" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">3</text>
+  <text x="62" y="281" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">4</text>
+  <text x="62" y="317" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">5</text>
+  <text x="62" y="349" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">6</text>
+  <text x="62" y="383" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">7</text>
+  <text x="62" y="423" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">8</text>
+  <text x="62" y="489" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">9</text>
+  <text x="62" y="543" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">10</text>
+
+  <text x="48" y="596" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">「同步返回」不等于「只做了一点」：真正决定轮次是否开始的工作，都发生在返回之前。</text>
+</svg>

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f04-d04-title f04-d04-desc">
+  <title id="f04-d04-title">尝试结算的四种结局</title>
+  <desc id="f04-d04-desc">左侧四个判断依次为流是否开始、是否被取消且有内容、finish 是否成功、是否失败或取消；右侧对应四种落账结果：直接抛出、带 interrupted 的 assistant/message、普通 assistant/message、assistant/attempt。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">ATTEMPT SETTLEMENT / 08</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">每种结局都必须留下一条记录</text>
+
+  <!-- decisions -->
+  <g>
+    <rect x="40" y="96" width="360" height="54" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="40" y="182" width="360" height="54" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="40" y="268" width="360" height="54" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="40" y="354" width="360" height="54" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">
+    <text x="56" y="118">① live.start() 执行了吗？</text>
+    <text x="56" y="136" font-size="8" fill="#4f5d75">流在第一个 chunk 之前就失败 → 没有可结算的尝试</text>
+    <text x="56" y="204">② 被取消，且已经收到内容？</text>
+    <text x="56" y="222" font-size="8" fill="#4f5d75">abort 发生在流中途 → 有部分产出</text>
+    <text x="56" y="290">③ finish.kind 是成功？</text>
+    <text x="56" y="308" font-size="8" fill="#4f5d75">包含 max-tokens：仍是成功，只是要标记</text>
+    <text x="56" y="376">④ 其余：失败 / 取消且无内容</text>
+    <text x="56" y="394" font-size="8" fill="#4f5d75">stream error、提供方错误、取消在首块之前</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f04-a8)">
+    <path d="M404 123 H 470"/>
+    <path d="M404 209 H 470"/>
+    <path d="M404 295 H 470"/>
+    <path d="M404 381 H 470"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">
+    <text x="416" y="117">否</text>
+    <text x="416" y="203">是</text>
+    <text x="416" y="289">是</text>
+    <text x="416" y="375">其余</text>
+  </g>
+
+  <!-- outcomes -->
+  <g>
+    <rect x="480" y="96" width="440" height="54" rx="5" fill="#f7f7f7" stroke="#d8d8d8"/>
+    <rect x="480" y="182" width="440" height="54" rx="5" fill="#fbf1ec" stroke="#bf4520"/>
+    <rect x="480" y="268" width="440" height="54" rx="5" fill="#eef4ef" stroke="#5b8a5e"/>
+    <rect x="480" y="354" width="440" height="54" rx="5" fill="#ffffff" stroke="#2d3142"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+    <text x="496" y="118">不写日志，直接抛出</text>
+    <text x="496" y="136" font-size="8" fill="#4f5d75">没有 attempt 可结算：连接都没建立</text>
+    <text x="496" y="204" fill="#bf4520">assistant/message + interrupted: true</text>
+    <text x="496" y="222" font-size="8" fill="#8a5a44">保留已生成内容 + 部分 stream/usage，进模型历史</text>
+    <text x="496" y="290" fill="#3f6b42">assistant/message（内嵌 stream/usage）</text>
+    <text x="496" y="308" font-size="8" fill="#4f5d75">空内容也写，但派生历史返回 null；max-tokens 单独标记</text>
+    <text x="496" y="376">assistant/attempt + settlement</text>
+    <text x="496" y="394" font-size="8" fill="#4f5d75">{ kind: 'error', failure } 或 { kind: 'cancelled', reason }</text>
+  </g>
+
+  <!-- invariants -->
+  <rect x="40" y="440" width="880" height="120" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">THREE INVARIANTS</text>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.8" fill="#2d3142">
+    <text x="56" y="484">① 失败也要落账：没有 attempt，重建时分不清「模型没回」与「回了没记」。</text>
+    <text x="56" y="506">② attempt 永不进模型历史：它是结算记录，不是对话内容。</text>
+    <text x="56" y="528">③ 记账失败不能吞掉原错误：抛 AggregateError，两者都保留。</text>
+  </g>
+  <text x="56" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a5a44">取消被当作「有内容就保留」而不是「一律丢弃」：模型已经生成的半句话，往往比没有更有用。</text>
+
+  <defs>
+    <marker id="f04-a8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/></marker>
+  </defs>
+</svg>

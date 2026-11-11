@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">从 ToolDefinition 到模型请求</title>
+  <desc id="f03-d3-desc">ToolDefinition 的十来个字段里，只有 name、description、parameters 被 projectToolSchema 投影；执行器再决定把它们作为结构化 schemas 放进请求，还是额外生成 prompt section。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">09 / SCHEMA PROJECTION</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">工具定义怎么变成提示词里的两样东西</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">结构化 tools[] 是主通道，prompt section 是补充说明；执行期字段一个都不过去</text>
+
+  <!-- ToolDefinition -->
+  <rect x="40" y="116" width="250" height="356" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">REGISTRY-SIDE</text>
+  <text x="56" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">ToolDefinition</text>
+  <text x="56" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">注册时校验；模型永远看不到整张卡</text>
+  <line x1="56" y1="186" x2="274" y2="186" stroke="#ececec"/>
+
+  <text x="56" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">name</text>
+  <text x="246" y="206" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">→ tools[]</text>
+  <text x="56" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">description</text>
+  <text x="246" y="226" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">→ tools[]</text>
+  <text x="56" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">parameters</text>
+  <text x="246" y="246" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">→ tools[]</text>
+  <text x="56" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">deferLoading?</text>
+  <text x="246" y="266" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">→ tools[] 可选</text>
+
+  <line x1="56" y1="278" x2="274" y2="278" stroke="#ececec"/>
+  <text x="56" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">output.schema</text>
+  <text x="246" y="298" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">执行期</text>
+  <text x="56" y="318" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">execute()</text>
+  <text x="246" y="318" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">执行期</text>
+  <text x="56" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">projectContent / finalizeContent</text>
+  <text x="246" y="338" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">结果期</text>
+  <text x="56" y="358" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">timeoutMs / isConcurrencySafe</text>
+  <text x="246" y="358" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">调度期</text>
+  <text x="56" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">presentCall / presentResult</text>
+  <text x="246" y="378" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">UI 期</text>
+
+  <rect x="56" y="400" width="218" height="52" rx="4" fill="#f5f5f5"/>
+  <text x="68" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">execute 与 output 不是「藏起来」，</text>
+  <text x="68" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">而是压根不在 ToolSchema 类型里。</text>
+
+  <!-- funnel -->
+  <line x1="290" y1="294" x2="318" y2="294" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-acc)"/>
+  <rect x="320" y="176" width="190" height="238" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="336" y="200" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">ALLOWLIST</text>
+  <text x="336" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">projectToolSchema</text>
+  <text x="336" y="236" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">schema.ts:641</text>
+
+  <rect x="336" y="252" width="158" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="348" y="269" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">name</text>
+  <rect x="336" y="284" width="158" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="348" y="301" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">description</text>
+  <rect x="336" y="316" width="158" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="348" y="333" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">parameters</text>
+  <text x="336" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">snapshotJsonValue 必须无损，</text>
+  <text x="336" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">否则注册时直接抛错</text>
+  <text x="336" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">其余字段在这里被类型挡住</text>
+
+  <!-- describe -->
+  <line x1="510" y1="268" x2="544" y2="268" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <rect x="546" y="196" width="180" height="144" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="562" y="220" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">EXECUTOR</text>
+  <text x="562" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">describe(definitions)</text>
+  <text x="562" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">原生执行器只返回 schemas</text>
+  <text x="562" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">别的执行器可加 sections</text>
+  <text x="562" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">返回类型 ToolModelInput</text>
+  <text x="562" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">executor.ts:64</text>
+
+  <!-- branches -->
+  <line x1="636" y1="196" x2="636" y2="166" stroke="#8a93a6" stroke-width="1"/>
+  <text x="646" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">schemas</text>
+  <rect x="600" y="116" width="150" height="44" rx="4" fill="rgba(47,111,94,0.08)" stroke="#2f6f5e"/>
+  <text x="610" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">schemas: ToolSchema[]</text>
+  <text x="610" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">每项只有 name/desc/params</text>
+
+  <line x1="726" y1="268" x2="760" y2="268" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <rect x="762" y="196" width="158" height="144" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="776" y="220" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">ASSEMBLY</text>
+  <text x="776" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">systemPrompt.tools</text>
+  <text x="776" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每次组装都重跑 provider</text>
+  <text x="776" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">sections 进 system 文本</text>
+  <text x="776" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">schemas 进 request.tools</text>
+  <text x="776" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">index.ts:113</text>
+
+  <!-- request -->
+  <line x1="675" y1="340" x2="675" y2="378" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="841" y1="340" x2="841" y2="378" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <rect x="546" y="380" width="374" height="104" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="562" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">LLM REQUEST</text>
+  <text x="562" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">tools: [{ name, description, parameters }]</text>
+  <text x="562" y="442" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">messages: [ ... system, user, assistant, tool ... ]</text>
+  <text x="562" y="460" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">结构化字段是主通道；section 只是同一批工具的自然语言补充</text>
+  <text x="562" y="476" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">execute / output / presenters 不可能出现在这里</text>
+
+  <!-- knownNames -->
+  <rect x="40" y="500" width="480" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="56" y="520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">DIAGNOSTIC SIDE-CHANNEL</text>
+  <text x="56" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">knownNames 只用于「名字是否存在」的诊断，不进请求；被 restriction 挡掉的名字也只留在这里。</text>
+
+  <!-- bottom note -->
+  <text x="40" y="584" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">同一个 ToolDefinition 可以有多个执行器视角：原生执行器给结构化 schema，代码模式执行器给 run_code + 目录。</text>
+</svg>

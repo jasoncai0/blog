@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f01-d01-title f01-d01-desc">
+  <title id="f01-d01-title">一次请求的四个来源</title>
+  <desc id="f01-d01-desc">左侧四张卡片分别是信封快照、日志投影、本步工具准入与运行时上下文；箭头汇入右侧的请求对象，请求对象列出七个字段。底部注明四者都先写成会话事件再被组装。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">REQUEST ASSEMBLY / 07</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">一次请求的四个来源，七个字段</text>
+
+  <!-- source 1 -->
+  <rect x="40" y="92" width="300" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="114" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">SOURCE 1</text>
+  <text x="56" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11.5" fill="#2d3142">request/header 快照</text>
+  <text x="56" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">config · adapterDefaults · tools</text>
+  <text x="56" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">四种 reason，重建只取最新一条</text>
+
+  <!-- source 2 -->
+  <rect x="40" y="210" width="300" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="232" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">SOURCE 2</text>
+  <text x="56" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11.5" fill="#2d3142">日志投影 deriveMessages()</text>
+  <text x="56" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">surface 折叠后的活跃消息节点</text>
+  <text x="56" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">逐条 deepFreeze，跨请求复用</text>
+
+  <!-- source 3 -->
+  <rect x="40" y="328" width="300" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="350" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">SOURCE 3</text>
+  <text x="56" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11.5" fill="#2d3142">本步工具准入 resolve()</text>
+  <text x="56" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">每个拟议步骤调用一次</text>
+  <text x="56" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">ResolvedToolSet 在该步结算后 dispose</text>
+
+  <!-- source 4 -->
+  <rect x="40" y="446" width="300" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="468" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">SOURCE 4</text>
+  <text x="56" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11.5" fill="#2d3142">组装出的运行时上下文</text>
+  <text x="56" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">PromptContext 渲染 + 固定前缀</text>
+  <text x="56" y="526" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">相同则不再写新快照</text>
+
+  <!-- arrows -->
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f01-ar)">
+    <path d="M344 144 C 440 144 470 160 520 176"/>
+    <path d="M344 262 C 440 262 470 250 520 236"/>
+    <path d="M344 380 C 440 380 470 330 520 300"/>
+    <path d="M344 498 C 440 498 470 420 520 372"/>
+  </g>
+  <defs>
+    <marker id="f01-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <!-- request card -->
+  <rect x="530" y="92" width="390" height="458" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1.4"/>
+  <text x="550" y="118" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">LLM REQUEST</text>
+  <text x="550" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11.5" fill="#2d3142">buildRequest() 的输出</text>
+  <line x1="550" y1="152" x2="900" y2="152" stroke="#e4e4e4"/>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">
+    <text x="550" y="178">header.config</text>
+    <text x="550" y="230">header.tools</text>
+    <text x="550" y="282">header.adapterDefaults</text>
+    <text x="550" y="334">messages</text>
+    <text x="550" y="386">toolHistory</text>
+    <text x="550" y="438">sessionId</text>
+    <text x="550" y="490">signal</text>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">
+    <text x="720" y="178">路由与采样</text>
+    <text x="720" y="230">本步声明集合</text>
+    <text x="720" y="282">适配器实际默认值</text>
+    <text x="720" y="334">冻结的派生历史</text>
+    <text x="720" y="386">已发生的调用摘要</text>
+    <text x="720" y="438">固定</text>
+    <text x="720" y="490">turn 的 AbortSignal</text>
+  </g>
+  <g stroke="#eeeeee">
+    <line x1="550" y1="192" x2="900" y2="192"/>
+    <line x1="550" y1="244" x2="900" y2="244"/>
+    <line x1="550" y1="296" x2="900" y2="296"/>
+    <line x1="550" y1="348" x2="900" y2="348"/>
+    <line x1="550" y1="400" x2="900" y2="400"/>
+    <line x1="550" y1="452" x2="900" y2="452"/>
+  </g>
+
+  <text x="40" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">顺序即优先级：每个来源都先落成会话事件（header / message / context），再被组装；没有「只在内存里存在」的请求输入。</text>
+</svg>

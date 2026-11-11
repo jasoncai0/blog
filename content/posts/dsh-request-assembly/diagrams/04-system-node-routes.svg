@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f04-d04-title f04-d04-desc">
+  <title id="f04-d04-title">系统提示词的两种更新路由</title>
+  <desc id="f04-d04-desc">顶部是三条归一化触发条件；左侧展示归一化路由把节点 0 替换为新文本、后续节点置空；右侧展示 in-history 路由追加新节点并保留前缀；底部说明空渲染清空全部活跃节点、节点 0 不能被压缩遮蔽。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">SYSTEM NODE ROUTES / 07</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">同一段提示词，两种写入历史的方式</text>
+
+  <!-- decision -->
+  <rect x="40" y="88" width="880" height="70" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="56" y="110" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">DECISION</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+    <text x="56" y="132">!inHistory</text>
+    <text x="196" y="132">‖ rendered === ''</text>
+    <text x="366" y="132">‖ (startsSeries ∧ text ≠ latest)</text>
+    <text x="620" y="132" fill="#bf4520">→ 归一化</text>
+    <text x="740" y="132">否则若 latest ≠ text → 追加</text>
+  </g>
+  <text x="56" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">三条任一成立就走「让模型只看到一段提示词」的路由；都不成立时才允许在历史里堆叠。</text>
+
+  <!-- left: normalize -->
+  <rect x="40" y="182" width="420" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">NORMALIZE</text>
+  <text x="56" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10.5" fill="#2d3142">替换 head，清空后续</text>
+
+  <text x="56" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a8a8a">BEFORE</text>
+  <g>
+    <rect x="56" y="260" width="180" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="56" y="292" width="180" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="56" y="324" width="180" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">
+    <text x="66" y="277">seq 0 · base prompt</text>
+    <text x="66" y="309">seq 1 · update A</text>
+    <text x="66" y="341">seq 2 · update B</text>
+  </g>
+
+  <text x="264" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a8a8a">AFTER</text>
+  <g>
+    <rect x="264" y="260" width="180" height="26" rx="4" fill="#fbf1ec" stroke="#bf4520"/>
+    <rect x="264" y="292" width="180" height="26" rx="4" fill="#f7f7f7" stroke="#d8d8d8" stroke-dasharray="3 2"/>
+    <rect x="264" y="324" width="180" height="26" rx="4" fill="#f7f7f7" stroke="#d8d8d8" stroke-dasharray="3 2"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">
+    <text x="274" y="277" fill="#bf4520">seq 0 · new prompt</text>
+    <text x="274" y="309" fill="#8a8a8a">seq 1 · ''（休眠）</text>
+    <text x="274" y="341" fill="#8a8a8a">seq 2 · ''（休眠）</text>
+  </g>
+  <g stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f04-a3)">
+    <path d="M240 273 H 258"/>
+    <path d="M240 305 H 258"/>
+    <path d="M240 337 H 258"/>
+  </g>
+  <text x="56" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">模型看到的系统提示词永远只有一段，位置固定在节点 0。</text>
+  <text x="56" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">代价：节点 0 之后的前缀全部变化 → prompt cache 失效。</text>
+  <text x="56" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">适用：路由不支持 in-history / 渲染为空 / 新序列且文本不同</text>
+  <rect x="56" y="440" width="388" height="28" rx="4" fill="#fbf1ec" stroke="#e8c9b8"/>
+  <text x="66" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a5a44">空渲染会清空所有活跃节点：移除指令必须彻底，不能留旧段。</text>
+
+  <!-- right: in-history -->
+  <rect x="500" y="182" width="420" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="516" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">IN-HISTORY</text>
+  <text x="516" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10.5" fill="#2d3142">追加节点，前缀不动</text>
+
+  <text x="516" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a8a8a">BEFORE</text>
+  <g>
+    <rect x="516" y="260" width="180" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="516" y="292" width="180" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">
+    <text x="526" y="277">seq 0 · base prompt</text>
+    <text x="526" y="309">seq 1 · update A</text>
+  </g>
+
+  <text x="724" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a8a8a">AFTER</text>
+  <g>
+    <rect x="724" y="260" width="180" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="724" y="292" width="180" height="26" rx="4" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="724" y="324" width="180" height="26" rx="4" fill="#eef4ef" stroke="#5b8a5e"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">
+    <text x="734" y="277">seq 0 · 不变</text>
+    <text x="734" y="309">seq 1 · 不变</text>
+    <text x="734" y="341" fill="#3f6b42">seq 2 · update B（新）</text>
+  </g>
+  <g stroke="#5b8a5e" stroke-width="1" fill="none" marker-end="url(#f04-a4)">
+    <path d="M700 337 H 718"/>
+  </g>
+  <text x="516" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">旧前缀逐字节保留，缓存命中；模型看到多段，可依序覆盖。</text>
+  <text x="516" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">代价：模型必须理解「后段覆盖前段」的语义。</text>
+  <text x="516" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">适用：提供方声明 systemPromptUpdate: 'in-history'</text>
+  <rect x="516" y="440" width="388" height="28" rx="4" fill="#eef4ef" stroke="#cfe0cf"/>
+  <text x="526" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#3f6b42">文本相同 → 零 commit；空渲染 → 仍然归一化清空。</text>
+
+  <defs>
+    <marker id="f04-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f04-a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5b8a5e"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">折叠器额外保证：surface 节点 0 永远不能被 replace（含压缩），所以「基础提示词」是压缩无法改写的锚点。</text>
+  <text x="40" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">写入顺序固定：先替换后续非空节点，再替换 head；否则先把 head 改掉，后续节点的 seq 定位就会落在旧 surface 上。</text>
+</svg>

@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">fork 与 spawn 的日志边界</title>
+  <desc id="f02-d2-desc">父日志的十二个事件与两种子日志。fork 复制前九个事件，在第九个位置放 inherited 的 end-seed，再写自己的事件；spawn 从零开始，没有 marker。</desc>
+  <defs>
+    <marker id="f02-arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f02-arwr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.16em">FORK BOUNDARY</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="start">一刀切在最后一个 turn/end 上</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" fill="#5a6580" text-anchor="start">fork 搬走完整 turn 的前缀，在切口补一条 inherited marker；spawn 从空日志开始，连 marker 都没有</text>
+<text x="48" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">父日志</text>
+<rect x="48" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="80" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 0</text>
+<text x="80" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">session/created</text>
+<rect x="116" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="148" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 1</text>
+<text x="148" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">turn/start</text>
+<rect x="184" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="216" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 2</text>
+<text x="216" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">user</text>
+<rect x="252" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="284" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 3</text>
+<text x="284" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">step/start</text>
+<rect x="320" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="352" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 4</text>
+<text x="352" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">assistant</text>
+<rect x="388" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="420" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 5</text>
+<text x="420" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">tool/call</text>
+<rect x="456" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="488" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 6</text>
+<text x="488" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">tool/result</text>
+<rect x="524" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="556" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 7</text>
+<text x="556" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">step/end</text>
+<rect x="592" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="624" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 8</text>
+<text x="624" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">turn/end</text>
+<rect x="660" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="692" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 9</text>
+<text x="692" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">turn/start</text>
+<rect x="728" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="760" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 10</text>
+<text x="760" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">user</text>
+<rect x="796" y="136" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="828" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 11</text>
+<text x="828" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">step/start</text>
+<line x1="658" y1="124" x2="658" y2="196" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="3 2" marker-end="url(#f02-arwr)"/>
+<text x="662" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="600" fill="#bf4520" text-anchor="start">cut = turn/end</text>
+<text x="48" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">fork 子的日志</text>
+<rect x="48" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="80" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 0</text>
+<text x="80" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">session/created</text>
+<rect x="116" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="148" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 1</text>
+<text x="148" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">turn/start</text>
+<rect x="184" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="216" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 2</text>
+<text x="216" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">user</text>
+<rect x="252" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="284" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 3</text>
+<text x="284" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">step/start</text>
+<rect x="320" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="352" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 4</text>
+<text x="352" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">assistant</text>
+<rect x="388" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="420" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 5</text>
+<text x="420" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">tool/call</text>
+<rect x="456" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="488" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 6</text>
+<text x="488" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">tool/result</text>
+<rect x="524" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="556" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 7</text>
+<text x="556" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">step/end</text>
+<rect x="592" y="238" width="64" height="38" rx="4" fill="#efefef" stroke="#d8d8d8" stroke-width="1"/>
+<text x="624" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 8</text>
+<text x="624" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">turn/end</text>
+<rect x="660" y="238" width="64" height="38" rx="4" fill="#ffffff" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="692" y="253" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#bf4520" text-anchor="middle">seq 9</text>
+<text x="692" y="267" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#bf4520" text-anchor="middle">end-seed</text>
+<rect x="728" y="238" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="760" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 10</text>
+<text x="760" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">子 turn/start</text>
+<rect x="796" y="238" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="828" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 11</text>
+<text x="828" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">子 step/start</text>
+<text x="662" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="600" fill="#bf4520" text-anchor="start">inheritedEventCount = 9</text>
+<line x1="658" y1="306" x2="658" y2="282" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-arw)"/>
+<text x="48" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">spawn 子的日志</text>
+<rect x="48" y="358" width="180" height="38" rx="4" fill="#f5f5f5" stroke="#c9ccc6" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="138" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#8a93a6" text-anchor="middle">空日志，没有 marker</text>
+<rect x="240" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="272" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 0</text>
+<text x="272" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">turn/start</text>
+<rect x="308" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="340" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 1</text>
+<text x="340" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">user</text>
+<rect x="376" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="408" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 2</text>
+<text x="408" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">step/start</text>
+<rect x="444" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="476" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 3</text>
+<text x="476" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">assistant</text>
+<rect x="512" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="544" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 4</text>
+<text x="544" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">tool/call</text>
+<rect x="580" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="612" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 5</text>
+<text x="612" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">tool/result</text>
+<rect x="648" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="680" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 6</text>
+<text x="680" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">step/end</text>
+<rect x="716" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="748" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 7</text>
+<text x="748" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">turn/end</text>
+<rect x="784" y="358" width="64" height="38" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="816" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" font-weight="400" fill="#8a93a6" text-anchor="middle">seq 8</text>
+<text x="816" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#2d3142" text-anchor="middle">turn/start</text>
+<text x="252" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">第一条事件就是子自己的 turn/start</text>
+<rect x="48" y="440" width="272" height="116" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="64" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">前缀就是父的事件对象</text>
+<text x="64" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· 不深拷贝，只持有引用</text>
+<text x="64" y="505" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· seq 仍是 0..8，不改写</text>
+<text x="64" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· 冷恢复 replay 同一份快照</text>
+<rect x="340" y="440" width="272" height="116" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="356" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">marker 不在前缀里</text>
+<text x="356" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· count 指向 marker 的 seq</text>
+<text x="356" y="505" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· 一条日志最多一个 marker</text>
+<text x="356" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· 缺了就无法重建切割线</text>
+<rect x="632" y="440" width="272" height="116" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="648" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">spawn 为什么没有 marker</text>
+<text x="648" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· seed 未定义，isSeeded=false</text>
+<text x="648" y="505" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· 空日志本身就是合法状态</text>
+<text x="648" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">· 没有需要标注的继承边界</text>
+<text x="48" y="586" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">读日志时只需要一条规则：log[inheritedEventCount] 是 marker，它之前的都算继承内容。</text>
+</svg>

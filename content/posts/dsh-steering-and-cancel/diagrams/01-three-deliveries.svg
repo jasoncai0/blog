@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">三种投递在同一时间轴上的位置</title>
+  <desc id="f01-d1-desc">followup 在 turn 边界被 claim，steer 在 step 边界被 claim，inject 同样等 step 边界但不唤醒；被 reject 的批次不会回插。
+</desc>
+  <defs>
+    <marker id="f01-d1-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-d1-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">DELIVERY × BOUNDARY</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">同一条时间轴，三种投递</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">差别只有两个参数：进哪条队列，提交时要不要唤醒。</text>
+
+  <!-- axis labels -->
+  <text x="150" y="120" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">send()</text>
+  <text x="420" y="120" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">step 边界</text>
+  <text x="650" y="120" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">turn 边界</text>
+  <text x="840" y="120" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">之后的 step</text>
+
+  <!-- boundaries -->
+  <path d="M 420 132 V 470" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4" fill="none"/>
+  <path d="M 650 132 V 396" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4" fill="none"/>
+
+  <!-- lane followup -->
+  <text x="48" y="160" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">FOLLOWUP</text>
+  <text x="48" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">next-turn · wake</text>
+  <rect x="120" y="150" width="180" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="210" y="177" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142">followup(msg)</text>
+  <path d="M 300 172 H 650" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <rect x="670" y="146" width="242" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="684" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">下一轮第一步 claim</text>
+  <text x="684" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">成为那一轮唯一的普通消息</text>
+
+  <!-- lane steer -->
+  <text x="48" y="250" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">STEER</text>
+  <text x="48" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">next-step · wake</text>
+  <rect x="120" y="240" width="180" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="210" y="267" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142">steer(msg)</text>
+  <path d="M 300 262 H 420" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <rect x="440" y="236" width="170" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="454" y="256" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">本步 pre-step claim</text>
+  <text x="454" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">和工具上下文同一批</text>
+  <text x="440" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">reject 时不回插：claimed 不等于被看见</text>
+
+  <!-- lane inject -->
+  <text x="48" y="340" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#7a5aa8">INJECT</text>
+  <text x="48" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">next-step · 不唤醒</text>
+  <rect x="120" y="330" width="180" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="210" y="357" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142">inject(ctx)</text>
+  <path d="M 300 352 H 420" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4" fill="none" marker-end="url(#f01-d1-a)"/>
+  <rect x="440" y="326" width="170" height="52" rx="6" fill="#ffffff" stroke="#7a5aa8" stroke-dasharray="4 4"/>
+  <text x="454" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">step 边界 claim</text>
+  <text x="454" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#7a5aa8">不唤醒，没人等它</text>
+
+  <rect x="660" y="398" width="252" height="58" rx="6" fill="#ffffff" stroke="#7a5aa8" stroke-dasharray="4 4"/>
+  <text x="674" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">idle 时一直 pending</text>
+  <text x="674" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">直到某次 followup / steer 唤醒</text>
+  <path d="M 610 378 V 427 H 660" stroke="#7a5aa8" stroke-width="1" stroke-dasharray="4 4" fill="none" marker-end="url(#f01-d1-a)"/>
+
+  <!-- legend -->
+  <path d="M 48 508 H 100" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <text x="110" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">唤醒并推进到下一个边界</text>
+  <path d="M 300 508 H 352" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4" fill="none" marker-end="url(#f01-d1-a)"/>
+  <text x="362" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">不唤醒，或可能不被消费</text>
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6">边界是 claim 的位置，不是模型看见的位置：claim 之后还要过 pre-step 与请求组装。</text>
+</svg>

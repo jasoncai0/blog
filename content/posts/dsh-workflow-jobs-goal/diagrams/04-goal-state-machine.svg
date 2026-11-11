@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">goal 的持久阶段与进程本地激活</title>
+  <desc id="f04-d4-desc">上半层是四个持久阶段 active、paused、blocked、complete，由 goal/change 事件推进；下半层是进程本地的 armed 与 disarmed。resume 同时改两层，pause、block、complete 只停下并 disarm。</desc>
+
+  <defs>
+    <marker id="f04-a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-a4b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="36" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">GOAL: PHASE VS ACTIVATION</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">两层状态：一层落盘，一层永不落盘</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">上半层回答「目标走到哪了」，下半层回答「谁有权限自动开下一轮」</text>
+
+  <!-- persistent phase band -->
+  <text x="40" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.14em" fill="#bf4520">PERSISTENT PHASE</text>
+  <text x="168" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">写进会话日志的 goal/change，每次带完整快照</text>
+
+  <rect x="70" y="146" width="176" height="70" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="158" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">active</text>
+  <text x="158" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">目标进行中</text>
+
+  <rect x="320" y="146" width="176" height="70" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="408" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">paused</text>
+  <text x="408" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">人类主动暂停</text>
+
+  <rect x="570" y="146" width="176" height="70" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="658" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">blocked</text>
+  <text x="658" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">带 code + message</text>
+
+  <rect x="806" y="146" width="114" height="70" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="863" y="176" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">complete</text>
+  <text x="863" y="196" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">终态</text>
+
+  <!-- pause -->
+  <line x1="246" y1="168" x2="316" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+  <text x="252" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">pause</text>
+
+  <!-- resume back -->
+  <line x1="320" y1="196" x2="250" y2="196" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+  <text x="252" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">resume</text>
+
+  <!-- block -->
+  <line x1="496" y1="168" x2="566" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+  <text x="502" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">block</text>
+
+  <!-- blocked resume -->
+  <path d="M 570 200 L 500 200" fill="none" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+  <text x="500" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">resume（先加预算）</text>
+
+  <!-- complete from active / paused / blocked -->
+  <path d="M 158 146 L 158 118 L 863 118 L 863 142" fill="none" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+  <text x="470" y="110" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">complete（任意非 complete 阶段都可直接结束）</text>
+
+  <!-- divider -->
+  <path d="M 40 250 L 920 250" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="472" y="272" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.14em" fill="#8a93a6">同一行日志之上，两种不同寿命的状态</text>
+
+  <!-- activation band -->
+  <text x="40" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.14em" fill="#bf4520">PROCESS-LOCAL ACTIVATION</text>
+  <text x="218" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">只活在内存里，回放不出来，重启即失</text>
+
+  <rect x="250" y="336" width="180" height="64" rx="6" fill="#ffffff" stroke="#2f6f5e" stroke-width="1.2"/>
+  <text x="340" y="364" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">armed</text>
+  <text x="340" y="384" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">可以开下一轮</text>
+
+  <rect x="560" y="336" width="180" height="64" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="650" y="364" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">disarmed</text>
+  <text x="650" y="384" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">目标还在，但不自动跑</text>
+
+  <line x1="560" y1="356" x2="434" y2="356" stroke="#2f6f5e" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+  <text x="452" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">resume</text>
+
+  <line x1="430" y1="382" x2="556" y2="382" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f04-a4b)"/>
+  <text x="440" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">pause / block / complete / disarm</text>
+
+  <!-- load/fork edge -->
+  <path d="M 48 424 L 48 448 L 650 448 L 650 404" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#f04-a4b)"/>
+  <text x="60" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">session load / fork / 插件重载 → 统一 disarm</text>
+
+  <!-- note card -->
+  <rect x="70" y="466" width="820" height="94" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="90" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">active + disarmed 是合法状态：目标仍在进行，只是没有人被授权自动开下一轮。</text>
+  <text x="90" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">driver 只在 phase=active 且 activation=armed 时驱动；disarm 不改 phase，也不改 revision。</text>
+  <text x="90" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">自动续跑是一种授权，授权不能从磁盘上长出来——所以恢复与 fork 之后都从 disarmed 开始。</text>
+  <text x="90" y="552" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">NEVER INHERITS HIDDEN AUTOMATIC AUTHORITY</text>
+</svg>

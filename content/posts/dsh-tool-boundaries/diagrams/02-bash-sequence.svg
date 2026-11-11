@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">一次 bash 调用从 schema 到进程</title>
+  <desc id="f02-d2-desc">模型参数依次经过参数校验、可选审批、策略解析、shell 服务、沙箱 confine、spawn 与拒绝分类；右侧标注每一步能拒绝调用的是谁。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">11 / BASH SEQUENCE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">审批在 spawn 之前，围栏在 spawn 之中</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">一条 bash 调用的十个落点；每一格都可能拒绝，但只有最后两格碰得到真实进程</text>
+
+  <!-- lanes -->
+  <text x="40" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">MODEL</text>
+  <text x="40" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">TOOL-BASH</text>
+  <text x="40" y="220" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">APPROVAL</text>
+  <text x="40" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">SHELL</text>
+  <text x="40" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">SANDBOX</text>
+  <text x="40" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">KERNEL</text>
+  <text x="40" y="420" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">RESULT</text>
+
+  <line x1="118" y1="112" x2="118" y2="536" stroke="#d8d8d8" stroke-width="2"/>
+
+  <!-- step 1 -->
+  <rect x="146" y="100" width="560" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="118" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">01</text>
+  <text x="184" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">模型输出 { command, sandbox_permissions?, justification? }</text>
+  <text x="184" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">schema 只校验已宣传的键：未宣传的字段仍可能到达 execute</text>
+  <line x1="118" y1="120" x2="146" y2="120" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <line x1="426" y1="140" x2="426" y2="158" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 2 -->
+  <rect x="146" y="160" width="560" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="178" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">02</text>
+  <text x="184" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">resolveSandboxPolicy(exec) → validateBashArgs(args, mode)</text>
+  <text x="184" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">两个升级参数必须成对；justification 不能是空白</text>
+  <line x1="118" y1="180" x2="146" y2="180" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <line x1="426" y1="200" x2="426" y2="218" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 3 -->
+  <rect x="146" y="220" width="560" height="40" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="162" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">03</text>
+  <text x="184" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">若请求升级：approveBashEscalation → ctx.approval.request</text>
+  <text x="184" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">严格更宽才继续；allowed-once 只对本次 callId 有效</text>
+  <line x1="118" y1="240" x2="146" y2="240" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <line x1="426" y1="260" x2="426" y2="278" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 4 -->
+  <rect x="146" y="280" width="560" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">04</text>
+  <text x="184" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">policy = { ...standingPolicy, mode: approvedMode }</text>
+  <text x="184" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">调用副本，不写回会话；下一条调用重新解析</text>
+  <line x1="118" y1="300" x2="146" y2="300" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <line x1="426" y1="320" x2="426" y2="338" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 5 -->
+  <rect x="146" y="340" width="560" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="358" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">05</text>
+  <text x="184" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">ctx.shell.execute({ ...request, sandboxPolicy: policy })</text>
+  <text x="184" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">shell 只是分发；本轮的选择决定用哪个 executor</text>
+  <line x1="118" y1="360" x2="146" y2="360" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <line x1="426" y1="380" x2="426" y2="398" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 6 -->
+  <rect x="146" y="400" width="560" height="40" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="162" y="418" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">06</text>
+  <text x="184" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">danger-full-access？直接 spawn : confine(['bash','-c',cmd])</text>
+  <text x="184" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">返回的是重新构造的 argv；confined 留给后面的 denial 分类</text>
+  <line x1="118" y1="420" x2="146" y2="420" stroke="#2f6f5e" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <line x1="426" y1="440" x2="426" y2="458" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 7 -->
+  <rect x="146" y="460" width="560" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="478" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">07</text>
+  <text x="184" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">spawn → 进程在策略下运行 → 退出</text>
+  <text x="184" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">内核拒绝写入；stderr 留下 denial signature</text>
+  <line x1="118" y1="480" x2="146" y2="480" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <line x1="426" y1="500" x2="426" y2="518" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 8 -->
+  <rect x="146" y="520" width="560" height="38" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="538" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">08</text>
+  <text x="184" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">classifyRunnerFailure → classifyDenial → { mode, denied, enforcement }</text>
+  <text x="184" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">先判“根本没跑”，再判“跑了但被挡”</text>
+  <line x1="118" y1="540" x2="146" y2="540" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- right: who can refuse -->
+  <rect x="726" y="100" width="194" height="458" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="742" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">WHO CAN REFUSE</text>
+
+  <text x="742" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">01 schema：形状，不挡注入</text>
+  <text x="742" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">02 参数守卫：配对 / 空白</text>
+  <text x="742" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">03 审批：可以是“拒绝一次”</text>
+  <text x="742" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">04 策略：没有通道就拒绝</text>
+  <text x="742" y="218" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">05 shell：没有 executor 就失败</text>
+  <text x="742" y="236" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">06 沙箱：confine 抛错即不 spawn</text>
+  <text x="742" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">07 内核：写入被 EACCES 挡下</text>
+  <text x="742" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">08 分类：runner failure ≠ denial</text>
+
+  <line x1="742" y1="292" x2="904" y2="292" stroke="#d8d8d8"/>
+  <text x="742" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一条命令越界时，真正的</text>
+  <text x="742" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">问题是“它走到第几步”。</text>
+  <text x="742" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">第 6 步之前失败，进程从未</text>
+  <text x="742" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">存在；第 7 步之后失败，</text>
+  <text x="742" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">副作用可能已发生。</text>
+
+  <rect x="742" y="398" width="162" height="20" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="750" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">approve → spawn</text>
+  <rect x="742" y="426" width="162" height="20" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="750" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">confine → argv</text>
+  <rect x="742" y="454" width="162" height="20" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="750" y="468" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">classify → result</text>
+
+  <text x="40" y="588" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 11</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">team 与 subagent 的职责边界</title>
+  <desc id="f04-d4-desc">subagent runtime 负责会话、容量、模型配置、收件箱与中断；team 负责任务快照、依赖、归属与 CAS 动作。两者只在任务归属和工作区两点交接。</desc>
+
+  <defs>
+    <marker id="f04-a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">RESPONSIBILITY BOUNDARY</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">职责边界：谁创建、谁记账、谁唤醒</text>
+  <text x="48" y="88" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">模型选择在左，任务语义在右；跨过中线的只有归属与工作区</text>
+
+  <line x1="480" y1="120" x2="480" y2="466" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- left -->
+  <rect x="48" y="120" width="404" height="346" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="72" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SUBAGENT RUNTIME</text>
+  <text x="72" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">身份、执行与生命周期</text>
+
+  <text x="72" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">创建会话、命名、记录 parentSession</text>
+  <text x="72" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">容量、并发、冷恢复、销毁</text>
+  <text x="72" y="256" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">provider / model / reasoning effort</text>
+  <text x="72" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具白名单、沙箱、审批</text>
+  <text x="72" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">收件箱、wait_agent、中断与结算</text>
+  <text x="72" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">成员失败与结果回传</text>
+
+  <text x="72" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">lineage 是数据：parentSession、delegationDepth</text>
+  <text x="72" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">作用域不向下继承，子树关系不改变可见性</text>
+  <text x="72" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">team 不参与这一列的任何一个决定</text>
+
+  <!-- right -->
+  <rect x="508" y="120" width="404" height="346" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="532" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TEAM</text>
+  <text x="532" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">任务事实与归属</text>
+
+  <text x="532" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">task 快照、revision、事件日志</text>
+  <text x="532" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">blockedBy 依赖图与 ready 判定</text>
+  <text x="532" y="256" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">owner / ownerName 与 CAS 动作</text>
+  <text x="532" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">writeScopes 重叠警告</text>
+  <text x="532" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">team/mode 与工具可见性</text>
+  <text x="532" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">任务策略提示（TEAM_POLICY）</text>
+
+  <text x="532" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">不创建成员、不选模型、不发消息</text>
+  <text x="532" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">不判断「谁死了」，只认 ownerId</text>
+  <text x="532" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">没有 lease / timeout / 自动回收</text>
+
+  <!-- crossings -->
+  <rect x="150" y="492" width="300" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="300" y="514" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">交接 1</text>
+  <text x="300" y="534" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">任务归属：ownerId 指向会话 id</text>
+
+  <rect x="510" y="492" width="300" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="660" y="514" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">交接 2</text>
+  <text x="660" y="534" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工作区：文件是唯一共享副作用面</text>
+
+  <line x1="300" y1="466" x2="300" y2="490" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+  <line x1="660" y1="466" x2="660" y2="490" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a4)"/>
+</svg>

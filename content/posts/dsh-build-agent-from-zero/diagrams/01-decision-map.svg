@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f01-d01-title f01-d01-desc">
+  <title id="f01-d01-title">十个决策的依赖关系</title>
+  <desc id="f01-d01-desc">四层决策：地基（消息表示、历史真源）、骨架（循环单位、工具协议）、行为（并发、审批、失败分类、取消）、运营（上下文预算、持久化格式）。箭头表示下层做错会迫使上层返工。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520">DECISION LAYERS</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="15" fill="#2d3142">十个决策，四层依赖</text>
+  <text x="40" y="82" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">越靠下越难改：改地基不是改代码，是改数据模型。</text>
+
+  <!-- layer bands -->
+  <rect x="40" y="100" width="880" height="104" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <rect x="40" y="216" width="880" height="104" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <rect x="40" y="332" width="880" height="130" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <rect x="40" y="474" width="880" height="96" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+
+  <text x="56" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">L1 · 地基</text>
+  <text x="56" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">L2 · 骨架</text>
+  <text x="56" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">L3 · 行为</text>
+  <text x="56" y="494" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">L4 · 运营</text>
+
+  <!-- L1 cards -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="150" y="112" width="240" height="80" fill="#fff8f4" stroke="#e8b9a4" rx="5"/>
+    <text x="166" y="134" font-size="11" fill="#2d3142">① 消息表示</text>
+    <text x="166" y="152" font-size="8.5" fill="#4f5d75">角色 + 内容块（文本/图片/工具调用）</text>
+    <text x="166" y="168" font-size="8.5" fill="#8a4b2a">错：扁平字符串，工具结果无处安放</text>
+
+    <rect x="410" y="112" width="260" height="80" fill="#fff8f4" stroke="#e8b9a4" rx="5"/>
+    <text x="426" y="134" font-size="11" fill="#2d3142">② 历史真源</text>
+    <text x="426" y="152" font-size="8.5" fill="#4f5d75">数组 / 只追加事件日志</text>
+    <text x="426" y="168" font-size="8.5" fill="#8a4b2a">错：压缩、fork、审计全部重写</text>
+
+    <rect x="690" y="112" width="212" height="80" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="706" y="134" font-size="9" fill="#4f5d75">这两项决定</text>
+    <text x="706" y="152" font-size="9" fill="#4f5d75">后面的所有形状</text>
+    <text x="706" y="170" font-size="8" fill="#8a8f9c">先定，再写第一行</text>
+  </g>
+
+  <!-- L2 cards -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="150" y="228" width="240" height="80" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="166" y="250" font-size="11" fill="#2d3142">③ 循环单位</text>
+    <text x="166" y="268" font-size="8.5" fill="#4f5d75">请求 / 步骤 / 轮次，边界在哪</text>
+    <text x="166" y="284" font-size="8.5" fill="#8a4b2a">错：工具批次无法归属</text>
+
+    <rect x="410" y="228" width="260" height="80" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="426" y="250" font-size="11" fill="#2d3142">④ 工具协议</text>
+    <text x="426" y="268" font-size="8.5" fill="#4f5d75">schema / 执行 / 结果 / 拒绝</text>
+    <text x="426" y="284" font-size="8.5" fill="#8a4b2a">错：审批与超时没有挂点</text>
+
+    <rect x="690" y="228" width="212" height="80" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="706" y="250" font-size="9" fill="#4f5d75">循环单位决定</text>
+    <text x="706" y="268" font-size="9" fill="#4f5d75">取消与日志的粒度</text>
+    <text x="706" y="286" font-size="8" fill="#8a8f9c">DSH：turn → step → attempt</text>
+  </g>
+
+  <!-- L3 cards -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="60" y="360" width="200" height="88" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="76" y="382" font-size="10" fill="#2d3142">⑤ 并发模型</text>
+    <text x="76" y="400" font-size="8.5" fill="#4f5d75">串行 / 并行 / 屏障</text>
+    <text x="76" y="416" font-size="8.5" fill="#8a4b2a">错：副作用互相踩踏</text>
+    <text x="76" y="434" font-size="8" fill="#8a8f9c">按工具声明执行模式</text>
+
+    <rect x="276" y="360" width="200" height="88" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="292" y="382" font-size="10" fill="#2d3142">⑥ 审批位置</text>
+    <text x="292" y="400" font-size="8.5" fill="#4f5d75">前置 / 执行中 / 后置</text>
+    <text x="292" y="416" font-size="8.5" fill="#8a4b2a">错：批得太晚，副作用已成</text>
+    <text x="292" y="434" font-size="8" fill="#8a8f9c">必须能看见参数</text>
+
+    <rect x="492" y="360" width="200" height="88" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="508" y="382" font-size="10" fill="#2d3142">⑦ 失败分类</text>
+    <text x="508" y="400" font-size="8.5" fill="#4f5d75">可重试 / 需修复 / 终止</text>
+    <text x="508" y="416" font-size="8.5" fill="#8a4b2a">错：重试风暴或不敢重试</text>
+    <text x="508" y="434" font-size="8" fill="#8a8f9c">按错误码而不是按文案</text>
+
+    <rect x="708" y="360" width="196" height="88" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="724" y="382" font-size="10" fill="#2d3142">⑧ 取消语义</text>
+    <text x="724" y="400" font-size="8.5" fill="#4f5d75">丢弃 / 保留 / 唤醒</text>
+    <text x="724" y="416" font-size="8.5" fill="#8a4b2a">错：按了停止还在跑</text>
+    <text x="724" y="434" font-size="8" fill="#8a8f9c">cause 要留下来</text>
+  </g>
+
+  <!-- L4 cards -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="150" y="486" width="300" height="72" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="166" y="508" font-size="10.5" fill="#2d3142">⑨ 上下文预算</text>
+    <text x="166" y="526" font-size="8.5" fill="#4f5d75">截断 / 压缩 / 召回，以及重试</text>
+    <text x="166" y="544" font-size="8.5" fill="#8a4b2a">错：长会话必崩，且崩得很难看</text>
+
+    <rect x="470" y="486" width="300" height="72" fill="#ffffff" stroke="#d8d8d8" rx="5"/>
+    <text x="486" y="508" font-size="10.5" fill="#2d3142">⑩ 持久化格式</text>
+    <text x="486" y="526" font-size="8.5" fill="#4f5d75">JSONL / DB / 对象存储，代际与迁移</text>
+    <text x="486" y="544" font-size="8.5" fill="#8a4b2a">错：崩溃恢复与并发写全部要补</text>
+  </g>
+
+  <!-- dependency arrows -->
+  <g stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f01-arrow)">
+    <path d="M270 192 L270 224"/>
+    <path d="M530 192 L530 224"/>
+    <path d="M270 308 L270 356"/>
+    <path d="M530 308 L530 356"/>
+    <path d="M160 448 L160 482"/>
+    <path d="M700 448 L640 482"/>
+  </g>
+  <defs>
+    <marker id="f01-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="588" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".1em" fill="#8a8f9c">01 / TEN DECISIONS</text>
+</svg>

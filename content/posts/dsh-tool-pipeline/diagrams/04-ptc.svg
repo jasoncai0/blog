@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">普通调用与 PTC 子调用的差异</title>
+  <desc id="f04-d4-desc">两条入口汇入同一条九段流水线；PTC 子调用多带 parent token 与 tool/ptc-dispatch 记账，拒绝被呈现为有约束力的驳回，且省略 additionalContexts 以保持 call 与 result 相邻。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">10 / PTC</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">同一个 execute，两种入口</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">PTC 不是旁路：子调用照样过 pre、guards、body、post、finalize，只是记账与结果回注的规则不同</text>
+
+  <!-- left lane -->
+  <text x="60" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">ORDINARY</text>
+  <rect x="60" y="132" width="340" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">模型输出 tool-call block</text>
+  <text x="76" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">一批可以有多条，按模型顺序编号</text>
+
+  <line x1="230" y1="186" x2="230" y2="208" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="60" y="210" width="340" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">executeToolBatch → pipeline</text>
+  <text x="76" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">callId = block.id；rootCallId = 自身</text>
+
+  <line x1="230" y1="264" x2="230" y2="286" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="60" y="288" width="340" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">tool/call … tool/result</text>
+  <text x="76" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">结果按模型顺序提交，sourceEventSeqs 指向 call</text>
+
+  <line x1="230" y1="342" x2="230" y2="364" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="60" y="366" width="340" height="52" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="76" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2f6f5e">additionalContexts 在批次末尾注入</text>
+  <text x="76" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">FIFO，排在所有 tool/result 之后</text>
+
+  <!-- right lane -->
+  <text x="540" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">PTC SUB-CALL</text>
+  <rect x="540" y="132" width="380" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="556" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">模型调用 run_code</text>
+  <text x="556" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">run_code 本身也是一个普通工具调用</text>
+
+  <line x1="730" y1="186" x2="730" y2="208" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="540" y="210" width="380" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="556" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">程序内 bridge 发起子调用</text>
+  <text x="556" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">callId 新铸，parent token 指向根调用</text>
+
+  <line x1="730" y1="264" x2="730" y2="286" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="540" y="288" width="380" height="52" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="556" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">同一 pipeline（不简化）</text>
+  <text x="556" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">pre / guards / body / post / finalize 全跑</text>
+
+  <line x1="730" y1="342" x2="730" y2="364" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="540" y="366" width="380" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="556" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">值回到程序 + tool/ptc-dispatch 记账</text>
+  <text x="556" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">程序拿到完整 value；模型看不到这次派发</text>
+
+  <!-- divergence marker between lanes -->
+  <line x1="470" y1="108" x2="470" y2="440" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="462" y="100" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">same</text>
+
+  <!-- bottom difference notes -->
+  <rect x="60" y="452" width="860" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="474" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">FOUR DIFFERENCES</text>
+  <text x="76" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">① rootCallId + parent token：日志能还原调用树，恢复时知道谁属于谁。</text>
+  <text x="76" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">② 额外记 tool/ptc-dispatch：durable log 里的文本可被 tools/ptc-dispatch-log 改写，程序已拿到的 value 不变。</text>
+  <text x="76" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">③ 拒绝是有约束力的驳回：不是「再试一次」的提示，程序必须处理这个失败。</text>
+  <text x="76" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">④ 省略 additionalContexts：否则上下文会插进子调用的 call 与 result 之间，配对失效。</text>
+
+  <text x="60" y="584" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">纯文本子调用溢出 → 异步 log-only spill；带图子调用图片被裁空 → 补一条 ptc-mode user message。</text>
+</svg>

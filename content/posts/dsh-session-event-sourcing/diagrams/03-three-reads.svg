@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">同一份日志的三种读法</title>
+  <desc id="f03-d3-desc">resume 在日志尾部继续并为孤儿轮次补 interrupted；fork 在 inheritedEventCount 处切一刀，写 end-seed 与 forked 结束标记；query 只读，冷读时合成 interrupted。三者共享同一套 surface fold。</desc>
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SESSION / READ PATHS</text>
+  <text x="40" y="56" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">同一份日志，三种读法</text>
+  <text x="40" y="76" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">区别不在格式，而在「写不写」与「从哪里写」</text>
+
+  <!-- log bar -->
+  <rect x="60" y="104" width="840" height="54" rx="4" fill="#2d3142"/>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#9aa3b5">
+    <text x="76" y="126">0</text>
+    <text x="196" y="126">4</text>
+    <text x="316" y="126">8</text>
+    <text x="436" y="126">12</text>
+    <text x="556" y="126">16</text>
+    <text x="676" y="126">20</text>
+    <text x="796" y="126">24</text>
+    <text x="872" y="126">N</text>
+  </g>
+  <g stroke="#4f5d75" stroke-width="1">
+    <path d="M70,138 L70,150"/><path d="M190,138 L190,150"/><path d="M310,138 L310,150"/>
+    <path d="M430,138 L430,150"/><path d="M550,138 L550,150"/><path d="M670,138 L670,150"/>
+    <path d="M790,138 L790,150"/><path d="M878,138 L878,150"/>
+  </g>
+  <text x="70" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">已提交事件（不可变）</text>
+
+  <!-- cut marker -->
+  <path d="M620,96 L620,232" stroke="#bf4520" stroke-width="1.4" stroke-dasharray="5 3"/>
+  <text x="626" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">inheritedEventCount</text>
+  <text x="626" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">fork 的切点（按事件序号）</text>
+
+  <!-- three cards -->
+  <rect x="60" y="252" width="250" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">resume</text>
+  <text x="76" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" letter-spacing="0.1em" fill="#bf4520">CONTINUE</text>
+  <text x="76" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">从日志尾部继续写</text>
+  <text x="76" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">孤儿 turn 补 interrupted</text>
+  <text x="76" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">模型看到全部历史</text>
+  <text x="76" y="382" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">open(write) → append</text>
+  <text x="76" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">代价：可能丢掉最后一次</text>
+  <text x="76" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">未检查点的请求</text>
+
+  <rect x="355" y="252" width="250" height="196" rx="6" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="371" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">fork</text>
+  <text x="371" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" letter-spacing="0.1em" fill="#bf4520">BRANCH</text>
+  <text x="371" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">复制前缀，写新会话</text>
+  <text x="371" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">end-seed {inherited:true}</text>
+  <text x="371" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">未闭合 turn 补 forked</text>
+  <text x="371" y="382" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">buildForkSeed(cut)</text>
+  <text x="371" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">源会话一条事件不动；</text>
+  <text x="371" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">切点由事件数唯一确定</text>
+
+  <rect x="650" y="252" width="250" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="666" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">query</text>
+  <text x="666" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" letter-spacing="0.1em" fill="#bf4520">READ ONLY</text>
+  <text x="666" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不发布后继代际</text>
+  <text x="666" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">冷读时合成 interrupted</text>
+  <text x="666" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">建索引供检索</text>
+  <text x="666" y="382" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">open(readonly) → fold</text>
+  <text x="666" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">代价：索引可能落后于</text>
+  <text x="666" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">最新日志</text>
+
+  <path d="M185,158 L185,248" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-a)"/>
+  <path d="M480,158 L480,248" stroke="#bf4520" stroke-width="1.4" fill="none" marker-end="url(#f03-ao)"/>
+  <path d="M775,158 L775,248" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-a)"/>
+
+  <text x="40" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">三者共享 foldSurface 与 deriveEventMessage：读法不同，投影规则完全相同，所以「另存一份摘要」永远不会和「原会话」产生两种解释。</text>
+  <text x="40" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">fork 之所以按事件序号切而不是按消息条数：消息是投影出来的，同一条消息数可能对应不同的事件前缀。</text>
+  <text x="40" y="524" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">session-query 可以把索引建在任何地方；日志始终是唯一真源。</text>
+</svg>

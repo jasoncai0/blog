@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">fork 的切点语义：复制到 boundary 的事件前缀，再补一条 end-seed 与合成收尾</title>
+  <desc id="f03-d3-desc">源会话日志按事件序号排列，boundary 取在一条带工具调用的 assistant 消息之后。fork 复制 0 到 boundary 的事件，追加 inherited 的 end-seed，再补上缺失的工具结果与 forked 原因的 turn/end。新会话自己的事件从下一个序号开始。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-RECALL / FORK CUT</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">切点是一个事件序号，不是一条消息</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">fork 只做三件事：复制前缀、标出继承边界、把开放尾部合上。它不重跑、不询问、不改写源会话。</text>
+
+  <text x="40" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SOURCE LOG · APPEND-ONLY</text>
+
+  <rect x="50" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">0</text>
+  <text x="58" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">turn/start</text>
+
+  <rect x="116" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="124" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">1</text>
+  <text x="124" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">user</text>
+
+  <rect x="182" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="190" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">2</text>
+  <text x="190" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">asst tc×2</text>
+
+  <rect x="248" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="256" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">3</text>
+  <text x="256" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">result A</text>
+
+  <rect x="314" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="322" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">4</text>
+  <text x="322" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">result B</text>
+
+  <rect x="380" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="388" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">5</text>
+  <text x="388" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">asst</text>
+
+  <rect x="446" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="454" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">6</text>
+  <text x="454" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">turn/end</text>
+
+  <rect x="512" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="520" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">7</text>
+  <text x="520" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">user</text>
+
+  <rect x="578" y="120" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="586" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">8</text>
+  <text x="586" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">turn/start</text>
+
+  <rect x="644" y="120" width="60" height="44" rx="4" fill="#fdf3ef" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="652" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">9</text>
+  <text x="652" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">asst tc C</text>
+
+  <rect x="710" y="120" width="60" height="44" rx="4" fill="#f0f0f0" stroke="#d8d8d8" stroke-dasharray="3 2"/>
+  <text x="718" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">10</text>
+  <text x="718" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">result C</text>
+
+  <rect x="776" y="120" width="60" height="44" rx="4" fill="#f0f0f0" stroke="#d8d8d8" stroke-dasharray="3 2"/>
+  <text x="784" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">11</text>
+  <text x="784" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">asst</text>
+
+  <rect x="842" y="120" width="60" height="44" rx="4" fill="#f0f0f0" stroke="#d8d8d8" stroke-dasharray="3 2"/>
+  <text x="850" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">12</text>
+  <text x="850" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">turn/end</text>
+
+  <line x1="707" y1="108" x2="707" y2="330" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="715" y="112" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">boundary = 9（含）</text>
+  <text x="715" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">右边不进 fork</text>
+
+  <line x1="60" y1="176" x2="60" y2="236" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="70" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">深克隆</text>
+  <text x="70" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">前缀</text>
+
+  <text x="40" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">FORK SEED · NEW SESSION SEQ 0..</text>
+
+  <rect x="50" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">0</text>
+  <text x="58" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="116" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="124" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">1</text>
+  <text x="124" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="182" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="190" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">2</text>
+  <text x="190" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="248" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="256" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">3</text>
+  <text x="256" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="314" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="322" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">4</text>
+  <text x="322" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="380" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="388" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">5</text>
+  <text x="388" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="446" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="454" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">6</text>
+  <text x="454" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="512" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="520" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">7</text>
+  <text x="520" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="578" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="586" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">8</text>
+  <text x="586" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="644" y="270" width="60" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="652" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">9</text>
+  <text x="652" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">copied</text>
+
+  <rect x="710" y="270" width="60" height="44" rx="4" fill="#eef5f2" stroke="#2f6f5e" stroke-width="1.4"/>
+  <text x="718" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2f6f5e">10</text>
+  <text x="718" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2f6f5e">end-seed</text>
+
+  <rect x="776" y="270" width="60" height="44" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="784" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">11</text>
+  <text x="784" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">tool result*</text>
+
+  <rect x="842" y="270" width="60" height="44" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="850" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">12</text>
+  <text x="850" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#2d3142">turn/end*</text>
+
+  <text x="710" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">inheritedEventCount = 10</text>
+  <text x="710" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">子会话的下一个 seq 是 13</text>
+
+  <rect x="40" y="360" width="290" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">为什么按事件序号切</text>
+  <text x="56" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">seq 2 是一条 assistant 消息，里面两个</text>
+  <text x="56" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">tool_call；结果分别在 seq 3、4。</text>
+  <text x="56" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">按「消息条数」切，只能切在这条消息</text>
+  <text x="56" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">前后，切不进调用与结果之间。</text>
+  <text x="56" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">事件序号是唯一能表达半开的坐标。</text>
+  <text x="56" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">boundary 落在开放 turn 里也合法。</text>
+
+  <rect x="335" y="360" width="290" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="351" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">cut 之后补三样</text>
+  <text x="351" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">缺的工具结果：按「没开始」与「结果未知」</text>
+  <text x="351" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">两种文案合成，告诉模型别盲目重试。</text>
+  <text x="351" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">未闭合的 step/end；</text>
+  <text x="351" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">cause 为 forked 的 turn/end。</text>
+  <text x="351" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2f6f5e">三条都是确定性合成，不调模型。</text>
+  <text x="351" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">已闭合的括号原样保留。</text>
+
+  <rect x="630" y="360" width="290" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="646" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">继承，但不共享</text>
+  <text x="646" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">seed 深克隆，子会话改自己的副本。</text>
+  <text x="646" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">isSeeded = true，inheritedEventCount</text>
+  <text x="646" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">精确等于复制的前缀长度。</text>
+  <text x="646" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">不设 parentSession，cwd 继承，</text>
+  <text x="646" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">delegationDepth 不带。</text>
+  <text x="646" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">继承前缀里的旧括号属于已死生命周期。</text>
+
+  <text x="40" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">fork 与 resume 的区别：resume 是给同一个会话补上崩溃时缺的收尾，然后继续；fork 是承认旧线到此为止，在新会话里重开。</text>
+  <text x="40" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">一个是修复，一个是分叉。两者都写入新事件，都不修改已落盘的历史。</text>
+
+  <text x="40" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">packages/core/session/src/fork.ts:21 buildForkSeed · index.ts:1403 fork · repair.ts:53 openTurnClosers</text>
+</svg>

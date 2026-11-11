@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d18b-title f02-d18b-desc">
+  <title id="f02-d18b-title">AGENTS.md 的层级、分组与去重</title>
+  <desc id="f02-d18b-desc">左侧是从用户全局目录、项目根、包目录到 cwd 与工具触碰子目录的指令文件层级；右侧是四条规则：组内按内容去重、组间不合并、变化按 digest 三态渲染、baseline 用 identity 校验恢复。</desc>
+  <defs>
+    <marker id="f02-m18b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">CONTEXT / AGENTS.MD</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">层级决定适用范围，分组决定去重边界</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一份内容可以合法地出现两次：只要它服务的目录范围不同</text>
+
+  <!-- spine -->
+  <line x1="46" y1="120" x2="46" y2="462" stroke="#d8d8d8" stroke-width="1.2"/>
+
+  <!-- group 1 -->
+  <line x1="46" y1="142" x2="58" y2="142" stroke="#d8d8d8" stroke-width="1.2"/>
+  <text x="70" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">GROUP 01 · USER GLOBAL</text>
+  <rect x="70" y="118" width="320" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="84" y="138" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">~/AGENTS.md</text>
+  <text x="84" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">与 agents-global 合并成一个候选组</text>
+
+  <!-- group 2 -->
+  <line x1="46" y1="204" x2="58" y2="204" stroke="#d8d8d8" stroke-width="1.2"/>
+  <text x="70" y="178" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">GROUP 02 · PROJECT ROOT</text>
+  <rect x="70" y="184" width="320" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="84" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">repo/AGENTS.md · CLAUDE.md</text>
+  <text x="84" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">距 cwd 最近的 .git 目录，找不到则退回 cwd</text>
+
+  <!-- group 3 -->
+  <line x1="46" y1="266" x2="58" y2="266" stroke="#d8d8d8" stroke-width="1.2"/>
+  <text x="70" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">GROUP 03 · PACKAGE DIR</text>
+  <rect x="70" y="246" width="320" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="84" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">packages/app/AGENTS.md</text>
+  <text x="84" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">祖先链上的每一层各自成组</text>
+
+  <!-- group 4 -->
+  <line x1="46" y1="328" x2="58" y2="328" stroke="#d8d8d8" stroke-width="1.2"/>
+  <text x="70" y="302" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#bf4520">GROUP 04 · CWD</text>
+  <rect x="70" y="308" width="320" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="84" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">src/AGENTS.local.md</text>
+  <text x="84" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">local 是同组的另一个候选，不是覆盖</text>
+
+  <!-- touched -->
+  <line x1="46" y1="400" x2="58" y2="400" stroke="#d8d8d8" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="70" y="382" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.12em" fill="#8a93a6">ON TOUCH · SUBDIR</text>
+  <rect x="70" y="388" width="320" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="84" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">src/feature/AGENTS.md</text>
+  <text x="84" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">read/write/edit 触碰后才探测，不预扫全树</text>
+
+  <line x1="398" y1="300" x2="430" y2="300" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-m18b)"/>
+
+  <!-- rule 1 -->
+  <rect x="442" y="112" width="478" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="458" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">组内：按内容去重，保留发现最早的一份</text>
+  <text x="458" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">键是 trim 后内容的 SHA-1；先发现者渲染原始字节，后来者丢弃。</text>
+  <text x="458" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">scope key 用 NUL 分隔目录与候选名：AGENTS.md 与 CLAUDE.md 永不互相误判。</text>
+  <text x="458" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">同目录同内容 → 只留一份；不同目录同内容 → 见下一条。</text>
+
+  <!-- rule 2 -->
+  <rect x="442" y="218" width="478" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="458" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">组间：不合并，哪怕字节完全相同</text>
+  <text x="458" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">根目录与 packages/app 的规则都写「提交前跑测试」：两份都保留。</text>
+  <text x="458" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">因为它们约束的范围不同；合并会让「这条规则管哪些目录」失去答案。</text>
+  <text x="458" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">Different groups never collapse even when identical.</text>
+
+  <!-- rule 3 -->
+  <rect x="442" y="324" width="478" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="458" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">变化：三种 action，不是三种提示</text>
+  <rect x="458" y="358" width="4" height="10" fill="#2f6f5e"/>
+  <text x="470" y="367" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">set</text>
+  <text x="500" y="367" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">这个 scope 从无到有</text>
+  <rect x="458" y="378" width="4" height="10" fill="#2f6f5e"/>
+  <text x="470" y="387" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">replace</text>
+  <text x="514" y="387" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">路径不变或之前被移除，内容变了</text>
+  <rect x="458" y="398" width="4" height="10" fill="#bf4520"/>
+  <text x="470" y="407" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">remove</text>
+  <text x="514" y="407" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">文件消失或 scope 不再适用，必须显式撤销</text>
+  <text x="458" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">渲染为空 → 不提交；下一轮重新探测，不发通知噪声。</text>
+
+  <!-- rule 4 -->
+  <rect x="442" y="444" width="478" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="458" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">baseline：identity 匹配才信任日志里的旧副本</text>
+  <text x="458" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">identity = 项目根相对路径 + marker 列表 + 字节预算 + 候选文件名。</text>
+  <text x="458" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">恢复会话时 identity 不同 → 重发完整 baseline；相同 → 只发增量。</text>
+  <text x="458" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">版本缓存只存 path / version / digest，正文每次重读。</text>
+
+  <text x="40" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">层级回答「这条规则管哪里」，分组回答「哪两份重复」。两个问题混在一起，就会出现「根目录规则被包目录规则覆盖」的错觉。</text>
+  <text x="40" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">范围不同就不是重复；范围相同才需要挑一份。digest 让「挑哪份」在文件变化后仍然成立。</text>
+</svg>

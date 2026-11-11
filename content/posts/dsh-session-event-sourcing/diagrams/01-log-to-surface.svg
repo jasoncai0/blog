@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">从日志折叠出 surface，再投影成模型消息</title>
+  <desc id="f01-d1-desc">左侧是只追加的事件日志，第 1 到 4 条被一次压缩的 replace 遮蔽但仍然留在日志里；中间是折叠后的 surface 节点序列；右侧是 deriveEventMessage 逐节点投影出的 wire messages。</desc>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SESSION / FOLD</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">日志只增，消息是折出来的</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">压缩不删事件，只是让一段节点离开 surface；deriveEventMessage 再逐节点投影</text>
+
+  <!-- log -->
+  <rect x="40" y="104" width="250" height="430" rx="6" fill="#2d3142"/>
+  <text x="56" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#ffffff">事件日志（只追加）</text>
+  <text x="56" y="144" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#9aa3b5">seq = log.length</text>
+
+  <rect x="52" y="158" width="226" height="28" rx="4" fill="#3a3f52"/>
+  <text x="62" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#d7dbe4">0  system/message</text>
+
+  <rect x="52" y="192" width="226" height="28" rx="4" fill="#4a3a3f"/>
+  <text x="62" y="210" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#e8d5d5">1  user/message</text>
+  <rect x="52" y="224" width="226" height="28" rx="4" fill="#4a3a3f"/>
+  <text x="62" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#e8d5d5">2  assistant/message</text>
+  <rect x="52" y="256" width="226" height="28" rx="4" fill="#4a3a3f"/>
+  <text x="62" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#e8d5d5">3  tool/call</text>
+  <rect x="52" y="288" width="226" height="28" rx="4" fill="#4a3a3f"/>
+  <text x="62" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#e8d5d5">4  tool/result</text>
+
+  <rect x="52" y="320" width="226" height="28" rx="4" fill="#3a3f52"/>
+  <text x="62" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#d7dbe4">5  assistant/message</text>
+
+  <rect x="52" y="356" width="226" height="42" rx="4" fill="#5a2f22" stroke="#bf4520"/>
+  <text x="62" y="374" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#ffd7c4">6  compaction/summary</text>
+  <text x="62" y="389" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#e0a184">replace 1..4</text>
+
+  <rect x="52" y="406" width="226" height="28" rx="4" fill="#3a3f52"/>
+  <text x="62" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#d7dbe4">7  user/message</text>
+
+  <text x="52" y="456" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#9aa3b5">红色 1–4 仍在磁盘上，</text>
+  <text x="52" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#9aa3b5">只是离开了 surface。</text>
+  <text x="52" y="494" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">shadowed ≠ deleted</text>
+  <text x="52" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#9aa3b5">seq 连续、冻结、JSON 无损</text>
+
+  <!-- surface -->
+  <rect x="340" y="104" width="220" height="430" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">Surface 节点</text>
+  <text x="356" y="144" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">model-visible order</text>
+
+  <rect x="352" y="158" width="196" height="28" rx="4" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="362" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#2d3142">node 0 · system</text>
+
+  <rect x="352" y="192" width="196" height="44" rx="4" fill="#ffe9dc" stroke="#bf4520"/>
+  <text x="362" y="210" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#2d3142">node 1..4 被遮蔽</text>
+  <text x="362" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a4a30">不在 surface 上，无法被模型看到</text>
+
+  <rect x="352" y="244" width="196" height="28" rx="4" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="362" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#2d3142">node 6 · summary</text>
+
+  <rect x="352" y="280" width="196" height="28" rx="4" fill="#f4f5f7" stroke="#d8d8d8"/>
+  <text x="362" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#2d3142">node 5 · assistant</text>
+
+  <rect x="352" y="316" width="196" height="28" rx="4" fill="#f4f5f7" stroke="#d8d8d8"/>
+  <text x="362" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#2d3142">node 7 · user</text>
+
+  <text x="352" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">replaceGeneration：节点形状变了</text>
+  <text x="352" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">contentGeneration：内容也被改写</text>
+  <text x="352" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">节点 0 不可被 replace：</text>
+  <text x="352" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">系统提示词只能原地更新</text>
+  <text x="352" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#8a93a6">空节点保留位置，投影为 null</text>
+  <text x="352" y="480" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">node[0] is special</text>
+
+  <!-- wire -->
+  <rect x="620" y="104" width="300" height="430" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="636" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">Wire messages</text>
+  <text x="636" y="144" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">deriveMessages() → llm.stream()</text>
+
+  <rect x="636" y="158" width="268" height="34" rx="4" fill="#f4f5f7"/>
+  <text x="646" y="179" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#4f5d75">role: system  ·  node 0</text>
+  <rect x="636" y="200" width="268" height="34" rx="4" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="646" y="221" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#4f5d75">role: user  ·  summary(1..4)</text>
+  <rect x="636" y="242" width="268" height="34" rx="4" fill="#f4f5f7"/>
+  <text x="646" y="263" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#4f5d75">role: assistant  ·  node 5</text>
+  <rect x="636" y="284" width="268" height="34" rx="4" fill="#f4f5f7"/>
+  <text x="646" y="305" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#4f5d75">role: user  ·  node 7</text>
+
+  <text x="636" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">投影是纯函数：同样的节点与投影器，</text>
+  <text x="636" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">永远得到同样的 wire messages。</text>
+  <text x="636" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">空 assistant 节点（只带 usage）</text>
+  <text x="636" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#5a6580">在这里被过滤掉，不进 transcript。</text>
+  <text x="636" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">message identity preserved</text>
+
+  <path d="M290,300 L336,300" stroke="#8a93a6" stroke-width="1.3" fill="none" marker-end="url(#f01-a)"/>
+  <text x="296" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#8a93a6">fold</text>
+  <path d="M560,300 L616,300" stroke="#8a93a6" stroke-width="1.3" fill="none" marker-end="url(#f01-a)"/>
+  <text x="566" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#8a93a6">derive</text>
+
+  <text x="40" y="562" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">关键不变量：给定日志，deriveMessages() 的输出确定；给定日志与 request/header，下一次请求也确定。</text>
+  <text x="40" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">代价：状态永远是一个 fold 的结果，没有「当前消息数组」可以直接读。</text>
+  <text x="40" y="602" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">14 event types · 5 surface types · 2 surface ops</text>
+</svg>

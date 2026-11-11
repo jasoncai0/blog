@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">parallel 的屏障与 pipeline 的无屏障流水线</title>
+  <desc id="f02-d2-desc">左侧 parallel 同时启动三个成员，等全部结束后越过屏障进入下一阶段；右侧 pipeline 的每个 item 独立走完 stage 链，没有跨 stage 屏障。两者都受 maxTotalAgents 与单次项数上限约束。</desc>
+
+  <defs>
+    <marker id="f02-a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-a2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="36" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">WORKFLOW SCHEDULING</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一个有屏障，一个没有</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">脚本只有五个钩子：agent、parallel、pipeline、phase、log；并发结构就是这两种</text>
+
+  <!-- left panel -->
+  <rect x="40" y="110" width="430" height="248" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="60" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">PARALLEL(THUNKS)</text>
+  <text x="60" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">全部结束才继续，等价于 Promise.all</text>
+
+  <rect x="60" y="170" width="220" height="26" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="70" y="187" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">member A</text>
+  <rect x="60" y="204" width="180" height="26" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="70" y="221" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">member B</text>
+  <rect x="60" y="238" width="248" height="26" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="70" y="255" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">member C</text>
+
+  <path d="M 322 164 L 322 274" stroke="#bf4520" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="316" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">屏障：等齐</text>
+
+  <line x1="330" y1="204" x2="356" y2="204" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a2)"/>
+  <rect x="360" y="184" width="92" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="406" y="201" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">下一阶段</text>
+  <text x="406" y="215" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">phase()</text>
+
+  <text x="60" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">任一 fatal 直接重抛；普通子运行失败 → 该项为 null</text>
+  <text x="60" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">耗时 = 最慢的那一项</text>
+
+  <!-- right panel -->
+  <rect x="492" y="110" width="428" height="248" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="512" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">PIPELINE(ITEMS, …STAGES)</text>
+  <text x="512" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">每个 item 独立推进，stage 之间没有全局屏障</text>
+
+  <rect x="512" y="170" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="540" y="185" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s1</text>
+  <rect x="574" y="170" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="602" y="185" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s2</text>
+  <rect x="636" y="170" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="664" y="185" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s3</text>
+
+  <rect x="542" y="202" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="570" y="217" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s1</text>
+  <rect x="604" y="202" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="632" y="217" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s2</text>
+  <rect x="666" y="202" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="694" y="217" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s3</text>
+
+  <rect x="572" y="234" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="600" y="249" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s1</text>
+  <rect x="634" y="234" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="662" y="249" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s2</text>
+  <rect x="696" y="234" width="56" height="22" rx="4" fill="#ffffff" stroke="#8a93a6" stroke-width="1"/>
+  <text x="724" y="249" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">s3</text>
+
+  <text x="512" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">item 2 在 s1 结束后立刻进 s2，不等 item 1 的整条链</text>
+  <text x="512" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">某项失败只丢该项，其余 item 继续</text>
+  <text x="512" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">阶段进度只来自真正开始过的成员</text>
+
+  <!-- bottom notes -->
+  <path d="M 40 380 L 920 380" stroke="#d8d8d8" stroke-width="1"/>
+
+  <rect x="40" y="400" width="276" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="58" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">脚本没有宿主能力</text>
+  <text x="58" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">没有 require / process / fs / fetch</text>
+  <text x="58" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">IO 只能经 agent() 交给子代理</text>
+
+  <rect x="332" y="400" width="276" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="350" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">失败分两类</text>
+  <text x="350" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">fatal：拼错选项、超限、取消</text>
+  <text x="350" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">普通失败：子运行非 completed</text>
+
+  <rect x="624" y="400" width="296" height="86" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="642" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">上限来自宿主，不来自脚本</text>
+  <text x="642" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">maxTotalAgents → AGENT_CAP</text>
+  <text x="642" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">脚本观察不到、也改不了这两项策略</text>
+
+  <text x="40" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">agentsStarted 是脚本侧计数，含排队等并发槽的调用；终止路径上退化为宿主观察计数。</text>
+  <text x="40" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">run 结束就散：没有跨重启、没有长期服务、取消即中止受管进程。</text>
+  <text x="40" y="576" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">ONE RUN, TWO SCHEDULING SHAPES</text>
+</svg>

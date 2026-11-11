@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f05-d05-title f05-d05-desc">
+  <title id="f05-d05-title">一次请求里的消息排列顺序</title>
+  <desc id="f05-d05-desc">从上到下依次是 system 节点 0、可选的 system 更新节点、运行时上下文快照、本轮用户消息、assistant 工具调用、工具结果与最终回答；右侧标注每条消息的来源与缓存含义。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">WIRE MESSAGE ORDER / 07</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">请求里的消息顺序，以及三条插入规则</text>
+
+  <!-- rows -->
+  <g>
+    <rect x="180" y="92" width="430" height="42" rx="5" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="180" y="146" width="430" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+    <rect x="180" y="200" width="430" height="42" rx="5" fill="#fbf1ec" stroke="#bf4520"/>
+    <rect x="180" y="254" width="430" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="180" y="308" width="430" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="180" y="362" width="430" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="180" y="416" width="430" height="42" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+    <rect x="180" y="470" width="430" height="42" rx="5" fill="#ffffff" stroke="#2d3142"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">
+    <text x="196" y="118">system · node 0</text>
+    <text x="196" y="172">system · node 1（可选）</text>
+    <text x="196" y="226" fill="#bf4520">user · runtime context</text>
+    <text x="196" y="280">user · 本轮输入 #1</text>
+    <text x="196" y="334">user · 本轮输入 #2</text>
+    <text x="196" y="388">assistant · tool calls</text>
+    <text x="196" y="442">tool · result</text>
+    <text x="196" y="496">assistant · 最终回答</text>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">
+    <text x="196" y="132" font-size="8">基础提示词，压缩也不能遮蔽</text>
+    <text x="196" y="186" font-size="8">仅当提供方支持 in-history 时出现</text>
+    <text x="196" y="240" font-size="8">固定前缀声明「本快照取代此前所有快照」</text>
+    <text x="196" y="294" font-size="8">claim 顺序，先到先入</text>
+    <text x="196" y="348" font-size="8">steering 可以追加，但只能进入下一步</text>
+    <text x="196" y="402" font-size="8">与下面的结果必须相邻</text>
+    <text x="196" y="456" font-size="8">isError 时可带 error 元数据</text>
+    <text x="196" y="510" font-size="8">step 结束，或触发下一次尝试</text>
+  </g>
+
+  <!-- left order numbers -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520" text-anchor="middle">
+    <text x="150" y="117">01</text>
+    <text x="150" y="171">02</text>
+    <text x="150" y="225">03</text>
+    <text x="150" y="279">04</text>
+    <text x="150" y="333">05</text>
+    <text x="150" y="387">06</text>
+    <text x="150" y="441">07</text>
+    <text x="150" y="495">08</text>
+  </g>
+
+  <!-- insertion rule callout -->
+  <g stroke="#bf4520" stroke-width="1" fill="none">
+    <path d="M620 221 H 650 V 275 H 620"/>
+  </g>
+  <text x="660" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">快照插在第一条用户</text>
+  <text x="660" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">消息之前，且只插一次</text>
+
+  <!-- cache note -->
+  <g stroke="#5b8a5e" stroke-width="1" fill="none">
+    <path d="M632 92 V 458"/>
+    <path d="M632 92 H 640"/>
+    <path d="M632 458 H 640"/>
+  </g>
+  <text x="648" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#3f6b42" transform="rotate(90 648 270)">已存在的历史：追加不破坏前缀</text>
+
+  <!-- bottom rules -->
+  <rect x="40" y="536" width="880" height="48" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="556" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">THREE INSERTION RULES</text>
+  <text x="56" y="574" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#2d3142">① system 永远在最前，节点 0 之后才允许追加　② 运行时快照只在首轮、只在第一条用户消息前　③ 工具调用与结果必须相邻，中间不许插别的。</text>
+</svg>

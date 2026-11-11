@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">并发分批：barrier 与滚动池</title>
+  <desc id="f03-d3-desc">五个调用按模型顺序排列；并行的 read 与 grep 进入上限为二的滚动池，遇到 exclusive 的 bash 时停止补充并等待池排空，之后继续并行段，最后再遇到 exclusive 的 edit。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">10 / CONCURRENCY</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">独占调用是屏障，并行调用是滚动池</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">池子上限是这一组的在飞上限；下一个调用被重分类为 exclusive 时，池子停止补充，等排空后重新开组</text>
+
+  <!-- axis -->
+  <line x1="160" y1="520" x2="700" y2="520" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="160" y="538" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">t0</text>
+  <text x="320" y="538" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">t1</text>
+  <text x="480" y="538" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">t2</text>
+  <text x="640" y="538" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">t3</text>
+
+  <!-- pool slots -->
+  <text x="40" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">IN-FLIGHT ≤ 2</text>
+  <rect x="160" y="104" width="120" height="10" rx="5" fill="#e7e7e7"/>
+  <rect x="160" y="104" width="120" height="10" rx="5" fill="#2f6f5e" opacity="0.45"/>
+  <rect x="160" y="104" width="45" height="10" rx="5" fill="#2f6f5e"/>
+
+  <!-- rows -->
+  <text x="40" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">read</text>
+  <rect x="160" y="136" width="120" height="26" rx="4" fill="rgba(47,111,94,0.14)" stroke="#2f6f5e"/>
+  <text x="172" y="153" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">parallel</text>
+  <rect x="160" y="136" width="7" height="26" fill="#2f6f5e"/>
+  <rect x="273" y="143" width="7" height="12" fill="#2d3142"/>
+  <text x="286" y="153" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">commit</text>
+
+  <text x="40" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">grep</text>
+  <rect x="205" y="190" width="120" height="26" rx="4" fill="rgba(47,111,94,0.14)" stroke="#2f6f5e"/>
+  <text x="217" y="207" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">parallel</text>
+  <rect x="205" y="190" width="7" height="26" fill="#2f6f5e"/>
+  <rect x="318" y="197" width="7" height="12" fill="#2d3142"/>
+  <text x="331" y="207" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">commit</text>
+
+  <!-- barrier -->
+  <line x1="360" y1="118" x2="360" y2="500" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="366" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">barrier：C 是 exclusive</text>
+
+  <text x="40" y="260" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">bash</text>
+  <rect x="370" y="244" width="110" height="26" rx="4" fill="rgba(122,90,168,0.12)" stroke="#7a5aa8"/>
+  <text x="382" y="261" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#7a5aa8">exclusive</text>
+  <rect x="370" y="244" width="7" height="26" fill="#7a5aa8"/>
+  <rect x="473" y="251" width="7" height="12" fill="#2d3142"/>
+
+  <text x="40" y="314" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">read</text>
+  <rect x="500" y="298" width="90" height="26" rx="4" fill="rgba(47,111,94,0.14)" stroke="#2f6f5e"/>
+  <text x="512" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">parallel</text>
+  <rect x="500" y="298" width="7" height="26" fill="#2f6f5e"/>
+
+  <text x="40" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">edit</text>
+  <rect x="600" y="352" width="90" height="26" rx="4" fill="rgba(122,90,168,0.12)" stroke="#7a5aa8"/>
+  <text x="612" y="369" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#7a5aa8">exclusive</text>
+  <rect x="600" y="352" width="7" height="26" fill="#7a5aa8"/>
+
+  <!-- reclassify annotation -->
+  <path d="M 360 200 C 420 200, 440 226, 455 242" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f03-a)"/>
+  <text x="398" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">填充时发现下一个不是 parallel，停止补充</text>
+
+  <!-- right panel -->
+  <rect x="720" y="108" width="200" height="392" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="736" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RULES</text>
+  <text x="736" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">1. 分类 fail-closed</text>
+  <text x="736" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">非严格 true 一律独占</text>
+
+  <text x="736" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">2. 每组件只读一次上限</text>
+  <text x="736" y="218" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">上限变化从下一组生效</text>
+
+  <text x="736" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">3. 提交按模型顺序</text>
+  <text x="736" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">完成可以乱，落账不能乱</text>
+
+  <text x="736" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">4. 被重分类就切组</text>
+  <text x="736" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">已启动的不打断</text>
+
+  <text x="736" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">5. abort 补 synthetic</text>
+  <text x="736" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">未开始的调用也有结果</text>
+
+  <text x="736" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">6. 调度失败先排空</text>
+  <text x="736" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">再抛 partial batch error</text>
+
+  <line x1="736" y1="424" x2="904" y2="424" stroke="#d8d8d8"/>
+  <text x="736" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">独占段既是屏障，也是重分类点：</text>
+  <text x="736" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">它前面的并行必须全部落账，</text>
+  <text x="736" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">它后面的调用按新现实重新判断。</text>
+
+  <!-- legend -->
+  <rect x="160" y="562" width="12" height="10" rx="2" fill="rgba(47,111,94,0.25)" stroke="#2f6f5e"/>
+  <text x="180" y="571" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">parallel</text>
+  <rect x="250" y="562" width="12" height="10" rx="2" fill="rgba(122,90,168,0.2)" stroke="#7a5aa8"/>
+  <text x="270" y="571" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">exclusive</text>
+  <rect x="345" y="564" width="7" height="7" fill="#2d3142"/>
+  <text x="360" y="571" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">tool/call 与 tool/result 落账点</text>
+</svg>

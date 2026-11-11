@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">spill 落盘、locator 与读回</title>
+  <desc id="f02-d2-desc">完整结果写入 spill store，返回不透明 locator 与 retrievalHint；模型上下文只保留头、尾、省略提示与 notice，需要时按 locator 读回完整内容。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">12 / SPILL</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">把“读完”变成“可再读”</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">完整内容落盘，模型上下文只留两端；locator 是不透明句柄，读回按 retrievalHint 走</text>
+
+  <!-- left: full content -->
+  <rect x="40" y="118" width="236" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">FULL CONTENT</text>
+  <text x="56" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool 返回的完整文本 / 图片</text>
+
+  <rect x="56" y="176" width="204" height="12" rx="2" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <rect x="56" y="194" width="204" height="12" rx="2" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <rect x="56" y="212" width="204" height="12" rx="2" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <rect x="56" y="230" width="204" height="12" rx="2" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <rect x="56" y="248" width="204" height="12" rx="2" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <rect x="56" y="266" width="204" height="12" rx="2" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="56" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">bytes 按 UTF-8；图片按整块计</text>
+
+  <line x1="278" y1="200" x2="314" y2="200" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- store -->
+  <rect x="316" y="118" width="264" height="196" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="332" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#2f6f5e">SPILL STORE</text>
+  <text x="332" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">saveText({ owner, source, content })</text>
+
+  <text x="332" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">&lt;root&gt;/session-&lt;sha256&gt;/</text>
+  <text x="332" y="203" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">  &lt;random&gt;-&lt;safeName&gt;</text>
+  <text x="332" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">root 0700；open(path,'wx',0o600)</text>
+  <text x="332" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">wx 拒绝覆盖，防预置符号链接</text>
+
+  <rect x="332" y="258" width="232" height="42" rx="4" fill="#f2f8f6" stroke="#2f6f5e"/>
+  <text x="344" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2f6f5e">SpillRef { locator, bytes, retrievalHint }</text>
+  <text x="344" y="291" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">locator 不透明；消费方不解析</text>
+
+  <line x1="580" y1="200" x2="616" y2="200" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- inline -->
+  <rect x="618" y="118" width="302" height="196" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="634" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">MODEL CONTEXT</text>
+  <text x="634" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">head + GAP + tail + notice</text>
+
+  <rect x="634" y="176" width="270" height="26" rx="3" fill="#fdf6f2" stroke="#d8d8d8"/>
+  <text x="644" y="193" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">head：预算的一半，从头保留</text>
+
+  <rect x="634" y="208" width="270" height="18" rx="3" fill="#f5f5f5" stroke="#d8d8d8" stroke-dasharray="3 2"/>
+  <text x="644" y="221" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">… omitted N bytes / M images …</text>
+
+  <rect x="634" y="232" width="270" height="26" rx="3" fill="#fdf6f2" stroke="#d8d8d8"/>
+  <text x="644" y="249" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">tail：另一半，从尾反向保留</text>
+
+  <rect x="634" y="264" width="270" height="34" rx="3" fill="#ffffff" stroke="#bf4520"/>
+  <text x="644" y="279" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">Full formatted result stored at:</text>
+  <text x="644" y="291" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">&lt;locator&gt;. &lt;retrievalHint&gt;</text>
+
+  <!-- read back -->
+  <path d="M 760 296 C 760 380 560 386 500 420" fill="none" stroke="#2f6f5e" stroke-width="1.2" marker-end="url(#f02-g)"/>
+  <rect x="340" y="404" width="252" height="70" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="356" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#2f6f5e">READ BACK</text>
+  <text x="356" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">按 retrievalHint 读回，不解析 locator</text>
+  <text x="356" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">换后端仍然可用；hint 是唯一契约</text>
+
+  <rect x="620" y="404" width="300" height="70" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="636" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">BEST EFFORT</text>
+  <text x="636" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">落盘失败 → 保留内联内容，记 warn</text>
+  <text x="636" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不把一次成功调用改成 isError</text>
+
+  <text x="40" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">read 是“保头 + 行窗口 + offset 续读”；bash 是“保尾 + 完整输出路径”；spill 是“保两端 + locator”。</text>
+  <text x="40" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">三种策略服务三种结果形状，不存在一个通用的 truncate()。</text>
+
+  <text x="40" y="588" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 12</text>
+</svg>

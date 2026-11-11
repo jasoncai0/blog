@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">session-query 的派生索引结构：日志是权威，SQLite 只是可重建的检索面</title>
+  <desc id="f04-d4-desc">左侧是追加写的会话日志，中间是 SQLite 派生索引，包含会话行、FTS5 文档表、全量代次与连接级临时表。右侧是检索、读 surface、追溯事件等消费者。索引可整体丢弃重建，不参与写路径。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-RECALL / SEARCH INDEX</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">索引可以整个丢掉，日志不行</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">检索面是派生物：重建只花时间，不丢事实。这条边界决定了 schema 可以就地 DROP，也决定了查询必须能识别过期。</text>
+
+  <rect x="40" y="104" width="230" height="380" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">AUTHORITATIVE</text>
+  <text x="56" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">会话日志</text>
+  <text x="56" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只追加，不原地改</text>
+  <text x="56" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">seq 从 0 连续，可回放</text>
+  <text x="56" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">surface 由 fold 得出</text>
+
+  <rect x="56" y="228" width="198" height="70" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">session-a.jsonl</text>
+  <text x="68" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">seq 0 … 183</text>
+  <text x="68" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">format v4</text>
+
+  <rect x="56" y="310" width="198" height="70" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">session-b.jsonl</text>
+  <text x="68" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">seq 0 … 41</text>
+  <text x="68" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">forks session-a</text>
+
+  <text x="56" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">崩溃留下的开放括号也在日志里，</text>
+  <text x="56" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">不会被索引「修好」。</text>
+  <text x="56" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">导出 ZIP / Markdown 也只读日志。</text>
+
+  <line x1="270" y1="290" x2="314" y2="290" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <text x="262" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">derive</text>
+
+  <rect x="320" y="104" width="320" height="380" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="336" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">DERIVED · SQLITE</text>
+  <text x="336" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">检索索引</text>
+  <text x="336" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">可丢、可重建；schema 不兼容就地 DROP</text>
+
+  <rect x="336" y="180" width="288" height="76" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="348" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">persisted_sessions</text>
+  <text x="348" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">id · version · cwd · parent_session</text>
+  <text x="348" y="228" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">seed_length · delegation_depth</text>
+  <text x="348" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">agent_preset · revision · generation</text>
+
+  <rect x="336" y="268" width="288" height="96" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="348" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">persisted_docs · fts5</text>
+  <text x="348" y="302" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">text  ← 语义文本，tokenize unicode61</text>
+  <text x="348" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">session_id · seq · type · time  UNINDEXED</text>
+  <text x="348" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">surface · codepoint_length  UNINDEXED</text>
+  <text x="348" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">surface 列：current / shadowed / log-only</text>
+
+  <rect x="336" y="376" width="288" height="46" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="348" y="394" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">search_state</text>
+  <text x="348" y="410" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">singleton · global_generation</text>
+
+  <rect x="336" y="434" width="288" height="38" rx="4" fill="#ffffff" stroke="#2f6f5e" stroke-dasharray="4 3"/>
+  <text x="348" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">temp live_sessions · live_docs</text>
+  <text x="348" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">已挂载未落盘；带 fingerprint</text>
+
+  <line x1="640" y1="290" x2="684" y2="290" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <text x="632" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">query</text>
+
+  <rect x="690" y="104" width="230" height="380" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="706" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">CONSUMERS</text>
+  <text x="706" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142">谁在读</text>
+
+  <rect x="706" y="168" width="198" height="58" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="718" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">searchSessions()</text>
+  <text x="718" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">跨会话，按最强命中事件分组</text>
+  <text x="718" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">cursor 绑定 query 与代次</text>
+
+  <rect x="706" y="234" width="198" height="58" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="718" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">searchEvents()</text>
+  <text x="718" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">单会话内检索，过滤器更细</text>
+  <text x="718" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">文本只做字面扫描</text>
+
+  <rect x="706" y="300" width="198" height="58" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="718" y="318" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">readSurface()</text>
+  <text x="718" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">按 seq 读当前投影，带 generation</text>
+  <text x="718" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">旧 generation 即过期</text>
+
+  <rect x="706" y="366" width="198" height="58" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="718" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">traceEvent()</text>
+  <text x="718" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">replacedBy / replacementChain</text>
+  <text x="718" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">压缩与剪枝的因果图</text>
+
+  <text x="706" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">检索结果不是上下文，</text>
+  <text x="706" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">只是「候选事件」。</text>
+
+  <rect x="40" y="500" width="270" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">防误伤</text>
+  <text x="56" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">application_id 0x44534851；</text>
+  <text x="56" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">外来库或空库带表都拒绝打开。</text>
+
+  <rect x="330" y="500" width="300" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="346" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">版本不兼容 = 丢掉重建</text>
+  <text x="346" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">schema v8；user_version 不同就 DROP</text>
+  <text x="346" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">全部已知表，再重新派生。</text>
+
+  <rect x="650" y="500" width="270" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="666" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">索引不写回</text>
+  <text x="666" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">派生失败不能让会话失败；</text>
+  <text x="666" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">索引只是日志的一个读者。</text>
+
+  <text x="40" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">packages/session-query/session-query-sqlite/src/{schema,documents,extraction}.ts · session-query/src/index.ts</text>
+</svg>

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">审批与沙箱的时间关系</title>
+  <desc id="f03-d3-desc">审批只发生在一次调用开始前的单点，沙箱覆盖从 confine 到进程退出的整段；批准的模式只存在于本次调用的 policy 副本里，下一条调用重新解析并重新审批。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">11 / APPROVAL VS SANDBOX</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">审批是一个点，沙箱是一段；中间没有权限传递</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">allowed-once 只改变本次调用交给 sandbox 的 policy 副本，不改变会话模式，也不产生新的默认值</text>
+
+  <!-- time axis -->
+  <line x1="70" y1="150" x2="900" y2="150" stroke="#d8d8d8" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="70" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">TIME</text>
+
+  <!-- lane labels -->
+  <text x="40" y="200" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">CALL #1</text>
+  <text x="40" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">APPROVAL</text>
+  <text x="40" y="400" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">SANDBOX</text>
+  <text x="40" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">CALL #2</text>
+
+  <!-- call 1 prep -->
+  <rect x="120" y="176" width="180" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="136" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool-call 到达</text>
+  <text x="136" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">policy: workspace-write</text>
+  <line x1="210" y1="224" x2="210" y2="262" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- approval token -->
+  <circle cx="210" cy="300" r="9" fill="#ffffff" stroke="#bf4520" stroke-width="1.6"/>
+  <text x="205" y="304" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">1</text>
+  <rect x="248" y="278" width="218" height="44" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="262" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">approveEscalation → allowed-once</text>
+  <text x="262" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">只对本次 callId 有效；不写 session</text>
+  <line x1="210" y1="309" x2="210" y2="352" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-r)"/>
+
+  <!-- policy copy -->
+  <rect x="248" y="344" width="218" height="34" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="262" y="365" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">policy = { ...standing, mode: approved }</text>
+
+  <!-- sandbox bar -->
+  <rect x="480" y="360" width="300" height="60" rx="6" fill="#f2f8f6" stroke="#2f6f5e"/>
+  <text x="496" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">confine(argv) → spawn → 进程运行</text>
+  <text x="496" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">内核策略覆盖整段生命周期；退出时结束</text>
+  <text x="496" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">danger-full-access 时这一段不存在</text>
+
+  <line x1="466" y1="380" x2="480" y2="380" stroke="#2f6f5e" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- gap / end -->
+  <line x1="780" y1="390" x2="820" y2="390" stroke="#8a93a6" stroke-width="1.2"/>
+  <text x="786" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">result: { mode, denied, enforcement }</text>
+
+  <!-- call 2 -->
+  <rect x="120" y="476" width="180" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="136" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool-call 再次到达</text>
+  <text x="136" y="512" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">policy: workspace-write（已重置）</text>
+
+  <!-- reset arrow -->
+  <path d="M 420 392 C 470 470 360 500 300 500" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f03-r)"/>
+  <text x="424" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">调用结束即失效，模式回到解析值</text>
+
+  <!-- no transfer -->
+  <rect x="620" y="190" width="300" height="96" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="636" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">NO IMPLICIT TRANSFER</text>
+  <text x="636" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">审批结果不是 token，不进入下一次调用；</text>
+  <text x="636" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">沙箱也不知道“这一次被批准过”。</text>
+  <text x="636" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">两者之间唯一的连接是 policy 副本。</text>
+
+  <rect x="620" y="532" width="300" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="636" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">第 2 次要更宽的模式？重新审批。</text>
+  <text x="636" y="566" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">allowed-once ≠ remember-once</text>
+
+  <text x="40" y="588" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 11</text>
+</svg>

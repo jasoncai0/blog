@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">restriction 的交集与 own 例外</title>
+  <desc id="f04-d4-desc">全局工具先被 agent A 的 deny 去掉 bash，再被子 scope 的 allow 只保留 read 与 edit；同一 scope 的 own 注册不经过这两层过滤，因此可以用同名提供受控变体。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">09 / RESTRICTION</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">restriction 的交集，以及 own 的那条例外</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">每个 layer 都保留自己的过滤器；解析时对继承名字求「全部通过」，own 注册在过滤之后合并</text>
+
+  <!-- stage 0 -->
+  <rect x="40" y="112" width="540" height="80" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">INHERITED · GLOBAL + ANCESTORS</text>
+  <rect x="56" y="144" width="64" height="26" rx="3" fill="#f5f5f5"/>
+  <text x="88" y="161" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">read</text>
+  <rect x="130" y="144" width="64" height="26" rx="3" fill="#f5f5f5"/>
+  <text x="162" y="161" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">bash</text>
+  <rect x="204" y="144" width="64" height="26" rx="3" fill="#f5f5f5"/>
+  <text x="236" y="161" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">edit</text>
+  <rect x="278" y="144" width="64" height="26" rx="3" fill="#f5f5f5"/>
+  <text x="310" y="161" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">deploy</text>
+  <text x="360" y="161" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">四个继承名字，按插入顺序</text>
+
+  <line x1="310" y1="192" x2="310" y2="204" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <!-- stage 1 -->
+  <rect x="40" y="210" width="540" height="80" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">AGENT A · DENY</text>
+  <rect x="56" y="242" width="64" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="88" y="259" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">read</text>
+  <rect x="130" y="242" width="64" height="26" rx="3" fill="rgba(191,69,32,0.07)"/>
+  <text x="162" y="259" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">bash</text>
+  <line x1="134" y1="255" x2="190" y2="255" stroke="#bf4520" stroke-width="1"/>
+  <rect x="204" y="242" width="64" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="236" y="259" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">edit</text>
+  <rect x="278" y="242" width="64" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="310" y="259" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">deploy</text>
+  <text x="360" y="259" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">deny 未列出的名字放行</text>
+
+  <line x1="310" y1="290" x2="310" y2="302" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <!-- stage 2 -->
+  <rect x="40" y="308" width="540" height="80" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">CHILD B · ALLOW</text>
+  <rect x="56" y="340" width="64" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="88" y="357" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">read</text>
+  <rect x="130" y="340" width="64" height="26" rx="3" fill="rgba(47,111,94,0.1)"/>
+  <text x="162" y="357" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">edit</text>
+  <rect x="204" y="340" width="64" height="26" rx="3" fill="#f5f5f5"/>
+  <text x="236" y="357" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">deploy</text>
+  <line x1="208" y1="353" x2="264" y2="353" stroke="#8a93a6" stroke-width="1"/>
+  <text x="288" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">allow 未列出即排除</text>
+
+  <line x1="310" y1="388" x2="310" y2="400" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f04-acc)"/>
+
+  <!-- stage 3 -->
+  <rect x="40" y="406" width="540" height="86" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="56" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">VISIBLE FOR B</text>
+  <text x="56" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142">{ read, edit }</text>
+  <text x="56" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">bash 被 A 去掉，deploy 被 B 的 allow 排除；两层不是 union，是 every(admits)</text>
+
+  <!-- own exception -->
+  <rect x="612" y="112" width="308" height="380" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="628" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">OWN EXCEPTION</text>
+  <text x="628" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">同 scope 的 own 注册</text>
+  <text x="628" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">不受 restriction 约束，最后无条件合并</text>
+
+  <rect x="628" y="192" width="130" height="52" rx="4" fill="#f5f5f5"/>
+  <text x="642" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">global bash</text>
+  <text x="642" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">被 deny 挡住</text>
+
+  <rect x="628" y="264" width="130" height="52" rx="4" fill="rgba(47,111,94,0.08)" stroke="#2f6f5e"/>
+  <text x="642" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">own bash</text>
+  <text x="642" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">只允许 npm test</text>
+
+  <line x1="758" y1="218" x2="782" y2="218" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="762" y="208" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">filtered</text>
+  <line x1="758" y1="290" x2="792" y2="290" stroke="#2f6f5e" stroke-width="1.4"/>
+  <rect x="794" y="196" width="110" height="106" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="806" y="216" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">visible</text>
+  <text x="806" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">bash</text>
+  <text x="806" y="256" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">来自 own</text>
+  <text x="806" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">审计时看 own</text>
+  <text x="806" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">否则会误判</text>
+
+  <text x="628" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">这是「受控变体」的正规写法：禁掉通用能力，</text>
+  <text x="628" y="366" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">在同一 scope 提供更窄的同名实现。</text>
+  <text x="628" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">但 restriction 因此不是绝对黑名单：</text>
+  <text x="628" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">要「绝不出现」，得在 executor 层拒绝。</text>
+  <text x="628" y="436" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">index.ts:216 / 222</text>
+
+  <text x="628" y="468" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">多个 restriction 同时存在：每个都得通过，</text>
+  <text x="628" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">等价于对继承名字取交集。</text>
+
+  <text x="40" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">判定链：layers.every(layer =&gt; layer.admits(name))，layers 是 nearest-first 的整条 scope 链。</text>
+  <text x="40" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">副作用：父层 restriction 会参与子层解析；own 注册不参与，所以「同 scope 覆盖」永远赢。</text>
+</svg>

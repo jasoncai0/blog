@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d2-title f03-d2-desc">
+  <title id="f03-d2-title">区域选择：先按 token 预算落切点，再向前退到成对边界</title>
+  <desc id="f03-d2-desc">surface 是一条按顺序排列的事件节点序列。算法先排除 system 头，再从尾部往前累加 token 直到达到 retainTokens，得到候选切点，然后不断向前退，直到切点两侧的工具调用完全闭合。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-COMPACTION / REGION</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">切点先按预算落，再向前退让</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">区域选择不解最优化问题。它只有三条规则：头不动、尾按预算保留、切点必须落在成对边界上。</text>
+
+  <rect x="40" y="100" width="430" height="460" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SURFACE, OLD → NEW</text>
+
+  <rect x="42" y="136" width="4" height="24" fill="#8a93a6"/>
+  <rect x="42" y="164" width="4" height="184" fill="#bf4520"/>
+  <rect x="42" y="352" width="4" height="148" fill="#2f6f5e"/>
+
+  <rect x="56" y="136" width="250" height="24" rx="4" fill="#f0f0f0" stroke="#d8d8d8"/>
+  <text x="66" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">system/message（头）</text>
+  <text x="316" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">firstIdx 从 1 开始</text>
+
+  <rect x="56" y="164" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">user/message</text>
+  <rect x="56" y="192" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="208" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">assistant: tool_call A, B</text>
+  <rect x="56" y="220" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">tool/result A</text>
+  <rect x="56" y="248" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">tool/result B</text>
+  <rect x="56" y="276" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">assistant/message</text>
+  <rect x="56" y="304" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">user/message</text>
+  <rect x="56" y="332" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">tool/result C</text>
+
+  <line x1="40" y1="386" x2="316" y2="386" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="326" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">候选：预算切点</text>
+  <text x="326" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">此处 D 还没结果</text>
+
+  <line x1="40" y1="352" x2="316" y2="352" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="326" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">退一格：最终切点</text>
+  <text x="326" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">调用与结果都不切开</text>
+
+  <rect x="56" y="360" width="250" height="24" rx="4" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="66" y="376" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">assistant: tool_call D</text>
+  <rect x="56" y="392" width="250" height="24" rx="4" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="66" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">tool/result D</text>
+  <rect x="56" y="420" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="436" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">user/message</text>
+  <rect x="56" y="448" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="464" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">assistant/message</text>
+  <rect x="56" y="476" width="250" height="24" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">user/message（最新）</text>
+
+  <text x="56" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">灰 = 头　红 = 摘要区间　绿 = 保留尾</text>
+  <text x="56" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">如果退到头还是不平衡，就返回 null：这一段不压。</text>
+  <text x="56" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">返回的 start 与 end 都是 surface 位置，不是数值 seq。</text>
+
+  <rect x="490" y="100" width="430" height="460" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="506" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SELECTCOMPACTABLERANGE</text>
+
+  <text x="506" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">① 头永远不参与</text>
+  <text x="506" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">firstIdx = systemHead(nodes[0]) ? 1 : 0</text>
+  <text x="506" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">system prompt 只能被整条重写，不能被摘要。</text>
+
+  <text x="506" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">② 从尾往前，累加到 retainTokens</text>
+  <text x="506" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">while (sum &lt; retain) sum += tokens[--keepFrom]</text>
+  <text x="506" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">这是「保留最近多少 token」，不是「最近几条消息」。</text>
+
+  <text x="506" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">③ 不平衡就往前退</text>
+  <text x="506" y="302" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">while (!balancedBefore(keepFrom)) keepFrom--</text>
+  <text x="506" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">退让只会缩小命中区间，不会扩大它。</text>
+
+  <text x="506" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">④ 返回左闭右闭的节点区间</text>
+  <text x="506" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">{ start: nodes[firstIdx], end: nodes[keepFrom - 1] }</text>
+  <text x="506" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">end 是闭区间，所以减一；空区间返回 null。</text>
+
+  <rect x="506" y="404" width="398" height="136" rx="6" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="520" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">溢出路径把 retainTokens 设成 0</text>
+  <text x="520" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">请求已经被拒，说明尾部预算本身就是问题来源。</text>
+  <text x="520" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">此时切点直接落在最后一个成对边界上，</text>
+  <text x="520" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">能省多少是多少，下一轮再按压力阈值收。</text>
+  <text x="520" y="502" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">retainTokens = 0 → 不保留消息，只保留头</text>
+  <text x="520" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">前提仍是：区间两端都成对。</text>
+
+  <text x="40" y="580" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">packages/compaction/compaction-basic/src/region.ts:117 · packages/compaction/compaction-tool-result-pruner</text>
+</svg>

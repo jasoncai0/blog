@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">写入模型可见状态的三条合法通道与一个反例</title>
+  <desc id="f04-d4-desc">合法通道一是追加一条带 surfaceOp 的事件，二是注册纯消息投影改写既有消息，三是追加一条 log-only 事件只影响控制面。反例是直接改内存 messages 或把流式 chunk 直接塞进下一次请求。</desc>
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">WRITE PATHS</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">一次写入，先选通道</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">判断标准只有一个：恢复之后，模型还该不该看到它？</text>
+
+  <!-- channel A -->
+  <rect x="40" y="106" width="280" height="240" rx="6" fill="#ffffff" stroke="#4a7c59"/>
+  <rect x="40" y="106" width="280" height="6" rx="3" fill="#4a7c59"/>
+  <text x="56" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" letter-spacing="0.12em" fill="#4a7c59">CHANNEL A</text>
+  <text x="56" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">追加 surface 事件</text>
+  <text x="56" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">适合：产生一条新的模型消息</text>
+  <text x="56" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">要求：surfaceOp 必填</text>
+  <text x="56" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">可选：sourceEventSeqs 引用证据</text>
+  <text x="56" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">user/message</text>
+  <text x="56" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">assistant/message</text>
+  <text x="56" y="280" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">tool/result · system/message</text>
+  <text x="56" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#4a7c59">恢复后可见？是。这就是它的定义。</text>
+  <text x="56" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">append(type, data, { surfaceOp: 'append' })</text>
+
+  <!-- channel B -->
+  <rect x="340" y="106" width="280" height="240" rx="6" fill="#ffffff" stroke="#bf8a20"/>
+  <rect x="340" y="106" width="280" height="6" rx="3" fill="#bf8a20"/>
+  <text x="356" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" letter-spacing="0.12em" fill="#bf8a20">CHANNEL B</text>
+  <text x="356" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">注册消息投影</text>
+  <text x="356" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">适合：改写已有消息的内容</text>
+  <text x="356" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">要求：纯函数、保留 identity</text>
+  <text x="356" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">副作用：推进 contentGeneration</text>
+  <text x="356" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">image-offload</text>
+  <text x="356" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">tool-result-pruner</text>
+  <text x="356" y="280" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">自定义的脱敏器</text>
+  <text x="356" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#bf8a20">卸载后读取会拒绝：缺了投影器，历史无法解释。</text>
+  <text x="356" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">registerMessageProjection({ type, project })</text>
+
+  <!-- channel C -->
+  <rect x="640" y="106" width="280" height="240" rx="6" fill="#ffffff" stroke="#8a93a6"/>
+  <rect x="640" y="106" width="280" height="6" rx="3" fill="#8a93a6"/>
+  <text x="656" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" letter-spacing="0.12em" fill="#8a93a6">CHANNEL C</text>
+  <text x="656" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">追加 log-only 事件</text>
+  <text x="656" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">适合：只影响控制面的状态</text>
+  <text x="656" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">禁止：surfaceOp / sourceEventSeqs</text>
+  <text x="656" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">注意：ignorable 只在可丢时给</text>
+  <text x="656" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">request/header</text>
+  <text x="656" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">assistant/attempt</text>
+  <text x="656" y="280" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.2" fill="#5a6580">compaction/start · hook/invoked</text>
+  <text x="656" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#5a6580">恢复后可见？否。但重建请求时必须读它。</text>
+  <text x="656" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.4" fill="#8a93a6">append(type, data)  // 无第三个参数</text>
+
+  <!-- counterexample -->
+  <rect x="40" y="372" width="880" height="110" rx="6" fill="#fff5f2" stroke="#bf4520"/>
+  <text x="56" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#bf4520">反例：不经过日志的「模型可见」</text>
+  <text x="56" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">· 直接改内存里的 messages 数组：当前请求有效，重启即失忆，压缩也看不到它。</text>
+  <text x="56" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">· 把流式 chunk 直接拼进下一次请求，而不先落 assistant/message：恢复、fork、压缩三条路径都会丢。</text>
+  <text x="56" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">· 用 UI 的本地状态当作「模型已知」：UI 可以重放，但模型历史不能从 UI 重建。</text>
+  <text x="56" y="472" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a93a6">model-visible ⟺ recorded — the check is replay, not observation</text>
+
+  <text x="40" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">三条通道的分工：A 增加事实，B 改写事实的解释，C 记录控制面。任何一个插件都应该能说清自己用的是哪条。</text>
+  <text x="40" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">判断捷径：把进程杀掉再恢复，这条信息还在吗？在 → 必须落日志；不在 → 不要假装它被记录过。</text>
+</svg>

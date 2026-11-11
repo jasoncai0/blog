@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">四种循环外机制的五行对照</title>
+  <desc id="f01-d1-desc">workflow、jobs、goal、schedule 四列，按触发源、生命周期、状态存放、失败恢复、记账单位五行逐格对比。四列没有一格完全相同，唯一的共同点是不在当前轮次里。</desc>
+
+  <defs>
+    <marker id="f01-a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="36" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">FOUR OUT-OF-LOOP MECHANISMS</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">四种机制，五行没有一格相同</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">共同点只有一个：都不在 agent loop 里；其余每一行都要各自记账</text>
+
+  <!-- column headers -->
+  <rect x="196" y="112" width="172" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="282" y="135" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">workflow</text>
+  <text x="282" y="153" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">受限 VM 脚本</text>
+
+  <rect x="386" y="112" width="172" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="472" y="135" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">jobs</text>
+  <text x="472" y="153" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">后台进程托管</text>
+
+  <rect x="576" y="112" width="172" height="54" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="662" y="135" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">goal</text>
+  <text x="662" y="153" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">状态 + 进程本地授权</text>
+
+  <rect x="766" y="112" width="172" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="852" y="135" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">schedule</text>
+  <text x="852" y="153" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">宿主定时器</text>
+
+  <!-- row labels -->
+  <text x="40" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TRIGGER</text>
+  <text x="40" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">触发源</text>
+
+  <text x="40" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">LIFECYCLE</text>
+  <text x="40" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">生命周期</text>
+
+  <text x="40" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">STATE</text>
+  <text x="40" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">状态存放</text>
+
+  <text x="40" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">RECOVERY</text>
+  <text x="40" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">失败恢复</text>
+
+  <text x="40" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">UNIT</text>
+  <text x="40" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">记账单位</text>
+
+  <!-- row 1 -->
+  <rect x="196" y="176" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="206" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">模型调用工具</text>
+  <text x="206" y="213" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">一次工具调用内</text>
+
+  <rect x="386" y="176" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="396" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">模型调用工具</text>
+  <text x="396" y="213" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">生产者交出 run()</text>
+
+  <rect x="576" y="176" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="586" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">空闲事件 + 授权</text>
+  <text x="586" y="213" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">active 且 armed</text>
+
+  <rect x="766" y="176" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="776" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">宿主时钟</text>
+  <text x="776" y="213" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">到期扫描，单定时器</text>
+
+  <!-- row 2 -->
+  <rect x="196" y="238" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="206" y="259" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">单次调用</text>
+  <text x="206" y="275" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">run 结束即散</text>
+
+  <rect x="386" y="238" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="396" y="259" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">进程或输出源</text>
+  <text x="396" y="275" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">长于轮次，跨轮存活</text>
+
+  <rect x="576" y="238" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="586" y="259" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">跨轮次</text>
+  <text x="586" y="275" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">直到 paused/blocked</text>
+
+  <rect x="766" y="238" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="776" y="259" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">独立于会话</text>
+  <text x="776" y="275" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">可跨重启</text>
+
+  <!-- row 3 -->
+  <rect x="196" y="300" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="206" y="321" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">run 内存</text>
+  <text x="206" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">父会话展示记录</text>
+
+  <rect x="386" y="300" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="396" y="321" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">registry + 会话事件</text>
+  <text x="396" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">registered / settled</text>
+
+  <rect x="576" y="300" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="586" y="321" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">会话日志 goal/change</text>
+  <text x="586" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每次存完整快照</text>
+
+  <rect x="766" y="300" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="776" y="321" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">宿主存储 + 回执</text>
+  <text x="776" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">不在会话日志里</text>
+
+  <!-- row 4 -->
+  <rect x="196" y="362" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="206" y="383" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">stopReason=error</text>
+  <text x="206" y="399" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">工具结果标 isError</text>
+
+  <rect x="386" y="362" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="396" y="383" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">结算 failed</text>
+  <text x="396" y="399" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">输出环仍可读</text>
+
+  <rect x="576" y="362" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="586" y="383" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">blocked + reason</text>
+  <text x="586" y="399" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">同时 disarm，等人</text>
+
+  <rect x="766" y="362" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="776" y="383" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">保留任务并报错</text>
+  <text x="776" y="399" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">没有通用重试循环</text>
+
+  <!-- row 5 -->
+  <rect x="196" y="424" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="206" y="445" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">子代理数</text>
+  <text x="206" y="461" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">maxTotalAgents</text>
+
+  <rect x="386" y="424" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="396" y="445" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">进程记录</text>
+  <text x="396" y="461" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每 owner 并发 10</text>
+
+  <rect x="576" y="424" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="586" y="445" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">轮次</text>
+  <text x="586" y="461" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">maxGoalRounds</text>
+
+  <rect x="766" y="424" width="172" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="776" y="445" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">触发次数</text>
+  <text x="776" y="461" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">回执保留 200 条</text>
+
+  <!-- bottom note -->
+  <path d="M 40 500 L 938 500" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="40" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">四列共享的只有「不在当前轮次」；状态、授权、配额、失败语义各走各的路。</text>
+  <text x="40" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">把四种「继续跑」合并成一个长任务抽象，第一个说不清的就是它到底消耗了几个子代理、几个进程、几轮目标。</text>
+  <text x="40" y="570" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">WORKFLOW / JOBS / GOAL / SCHEDULE — NO SHARED LEDGER</text>
+</svg>

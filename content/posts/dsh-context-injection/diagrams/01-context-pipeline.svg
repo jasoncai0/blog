@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d18a-title f01-d18a-desc">
+  <title id="f01-d18a-title">上下文装配管线</title>
+  <desc id="f01-d18a-desc">五个阶段自上而下：插件注册 section 或 context；assemble 合并作用域、工具 schema 并运行 waterfall；render 生成 prompt 文本与结构化快照；loop 在 pre-step 与 step 两次投影；最后提交为 system/message 与 user/message。</desc>
+  <defs>
+    <marker id="f01-m18a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">CONTEXT / ASSEMBLY PIPELINE</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">从注册到进入请求：五个阶段</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">前三个阶段是声明与装配，第四个阶段由 loop 独占，第五个阶段把结果写进日志</text>
+
+  <!-- stage 1 -->
+  <circle cx="62" cy="143" r="14" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="147" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">01</text>
+  <rect x="84" y="112" width="420" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="100" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">注册</text>
+  <text x="140" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">REGISTER</text>
+  <text x="100" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">section() 或 context()：name + order + text(thunk)</text>
+  <text x="100" y="166" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">provider 不决定位置，只声明内容</text>
+  <text x="532" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">声明可以来自任何插件</text>
+  <text x="532" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">同层 scope 内同名遮蔽</text>
+
+  <line x1="294" y1="174" x2="294" y2="188" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-m18a)"/>
+
+  <!-- stage 2 -->
+  <circle cx="62" cy="217" r="14" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="221" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">02</text>
+  <rect x="84" y="186" width="420" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="100" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">装配</text>
+  <text x="140" y="208" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">ASSEMBLE</text>
+  <text x="100" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">变量 / section / context / 工具 schema，再跑 waterfall</text>
+  <text x="100" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">system-prompt/src/index.ts:620</text>
+  <text x="532" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">每次 pre-step 一次</text>
+  <text x="532" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">waterfall 返回文本即权威</text>
+
+  <line x1="294" y1="248" x2="294" y2="262" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-m18a)"/>
+
+  <!-- stage 3 -->
+  <circle cx="62" cy="291" r="14" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="295" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">03</text>
+  <rect x="84" y="260" width="420" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="100" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">渲染</text>
+  <text x="140" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">RENDER</text>
+  <text x="100" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">renderPrompt 连接；renderContextSections 出快照</text>
+  <text x="100" y="314" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">空 section 被过滤；order 并列按 name</text>
+  <text x="532" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">system prompt 每次重渲染</text>
+  <text x="532" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">但不是每次都提交</text>
+
+  <line x1="294" y1="322" x2="294" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-m18a)"/>
+
+  <!-- stage 4 -->
+  <circle cx="62" cy="365" r="14" fill="#ffffff" stroke="#bf4520"/>
+  <text x="62" y="369" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">04</text>
+  <rect x="84" y="334" width="420" height="62" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="100" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">投影</text>
+  <text x="140" y="356" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">PROJECT · LOOP ONLY</text>
+  <text x="100" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">pre-step fallback 追加；step 刷新并替换</text>
+  <text x="100" y="388" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">agent.ts:299 / 446-472</text>
+  <text x="532" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">一轮最多一份快照</text>
+  <text x="532" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">相同则返回 undefined</text>
+
+  <line x1="294" y1="396" x2="294" y2="410" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-m18a)"/>
+
+  <!-- stage 5 -->
+  <circle cx="62" cy="439" r="14" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="443" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">05</text>
+  <rect x="84" y="408" width="420" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="100" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">提交</text>
+  <text x="140" y="430" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">COMMIT</text>
+  <text x="100" y="448" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">system/message 节点 0；user/message 快照</text>
+  <text x="100" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">deriveMessages() 下一轮再折叠</text>
+  <text x="532" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">日志是唯一可重建的副本</text>
+  <text x="532" y="450" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">请求里没有另一个 prompt 字段</text>
+
+  <text x="40" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">只有第 4 步属于 loop：插件可以注册、可以改写装配，但不能决定「这条消息放在历史的哪一格」。</text>
+  <text x="40" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">这就是注入看起来「明明写了却没生效」的根源：写在了声明层，却没有经过投影层。</text>
+  <text x="40" y="566" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">DECLARE → ASSEMBLE → RENDER → PROJECT → COMMIT</text>
+</svg>

@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">一次 append 的提交管线</title>
+  <desc id="f02-d2-desc">六道关卡：入口检查、JSON 快照、冻结与编号、数据校验、提交与 surface 计划、异步检查点。前五道同步执行，任何一道失败都不会留下半条事件；第六道按请求落盘。</desc>
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SESSION / APPEND</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">一次 append 的六道关卡</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">前五道同步且原子：要么整条事件提交，要么什么都不留</text>
+
+  <!-- sync bracket -->
+  <path d="M40,120 L40,140 L560,140 L560,120" stroke="#bf4520" stroke-width="1" fill="none"/>
+  <text x="44" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">SYNC · ATOMIC</text>
+  <path d="M600,120 L600,140 L920,140 L920,120" stroke="#8a93a6" stroke-width="1" fill="none"/>
+  <text x="604" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">ASYNC · PER-REQUEST</text>
+
+  <!-- stage 1 -->
+  <rect x="40" y="156" width="126" height="120" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="52" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#bf4520">01</text>
+  <text x="52" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">入口检查</text>
+  <text x="52" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">store 已附着？</text>
+  <text x="52" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">created 已完成？</text>
+  <text x="52" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">是否重入？</text>
+  <text x="52" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">publicationEntry()</text>
+
+  <!-- stage 2 -->
+  <rect x="182" y="156" width="126" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="194" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#bf4520">02</text>
+  <text x="194" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">JSON 快照</text>
+  <text x="194" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">data 一份</text>
+  <text x="194" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">surface 元数据一份</text>
+  <text x="194" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#8a93a6">不可无损序列化即拒</text>
+  <text x="194" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">snapshotJsonValue()</text>
+
+  <!-- stage 3 -->
+  <rect x="324" y="156" width="126" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="336" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#bf4520">03</text>
+  <text x="336" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">冻结与编号</text>
+  <text x="336" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">deepFreeze</text>
+  <text x="336" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">seq = log.length</text>
+  <text x="336" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">time = Date.now()</text>
+  <text x="336" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">no gaps, no holes</text>
+
+  <!-- stage 4 -->
+  <rect x="466" y="156" width="126" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="478" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#bf4520">04</text>
+  <text x="478" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">数据校验</text>
+  <text x="478" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">header 规范性</text>
+  <text x="478" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">role / 失败元数据</text>
+  <text x="478" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">surface 端点存在</text>
+  <text x="478" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">validateSessionEventData()</text>
+
+  <!-- stage 5 -->
+  <rect x="608" y="156" width="146" height="120" rx="6" fill="#fff8f2" stroke="#e0a184"/>
+  <text x="620" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#bf4520">05</text>
+  <text x="620" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">提交</text>
+  <text x="620" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">surface 计划应用</text>
+  <text x="620" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">generation 推进</text>
+  <text x="620" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">广播 session/event</text>
+  <text x="620" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">commit()</text>
+
+  <!-- stage 6 -->
+  <rect x="770" y="156" width="150" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="782" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a93a6">06</text>
+  <text x="782" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">检查点</text>
+  <text x="782" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">按请求而非按 turn</text>
+  <text x="782" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">编码 → 校验 → 发布</text>
+  <text x="782" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#4f5d75">不覆盖旧代际</text>
+  <text x="782" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">checkpoint-policy</text>
+
+  <!-- arrows -->
+  <path d="M166,216 L178,216" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f02-a)"/>
+  <path d="M308,216 L320,216" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f02-a)"/>
+  <path d="M450,216 L462,216" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f02-a)"/>
+  <path d="M592,216 L604,216" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f02-a)"/>
+  <path d="M754,216 L766,216" stroke="#8a93a6" stroke-width="1.1" fill="none" marker-end="url(#f02-a)"/>
+
+  <!-- error path -->
+  <path d="M103,276 L103,340 L300,340" stroke="#bf4520" stroke-width="1.1" fill="none" stroke-dasharray="4 3"/>
+  <path d="M245,276 L245,340" stroke="#bf4520" stroke-width="1.1" fill="none" stroke-dasharray="4 3"/>
+  <path d="M529,276 L529,340" stroke="#bf4520" stroke-width="1.1" fill="none" stroke-dasharray="4 3"/>
+  <text x="108" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#bf4520">throw</text>
+  <rect x="300" y="316" width="380" height="48" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="316" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" font-weight="600" fill="#bf4520">失败即整条回滚</text>
+  <text x="316" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#4f5d75">不会留下半条事件，也不会让 seq 出现空洞。</text>
+
+  <!-- notes -->
+  <rect x="40" y="392" width="560" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">两个真实踩过的坑</text>
+  <text x="56" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">· 在 <tspan font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.6">session/created</tspan> 监听器里 append：会话尚未完成公告，直接抛错。</text>
+  <text x="56" y="450" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">· 在 append 的投影回调里再 append：重入检测触发；要写的东西必须排到当前提交之后。</text>
+  <text x="56" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">· 以为 turn 边界已落盘：检查点是按请求的，「跑完一轮读文件」可能少一条。</text>
+  <text x="56" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" fill="#8a93a6">append is a transaction, not a push</text>
+
+  <rect x="620" y="392" width="300" height="120" rx="6" fill="#2d3142"/>
+  <text x="636" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#ffffff">写入点即校验点</text>
+  <text x="636" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">所有 JSON 无损性、surface 端点、</text>
+  <text x="636" y="448" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">消息角色约束，都在 append 内完成。</text>
+  <text x="636" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">下游（落盘、UI、恢复）因此可以</text>
+  <text x="636" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">假设「日志里的东西一定可序列化」。</text>
+  <text x="636" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#e0a184">validate at the source</text>
+
+  <text x="40" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">取舍：写路径变重（两次快照 + 深冻结 + 校验），换来的是下游全部可以不设防。</text>
+</svg>

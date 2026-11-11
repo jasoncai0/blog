@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">tool/call 与 tool/result 的配对状态机</title>
+  <desc id="f03-d3-desc">正常路径先记录 tool/call 再记录 tool/result；中断与 fork 由 ToolCallRecovery 补齐，未开始与结果未知使用不同错误码；补记失败则同时报告原始错误与恢复错误。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f03-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">12 / PAIRING</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">每一个 call，都必须有且只有一条 result</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">正常路径先落 call 后落 result；中断、fork、未开始三种缺口由恢复逻辑补齐</text>
+
+  <!-- normal path -->
+  <text x="40" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">NORMAL</text>
+
+  <rect x="40" y="134" width="180" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">assistant message</text>
+  <text x="56" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">tool-call block</text>
+  <text x="56" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">callId / name / args</text>
+
+  <line x1="222" y1="166" x2="250" y2="166" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <rect x="252" y="134" width="180" height="64" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="268" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool/call 落账</text>
+  <text x="268" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">append before execute</text>
+  <text x="268" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">返回 seq → callSeq</text>
+
+  <line x1="434" y1="166" x2="462" y2="166" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <rect x="464" y="134" width="180" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="480" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">prepare → dispatch</text>
+  <text x="480" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">可能 deny / abort / 抛错</text>
+  <text x="480" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">但一律产生一个结果</text>
+
+  <line x1="646" y1="166" x2="674" y2="166" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <rect x="676" y="134" width="244" height="64" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="692" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool/result 落账</text>
+  <text x="692" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2f6f5e">sourceEventSeqs: [callSeq]</text>
+  <text x="692" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">isError 时才能带 error</text>
+
+  <!-- recovery branches -->
+  <text x="40" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RECOVERY</text>
+
+  <!-- branch 1: interrupted after call -->
+  <rect x="40" y="260" width="270" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">中断：call 有，result 没有</text>
+  <text x="56" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">step 抛错 → ToolCallRecovery.results()</text>
+  <text x="56" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">补 isError 结果，带 callSeq</text>
+  <text x="56" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">TOOL_OUTCOME_UNKNOWN</text>
+  <text x="56" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">“结果未知；先核实再重试”</text>
+
+  <path d="M 175 252 C 175 228 330 210 342 200" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f03-r)"/>
+
+  <!-- branch 2: not started -->
+  <rect x="340" y="260" width="270" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">未开始：连 call 都没有</text>
+  <text x="356" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">assistant 里有 block，日志里没有 call</text>
+  <text x="356" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">补 isError 结果，不带 sourceEventSeqs</text>
+  <text x="356" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">TOOL_NOT_STARTED</text>
+  <text x="356" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">“还没开始；需要就重试”</text>
+
+  <!-- branch 3: fork -->
+  <rect x="640" y="260" width="280" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="656" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">fork：在别的分支上完成</text>
+  <text x="656" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">openTurnClosers(events, {kind:'forked'})</text>
+  <text x="656" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">补齐 step/end、turn/end，再补结果</text>
+  <text x="656" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">TOOL_OUTCOME_UNKNOWN</text>
+  <text x="656" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">“父会话可能在 fork 后完成”</text>
+
+  <!-- branch 4: recovery failure -->
+  <rect x="40" y="386" width="430" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RECOVERY FAILS</text>
+  <text x="56" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">补记也失败 → AggregateError([error, recoveryError])</text>
+  <text x="56" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">“Step failed and its pending tool results could not be recorded”</text>
+
+  <rect x="500" y="386" width="420" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="516" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">WHY BEFORE STEP END</text>
+  <text x="516" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">provider 拒绝悬空 assistant call；</text>
+  <text x="516" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">恢复必须发生在 step/end 之前。</text>
+
+  <!-- bottom timeline -->
+  <text x="40" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">OBSERVE</text>
+  <rect x="40" y="508" width="880" height="34" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="529" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">assistant/message → pending ｜ tool/call → 填 callSeq ｜ tool/result(append, 同 turn/step) → 删除 ｜ turn/start · turn/end · step/end → 清空</text>
+
+  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">配对不是“尽量保持”，而是进入下一轮的硬条件；缺一条，整个会话都不能继续。</text>
+
+  <text x="40" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 12</text>
+</svg>

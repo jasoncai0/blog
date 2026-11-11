@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">运行时树的四条线</title>
+  <desc id="f03-d3-desc">lead 下挂 reviewer 与 analyst，reviewer 下再挂 checker。每个节点标注 delegationDepth 与 parentSession；右侧列出四个字段各自的住所与持久性。普通 Session fork 只有日志复制关系，不在树上。</desc>
+  <defs>
+    <marker id="f03-arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f03-arwr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.16em">RUNTIME LINES</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="start">一棵树，三条线，外加一个地址</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" fill="#5a6580" text-anchor="start">parentSession 指向直接创建者；delegationDepth 是递归预算；subagentDepth 只影响这次运行能看到什么</text>
+<rect x="320" y="130" width="160" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="334" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">lead</text>
+<text x="334" y="168" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" fill="#4f5d75" text-anchor="start">d=0</text>
+<text x="334" y="181" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">root，名字固定</text>
+<rect x="140" y="250" width="160" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="154" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">reviewer</text>
+<text x="154" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" fill="#4f5d75" text-anchor="start">d=1 · subagentDepth=1</text>
+<text x="154" y="301" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">parentSession=lead</text>
+<rect x="470" y="250" width="160" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="484" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">analyst</text>
+<text x="484" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" fill="#4f5d75" text-anchor="start">d=1 · subagentDepth=1</text>
+<text x="484" y="301" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">parentSession=lead</text>
+<rect x="140" y="380" width="160" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="154" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">checker</text>
+<text x="154" y="418" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" font-weight="400" fill="#4f5d75" text-anchor="start">d=2 · subagentDepth=2</text>
+<text x="154" y="431" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">parentSession=reviewer，不是 lead</text>
+<line x1="400" y1="188" x2="300" y2="250" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<text x="330" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">创建</text>
+<line x1="400" y1="188" x2="470" y2="250" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<text x="452" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="middle">创建</text>
+<line x1="220" y1="308" x2="220" y2="380" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<text x="228" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">创建</text>
+<rect x="470" y="380" width="160" height="58" rx="6" fill="#ffffff" stroke="#c9ccc6" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="484" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#4f5d75" text-anchor="start">普通 session fork</text>
+<text x="484" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">日志复制，没有创建关系</text>
+<text x="484" y="433" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">listDescendants 看不见</text>
+<line x1="466" y1="420" x2="390" y2="420" stroke="#c9ccc6" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="378" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#8a93a6" text-anchor="middle">×</text>
+<text x="360" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">没有创建边，所以不在树上</text>
+<rect x="650" y="140" width="262" height="206" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="666" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">四个字段，四种用途</text>
+<text x="666" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="600" fill="#2f6f5e" text-anchor="start">parentSession</text>
+<text x="666" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">header · 直接创建者</text>
+<text x="666" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="600" fill="#2f6f5e" text-anchor="start">delegationDepth</text>
+<text x="666" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">header · 递归预算，持久</text>
+<text x="666" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="600" fill="#2f6f5e" text-anchor="start">subagentDepth</text>
+<text x="666" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">agent options · 运行时视图，不持久</text>
+<text x="666" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" font-weight="600" fill="#2f6f5e" text-anchor="start">name</text>
+<text x="666" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">目录条目 · 可选地址，不授权</text>
+<text x="650" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">名字只用于寻址。resolveName 查到 id 就结束，</text>
+<text x="650" y="385" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">能不能操作由服务层按实时血缘再判一次。</text>
+<text x="48" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">实线是创建关系，进目录；虚线是日志复制关系，不进目录。</text>
+<text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">深度上限靠 header 活过恢复，subagentDepth 只活在一次运行里。</text>
+</svg>

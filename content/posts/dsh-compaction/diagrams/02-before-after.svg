@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d3-title f02-d3-desc">
+  <title id="f02-d3-title">压缩前后的消息：区间被一条 checkpoint 替换，尾部与工具对保持原样</title>
+  <desc id="f02-d3-desc">左边是压缩前的 surface，中间六个节点被标为摘要区间，其中一个工具结果先被剪掉中段、一张图片留在尾部。右边是替换后的 surface，区间变成一个 compacted-summary 消息，尾部节点与工具调用对原样保留。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-COMPACTION / BEFORE-AFTER</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">换掉的是一段位置，不是一段文本</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">日志里所有事件都还在。压缩只改一件事：下一次请求从哪些 seq 拼出来。</text>
+
+  <rect x="40" y="100" width="380" height="390" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">压缩前：10 个节点</text>
+  <text x="236" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">surface.nodes</text>
+
+  <rect x="56" y="140" width="348" height="26" rx="4" fill="#f0f0f0" stroke="#d8d8d8"/>
+  <text x="66" y="157" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">system/message</text>
+  <rect x="56" y="170" width="348" height="26" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="66" y="187" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">user/message</text>
+  <rect x="56" y="200" width="348" height="26" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="66" y="217" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">assistant: tool_call A, B</text>
+  <rect x="56" y="230" width="348" height="26" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="66" y="247" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">tool/result A  8.4k → 4.1k + marker + 1k</text>
+  <rect x="56" y="260" width="348" height="26" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="66" y="277" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">tool/result B</text>
+  <rect x="56" y="290" width="348" height="26" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="66" y="307" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">assistant/message</text>
+  <rect x="56" y="320" width="348" height="26" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="66" y="337" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">user/message</text>
+  <rect x="56" y="350" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="367" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">assistant: tool_call C</text>
+  <rect x="56" y="380" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="397" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">tool/result C</text>
+  <rect x="56" y="410" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="427" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">image/png  (1.2 MB)</text>
+
+  <text x="56" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">区间 = nodes[1..6]，两端都成对</text>
+  <text x="56" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">剪枝只改 tool/result 的内容，不动节点数</text>
+
+  <line x1="424" y1="250" x2="532" y2="250" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <text x="428" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">surfaceOp</text>
+  <text x="428" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">replace</text>
+  <text x="428" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">6 → 1</text>
+  <line x1="408" y1="420" x2="550" y2="352" stroke="#2f6f5e" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="440" y="396" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">offload</text>
+  <text x="438" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">换占位</text>
+
+  <rect x="540" y="100" width="380" height="390" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="556" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">压缩后：请求里只剩 7 个节点</text>
+
+  <rect x="556" y="140" width="348" height="26" rx="4" fill="#f0f0f0" stroke="#d8d8d8"/>
+  <text x="566" y="157" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">system/message</text>
+
+  <rect x="556" y="170" width="348" height="52" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="566" y="187" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">&lt;compacted-summary&gt;  user/message</text>
+  <text x="566" y="201" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">8 段固定结构：请求 / 概念 / 文件 / 错误 / 待办 /</text>
+  <text x="566" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">当前工作 / 下一步 / Critical Context</text>
+
+  <rect x="556" y="236" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="3 2"/>
+  <text x="566" y="253" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">… 中间 6 个节点不再出现在 surface</text>
+
+  <rect x="556" y="276" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="566" y="293" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">assistant: tool_call C</text>
+  <rect x="556" y="306" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="566" y="323" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">tool/result C</text>
+  <rect x="556" y="336" width="348" height="26" rx="4" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="566" y="353" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">[image omitted]  ← 同一节点，无 surfaceOp</text>
+  <rect x="556" y="366" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="566" y="383" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">user/message（最新）</text>
+  <rect x="556" y="396" width="348" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="566" y="413" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">assistant/message（最新）</text>
+
+  <text x="556" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">replaceGeneration +1，contentGeneration 也 +1</text>
+  <text x="556" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">旧 seq 仍在日志；traceEvent 能查到被谁替换</text>
+  <text x="556" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">摘要消息本身也是一个普通 surface 节点</text>
+
+  <rect x="40" y="502" width="280" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">成对：切点不落在 A/B 之间</text>
+  <text x="56" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">provider 要求每个 tool_call 后面</text>
+  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">紧跟它的 result，缺一个就 400。</text>
+
+  <rect x="340" y="502" width="280" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">offload：换投影，不删字节</text>
+  <text x="356" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">imageIndexes 按深度优先稳定计数，</text>
+  <text x="356" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">同一张图不会被数两次。</text>
+
+  <rect x="640" y="502" width="280" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="656" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">pin：最近事实留在尾部</text>
+  <text x="656" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">更早的决定进 Critical Context；</text>
+  <text x="656" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">需要原文时按 shadowedSeqs 回查。</text>
+
+  <text x="40" y="592" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">region.ts:471 commitCompactionBody · summarizer.ts:32 COMPACTION_INSTRUCTION · image-offload.ts:16</text>
+</svg>

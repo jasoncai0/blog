@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">abort 之后的两条唤醒路径</title>
+  <desc id="f03-d3-desc">已 idle 时唤醒直接开新 driver；已 abort 或维护中的活动只能把唤醒闩锁到收敛点，再决定是否 replay；disposed 的取消不闩锁。</desc>
+  <defs>
+    <marker id="f03-d3-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-d3-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">WAKE · CONVERGENCE</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">唤醒要么开一个 driver，要么留一个闩锁</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">同一个 wakeDriver()，两条完全不同的路径；区别只在调用瞬间 phase 处于什么状态。</text>
+
+  <!-- left column -->
+  <text x="60" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#2f6f5e">IDLE · 直接开</text>
+  <rect x="60" y="146" width="390" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="74" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">phase.kind === 'idle'</text>
+  <text x="74" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">没有 driver；activityDone 已经结算</text>
+
+  <rect x="60" y="222" width="390" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="74" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">wakeDriver()</text>
+  <text x="74" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">替换 activityDone；setPhase(running)</text>
+
+  <rect x="60" y="298" width="390" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="74" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">withInitiator(kick)</text>
+  <text x="74" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">同步跑到第一个 await：turn/start 与 claim 已落盘</text>
+
+  <rect x="60" y="374" width="390" height="52" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="74" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">新 turn 开始</text>
+  <text x="74" y="413" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2f6f5e">agent/status: running</text>
+
+  <path d="M 255 204 V 222" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d3-a)"/>
+  <path d="M 255 280 V 298" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d3-a)"/>
+  <path d="M 255 356 V 374" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d3-a)"/>
+
+  <!-- right column -->
+  <text x="510" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">ABORTED / MAINTENANCE · 闩锁</text>
+  <rect x="510" y="146" width="390" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="524" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">phase ≠ idle 且 signal 已 abort</text>
+  <text x="524" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">或 maintenance 正在跑：都不能新开 driver</text>
+
+  <rect x="510" y="222" width="390" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="524" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">目标强制改成 next-turn</text>
+  <text x="524" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">wakingAfterAbort 在插入之前就已捕获</text>
+
+  <rect x="510" y="298" width="390" height="58" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="524" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">phase.wakeRequested = true</text>
+  <text x="524" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">不新建 driver，不替换 activityDone</text>
+
+  <rect x="510" y="374" width="390" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="524" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">收敛点 finally：先切 idle，再检查</text>
+  <text x="524" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">kick 或 runMaintenance 的 finally</text>
+
+  <rect x="510" y="440" width="390" height="52" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="524" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">hasPending ? replay : 留在队列</text>
+  <text x="524" y="479" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2f6f5e">只有 replay 会再走一次 wakeDriver()</text>
+
+  <path d="M 705 204 V 222" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d3-a)"/>
+  <path d="M 705 280 V 298" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d3-a)"/>
+  <path d="M 705 356 V 374" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f03-d3-b)"/>
+  <path d="M 705 432 V 440" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-d3-a)"/>
+
+  <!-- footnotes -->
+  <rect x="60" y="452" width="390" height="52" rx="6" fill="#f5f5f5" stroke="#2f6f5e" stroke-dasharray="4 4"/>
+  <text x="74" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">第三条路：turn 尾部直接续跑</text>
+  <text x="74" y="491" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">同一 driver 换 AbortController 继续，不经过 wakeDriver</text>
+
+  <text x="48" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6">例外：cause.kind === 'disposed' 时不置闩锁。拆除不等模型轮次，也不 replay 队列。</text>
+  <text x="48" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6">闩锁只是一个布尔值：它不保存「哪条消息唤醒了谁」，只表示「收敛后还要再看一眼队列」。</text>
+</svg>

@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">模型、UI、日志三条消费路径</title>
+  <desc id="f04-d4-desc">同一个工具结果按三种投影分叉：模型只读 finalize 之后的 content；UI 读 presentCall 与 presentResult 的展示结构以及持久化的 meta；日志读 tool/result 的 message、error、meta 与 sourceEventSeqs，value 不落账。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f04-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f5e"/>
+    </marker>
+    <marker id="f04-p" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a5aa8"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">12 / THREE CONSUMERS</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一个结果，三份投影</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">模型要“短而够用”，UI 要结构，日志要可重放；三者的字段集合故意不相等</text>
+
+  <!-- source result -->
+  <rect x="40" y="120" width="222" height="238" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="144" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">PIPELINE OUTCOME</text>
+  <text x="56" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">finalizeContent 之后</text>
+
+  <rect x="56" y="178" width="190" height="26" rx="4" fill="#fdf6f2" stroke="#d8d8d8"/>
+  <text x="68" y="195" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">content[]</text>
+  <text x="128" y="195" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">模型可见</text>
+
+  <rect x="56" y="210" width="190" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="227" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">value</text>
+  <text x="128" y="227" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">只在执行期</text>
+
+  <rect x="56" y="242" width="190" height="26" rx="4" fill="#f2f8f6" stroke="#d8d8d8"/>
+  <text x="68" y="259" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">meta?</text>
+  <text x="128" y="259" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#2f6f5e">仅供重放</text>
+
+  <rect x="56" y="274" width="190" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="291" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">isError</text>
+  <text x="128" y="291" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">错误时带 error.info</text>
+
+  <rect x="56" y="306" width="190" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="323" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">additionalContexts</text>
+
+  <text x="56" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">批次级 FIFO，记录后注入</text>
+
+  <!-- fan out -->
+  <path d="M 264 178 C 292 160 296 150 316 146" fill="none" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f04-m)"/>
+  <path d="M 264 220 L 316 220" fill="none" stroke="#7a5aa8" stroke-width="1.2" marker-end="url(#f04-p)"/>
+  <path d="M 264 300 C 288 320 296 338 316 344" fill="none" stroke="#2f6f5e" stroke-width="1.2" marker-end="url(#f04-g)"/>
+
+  <!-- model -->
+  <rect x="318" y="110" width="196" height="104" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="334" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">MODEL</text>
+  <text x="334" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">只读 content</text>
+  <text x="334" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">provider 看到的消息序列</text>
+  <text x="334" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">截断、spill notice 都在这里</text>
+  <text x="334" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#8a93a6">无 meta / 无 value / 无 presenter</text>
+
+  <!-- ui -->
+  <rect x="318" y="230" width="196" height="120" rx="6" fill="#ffffff" stroke="#7a5aa8"/>
+  <text x="334" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#7a5aa8">UI</text>
+  <text x="334" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">presentCall(args)</text>
+  <text x="334" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">→ ToolCallView（generic/terminal/diff）</text>
+  <text x="334" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">presentResult(args, result)</text>
+  <text x="334" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">→ 六种 card；meta 供重放</text>
+  <text x="334" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">纯函数；不回流模型</text>
+
+  <!-- log -->
+  <rect x="318" y="366" width="196" height="120" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="334" y="388" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#2f6f5e">LOG</text>
+  <text x="334" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool/result 事件</text>
+  <text x="334" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">message + error? + meta</text>
+  <text x="334" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.8" fill="#4f5d75">sourceEventSeqs: [callSeq]</text>
+  <text x="334" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">value 永不落账</text>
+  <text x="334" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">重放靠 message + meta</text>
+
+  <!-- right: distinctions -->
+  <rect x="560" y="110" width="360" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="576" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">SAME SOURCE, DIFFERENT SHAPE</text>
+
+  <text x="576" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">模型：语义完整优先，超预算必须给 locator</text>
+  <text x="576" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">UI：结构优先，行号/diff/exit code 不能被拼平</text>
+  <text x="576" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">日志：可重放优先，保留 meta 与引用 seq</text>
+  <text x="576" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">把三者塞进一个字符串，任意两个都会被牺牲。</text>
+  <text x="576" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">所以先分叉，再各自截断；顺序不能反。</text>
+
+  <rect x="560" y="280" width="360" height="96" rx="6" fill="#ffffff" stroke="#7a5aa8"/>
+  <text x="576" y="302" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#7a5aa8">PRESENTER IS NOT CONTENT</text>
+  <text x="576" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">presentCall 只拿 args；presentResult 拿 args +</text>
+  <text x="576" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">{content, isError, meta?}；两者都不写回消息。</text>
+  <text x="576" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">换 UI 不需要重跑工具，也不改模型上下文。</text>
+
+  <rect x="560" y="394" width="360" height="92" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="576" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#2f6f5e">DURABLE ≠ COMPLETE</text>
+  <text x="576" y="438" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">日志保存的是规范化的 message，不是 value；</text>
+  <text x="576" y="456" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">要“完整”必须另存 spill，并让 locator 可读回。</text>
+  <text x="576" y="476" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">三份副本各有明确的上界与用途。</text>
+
+  <!-- bottom note -->
+  <rect x="40" y="510" width="880" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">判断一份结果该进哪条路径，只问三个问题：模型下一步需要它吗？用户需要它的结构吗？以后还能重放吗？</text>
+  <text x="56" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">三者都答“是”时，也不是复制三份原文，而是让每条路径各自决定保真度。</text>
+
+  <text x="40" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 12</text>
+</svg>

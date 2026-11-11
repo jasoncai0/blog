@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">一次带超时的提问</title>
+  <desc id="f02-d2-desc">askTimed 建立 deadline 后下发卡片；attachWait 接手并报剩余时间。到点无人接手时工具返回 pending，Turn 继续，迟到的回答仍以 steer 进入下一步。</desc>
+  <defs>
+    <marker id="f02-d2-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">ASK · TIMED WAIT</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">超时只关掉问题，不关掉 Turn</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">左侧是回答到达的路径；右侧是没人接手时的另一条时间线，两条最终汇在同一处。</text>
+
+  <text x="392" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#7a5aa8">TIMEOUT PATH</text>
+
+  <!-- step 1 -->
+  <rect x="60" y="130" width="320" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">ask_user_question({wait:{callId,timed}})</text>
+  <text x="76" y="165" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">工具调用进入提问服务</text>
+
+  <!-- step 2 -->
+  <rect x="60" y="184" width="320" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">new TimedQuestionWait(deadline)</text>
+  <text x="76" y="219" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">计时器只在 claims.size === 0 时跑</text>
+
+  <!-- step 3 -->
+  <rect x="60" y="238" width="320" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="258" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">waterfall: 下发卡片 {callId}</text>
+  <text x="76" y="273" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">agent-scoped；UI 只是监听器之一</text>
+
+  <!-- step 4 -->
+  <rect x="60" y="292" width="320" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">attachWait → {remainingMs}</text>
+  <text x="76" y="327" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">接手才暂停计时；最后一个离开后恢复</text>
+
+  <!-- step 5 -->
+  <rect x="60" y="346" width="320" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">用户：answer(callId, selected)</text>
+  <text x="76" y="381" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">只对 continued 集合生效，否则返回 false</text>
+
+  <!-- step 6 -->
+  <rect x="60" y="400" width="320" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="420" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">agent.steer(user-question-reply)</text>
+  <text x="76" y="435" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">答案作为 user message 排队</text>
+
+  <!-- step 7 -->
+  <rect x="60" y="454" width="320" height="44" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="76" y="474" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2f6f5e">下一 step claim → user/message</text>
+  <text x="76" y="489" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">此刻投影把问题移入 settled</text>
+
+  <!-- main arrows -->
+  <path d="M 220 174 V 184" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 220 228 V 238" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 220 282 V 292" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 220 336 V 346" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 220 390 V 400" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 220 444 V 454" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+
+  <!-- fork to timeout -->
+  <path d="M 380 206 H 460" stroke="#7a5aa8" stroke-width="1.2" stroke-dasharray="4 4" fill="none" marker-end="url(#f02-d2-a)"/>
+
+  <rect x="460" y="184" width="440" height="44" rx="6" fill="#ffffff" stroke="#7a5aa8" stroke-dasharray="4 4"/>
+  <text x="476" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#7a5aa8">deadline 到点，且无人接手</text>
+  <text x="476" y="219" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">close(timeout)：只中止这次提问自己的 signal</text>
+
+  <rect x="460" y="238" width="440" height="44" rx="6" fill="#ffffff" stroke="#7a5aa8" stroke-dasharray="4 4"/>
+  <text x="476" y="258" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ask 以 ASK_TIMED_OUT 拒绝</text>
+  <text x="476" y="273" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">父 signal（Turn）没有被 abort</text>
+
+  <rect x="460" y="292" width="440" height="44" rx="6" fill="#ffffff" stroke="#7a5aa8"/>
+  <text x="476" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#7a5aa8">工具返回 {pending:true, callId}</text>
+  <text x="476" y="327" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">pending 不是空答案，也不是拒绝，更不是授权</text>
+
+  <rect x="460" y="346" width="440" height="60" rx="6" fill="#ffffff" stroke="#7a5aa8" stroke-dasharray="4 4"/>
+  <text x="476" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">Turn 继续；问题仍可回答</text>
+  <text x="476" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">模型可以先做独立的工作</text>
+  <text x="476" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">迟到的回答仍走第 5、7 步</text>
+
+  <path d="M 680 228 V 238" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 680 282 V 292" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+  <path d="M 680 336 V 346" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f02-d2-a)"/>
+
+  <path d="M 460 376 H 420 V 476 H 380" stroke="#7a5aa8" stroke-width="1.2" stroke-dasharray="4 4" fill="none" marker-end="url(#f02-d2-a)"/>
+
+  <!-- bottom note -->
+  <rect x="60" y="520" width="840" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="540" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">CANCEL ≠ TIMEOUT</text>
+  <text x="76" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">取消：Turn 的 signal abort → wait.close(aborted) → ASK_ABORTED，Turn 本身也在结束。超时：只关问题，Turn 照常。</text>
+</svg>

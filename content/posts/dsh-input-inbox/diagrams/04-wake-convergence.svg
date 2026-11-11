@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d4-title f04-d4-desc">
+  <title id="f04-d4-title">wake 的收敛状态机：idle、running、aborted、maintenance 与 wakeRequested 闩锁</title>
+  <desc id="f04-d4-desc">idle 收到唤醒直接开 driver；running 的 live driver 自己领队列；running 但已被取消的活动不能接收唤醒，只能置 wakeRequested；maintenance 同样只能闩锁；闩锁在 kick 或 runMaintenance 的 finally 里兑现，兑现前再查一次 hasPending。被 dispose 的取消既不闩锁也不 replay。</desc>
+  <defs>
+    <marker id="f04-d4-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-d4-a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">WAKE CONVERGENCE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">唤醒只有两种命运：开一个 driver，或留一个闩锁</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">闩锁不是队列，是一个布尔值；它只在收敛点被读取一次</text>
+
+  <!-- IDLE -->
+  <rect x="48" y="240" width="180" height="72" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="64" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">idle</text>
+  <text x="64" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">没有 driver</text>
+  <text x="64" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">activityDone 已结算</text>
+
+  <!-- RUNNING -->
+  <rect x="330" y="160" width="180" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="346" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">running · live</text>
+  <text x="346" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">driver 正在跑</text>
+  <text x="346" y="218" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">wakeup 不闩锁，自己领</text>
+
+  <!-- ABORTED -->
+  <rect x="330" y="300" width="180" height="76" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 3"/>
+  <text x="346" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">running · aborted</text>
+  <text x="346" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">signal 已死，不会再 claim</text>
+  <text x="346" y="358" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">wake → 只能闩锁</text>
+
+  <!-- MAINTENANCE -->
+  <rect x="330" y="440" width="180" height="72" rx="6" fill="#ffffff" stroke="#7a5aa8"/>
+  <text x="346" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">maintenance</text>
+  <text x="346" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">非 turn 任务，占着 agent</text>
+  <text x="346" y="498" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">public status 仍报 idle</text>
+
+  <!-- LATCH -->
+  <rect x="640" y="300" width="200" height="72" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.6"/>
+  <text x="656" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#bf4520">wakeRequested = true</text>
+  <text x="656" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一个布尔值，不是队列</text>
+  <text x="656" y="358" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">收敛点读一次，然后清掉</text>
+
+  <!-- arrows -->
+  <path d="M 138 240 V 194 H 330" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+  <text x="146" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">wakeDriver()</text>
+
+  <path d="M 330 215 H 290 V 300 H 228" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+  <text x="238" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">driver 排空</text>
+
+  <path d="M 420 236 V 300" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a-accent)"/>
+  <text x="428" y="272" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">cancel(cause)</text>
+
+  <path d="M 510 334 H 640" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a-accent)"/>
+  <text x="516" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">wake 且未 disposed</text>
+
+  <path d="M 330 334 H 210 V 312" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+  <text x="214" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">kick finally</text>
+
+  <path d="M 510 474 H 590 V 340 H 640" stroke="#7a5aa8" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+  <text x="560" y="466" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#7a5aa8">任何 wakeup</text>
+
+  <path d="M 330 474 H 180 V 312" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a)"/>
+  <text x="188" y="466" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">任务结束</text>
+
+  <path d="M 740 300 V 110 H 480 V 160" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f04-d4-a-accent)"/>
+  <text x="750" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">兑现：hasPending → 开新 driver</text>
+
+  <!-- disposed note -->
+  <rect x="640" y="440" width="248" height="96" rx="6" fill="#ffffff" stroke="#8a93a6" stroke-dasharray="4 3"/>
+  <text x="656" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#4f5d75">DISPOSED 例外</text>
+  <text x="656" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">reason.kind === 'disposed'：不闩锁、</text>
+  <text x="656" y="497" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">teardown 也不 replay。disposal 要让</text>
+  <text x="656" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">拆除过程不欠任何一次模型轮次。</text>
+
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">同一个布尔值在两类收敛点被读：kick 的 finally（turn 循环退出）与 runMaintenance 的 finally（维护任务结束）。</text>
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">turn 尾部的 hasPending 走另一条路：不闩锁，直接换 AbortController 继续下一轮。</text>
+</svg>

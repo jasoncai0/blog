@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f02-d02-title f02-d02-desc">
+  <title id="f02-d02-title">事件日志与派生历史</title>
+  <desc id="f02-d02-desc">左侧是只追加的事件日志，中间是纯函数投影，右侧是三个消费者：模型请求、UI 视图、审计导出。底部红框是反例：把可变的 messages 数组当历史。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520">LOG IS TRUTH</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="16" fill="#2d3142">日志是唯一真源，消息是投影</text>
+  <text x="40" y="82" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">同一份日志，必须能派生出逐字节相同的请求；否则重放就不可信。</text>
+
+  <!-- log column -->
+  <rect x="40" y="104" width="300" height="404" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <text x="58" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">EVENT LOG · APPEND ONLY</text>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5">
+    <text x="58" y="152" fill="#8a8f9c">#00</text><text x="88" y="152" fill="#4f5d75">turn/start        turn 3</text>
+    <text x="58" y="174" fill="#8a8f9c">#01</text><text x="88" y="174" fill="#4f5d75">step/start        step 0</text>
+    <text x="58" y="196" fill="#8a8f9c">#02</text><text x="88" y="196" fill="#2d3142">user/message      "修这个 bug"</text>
+    <text x="58" y="218" fill="#8a8f9c">#03</text><text x="88" y="218" fill="#2d3142">assistant/message tool-call(read)</text>
+    <text x="58" y="240" fill="#8a8f9c">#04</text><text x="88" y="240" fill="#4f5d75">tool/call         read{path}</text>
+    <text x="58" y="262" fill="#8a8f9c">#05</text><text x="88" y="262" fill="#4f5d75">tool/result       isError=false</text>
+    <text x="58" y="284" fill="#8a8f9c">#06</text><text x="88" y="284" fill="#4f5d75">step/end</text>
+    <text x="58" y="306" fill="#8a8f9c">#07</text><text x="88" y="306" fill="#4f5d75">step/start        step 1</text>
+    <text x="58" y="328" fill="#8a8f9c">#08</text><text x="88" y="328" fill="#8a4b2a">assistant/attempt timeout · retry</text>
+    <text x="58" y="350" fill="#8a8f9c">#09</text><text x="88" y="350" fill="#2d3142">assistant/message final answer</text>
+    <text x="58" y="372" fill="#8a8f9c">#10</text><text x="88" y="372" fill="#4f5d75">step/end</text>
+    <text x="58" y="394" fill="#8a8f9c">#11</text><text x="88" y="394" fill="#4f5d75">turn/end         completed</text>
+  </g>
+
+  <line x1="58" y1="410" x2="322" y2="410" stroke="#e4e4e4" stroke-width="1"/>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">
+    <text x="58" y="430">seq = log.length，只增不改</text>
+    <text x="58" y="448">attempt 不进模型历史</text>
+    <text x="58" y="466">tool/call 在执行前记录</text>
+    <text x="58" y="484">turn/end 必须最后写</text>
+  </g>
+
+  <!-- projection -->
+  <rect x="372" y="104" width="200" height="300" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <text x="390" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">PURE PROJECTION</text>
+  <text x="390" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">deriveMessages(log)</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">
+    <text x="390" y="176">user/message   → include</text>
+    <text x="390" y="196">assistant/message → include</text>
+    <text x="390" y="216">tool/result    → include</text>
+    <text x="390" y="236">step/*, turn/*  → skip</text>
+    <text x="390" y="256">assistant/attempt → skip</text>
+  </g>
+  <line x1="390" y1="272" x2="554" y2="272" stroke="#e4e4e4"/>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">
+    <text x="390" y="292">纯函数：输入相同，输出相同</text>
+    <text x="390" y="310">返回不可变副本</text>
+    <text x="390" y="328">保留消息 identity（id）</text>
+    <text x="390" y="346">空内容节点不产生 wire 消息</text>
+    <text x="390" y="364">投影器缺失 = 读取拒绝</text>
+    <text x="390" y="382">不得就地修改日志</text>
+  </g>
+
+  <!-- outputs -->
+  <rect x="600" y="104" width="320" height="120" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <text x="618" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">CONSUMER 1 · REQUEST</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">
+    <text x="618" y="150">[user, assistant(tool-call),</text>
+    <text x="618" y="170"> tool-result, assistant]</text>
+  </g>
+  <text x="618" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9c">冻结后发给模型；重试时复用同一份</text>
+  <text x="618" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9c">「模型可见 ⟺ 已记录」在这里兑现</text>
+
+  <rect x="600" y="240" width="320" height="82" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <text x="618" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">CONSUMER 2 · UI</text>
+  <text x="618" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">工具卡片、重试提示、token 计数</text>
+  <text x="618" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9c">UI 可以比模型多看到 attempt 与 retry</text>
+
+  <rect x="600" y="338" width="320" height="82" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
+  <text x="618" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">CONSUMER 3 · AUDIT / FORK</text>
+  <text x="618" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">按 seq 切片 = 一条分支</text>
+  <text x="618" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9c">fork 是「复制前缀 + 新 session id」，不是复制对象</text>
+
+  <!-- red counterexample -->
+  <rect x="40" y="520" width="880" height="52" fill="#fdf1ed" stroke="#e0a48d" rx="6"/>
+  <text x="58" y="542" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">ANTI-PATTERN</text>
+  <text x="150" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#8a4b2a">messages.push(...) 当历史：压缩时要「猜」哪条能删，fork 时复制整个数组，重放时永远对不上。</text>
+  <text x="150" y="561" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a4b2a">修法：先加日志，让 messages 变成 deriveMessages(log) 的返回值；数组只作为一次请求的快照。</text>
+
+  <!-- arrows -->
+  <g stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f02-a2)">
+    <path d="M340 200 L368 200"/>
+    <path d="M572 180 L596 168"/>
+    <path d="M572 240 L596 268"/>
+    <path d="M572 320 L596 370"/>
+  </g>
+  <defs>
+    <marker id="f02-a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="592" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".1em" fill="#8a8f9c">02 / LOG → PROJECTION</text>
+</svg>

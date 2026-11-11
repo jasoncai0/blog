@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="f01-s1-title f01-s1-desc">
+  <title id="f01-s1-title">Agent 的外部状态与内部阶段</title>
+  <desc id="f01-s1-desc">对外只有 idle 与 running 两个状态。running 内部依次经过 pre-step、step、closing 三个不可见的阶段。maintenance 是旁路阶段，公开状态仍报 idle。dispose 不是状态，而是把 agent 从注册表移除的能力撤销。</desc>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+    <marker id="f01-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">AGENT / LIFECYCLE</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">对外两态，对内三阶段</text>
+
+  <!-- status brackets -->
+  <path d="M80,96 L80,108 L230,108 L230,96" stroke="#8a93a6" stroke-width="1" fill="none"/>
+  <text x="86" y="88" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">status = idle</text>
+  <path d="M290,96 L290,108 L800,108 L800,96" stroke="#bf4520" stroke-width="1" fill="none"/>
+  <text x="296" y="88" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">status = running（内部阶段不对外暴露）</text>
+
+  <!-- idle -->
+  <rect x="80" y="140" width="150" height="76" rx="38" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+  <text x="112" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">idle</text>
+  <text x="112" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">无驱动者排队或活动</text>
+  <text x="112" y="203" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">nothing scheduled</text>
+
+  <!-- pre-step -->
+  <rect x="290" y="140" width="150" height="76" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="306" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">RUNNING / 1</text>
+  <text x="306" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">pre-step</text>
+  <text x="306" y="198" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" fill="#5a6580">组装 · 准入 · 可拒绝</text>
+
+  <!-- step -->
+  <rect x="480" y="140" width="150" height="76" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="496" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">RUNNING / 2</text>
+  <text x="496" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">step</text>
+  <text x="496" y="198" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" fill="#5a6580">请求 · 流式 · 工具</text>
+
+  <!-- closing -->
+  <rect x="670" y="140" width="130" height="76" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="686" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">RUNNING / 3</text>
+  <text x="686" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">closing</text>
+  <text x="686" y="198" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" fill="#5a6580">turn-stopping · turn/end</text>
+
+  <!-- transitions -->
+  <path d="M230,178 L286,178" stroke="#5a6580" stroke-width="1.2" fill="none" marker-end="url(#f01-a)"/>
+  <text x="234" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" fill="#5a6580">wake</text>
+
+  <path d="M440,178 L476,178" stroke="#5a6580" stroke-width="1.2" fill="none" marker-end="url(#f01-a)"/>
+  <path d="M630,178 L666,178" stroke="#5a6580" stroke-width="1.2" fill="none" marker-end="url(#f01-a)"/>
+
+  <path d="M735,216 L735,258 L155,258 L155,220" stroke="#5a6580" stroke-width="1.2" fill="none" stroke-dasharray="5 3" marker-end="url(#f01-a)"/>
+  <text x="330" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">turn/end 且收件箱已排空</text>
+
+  <path d="M290,178 L260,178" stroke="#bf4520" stroke-width="1.1" fill="none" stroke-dasharray="3 3" marker-end="url(#f01-ao)"/>
+  <text x="246" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" fill="#bf4520">reject → blocked</text>
+
+  <!-- maintenance -->
+  <rect x="290" y="320" width="220" height="96" rx="6" fill="#fbfbfc" stroke="#8a93a6" stroke-dasharray="5 3"/>
+  <text x="306" y="342" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#8a93a6">SIDE CHANNEL</text>
+  <text x="306" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">maintenance</text>
+  <text x="306" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">压缩 / 索引 / 后台整理</text>
+  <text x="306" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">公开 status 仍报 idle</text>
+  <text x="306" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">whenIdle() 会等它</text>
+
+  <path d="M155,216 L155,300 L286,300" stroke="#8a93a6" stroke-width="1.1" fill="none" stroke-dasharray="4 3" marker-end="url(#f01-a)"/>
+  <text x="160" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" fill="#8a93a6">runMaintenance()</text>
+  <path d="M290,330 L250,330 L250,222" stroke="#8a93a6" stroke-width="1.1" fill="none" stroke-dasharray="4 3" marker-end="url(#f01-a)"/>
+
+  <!-- disposed -->
+  <rect x="670" y="320" width="250" height="96" rx="6" fill="#fff5f2" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="686" y="342" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">NOT A STATE</text>
+  <text x="686" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">dispose（能力撤销）</text>
+  <text x="686" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">停驱动 → 等退出 → 注销 → 拆 scope</text>
+  <text x="686" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">之后 send() 抛错，status 不再可观察</text>
+  <text x="686" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#bf4520">AgentStatus has only two values</text>
+
+  <path d="M800,190 L800,300" stroke="#bf4520" stroke-width="1.1" fill="none" stroke-dasharray="4 3" marker-end="url(#f01-ao)"/>
+  <text x="806" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.8" fill="#bf4520">owner dispose</text>
+
+  <!-- notes -->
+  <text x="40" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">为什么不做第三个状态：一旦 status 出现 'disposed'，调用方就会去轮询它，而正确做法是销毁后不再持有。能力撤销比状态更诚实。</text>
+  <text x="40" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">为什么 maintenance 报 idle：后台整理不该让 UI 显示「正在思考」；需要等待的调用方用 whenIdle()，那里会把维护任务算进去。</text>
+  <text x="40" y="516" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">phase: idle | running{turn, step, abort, wakeRequested}</text>
+  <text x="40" y="538" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">wakeRequested 只在 abort 收敛后兑现，避免新循环撞上旧 signal</text>
+</svg>

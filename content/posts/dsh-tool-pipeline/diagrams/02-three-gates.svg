@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d2-title f02-d2-desc">
+  <title id="f02-d2-title">三个 waterfall 的输入输出与责任</title>
+  <desc id="f02-d2-desc">pre-execute 接收 exec 并返回 allow、deny、cancel 或 ask；execute 包裹工具 body 并返回结果；post-execute 接收结果并返回 accept 或 block。guards 在三条带之外，只返回拒绝理由。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">10 / THREE GATES</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">三个 waterfall，三种权力</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">签名都是「对象 + next」，但能改的东西被契约压得很窄；guards 不在其中，因为它没有 next</text>
+
+  <!-- gate 1 -->
+  <rect x="40" y="108" width="880" height="112" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">GATE 1 · TOOLS/PRE-EXECUTE</text>
+  <rect x="56" y="142" width="150" height="56" rx="4" fill="#f5f5f5"/>
+  <text x="131" y="164" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">exec</text>
+  <text x="131" y="182" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">已冻结的 arguments</text>
+
+  <line x1="208" y1="170" x2="228" y2="170" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <rect x="230" y="142" width="150" height="56" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="305" y="164" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">waterfall</text>
+  <text x="305" y="182" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">(exec, next)</text>
+
+  <line x1="382" y1="170" x2="402" y2="170" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <rect x="404" y="142" width="196" height="56" rx="4" fill="#f5f5f5"/>
+  <text x="418" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">{ allow | deny | cancel | ask }</text>
+  <text x="418" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">ask → 一次性审批 → allow / deny</text>
+
+  <text x="620" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">能：问人、拒绝、取消、建立本次策略</text>
+  <text x="620" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">不能：改参数、换工具定义</text>
+
+  <!-- gate 2 -->
+  <rect x="40" y="232" width="880" height="112" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">GATE 2 · TOOLS/EXECUTE</text>
+  <rect x="56" y="266" width="150" height="56" rx="4" fill="#f5f5f5"/>
+  <text x="131" y="288" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">exec</text>
+  <text x="131" y="306" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">signal 可被追加</text>
+
+  <line x1="208" y1="294" x2="228" y2="294" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <rect x="230" y="266" width="150" height="56" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="305" y="288" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">waterfall</text>
+  <text x="305" y="306" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">(exec, next)</text>
+
+  <line x1="382" y1="294" x2="402" y2="294" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <rect x="404" y="266" width="196" height="56" rx="4" fill="#f5f5f5"/>
+  <text x="418" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">ToolExecutionResult</text>
+  <text x="418" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">非 canonical → 重新校验</text>
+
+  <text x="620" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">能：包裹、短路、追加取消信号</text>
+  <text x="620" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">不能：伪造未校验的成功值</text>
+
+  <!-- gate 3 -->
+  <rect x="40" y="356" width="880" height="112" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">GATE 3 · TOOLS/POST-EXECUTE</text>
+  <rect x="56" y="390" width="150" height="56" rx="4" fill="#f5f5f5"/>
+  <text x="131" y="412" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">exec + result</text>
+  <text x="131" y="430" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">已规范化、已冻结</text>
+
+  <line x1="208" y1="418" x2="228" y2="418" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <rect x="230" y="390" width="150" height="56" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="305" y="412" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">waterfall</text>
+  <text x="305" y="430" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">(exec, result, next)</text>
+
+  <line x1="382" y1="418" x2="402" y2="418" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <rect x="404" y="390" width="196" height="56" rx="4" fill="#f5f5f5"/>
+  <text x="418" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">{ accept | block }</text>
+  <text x="418" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">accept 可带 content 或 value</text>
+
+  <text x="620" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">能：换 content、换 value、阻断</text>
+  <text x="620" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">不能：同时换两者、改失败的 value</text>
+
+  <!-- guards strip -->
+  <rect x="40" y="490" width="880" height="66" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 4"/>
+  <text x="56" y="512" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">NOT A GATE · GUARDS</text>
+  <text x="56" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">签名只有 (exec) =&gt; string | undefined；第一个非空理由立即终止，后续 guard 与监听器都无法翻案。</text>
+  <text x="56" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">全局 guard 先于 agent 链，agent 链 nearest-first；它没有 allow，因此不是 waterfall。</text>
+
+  <text x="40" y="584" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">三闸的顺序即权限顺序：先问能不能做，再问准不准，再决定怎么做，最后决定怎么看。</text>
+</svg>

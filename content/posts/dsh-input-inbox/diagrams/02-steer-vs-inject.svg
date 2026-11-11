@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-d3-title f02-d3-desc">
+  <title id="f02-d3-title">steer 与 inject 在同一时间轴上的分叉：唤醒与不唤醒</title>
+  <desc id="f02-d3-desc">两条泳道共享同一时间轴。steer 依次经过 send、spliced、wakeDriver、pre-step 边界上的 claim，进入 user/message；inject 走同样的 send 与 spliced，但第三个节点是「不唤醒」，消息留在 next-step 直到某个 followup 或 steer 打开轮次。图中标出 pre-step 边界：已经 claim 的批次看不到之后才 inject 的上下文。</desc>
+  <defs>
+    <marker id="f02-d3-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-d3-a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">STEER × INJECT</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">同一条队列，两种到达方式</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">两者都写 next-step；差别只在提交瞬间是否调用 wakeDriver</text>
+
+  <!-- lane A -->
+  <rect x="40" y="132" width="880" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="48" y="166" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">STEER</text>
+  <text x="48" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">next-step</text>
+  <text x="48" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">wakeup = true</text>
+
+  <rect x="120" y="152" width="112" height="56" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="132" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">send()</text>
+  <text x="132" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">append spliced</text>
+
+  <rect x="272" y="152" width="112" height="56" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="284" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">spliced</text>
+  <text x="284" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">已可回放</text>
+
+  <rect x="424" y="152" width="112" height="56" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="436" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">wakeDriver</text>
+  <text x="436" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">idle 时开 turn</text>
+
+  <rect x="590" y="152" width="140" height="56" rx="4" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="602" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">claim</text>
+  <text x="602" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">next-step 整批</text>
+
+  <rect x="770" y="152" width="140" height="56" rx="4" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="782" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">user/message</text>
+  <text x="782" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">进入本 step 请求</text>
+
+  <g stroke="#8a93a6" stroke-width="1.2" fill="none">
+    <path d="M 232 180 H 272" marker-end="url(#f02-d3-a)"/>
+    <path d="M 384 180 H 424" marker-end="url(#f02-d3-a)"/>
+    <path d="M 536 180 H 590" marker-end="url(#f02-d3-a)"/>
+    <path d="M 730 180 H 770" marker-end="url(#f02-d3-a)"/>
+  </g>
+
+  <!-- lane B -->
+  <rect x="40" y="268" width="880" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="48" y="302" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#7a5aa8">INJECT</text>
+  <text x="48" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">next-step</text>
+  <text x="48" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">wakeup = false</text>
+
+  <rect x="120" y="288" width="112" height="56" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="132" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">send()</text>
+  <text x="132" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">append spliced</text>
+
+  <rect x="272" y="288" width="112" height="56" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="284" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">spliced</text>
+  <text x="284" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">已可回放</text>
+
+  <rect x="424" y="288" width="112" height="56" rx="4" fill="#ffffff" stroke="#7a5aa8" stroke-dasharray="4 3"/>
+  <text x="436" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">不唤醒</text>
+  <text x="436" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#7a5aa8">wakeDriver 未调用</text>
+
+  <rect x="590" y="288" width="140" height="56" rx="4" fill="#ffffff" stroke="#2f6f5e" stroke-dasharray="4 3"/>
+  <text x="602" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">claim</text>
+  <text x="602" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">要等下一次唤醒</text>
+
+  <rect x="770" y="288" width="140" height="56" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="782" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6">user/message</text>
+  <text x="782" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">可能晚很多</text>
+
+  <g stroke="#8a93a6" stroke-width="1.2" fill="none">
+    <path d="M 232 316 H 272" marker-end="url(#f02-d3-a)"/>
+    <path d="M 384 316 H 424" marker-end="url(#f02-d3-a)"/>
+    <path d="M 536 316 H 590" stroke-dasharray="4 3" marker-end="url(#f02-d3-a)"/>
+    <path d="M 730 316 H 770" stroke-dasharray="4 3" marker-end="url(#f02-d3-a)"/>
+  </g>
+
+  <!-- idle comparison -->
+  <rect x="40" y="404" width="424" height="92" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="56" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#2f6f5e">IDLE 时投递 STEER</text>
+  <text x="56" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">wakeDriver 立即 setPhase(running)，消息在同一次</text>
+  <text x="56" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">同步调用里被 claim，成为这一步的批次。</text>
+  <text x="56" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">它就是「用户现在补一句」的正常路径。</text>
+
+  <rect x="488" y="404" width="432" height="92" rx="6" fill="#ffffff" stroke="#7a5aa8"/>
+  <text x="504" y="426" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#7a5aa8">IDLE 时投递 INJECT</text>
+  <text x="504" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">只有一条 spliced，没有 driver，队列原地等待；</text>
+  <text x="504" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">下一次 followup / steer 才顺带把它带进请求。</text>
+  <text x="504" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">需要「一定被看见」就别用它。</text>
+
+  <!-- boundary on top -->
+  <path d="M 565 128 V 396" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4" fill="none"/>
+  <text x="571" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">下一个 pre-step 边界：claim() 在这里发生</text>
+
+  <text x="48" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">两者都可能错过：pre-step 已经 claim 的批次不会被后来者修改，新消息只能等下一个边界。</text>
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">唯一能影响当前请求的做法，是在 agent/pre-step 里改写 messages 并返回新决策。</text>
+</svg>

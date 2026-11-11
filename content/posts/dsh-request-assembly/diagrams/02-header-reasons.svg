@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f02-d02-title f02-d02-desc">
+  <title id="f02-d02-title">request/header 的四种 reason 与重建规则</title>
+  <desc id="f02-d02-desc">时间轴上依次出现 initial、series、change、series、resume、change 六条 header；下方说明重建时只取最新一条快照，并列出四种 reason 的写入条件。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".14em" fill="#bf4520">REQUEST HEADER / 07</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">信封的四种 reason，一条重建规则</text>
+
+  <!-- timeline -->
+  <line x1="70" y1="190" x2="900" y2="190" stroke="#2d3142" stroke-width="1.2"/>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142" text-anchor="middle">
+    <circle cx="120" cy="190" r="5" fill="#ffffff" stroke="#bf4520" stroke-width="1.6"/>
+    <circle cx="270" cy="190" r="5" fill="#ffffff" stroke="#bf4520" stroke-width="1.6"/>
+    <circle cx="420" cy="190" r="5" fill="#2d3142" stroke="#2d3142" stroke-width="1.6"/>
+    <circle cx="570" cy="190" r="5" fill="#ffffff" stroke="#bf4520" stroke-width="1.6"/>
+    <circle cx="720" cy="190" r="5" fill="#ffffff" stroke="#2d3142" stroke-width="1.6"/>
+    <circle cx="860" cy="190" r="5" fill="#2d3142" stroke="#2d3142" stroke-width="1.6"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" text-anchor="middle">
+    <text x="120" y="174">initial</text>
+    <text x="270" y="174">series</text>
+    <text x="420" y="174">change</text>
+    <text x="570" y="174">series</text>
+    <text x="720" y="174">resume</text>
+    <text x="860" y="174">change</text>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75" text-anchor="middle">
+    <text x="120" y="212">loop 实例首个请求</text>
+    <text x="270" y="212">开新序列，信封不变</text>
+    <text x="420" y="212">模型/采样/工具变化</text>
+    <text x="570" y="212">surface 替换后新序列</text>
+    <text x="720" y="212">恢复后的首个请求</text>
+    <text x="860" y="212">再次变化</text>
+  </g>
+
+  <!-- snapshots -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">
+    <rect x="86" y="238" width="68" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="98" y="255">model A</text>
+    <rect x="236" y="238" width="68" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="248" y="255">model A</text>
+    <rect x="386" y="238" width="68" height="26" rx="4" fill="#ffffff" stroke="#2d3142"/>
+    <text x="398" y="255">model B</text>
+    <rect x="536" y="238" width="68" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="548" y="255">model B</text>
+    <rect x="686" y="238" width="68" height="26" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="698" y="255">model B</text>
+    <rect x="826" y="238" width="68" height="26" rx="4" fill="#ffffff" stroke="#2d3142"/>
+    <text x="838" y="255">model C</text>
+  </g>
+
+  <!-- fold rule -->
+  <rect x="70" y="300" width="500" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="88" y="324" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">FOLD RULE</text>
+  <text x="88" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10.5" fill="#2d3142">重建只读最新一条 header</text>
+  <text x="88" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">foldRequestHeader(events) 取最后一条快照，不做差分重放。</text>
+  <text x="88" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">因此每次变化都写完整 config + tools + adapterDefaults，</text>
+  <text x="88" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">而不是只写变化字段。</text>
+  <text x="88" y="434" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a5a44">冗余是特性：读一条即可重建，无需理解历史。</text>
+
+  <!-- canonical form -->
+  <rect x="600" y="300" width="320" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="618" y="324" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">CANONICAL FORM</text>
+  <text x="618" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10.5" fill="#2d3142">非规范 header 一律拒绝</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+    <text x="618" y="370">system: never</text>
+    <text x="618" y="390">tools: []  → 省略</text>
+    <text x="618" y="410">adapterDefaults: {} → 省略</text>
+  </g>
+  <text x="618" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a5a44">seed / append / read 三处都拒绝，不静默修正。</text>
+
+  <!-- bottom rule -->
+  <rect x="70" y="486" width="850" height="64" rx="6" fill="#fbf1ec" stroke="#e8c9b8"/>
+  <text x="88" y="512" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">WHY NOT DELTA</text>
+  <text x="88" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9.5" fill="#2d3142">v0 的 header-delta 与 reason:fallback 已被移除：差分要求读取方理解全部历史，而全量快照只要求它读最后一条。</text>
+</svg>

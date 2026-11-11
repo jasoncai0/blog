@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d3-title f03-d3-desc">
+  <title id="f03-d3-title">打断与释放的三条路径</title>
+  <desc id="f03-d3-desc">第一行是用户按停，authority 与 cause 都是 user；第二行是祖先打断，authority 是 ancestor，落地为 parent，且孙继续跑；第三行是释放，cancel 后等静默，整棵子树收掉。</desc>
+  <defs>
+    <marker id="f03-arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f03-arwr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f03-arwg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#bf4520" text-anchor="start" letter-spacing="0.16em">INTERRUPT PATHS</text>
+<text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="start">两条打断路径，一条回收路径</text>
+<text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="400" fill="#5a6580" text-anchor="start">authority 决定 cause；cause 决定日志里怎么记；没有一条会级联到孙</text>
+<circle cx="62" cy="144" r="7" fill="#bf4520"/>
+<text x="62" y="146.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">1</text>
+<text x="84" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">用户按停</text>
+<circle cx="62" cy="284" r="7" fill="#bf4520"/>
+<text x="62" y="286.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">2</text>
+<text x="84" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">祖先打断</text>
+<circle cx="62" cy="454" r="7" fill="#bf4520"/>
+<text x="62" y="456.7" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="600" fill="#ffffff" text-anchor="middle">3</text>
+<text x="84" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">释放路径</text>
+<rect x="60" y="160" width="150" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="74" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">用户</text>
+<text x="74" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">按停这个方向</text>
+<rect x="280" y="160" width="180" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="294" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">interrupt(kind:user)</text>
+<text x="294" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">authority = user</text>
+<rect x="530" y="160" width="180" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="544" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">manager.interrupt</text>
+<text x="544" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">校验 → 翻译 cause</text>
+<rect x="780" y="160" width="120" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="794" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">子 A</text>
+<text x="794" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">cause: user</text>
+<line x1="210" y1="190" x2="280" y2="190" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<line x1="460" y1="190" x2="530" y2="190" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<line x1="710" y1="190" x2="780" y2="190" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<text x="240" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">authority</text>
+<text x="490" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" font-weight="400" fill="#8a93a6" text-anchor="start">不级联</text>
+<rect x="60" y="300" width="150" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="74" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">祖先 agent</text>
+<text x="74" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">正在跑的父</text>
+<rect x="280" y="300" width="180" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="294" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">interrupt_agent</text>
+<text x="294" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">{kind:ancestor}</text>
+<rect x="530" y="300" width="180" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="544" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">血缘校验</text>
+<text x="544" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">同根 + 是祖先</text>
+<rect x="780" y="300" width="120" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="794" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">子 B</text>
+<text x="794" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">cause: parent</text>
+<line x1="210" y1="330" x2="280" y2="330" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<line x1="460" y1="330" x2="530" y2="330" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<line x1="710" y1="330" x2="780" y2="330" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<line x1="840" y1="360" x2="840" y2="392" stroke="#2f6f5e" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<rect x="780" y="394" width="120" height="46" rx="6" fill="#ffffff" stroke="#2f6f5e" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="792" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">孙</text>
+<text x="792" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#2f6f5e" text-anchor="start">继续跑</text>
+<text x="748" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#2f6f5e" text-anchor="end">不级联</text>
+<rect x="60" y="470" width="150" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="74" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">dispose / drain</text>
+<text x="74" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">资源回收</text>
+<rect x="280" y="470" width="180" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="294" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">cancel(kind:parent)</text>
+<text x="294" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">先 abort 再等 idle</text>
+<rect x="530" y="470" width="180" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="544" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">逐个释放</text>
+<text x="544" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">只作用于本实例</text>
+<rect x="780" y="470" width="120" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="794" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142" text-anchor="start">整棵子树</text>
+<text x="794" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" font-weight="400" fill="#4f5d75" text-anchor="start">不再可续</text>
+<line x1="210" y1="498" x2="280" y2="498" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<line x1="460" y1="498" x2="530" y2="498" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<line x1="710" y1="498" x2="780" y2="498" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arw)"/>
+<text x="48" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">interrupt 是信号，返回即结束；dispose 是回收，会等 agent 静默之后才继续。</text>
+<text x="48" y="576" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">两条 interrupt 路径都保留未 claim 的收件箱：停的是这次执行，不是这份工作。</text>
+</svg>

@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d17d-title f04-d17d-desc">
+  <title id="f04-d17d-title">设计侧五层与实现侧五层的映射</title>
+  <desc id="f04-d17d-desc">左侧是设计文章里的 M0 工作记忆、M1 情景记忆、M2 语义记忆、M3 程序记忆、M4 资产五层，右侧是 DSH 实现里的压缩工作集、会话日志、检索、技能系统与工具资产。注解说明每一层落地时被降级、拆分或移出的部分。</desc>
+  <defs>
+    <marker id="f04-m17d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-m17dd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c9c4bc"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">MEMORY / DESIGN → IMPLEMENTATION</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">设计侧的五层，落到实现侧变成了什么</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一套名词，落地时至少要回答三个问题：存在哪、谁写入、失效后还能不能重建</text>
+
+  <text x="40" y="106" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">DESIGN SIDE</text>
+  <text x="560" y="106" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">IMPLEMENTATION SIDE</text>
+
+  <!-- M0 -->
+  <rect x="40" y="118" width="330" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">M0</text>
+  <text x="84" y="141" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">工作记忆</text>
+  <text x="56" y="159" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">焦点子图 + 最近若干轮，每次调用重建</text>
+  <text x="56" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">生命周期：一次调用；不落库</text>
+
+  <rect x="560" y="118" width="360" height="72" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="576" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">压缩工作集 + runtime-context</text>
+  <text x="576" y="159" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">最近保留区 + checkpoint + 每步投影的快照</text>
+  <text x="576" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">不是内存对象，是 surface 上的一段</text>
+
+  <line x1="376" y1="154" x2="554" y2="154" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-m17d)"/>
+  <text x="392" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每轮重建 → 每请求重投影</text>
+
+  <!-- M1 -->
+  <rect x="40" y="204" width="330" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">M1</text>
+  <text x="84" y="227" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">情景记忆</text>
+  <text x="56" y="245" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">轮次 / 工具调用 / 事件，只追加</text>
+  <text x="56" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">生命周期：永久；唯一事实来源</text>
+
+  <rect x="560" y="204" width="360" height="72" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="576" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">会话日志</text>
+  <text x="576" y="245" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">仅追加 SessionEvent；surface 由 fold 得出</text>
+  <text x="576" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">模型历史不是存出来的，是 deriveMessages() 算的</text>
+
+  <line x1="376" y1="240" x2="554" y2="240" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-m17d)"/>
+  <text x="392" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">只追加 → 只追加，且可重放</text>
+
+  <!-- M2 -->
+  <rect x="40" y="290" width="330" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">M2</text>
+  <text x="84" y="313" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">语义记忆</text>
+  <text x="56" y="331" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">带证据的命题，按需召回</text>
+  <text x="56" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">生命周期：数月；关系库</text>
+
+  <rect x="560" y="290" width="360" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="576" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">检索（不自动召回）</text>
+  <text x="576" y="331" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">session_search / event_search 等显式工具</text>
+  <text x="576" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">结果必须作为 tool/result 回到日志，才能进请求</text>
+
+  <line x1="376" y1="326" x2="554" y2="326" stroke="#c9c4bc" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f04-m17dd)"/>
+  <text x="392" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">自动召回 → 显式调用</text>
+
+  <!-- M3 -->
+  <rect x="40" y="376" width="330" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">M3</text>
+  <text x="84" y="399" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">程序记忆</text>
+  <text x="56" y="417" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">技能 + 触发条件；版本化技能库</text>
+  <text x="56" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">生命周期：有版本；按触发条件加载</text>
+
+  <rect x="560" y="376" width="360" height="72" rx="6" fill="#ffffff" stroke="#7a5aa8"/>
+  <text x="576" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">技能系统</text>
+  <text x="576" y="417" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">目录常驻 name+description；skill 工具加载正文</text>
+  <text x="576" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">目录 digest 变化才重新发布，不重发全文</text>
+
+  <line x1="376" y1="412" x2="554" y2="412" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-m17d)"/>
+  <text x="392" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">技能库 → 目录 + 按需加载</text>
+
+  <!-- M4 -->
+  <rect x="40" y="462" width="330" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="484" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">M4</text>
+  <text x="84" y="485" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">资产记忆</text>
+  <text x="56" y="503" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">Brand Kit、品牌 token、状态图</text>
+  <text x="56" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">生命周期：资产版本；图数据库</text>
+
+  <rect x="560" y="462" width="360" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="576" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">工具 + 交付物 + 资源基座</text>
+  <text x="576" y="503" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">文件由工具读写，交付物走独立包</text>
+  <text x="576" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">不进入对话记忆；只通过路径与结果被引用</text>
+
+  <line x1="376" y1="498" x2="554" y2="498" stroke="#c9c4bc" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f04-m17dd)"/>
+  <text x="392" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">资产库 → 移出记忆平面</text>
+
+  <text x="40" y="562" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">实线 = 同一件事的两种说法；虚线 = 落地时被降级或拆走的部分。设计侧的「语义记忆」在实现里退化成了「显式检索」。</text>
+  <text x="40" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">这不是实现偷懒：自动召回要回答「召回错了谁负责」，而显式调用把责任交回给模型和工具结果。</text>
+</svg>
