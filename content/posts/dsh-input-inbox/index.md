@@ -217,7 +217,7 @@ type Phase =
 
 消息入队 → 旧 driver 还活着，可能正在某个 step 的尾部 → 它回到循环顶部，`target` 变成 `next-step` → `preStep()` 先 claim，把这条消息领走 → `signal.throwIfAborted()` 抛出 → `turn/end` 记为 aborted。消息被 claim 了，但永远不会成为 `user/message`。对用户来说，这就是「我发了，但它没了」。
 
-所以 `send()` 把这类唤醒输入改道到 `next-turn`，并且把 `wakingAfterAbort` 传给 `wakeDriver`。后者在活动未收敛时把 `wakeRequested` 闩上，等收敛时再 replay（下一节）。消息留在 `next-turn` 里，等下一个真正活着的 driver 来领。
+所以 `send()` 把这类唤醒输入改道到 `next-turn`，并且把 `wakingAfterAbort` 传给 `wakeDriver`。后者在活动未收敛时把 `wakeRequested` 闩上，等收敛时再 replay（第 7 节）。消息留在 `next-turn` 里，等下一个真正活着的 driver 来领。
 
 那为什么必须在插入前捕获，而不能在插入后、唤醒前再读一次？注释给的答案是「splice 观察者里的重入 cancel」。`inbox.splice()` 会同步发 `agent/inbox/inserted`，监听器是任意插件代码，完全可能在里面调用 `agent.cancel()`。如果在插入之后才读 phase，读到的可能是「刚刚被这个观察者 abort 的活动」，于是同一条消息被分类成两种目标：先按 `next-step` 落库，再按 `next-turn` 唤醒。日志里留下一条落在错误队列的记录，而唤醒闩锁却按另一条路径设置——两个事实对不上。
 
@@ -327,7 +327,72 @@ return true
 
 **自己搭时**：不要在「活动未收敛」时启动第二个执行者。用一个闩锁记录意图，在唯一的收尾点兑现，并在兑现前重新检查前提。这套模式比锁简单，也比「等一个 promise 再重试」可靠——后者会在收尾点之后留下竞态窗口。
 
-## 8. 为什么 `AgentStatus` 只有两个值
+## 8. 唤醒的实现：一个句柄、一个循环、三个入口
+
+第 7 节回答的是「什么条件下允许启动」。这一节看启动本身：`wakeDriver()` 的 idle 分支只有四条语句，agent 的活动生命周期却都由它们定义。
+
+### 启动：四条语句的顺序
+
+```ts
+const driver = Promise.withResolvers<void>()
+this.activityDone = driver.promise
+this.setPhase({ kind: 'running', abort: new AbortController(), turn: this.phase.lastTurn, step: 0, wakeRequested: false })
+this.loopCtx.agents.withInitiator(this, () => this.kick()).then(driver.resolve, driver.reject)
+```
+
+顺序不是风格问题。
+
+**先造句柄，再启动。** `kick()` 一旦跑起来，就可能在任意一个 await 后结束；完成信号必须提前存在。`Promise.withResolvers()` 先把 resolve/reject 拿到手，再让执行体去跑，这样「结束」永远不会早于「登记」。
+
+**句柄先换，status 后发。** `activityDone` 替换之后才 `setPhase()`；后者会同步发 `agent/status`，监听器可能在 `wakeDriver()` 还没返回时就跑起来。句柄写在前面，监听器看到的 status 与句柄指向同一次活动；反过来，status 已经宣布 running，`whenIdle()` 进来却先拿到上一轮已经 resolve 的句柄——do-while 会在下一拍纠正，但 status 与 `whenIdle()` 的等待对象在同一个同步段里先对不上一次。
+
+**判断与迁移之间没有 await。** 从 `phase.kind !== 'idle'` 到 `setPhase(running)` 是同一段同步代码，没有回调，也没有挂起点。两个先后到达的 `followup()` 不可能各起一个 driver：第一个把 phase 改成 running，第二个看到 running 就返回，把队列留给第一个。单 driver 的唯一性靠这段原子性，不靠锁。
+
+**`withInitiator` 同步调用 `kick()`，并接上完成信号。** `withInitiator()` 把这次执行登记到 agent 的 initiator 作用域（`AsyncLocalStorage`），原样返回 `kick()` 的 promise。`kick()` 的同步段因此一路跑到第一个 await——通常是 `tools.resolve()`——`turn/start` 与 `claim` 已经落盘；第 4 节说的「方法返回与轮次开始之间没有间隔」就是这一行的结果。末尾的 `.then(driver.resolve, driver.reject)` 把 driver 的结束接到句柄上，而 `wakeDriver()` 自己不 await、也不返回 promise。
+
+### 循环与句柄
+
+```ts
+private async kick(): Promise<void> {
+  try {
+    while (await this.turn()) {}
+  } catch (_error) {
+    // Reported failures and cancellation are contained at the driver boundary.
+  } finally {
+    if (this.phase.kind === 'running') {
+      const { turn, wakeRequested } = this.phase
+      this.setPhase({ kind: 'idle', lastTurn: turn })
+      if (wakeRequested && this.inbox.hasPending) this.wakeDriver()
+    }
+  }
+}
+```
+
+**启动的是 driver，不是 turn。** `turn()` 的返回值是「还要不要下一轮」：`turn/end` 之后如果 `inbox.hasPending`，它换 controller、清 `wakeRequested`、`step` 归零，返回 `true`；否则返回 `false`，while 退出。一次唤醒可以连续跑完 next-turn 排出的多轮，中途不再经过 `wakeDriver()`。
+
+**异常在 driver 边界收住。** `catch` 吞掉 `turn()` 抛出的所有异常：可上报的在更内层已经由 `throwError()` 发过 `agent/error`，取消则只留下 `turn/end` 的 `aborted` 原因。因此 `driver.reject` 是兜底——只有 `finally` 自身再抛错（比如事件监听器）才会让句柄 reject——不是常规错误通道。
+
+**`activityDone` 是「当前活动」的句柄。** 它初始是 `Promise.resolve()`：从未被唤醒的 agent，`whenIdle()` 立即返回。每次 `wakeDriver()` 启动 driver、每次 `runMaintenance()` 开始维护，都会替换它。它的 resolve 发生在 `kick()` 的 finally 之后；如果 finally 里兑现闩锁又起了一个 driver，旧句柄 resolve 时 `activityDone` 已经指向新活动——`whenIdle()` 的 do-while 引用比较就是为这个窗口准备的（见「`whenIdle()` 为什么要 do-while」一节）。句柄不携带结果：成功没有返回值，常规失败已经上报；真正会让 `whenIdle()` 抛错的是上面那条兜底 reject。
+
+### 入口：三处调用，三个反例
+
+| 调用点 | 条件 | 做什么 |
+| --- | --- | --- |
+| `send()`（`agent.ts:176`） | `wakeup === true` | idle 时启动；否则按第 7 节闩锁，或交给活 driver |
+| `kick()` 的 finally（`agent.ts:278`） | `phase` 仍是 running，且 `wakeRequested && hasPending` | driver 收尾后兑现闩锁 |
+| `runMaintenance()` 的 finally（`agent.ts:216`） | phase 已设回 idle，取消原因不是 `disposed`，且 `wakeRequested && hasPending` | 维护收尾后兑现闩锁 |
+
+三个反例同样说明了边界：
+
+- `inject()` 不调用 `wakeDriver()`，只写队列；idle 时它就一直等。
+- `cancel()` 清队列、清闩锁（`keepInbox` 时跳过），然后 abort；它不启动任何东西，收敛由被 abort 的 driver 在 finally 里完成。
+- disposal 走 `cancel({ kind: 'disposed' })`，再 `await whenIdle()`（`agent-loop/src/index.ts:517`）。`wakeDriver()` 对 disposed 原因不闩锁，注释写的是「disposal never latches, so teardown waits on no model turn」——拆掉一个 agent 时，不能再替它开一轮。
+
+**唤醒不做什么。** 它不扫描队列，不知道队列里有哪些消息，也不挑选；调用方在兑现闩锁前查一次 `hasPending`，真正决定「要不要多走一个 step 或 turn」的是循环里的 claim 与 `turn()` 的尾部。它不等待、不重试：启动即返回，没有「唤醒失败后再试」的分支，可恢复性来自闩锁的下一次兑现。它也不创建第二个 driver：`wakeDriver()` 只在 idle 时启动，其他情况要么交给活 driver，要么闩锁。最后，它不保证消息被消费——这是第 3 节就划清的承诺边界：唤醒打开的是边界，不是消息的入场券。
+
+**自己搭时**：把「启动」与「执行」拆成两个函数。启动函数只做所有权转移——判断、换句柄、迁移状态、同步拉起执行体；执行体是一个独立的 async 循环，自己决定何时结束，并在唯一的收尾点兑现待办。别让启动函数 await 执行体，也别让执行体在结束时递归调用启动函数而不经过状态检查。
+
+## 9. 为什么 `AgentStatus` 只有两个值
 
 公开的 status 只有 `idle` 与 `running`（`agent.ts:156`）：
 
@@ -349,7 +414,7 @@ disposal 不是第三个状态。`dispose()` 做的是把 agent 从注册表移�
 
 **自己搭时**：状态机只放「会被反复进出」的状态。一次性、不可逆的生命周期终点用独立事件表达，别塞进 status 枚举；否则每个 switch 都要处理一个永远不会再变的 case。
 
-## 9. `whenIdle()` 为什么要 do-while 比较 `activityDone`
+## 10. `whenIdle()` 为什么要 do-while 比较 `activityDone`
 
 ```ts
 async whenIdle(): Promise<void> {
@@ -360,7 +425,7 @@ async whenIdle(): Promise<void> {
 }
 ```
 
-`activityDone` 是一个会不断被替换的 promise：每次 `wakeDriver()` 启动 driver、每次 `runMaintenance()` 开始任务，都会换成新的。
+第 8 节说过，`activityDone` 会随着每次 driver 或维护被替换；`whenIdle()` 要等的正是「当前活动的句柄」，所以它不能只 await 一次。
 
 只 await 一次会漏掉什么？设想 driver A 正在收尾。它的 `kick()` finally 先 `setPhase(idle)`，发现闩锁为真且有 pending，于是调用 `wakeDriver()` 启动 driver B，`activityDone` 被替换成 B 的 promise；然后 A 的 promise resolve。此时 `await` 返回，但 B 正在跑。单次 await 会让 `whenIdle()` 在 B 刚开始时返回，调用方以为「已经静默」，实际上模型正在生成。
 
@@ -378,7 +443,7 @@ do-while 的比较是引用相等：如果 await 返回后 `activityDone` 已经
 
 **自己搭时**：实现 `whenIdle()` 时，等待的对象必须是「当前活动的句柄」，而不是「空闲这个布尔值」。句柄会被替换，布尔值会骗你。
 
-## 10. 设计取舍
+## 11. 设计取舍
 
 | 取舍 | 选了什么 | 放弃了什么 | 什么时候该反悔 |
 | --- | --- | --- | --- |
@@ -389,7 +454,7 @@ do-while 的比较是引用相等：如果 await 返回后 `activityDone` 已经
 | status 取值 | 两值，maintenance 归 idle | 一个能区分维护的公开状态 | 需要给用户展示「正在整理上下文」时，应加独立事件而不是扩枚举 |
 | 唤醒收敛 | 闩锁 + 唯一收尾点兑现 | 立即重试的简单写法 | 收尾点变多时，闩锁会散落；此时应把兑现收敛到一个 `converge()` |
 
-## 11. 踩坑点
+## 12. 踩坑点
 
 **1. 以为 `followup()` 返回 void 就等于「只是排了个队」。** 现象：调用返回后读 `agent.status` 已经是 `running`，日志里已有 `turn/start` 与 `claimed`，但模型请求还没发出去。原因：`wakeDriver()` 同步调用 `kick()`，`kick()` 同步跑到 `turn/start` 与 `claim`，再在 `tools.resolve` 处挂起。对策：别把「方法返回」当「还没开始」的信号；要等处理完就 `whenIdle()` 或跟踪事件流，不要读一次 status 就下结论。
 
@@ -405,22 +470,27 @@ do-while 的比较是引用相等：如果 await 返回后 `activityDone` 已经
 
 **7. 在 maintenance 里发 `followup()`，然后等它执行。** 现象：消息入队了，但直到维护任务结束才开轮。原因：`wakeDriver` 在 maintenance 期间只闩锁，兑现点在 `runMaintenance` 的 finally。对策：需要维护期间就处理输入，应该把工作拆成 turn 内的工具调用，而不是 maintenance。
 
-## 12. 源码索引
+## 13. 源码索引
 
 - `packages/core/agent-loop/src/agent.ts:53` — `Phase` 三态；`aborted` 是 controller 的状态，不是 phase。
+- `packages/core/agent-loop/src/agent.ts:116` — `activityDone` 的初始句柄；每次启动 driver 或维护都会替换。
 - `packages/core/agent-loop/src/agent.ts:156` — status 只有 idle/running，maintenance 折叠进 idle。
 - `packages/core/agent-loop/src/agent.ts:161` — `setPhase` 只在状态真的变化时发 `agent/status`。
 - `packages/core/agent-loop/src/agent.ts:170` — `send()` 的四步顺序，含 `wakingAfterAbort` 的插入前捕获。
 - `packages/core/agent-loop/src/agent.ts:179` — 三种投递只是两个参数的组合。
 - `packages/core/agent-loop/src/agent.ts:191` — `cancel()` 清队列、清闩锁、abort 的顺序。
 - `packages/core/agent-loop/src/agent.ts:230` — `wakeDriver` 的 idle/maintenance/aborted 三分支与 disposed 例外。
+- `packages/core/agent-loop/src/agent.ts:241` — idle 分支的四条启动语句：句柄、phase、同步 `kick()`。
+- `packages/core/agent-loop/src/agent.ts:250` — `withInitiator` 同步启动 `kick()`，并把完成信号接到句柄。
 - `packages/core/agent-loop/src/agent.ts:253` — `whenIdle()` 的 do-while 引用比较。
-- `packages/core/agent-loop/src/agent.ts:268` — `kick()` finally 里的闩锁兑现。
+- `packages/core/agent-loop/src/agent.ts:268` — `kick()` 的 driver 循环、异常收束与 finally 里的闩锁兑现。
 - `packages/core/agent-loop/src/agent.ts:283` — `preStep()` 先 claim 再走 waterfall。
 - `packages/core/agent-loop/src/agent.ts:327` — `turn()` 的空批次分支与换 controller。
 - `packages/core/agent-loop/src/inbox.ts:97` — `clear()` 先 next-step 后 next-turn。
 - `packages/core/agent-loop/src/inbox.ts:108` — `claim()` 纯删除 splice、顺序、逐条 claimed。
 - `packages/core/agent-loop/src/inbox.ts:186` — `mutate()` 的坐标截断、跨列表查重、先提交后通知。
+- `packages/core/agent-loop/src/index.ts:517` — disposal 先 `cancel({ kind: 'disposed' })`，再 `await whenIdle()`。
+- `packages/core/agent/src/index.ts:346` — `withInitiator` 的同步语义与 initiator 归属。
 - `packages/core/agent/src/types.ts` — `InboxTarget`、`InboxState`、`agent/inbox/spliced` 的 wire 形态。
 - `docs/subsystems/core.zh.md:150` — running 覆盖整个 driver 排空区间；dispose 不是 status。
 - `docs/subsystems/core.zh.md:283` — 纯删除 splice 与 claimed 的语义，以及 `discarded` 的适用面。
