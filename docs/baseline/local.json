@@ -215,6 +215,15 @@
   "pre": 0,
   "table": 8
  },
+ "plan-carriers": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 10,
+  "h3": 10,
+  "hr": 0,
+  "pre": 6,
+  "table": 3
+ },
  "vector-engine-milvus-es-pg": {
   "figure": 4,
   "h1": 1,
