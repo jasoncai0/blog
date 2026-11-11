@@ -156,6 +156,16 @@ inject(input: UserMessage): void   { this.send(input, 'next-step', false) }
 
 {{< fig "diagrams/02-steer-vs-inject.svg" "时序对比：steer 与 inject 在同一时间轴上的分叉。两者都写入 next-step 并在下一个 pre-step 被 claim；差别在写入瞬间——steer 会调用 wakeDriver，所以在 idle 时立刻打开 turn 边界，而 inject 只留下一条 spliced 事件，队列原地等待。图中同时标出「错过已 claim 批次」的位置。" >}}
 
+### 一次运行里的三种到达
+
+三条消息可以同时落进一个正在跑的轮次。设 turn T 的 step 1 正在等模型，调用方先 `inject` 一条 runtime context，再 `steer` 一句补充，最后 `followup` 一个新问题：前两条按到达顺序追加进 `next-step`，第三条进 `next-turn`。此时没有 driver 需要启动——`steer` 与 `followup` 的 `wakeDriver` 都直接返回，`inject` 根本不调它。
+
+step 1 结束时，只要 `next-step` 非空，轮次就不收尾（`turnEnds && inbox.nextStep.length === 0` 才 break）：driver 原地进 step 2，`preStep()` 把 inject 与 steer 整批 claim，两条一起进入同一次请求的 `user/message`。step 2 结束、`turnEnds` 为真而 `next-step` 已空，才写 `turn/end`；又因为 `next-turn` 里还有 followup，同一个 driver 换一个 controller 接着跑，`turn/start(T+1)` 之后把 followup 领成新轮的唯一一条普通消息。两次 claim 之间隔着一次真实的模型调用，中间没有调度器——只是循环回到 `preStep()`。
+
+{{< fig "diagrams/03-three-deliveries-sequence.svg" "时序：三条消息落进同一个正在运行的 turn。inject 写入 next-step 后不唤醒；steer 与 followup 的 wakeDriver 因为 driver 还活着而直接返回。step 1 结束、next-step 非空，轮次多走一个 step，inject 与 steer 被整批 claim 进同一次请求；step 2 结束且不再调工具、next-step 为空，才写 turn/end，随后同一 driver 开启 turn T+1，followup 在那里被领走。两种等待的分界就是 step 边界与 turn 边界。" >}}
+
+两种等待的分界就在边界：`next-step` 等 step 边界，`next-turn` 等 turn 边界。这也解释了一个容易看反的地方——运行中的 inject 不需要 steer 来「拖」它进下一次请求，只要 `next-step` 非空，当前轮次就会为它多走一个 step。inject 真正会输的场景是到达时轮次已经 idle：没有唤醒，它停在 pending，直到某条 followup 或 steer 打开新的 turn。
+
 ## 4. 一次 followup 从 send 到 turn/start
 
 把一次 `followup` 拆成时序，会撞见一件反直觉的事：这个返回 `void` 的同步方法，在返回之前就已经把轮次打开、把消息认领完了。「方法返回」与「轮次开始」之间没有间隔。
@@ -171,7 +181,7 @@ inject(input: UserMessage): void   { this.send(input, 'next-step', false) }
 9. 到这里才遇到第一个真正的挂起点：`await tools.resolve(...)`。之后是 `systemPrompt.assemble()` 与 `agent/pre-step` waterfall，再往后才是 `step/start` 与请求组装。
 10. 返回发生在第 9 步的第一个 `await` 处：`kick()` 同步跑到 `tools.resolve` 才让出。调用方拿到 `void` 时，日志里已经有 `turn/start` 和 `claimed`，但 `agent/pre-step` 还没跑、请求还没组装。
 
-{{< fig "diagrams/03-followup-timeline.svg" "时序：一次 followup 从 send 到 step/start。前八步全部发生在方法返回之前——`kick()` 被同步调用并跑到第一个 await，所以 turn/start 与 claim 都已经落盘；第一个真正的挂起点是 `tools.resolve`。这也解释了为什么在 inserted 监听器里 cancel() 能影响本次唤醒。" >}}
+{{< fig "diagrams/04-followup-timeline.svg" "时序：一次 followup 从 send 到 step/start。前八步全部发生在方法返回之前——`kick()` 被同步调用并跑到第一个 await，所以 turn/start 与 claim 都已经落盘；第一个真正的挂起点是 `tools.resolve`。这也解释了为什么在 inserted 监听器里 cancel() 能影响本次唤醒。" >}}
 
 第 5 步里有个容易忽略的分支：`wakeDriver` 只有在 phase 是 idle 时才真的启动。如果此刻 driver 正在跑（比如上一轮还没收尾），它什么也不做——注释说 live driver 自己会领队列。这正是「排队」在实现上的样子：没有队列管理器，没有调度器，只有一个已经在跑的循环，和它下一次 claim 时自然会看到的数组。
 
@@ -313,7 +323,7 @@ return true
 
 一个 turn 结束时如果队列还有活，driver 不退出，而是换一个 controller、清掉闩锁、原地开下一轮。换 controller 是因为旧的已经 abort 或即将被丢弃，`wakeRequested` 是挂在旧 controller 上的判断；不换就会把上一轮的闩锁状态带进下一轮。
 
-{{< fig "diagrams/04-wake-convergence.svg" "状态机：wake 的收敛。idle 收到唤醒直接开 driver；maintenance 与「running 但已 abort」只能置 wakeRequested；disposed 的取消连闩锁都不置。闩锁在两个 finally 里兑现，兑现前还要再查一次 hasPending；turn 尾部换 controller 时清闩锁。" >}}
+{{< fig "diagrams/05-wake-convergence.svg" "状态机：wake 的收敛。idle 收到唤醒直接开 driver；maintenance 与「running 但已 abort」只能置 wakeRequested；disposed 的取消连闩锁都不置。闩锁在两个 finally 里兑现，兑现前还要再查一次 hasPending；turn 尾部换 controller 时清闩锁。" >}}
 
 **自己搭时**：不要在「活动未收敛」时启动第二个执行者。用一个闩锁记录意图，在唯一的收尾点兑现，并在兑现前重新检查前提。这套模式比锁简单，也比「等一个 promise 再重试」可靠——后者会在收尾点之后留下竞态窗口。
 

@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="840" viewBox="0 0 960 840" role="img" aria-labelledby="f03-seq-title f03-seq-desc">
+  <title id="f03-seq-title">三种投递在同一次运行中的时序：followup 独占下一轮，steer 与 inject 并入下一个 step</title>
+  <desc id="f03-seq-desc">四条生命线是调用方、agent 门面、inbox 与日志、driver。三条消息都在 turn T 的 step 1 运行期间到达：inject 写入 next-step，wakeup 为 false，不调用 wakeDriver；steer 写入 next-step，wakeDriver 因为 driver 还活着而直接返回；followup 写入 next-turn，唤醒同样直接返回。step 1 结束且模型没有再发工具调用，但 next-step 非空，轮次不收尾，driver 在 step 2 的 pre-step 里把 inject 与 steer 按插入顺序整批 claim，两条一起进入同一次请求。step 2 结束后 next-step 为空，turn/end 记 completed；因为 next-turn 还有 followup，同一个 driver 换 controller 续跑，turn/start(T+1) 后 claim 一条，followup 成为新轮唯一一条普通消息。</desc>
+  <defs>
+    <marker id="f03-seq-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-seq-a-inject" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7a5aa8"/>
+    </marker>
+    <marker id="f03-seq-a-steer" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f03-seq-a-followup" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">FOLLOWUP × STEER × INJECT</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">三种投递，两种等待</text>
+  <text x="48" y="88" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">三条消息落进 turn T 的 step 1：两条并入下一个 step，一条独占下一轮</text>
+
+  <!-- legend -->
+  <circle cx="596" cy="34" r="3" fill="#7a5aa8"/>
+  <text x="604" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">inject</text>
+  <circle cx="660" cy="34" r="3" fill="#bf4520"/>
+  <text x="668" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">steer</text>
+  <circle cx="726" cy="34" r="3" fill="#2f6f5e"/>
+  <text x="734" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">followup</text>
+
+  <!-- lifelines -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" text-anchor="middle">
+    <text x="110" y="114">CALLER</text>
+    <text x="320" y="114">AGENT</text>
+    <text x="540" y="114">INBOX + LOG</text>
+    <text x="740" y="114">DRIVER</text>
+  </g>
+  <g stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4">
+    <path d="M 110 126 V 800"/>
+    <path d="M 320 126 V 800"/>
+    <path d="M 540 126 V 800"/>
+    <path d="M 740 126 V 800"/>
+  </g>
+
+  <!-- 1 inject call -->
+  <path d="M 110 152 H 320" stroke="#7a5aa8" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a-inject)"/>
+  <text x="120" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#7a5aa8">inject(ctx)</text>
+
+  <!-- 2 splice next-step -->
+  <path d="M 320 184 H 540" stroke="#7a5aa8" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a-inject)"/>
+  <text x="330" y="178" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">splice('next-step', ∞, 0, [ctx])</text>
+
+  <!-- 3 wakeup false -->
+  <rect x="332" y="202" width="196" height="32" rx="4" fill="#ffffff" stroke="#7a5aa8"/>
+  <path d="M 320 218 H 332" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+  <text x="342" y="217" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">wakeup = false</text>
+  <text x="342" y="229" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不调用 wakeDriver</text>
+
+  <!-- 4 steer call -->
+  <path d="M 110 266 H 320" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a-steer)"/>
+  <text x="120" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">steer('补一句')</text>
+
+  <!-- 5 splice next-step -->
+  <path d="M 320 298 H 540" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a-steer)"/>
+  <text x="330" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">splice('next-step', ∞, 0, [steer])</text>
+
+  <!-- 6 wake no-op -->
+  <rect x="332" y="316" width="196" height="46" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <path d="M 320 339 H 332" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+  <text x="342" y="331" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">wakeDriver(false)</text>
+  <text x="342" y="343" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">running 且未 abort → return</text>
+  <text x="342" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">活 driver 自己会来领</text>
+
+  <!-- 7 followup call -->
+  <path d="M 110 390 H 320" stroke="#2f6f5e" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a-followup)"/>
+  <text x="120" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2f6f5e">followup('新问题')</text>
+
+  <!-- 8 splice next-turn -->
+  <path d="M 320 422 H 540" stroke="#2f6f5e" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a-followup)"/>
+  <text x="330" y="416" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">splice('next-turn', ∞, 0, [followup])</text>
+
+  <!-- 9 wake no-op -->
+  <rect x="332" y="440" width="196" height="34" rx="4" fill="#ffffff" stroke="#2f6f5e"/>
+  <path d="M 320 457 H 332" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+  <text x="342" y="454" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">wakeDriver(false) → return</text>
+  <text x="342" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">消息停在 next-turn</text>
+
+  <!-- step 1 boundary -->
+  <path d="M 96 498 H 928" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4" fill="none"/>
+  <text x="920" y="492" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">step 1 结束 · next-step 非空 → 继续 step 2</text>
+
+  <!-- 10 claim next-step -->
+  <path d="M 740 522 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a)"/>
+  <text x="730" y="516" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">claim('next-step')</text>
+
+  <!-- 11 claimed -->
+  <path d="M 540 552 H 740" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" fill="none" marker-end="url(#f03-seq-a)"/>
+  <text x="550" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">claimed ×2（ctx, steer 按插入顺序）</text>
+
+  <!-- 12 step/start user/message -->
+  <path d="M 740 584 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a)"/>
+  <text x="730" y="578" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">step/start(T,2) · user/message ×2</text>
+
+  <!-- step 2 boundary -->
+  <path d="M 96 620 H 928" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4" fill="none"/>
+  <text x="920" y="614" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">step 2 结束 · turnEnds 且 next-step 空 → break</text>
+
+  <!-- 13 turn/end -->
+  <path d="M 740 644 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a)"/>
+  <text x="730" y="638" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">turn/end(T, completed)</text>
+
+  <!-- 14 hasPending -->
+  <rect x="566" y="660" width="168" height="48" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <path d="M 740 684 H 734" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+  <text x="576" y="674" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">hasPending(next-turn)</text>
+  <text x="576" y="686" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">换 controller，清 wakeRequested</text>
+  <text x="576" y="698" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">step = 0，原地开下一轮</text>
+
+  <!-- 15 turn/start -->
+  <path d="M 740 720 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a)"/>
+  <text x="730" y="714" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">turn/start(T+1)</text>
+
+  <!-- 16 claim next-turn -->
+  <path d="M 740 750 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a)"/>
+  <text x="730" y="744" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">claim('next-turn') → claimed ×1</text>
+
+  <!-- 17 step/start -->
+  <path d="M 740 780 H 540" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f03-seq-a)"/>
+  <text x="730" y="774" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">step/start(T+1,1) · user/message</text>
+  <text x="730" y="794" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">独占这一轮的唯一普通消息</text>
+
+  <!-- step numbers -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">
+    <text x="62" y="149">1</text>
+    <text x="62" y="181">2</text>
+    <text x="62" y="221">3</text>
+    <text x="62" y="263">4</text>
+    <text x="62" y="295">5</text>
+    <text x="62" y="342">6</text>
+    <text x="62" y="387">7</text>
+    <text x="62" y="419">8</text>
+    <text x="62" y="460">9</text>
+    <text x="62" y="519">10</text>
+    <text x="62" y="549">11</text>
+    <text x="62" y="581">12</text>
+    <text x="62" y="641">13</text>
+    <text x="62" y="681">14</text>
+    <text x="62" y="717">15</text>
+    <text x="62" y="747">16</text>
+    <text x="62" y="777">17</text>
+  </g>
+
+  <text x="48" y="824" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">running 期间，steer 与 followup 的唤醒都不做事；队列与边界决定消息什么时候被看见。</text>
+</svg>
