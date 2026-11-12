@@ -39,7 +39,7 @@ body {
 }
 .main-col { min-width: 0; }
 .layout-narrow { grid-template-columns: minmax(0, 1fr); }
-@media (max-width: 1279px) {
+@media (max-width: 1439px) {
 /* 目录收起后正文列收窄回原来的行宽并真正居中：44px 的窄轨浮在左边距里，
    不占栅格宽度，所以正文中心 = 页面中心。 */
 .layout.is-rail-collapsed,
@@ -57,15 +57,15 @@ body {
 }
 
 /* 宽屏：正文列固定行宽并相对页面居中，左栏（日历/目录）落进左边距。
-   900–1279 仍用「左栏占一列」的省空间排法。 */
-@media (min-width: 1280px) {
-  .page { max-width: 1400px; }
+   1439 及以下用「左栏占一列」的排法：正文本来就是 848，不必为了居中把它压窄。 */
+@media (min-width: 1440px) {
+  .page { max-width: 1560px; }
   .layout {
-    --rail-w: 220px;
+    --rail-w: 200px;
     --rail-gap: 48px;
     grid-template-columns:
       minmax(0, 1fr)
-      minmax(0, min(720px, calc(100% - 2 * (var(--rail-w) + var(--rail-gap)))))
+      minmax(0, min(848px, calc(100% - 2 * (var(--rail-w) + var(--rail-gap)))))
       minmax(0, 1fr);
     column-gap: 0;
   }

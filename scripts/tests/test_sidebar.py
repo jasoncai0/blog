@@ -220,7 +220,7 @@ def test_expanded_rail_keeps_article_centered(page, base):
     center = page.evaluate("document.documentElement.clientWidth / 2")
     assert abs(main["x"] + main["width"] / 2 - center) < 10, "展开时正文也应居中"
     assert rail["x"] + rail["width"] <= main["x"] + 1, "目录不该压到正文"
-    assert abs(main["width"] - 720) <= 2, "宽屏正文行宽固定 720"
+    assert abs(main["width"] - 848) <= 2, "宽屏正文行宽 848（沿用原来的文档尺寸）"
 
 
 def test_collapse_keeps_article_in_place_on_wide(page, base):
