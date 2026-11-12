@@ -1,4 +1,9 @@
 {{ define "main" }}
+<div class="layout">
+<aside class="rail rail-home">
+{{ partial "rail-home.html" . }}
+</aside>
+<div class="main-col">
 {{- $pages := where site.RegularPages "Section" "posts" }}
 <header>
 <h1>{{ .Site.Title }}</h1>
@@ -6,18 +11,11 @@
 <p class="links"><a href="{{ .Site.Params.github }}">GitHub</a></p>
 </header>
 
-<nav class="tag-cloud" aria-label="标签">
-{{- range $key, $meta := hugo.Data.tags }}
-{{- $count := len (where $pages "Params.tags" "intersect" (slice $key)) }}
-{{- if $count }}
-<a class="tag-chip" href="{{ printf "/tags/%s.html" $key | relURL }}">{{ $meta.name }}<span class="count">{{ $count }}</span></a>
-{{- end }}
-{{- end }}
-</nav>
-
 <ul class="posts">
 {{- range $pages.ByDate.Reverse }}
 <li data-progress-post="{{ .File.ContentBaseName }}"><time>{{ .Date.Format "2006-01-02" }}</time><div class="entry"><a href="{{ .RelPermalink }}">{{ .Title }}</a><p class="summary">{{ .Params.summary }}</p><div class="post-foot">{{ partial "tag-chips.html" . }}<span class="read-mark"></span></div></div></li>
 {{- end }}
 </ul>
+</div>
+</div>
 {{ end }}

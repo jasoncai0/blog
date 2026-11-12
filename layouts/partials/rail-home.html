@@ -1,0 +1,12 @@
+{{- $pages := where site.RegularPages "Section" "posts" -}}
+<div class="rail-block" data-block="calendar"></div>
+<div class="rail-block" data-block="tags">
+<nav class="tag-cloud" aria-label="标签">
+{{- range $key, $meta := hugo.Data.tags }}
+{{- $count := len (where $pages "Params.tags" "intersect" (slice $key)) }}
+{{- if $count }}
+<a class="tag-chip" href="{{ printf "/tags/%s.html" $key | relURL }}">{{ $meta.name }}<span class="count">{{ $count }}</span></a>
+{{- end }}
+{{- end }}
+</nav>
+</div>
