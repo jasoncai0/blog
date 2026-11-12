@@ -40,17 +40,20 @@ async function send(op) {
   }
 }
 
+let queueSeq = 0;
+
 export async function flush() {
   if (flushing) return flushing;
-  const ops = readQueue();
-  if (!ops.length) return null;
+  if (!readQueue().length) return null;
   flushing = (async () => {
-    while (ops.length) {
-      const op = ops[0];
+    while (true) {
+      // 每次都重新读队列：发送期间可能有新操作入队，不能拿旧快照覆盖回去
+      const pending = readQueue();
+      if (!pending.length) break;
+      const op = pending[0];
       try {
         await send(op);
       } catch {
-        writeQueue(ops);
         clearTimeout(retryTimer);
         retryTimer = setTimeout(() => {
           backoff = Math.min(backoff * 2, 60000);
@@ -58,8 +61,12 @@ export async function flush() {
         }, backoff);
         return;
       }
-      ops.shift();
-      writeQueue(ops);
+      const rest = readQueue();
+      if (op.qid) writeQueue(rest.filter((item) => item.qid !== op.qid));
+      else {
+        rest.shift();
+        writeQueue(rest);
+      }
     }
     backoff = 4000;
     return null;
@@ -73,7 +80,7 @@ export async function flush() {
 
 export function enqueue(op) {
   const ops = readQueue();
-  ops.push({ ...op, at: Date.now() });
+  ops.push({ ...op, at: Date.now(), qid: `${Date.now()}-${++queueSeq}` });
   writeQueue(ops);
   if (navigator.onLine !== false) flush();
 }

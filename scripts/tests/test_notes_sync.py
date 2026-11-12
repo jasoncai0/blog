@@ -232,6 +232,29 @@ def test_offline_write_is_queued_and_flushed_later(page, base):
     wait_until(lambda: api(f"/notes/{SLUG}")["notes"], timeout=10)
 
 
+def test_all_local_notes_upload_from_any_page(context, base):
+    """换服务器前写在浏览器里的笔记，打开首页就该全部补传（不用逐篇打开）。"""
+    stamp = int(time.time() * 1000)
+    local = {
+        SLUG: [{"id": "legacy-ot-0001", "q": "收敛是必要条件", "pre": "", "post": "", "block": 4,
+                "t": stamp, "thread": [{"author": "我", "text": "旧批注 A", "t": stamp}]}],
+        "hello": [{"id": "legacy-hi-0001", "q": "博客", "pre": "", "post": "", "block": 1,
+                   "t": stamp, "thread": [{"author": "我", "text": "旧批注 B", "t": stamp}]}],
+        "opencode-rewind": [{"id": "legacy-rw-0001", "q": "回滚", "pre": "", "post": "", "block": 2,
+                             "t": stamp, "thread": [{"author": "我", "text": "旧批注 C", "t": stamp}]}],
+    }
+    context.add_init_script(
+        f"localStorage.setItem('jasoncai:notes:v1', {json.dumps(json.dumps(local))});"
+    )
+    page = context.new_page()
+    page.goto(base + "/")
+    wait_until(lambda: all(api(f"/notes/{slug}")["notes"] for slug in local), timeout=15)
+    got = {slug: [n["thread"][0]["text"] for n in api(f"/notes/{slug}")["notes"]] for slug in local}
+    assert got[SLUG] == ["旧批注 A"], got
+    assert got["hello"] == ["旧批注 B"], got
+    assert got["opencode-rewind"] == ["旧批注 C"], got
+
+
 def test_progress_arriving_after_load_still_resumes(page, base):
     """服务端响应晚于 load 事件时，也要接手续读（首屏读完才拿到进度的情况）。"""
     api(f"/progress/{SLUG}", "PUT", {"p": 62, "t": int(time.time() * 1000), "d": False})
@@ -258,6 +281,7 @@ CASES = [
     (test_home_shows_server_side_marks, False, DESKTOP),
     (test_offline_write_is_queued_and_flushed_later, False, DESKTOP),
     (test_progress_arriving_after_load_still_resumes, False, DESKTOP),
+    (test_all_local_notes_upload_from_any_page, True, DESKTOP),
 ]
 
 

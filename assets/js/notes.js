@@ -188,10 +188,50 @@ export function markHome() {
   }
 }
 
+let pushedLocal = false;
+
+// 浏览器里原有的笔记（换服务器之前写的）在第一次打开任意页面时补传到服务器。
+// 每篇一次 GET + 只推「服务端没有的」；离线时不做标记，下次再试。
+async function pushLocalSlugs(currentSlug) {
+  if (pushedLocal) return;
+  pushedLocal = true;
+  try {
+    if (sessionStorage.getItem("jasoncai:notes:pushed") === "1") return;
+  } catch {
+    /* 存储被禁也不是致命问题 */
+  }
+  let all = readNotes(safeStore());
+  const slugs = Object.keys(all).filter((slug) => notesFor(all, slug).length);
+  if (!slugs.length) return;
+  let ok = true;
+  for (const slug of slugs) {
+    if (slug === currentSlug) continue;
+    try {
+      const { notes, deleted } = await pullNotes(slug);
+      all = readNotes(safeStore());
+      const local = notesFor(all, slug);
+      if (!local.length) continue;
+      const { merged, adopted } = mergeNotes(local, notes, deleted);
+      all = save({ ...all, [slug]: merged });
+      uploadLocalOnly(slug, local, adopted);
+    } catch {
+      ok = false;
+    }
+  }
+  if (ok) {
+    try {
+      sessionStorage.setItem("jasoncai:notes:pushed", "1");
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 function initNotes() {
   const body = document.querySelector(".post-body[data-progress-post]");
   if (!body) {
     markHome();
+    pushLocalSlugs().then(() => markHome());
     pullSummary()
       .then((data) => {
         serverCounts = data.notes || {};
@@ -229,6 +269,7 @@ function initNotes() {
       uploadLocalOnly(slug, local, adopted);
       paintAll();
       renderList();
+      pushLocalSlugs(slug);
     })
     .catch(() => {});
 
