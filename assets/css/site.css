@@ -39,6 +39,7 @@ body {
 }
 .main-col { min-width: 0; }
 .layout-narrow { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 1279px) {
 /* 目录收起后正文列收窄回原来的行宽并真正居中：44px 的窄轨浮在左边距里，
    不占栅格宽度，所以正文中心 = 页面中心。 */
 .layout.is-rail-collapsed,
@@ -52,6 +53,38 @@ body {
   grid-area: 1 / 1; width: 100%; margin-inline: auto;
   /* 收起前正文是「页面宽 - 240 - 56」，收起后保持同一个行宽，只是居中 */
   max-width: calc(100% - var(--rail-w) - var(--rail-gap));
+}
+}
+
+/* 宽屏：正文列固定行宽并相对页面居中，左栏（日历/目录）落进左边距。
+   900–1279 仍用「左栏占一列」的省空间排法。 */
+@media (min-width: 1280px) {
+  .page { max-width: 1400px; }
+  .layout {
+    --rail-w: 220px;
+    --rail-gap: 48px;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, min(720px, calc(100% - 2 * (var(--rail-w) + var(--rail-gap)))))
+      minmax(0, 1fr);
+    column-gap: 0;
+  }
+  .layout > .rail {
+    grid-column: 1;
+    justify-self: end;
+    width: var(--rail-w);
+    margin-right: var(--rail-gap);
+  }
+  .layout > .main-col { grid-column: 2; }
+  /* 收起时正文不动（本来就居中），窄轨在原地缩窄 */
+  .layout.is-rail-collapsed > .rail-article,
+  .layout:has(.rail-article.is-collapsed) > .rail-article {
+    grid-area: auto; grid-column: 1; justify-self: end; width: 44px;
+  }
+  .layout.is-rail-collapsed > .main-col,
+  .layout:has(.rail-article.is-collapsed) > .main-col {
+    grid-area: auto; grid-column: 2; max-width: none;
+  }
 }
 
 /* ---- 文章页左栏目录 ---- */

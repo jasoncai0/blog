@@ -15,6 +15,7 @@ import urllib.request
 from playwright.sync_api import sync_playwright
 
 DESKTOP = {"viewport": {"width": 1200, "height": 900}}
+WIDE = {"viewport": {"width": 1440, "height": 900}}
 
 
 def wait_for_server(url, timeout=15.0):
@@ -211,6 +212,27 @@ def test_collapsed_rail_centers_the_article(page, base):
     assert rail["x"] + rail["width"] <= after["x"] + 1, "窄轨不该压到正文"
 
 
+def test_expanded_rail_keeps_article_centered(page, base):
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.wait_for_timeout(250)
+    main = page.locator(".main-col").bounding_box()
+    rail = page.locator("aside.rail-article").bounding_box()
+    center = page.evaluate("document.documentElement.clientWidth / 2")
+    assert abs(main["x"] + main["width"] / 2 - center) < 10, "展开时正文也应居中"
+    assert rail["x"] + rail["width"] <= main["x"] + 1, "目录不该压到正文"
+    assert abs(main["width"] - 720) <= 2, "宽屏正文行宽固定 720"
+
+
+def test_collapse_keeps_article_in_place_on_wide(page, base):
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.wait_for_timeout(250)
+    before = page.locator(".main-col").bounding_box()
+    page.click(".toc-toggle")
+    page.wait_for_timeout(450)
+    after = page.locator(".main-col").bounding_box()
+    assert abs(after["x"] - before["x"]) < 2 and abs(after["width"] - before["width"]) < 2
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
@@ -232,6 +254,8 @@ CASES = [
     (test_no_js_home_keeps_rail_content, True, {**DESKTOP, "java_script_enabled": False}),
     (test_no_js_article_keeps_toc_but_hides_toggle, True, {**DESKTOP, "java_script_enabled": False}),
     (test_collapsed_rail_centers_the_article, False, DESKTOP),
+    (test_expanded_rail_keeps_article_centered, False, WIDE),
+    (test_collapse_keeps_article_in_place_on_wide, False, WIDE),
 ]
 
 
