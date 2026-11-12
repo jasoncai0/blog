@@ -24,9 +24,11 @@ body {
 }
 .page { max-width: 1240px; margin: 0 auto; padding: 64px 48px 120px; }
 .layout {
+  --rail-w: 240px;
+  --rail-gap: 56px;
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: 56px;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  gap: var(--rail-gap);
   align-items: start;
 }
 .rail {
@@ -37,6 +39,20 @@ body {
 }
 .main-col { min-width: 0; }
 .layout-narrow { grid-template-columns: minmax(0, 1fr); }
+/* 目录收起后正文列收窄回原来的行宽并真正居中：44px 的窄轨浮在左边距里，
+   不占栅格宽度，所以正文中心 = 页面中心。 */
+.layout.is-rail-collapsed,
+.layout:has(.rail-article.is-collapsed) { grid-template-columns: minmax(0, 1fr); }
+.layout.is-rail-collapsed > .rail-article,
+.layout:has(.rail-article.is-collapsed) > .rail-article {
+  grid-area: 1 / 1; justify-self: start; width: 44px; z-index: 1;
+}
+.layout.is-rail-collapsed > .main-col,
+.layout:has(.rail-article.is-collapsed) > .main-col {
+  grid-area: 1 / 1; width: 100%; margin-inline: auto;
+  /* 收起前正文是「页面宽 - 240 - 56」，收起后保持同一个行宽，只是居中 */
+  max-width: calc(100% - var(--rail-w) - var(--rail-gap));
+}
 
 /* ---- 文章页左栏目录 ---- */
 .rail-article { width: 240px; transition: width 0.18s ease; }
@@ -228,7 +244,13 @@ figcaption {
 .toc a::after { content: ""; }
 @media (max-width: 900px) {
   .page { padding: 48px 28px 96px; }
-  .layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .layout,
+  .layout.is-rail-collapsed,
+  .layout:has(.rail-article.is-collapsed) { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .layout.is-rail-collapsed > .rail-article,
+  .layout:has(.rail-article.is-collapsed) > .rail-article { grid-area: auto; width: auto; z-index: auto; }
+  .layout.is-rail-collapsed > .main-col,
+  .layout:has(.rail-article.is-collapsed) > .main-col { grid-area: auto; max-width: none; }
   .rail { position: static; max-height: none; width: auto; }
   .rail-article.is-collapsed { width: auto; }
   .rail-article.is-collapsed .toc-label { writing-mode: horizontal-tb; }

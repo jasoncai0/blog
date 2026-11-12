@@ -110,8 +110,10 @@ function initToc() {
   if (!rail) return;
   const btn = rail.querySelector(".toc-toggle");
   btn?.removeAttribute("hidden");
+  const layout = rail.closest(".layout");
   const apply = (collapsed) => {
     rail.classList.toggle("is-collapsed", collapsed);
+    layout?.classList.toggle("is-rail-collapsed", collapsed);
     if (!btn) return;
     btn.setAttribute("aria-expanded", String(!collapsed));
     btn.textContent = collapsed ? "»" : "收起";

@@ -197,6 +197,20 @@ def test_no_js_article_keeps_toc_but_hides_toggle(ctx, base):
     assert not page.locator(".toc-toggle").is_visible(), "无 JS 时不显示折叠按钮"
 
 
+def test_collapsed_rail_centers_the_article(page, base):
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.wait_for_timeout(250)
+    before = page.locator(".main-col").bounding_box()
+    page.click(".toc-toggle")
+    page.wait_for_timeout(450)
+    after = page.locator(".main-col").bounding_box()
+    rail = page.locator("aside.rail-article").bounding_box()
+    assert abs(after["width"] - before["width"]) < 8, "收起目录后正文不该被拉宽"
+    page_center = page.evaluate("document.documentElement.clientWidth / 2")
+    assert abs(after["x"] + after["width"] / 2 - page_center) < 10, "正文列应水平居中"
+    assert rail["x"] + rail["width"] <= after["x"] + 1, "窄轨不该压到正文"
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
@@ -217,6 +231,7 @@ CASES = [
     (test_no_marker_when_resume_jumped, False, DESKTOP),
     (test_no_js_home_keeps_rail_content, True, {**DESKTOP, "java_script_enabled": False}),
     (test_no_js_article_keeps_toc_but_hides_toggle, True, {**DESKTOP, "java_script_enabled": False}),
+    (test_collapsed_rail_centers_the_article, False, DESKTOP),
 ]
 
 
