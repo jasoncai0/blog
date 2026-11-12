@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-desc">
+  <title id="f02-title">评测的双循环与一道题的 rubric</title>
+  <desc id="f02-desc">线上会话产生 badcase，经分拣进入 benchmark，再回到训练与发布，形成闭环；右侧是一道感冒题的三档 rubric：必答、加分、一票否决。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">02 / EVAL LOOP</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">Badcase 是起点，不是质量部门的工单</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">一圈把线上问题变成题，另一圈把题变成能力；右边的 rubric 决定这两圈转得动不动</text>
+
+  <!-- nodes -->
+  <rect x="40" y="120" width="230" height="64" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">01</text>
+  <text x="56" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">线上会话</text>
+  <text x="56" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">种子内测 · 体验群 · 社区运营</text>
+
+  <rect x="40" y="240" width="230" height="64" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="260" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">02</text>
+  <text x="56" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">Badcase 池</text>
+  <text x="56" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">先聚类去重，再按危害排序</text>
+
+  <rect x="40" y="360" width="230" height="64" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">03</text>
+  <text x="56" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">分拣三类</text>
+  <text x="56" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">产品需求 · 功能缺失 · 模型能力</text>
+
+  <rect x="300" y="360" width="230" height="64" rx="7" fill="#ffffff" stroke="#bf4520"/>
+  <text x="316" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">04</text>
+  <text x="316" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">Benchmark</text>
+  <text x="316" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">定期发布项；两年后只当回归集</text>
+
+  <rect x="300" y="240" width="230" height="64" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="316" y="260" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">05</text>
+  <text x="316" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">训练与改法</text>
+  <text x="316" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">改 prompt · 改检索 · 加工具 · 换模型</text>
+
+  <rect x="300" y="120" width="230" height="64" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="316" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">06</text>
+  <text x="316" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">发布</text>
+  <text x="316" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">以天为单位；灰度后再推全</text>
+
+  <!-- arrows -->
+  <line x1="155" y1="184" x2="155" y2="236" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <line x1="155" y1="304" x2="155" y2="356" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <line x1="270" y1="392" x2="296" y2="392" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <line x1="415" y1="360" x2="415" y2="308" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <line x1="415" y1="240" x2="415" y2="188" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <path d="M 300 152 L 276 152" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- rubric panel -->
+  <rect x="600" y="120" width="320" height="304" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="620" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">「感冒怎么治」的 rubric</text>
+  <text x="620" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">一道题挂多条维度：有效性 / 安全性 / 循证</text>
+  <line x1="620" y1="176" x2="900" y2="176" stroke="#eeeeee"/>
+
+  <text x="620" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">+1 必答</text>
+  <text x="676" y="198" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">说清自限性，多数情况可自愈</text>
+
+  <text x="620" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">+1 必答</text>
+  <text x="676" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">休息、补水，必要时对症用药</text>
+
+  <text x="620" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">+0.5</text>
+  <text x="676" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">点出需要就医的危险信号</text>
+
+  <text x="620" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">−1 否决</text>
+  <text x="676" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">滥用抗生素，或编造剂量</text>
+
+  <line x1="620" y1="288" x2="900" y2="288" stroke="#eeeeee"/>
+  <text x="620" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">判的人通常是模型，但标准是人写的</text>
+
+  <rect x="620" y="322" width="82" height="22" rx="11" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="661" y="337" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">区分度</text>
+  <rect x="710" y="322" width="82" height="22" rx="11" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="751" y="337" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">稳定性</text>
+  <rect x="800" y="322" width="82" height="22" rx="11" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="841" y="337" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">可执行</text>
+
+  <text x="620" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">所有模型都 80 分，这套题就废了；</text>
+  <text x="620" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">要能把 Claude / GPT / 千问分开。</text>
+  <text x="620" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">人机一致性：每个场景校准 1–2 个月</text>
+
+  <text x="40" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">最贵的不是写题，是分拣：一条 badcase 该进产品需求、功能缺失，还是模型能力？分错一次，后面全白做。</text>
+  <text x="40" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">把 badcase 直接丢给质量团队，在医疗这种零容错场景里大概率会失败。</text>
+</svg>

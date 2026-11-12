@@ -46,6 +46,9 @@ embedding:
 ann:
   name: ANN
   description: 向量索引、近似最近邻与召回
+evaluation:
+  name: 评测
+  description: Benchmark、rubric、Badcase 归因与线上质量度量
 memory:
   name: 记忆
   description: Agent 记忆的分层、写入、检索与演进

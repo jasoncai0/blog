@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">上下文预算的锯齿与压缩触发点</title>
+  <desc id="f04-desc">上下文随轮次上涨，在第 9 轮触及 20K 阈值、第 12 轮按轮次策略各压缩一次，形成锯齿；右侧列出压缩时保留与丢弃的内容。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">03 / CONTEXT BUDGET</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">标称 128K，实际把上下文压在 32–64K</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">过了 64K 就开始 lost in the middle：recall 和准确率一起掉，钱也在烧</text>
+
+  <!-- sweet band -->
+  <rect x="90" y="120" width="490" height="175" fill="#eef1f6"/>
+  <text x="572" y="136" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">32K–64K 甜点区</text>
+
+  <!-- grid -->
+  <line x1="90" y1="470" x2="580" y2="470" stroke="#d8d8d8"/>
+  <line x1="90" y1="382.5" x2="580" y2="382.5" stroke="#e8e8e8"/>
+  <line x1="90" y1="295" x2="580" y2="295" stroke="#e8e8e8"/>
+  <line x1="90" y1="207.5" x2="580" y2="207.5" stroke="#e8e8e8"/>
+  <line x1="90" y1="120" x2="580" y2="120" stroke="#e8e8e8"/>
+
+  <text x="80" y="473" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">0</text>
+  <text x="80" y="385" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">16K</text>
+  <text x="80" y="298" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">32K</text>
+  <text x="80" y="210" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">48K</text>
+  <text x="80" y="123" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">64K</text>
+
+  <!-- 20K threshold -->
+  <line x1="90" y1="360.6" x2="580" y2="360.6" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="96" y="355" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">20K 触发线</text>
+
+  <!-- sawtooth -->
+  <polyline points="90,426.3 220.8,393.4 318.9,366.1 351.6,360.6 351.6,431.7 417,409.9 449.7,393.4 449.7,437.2 515.1,415.3 580.5,387.9"
+            fill="none" stroke="#2d3142" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- trigger markers -->
+  <circle cx="351.6" cy="360.6" r="4" fill="#bf4520"/>
+  <circle cx="449.7" cy="393.4" r="4" fill="#bf4520"/>
+  <text x="102" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">两次压缩：第 9 轮撞到 20K，第 12 轮按轮次策略</text>
+  <text x="102" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每次压完回落到 6–7K，再继续涨；阈值是实验搜出来的，不是拍的</text>
+
+  <text x="96" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">第 1 轮还会先压一次，把「开场白 + 系统提示」压成骨架</text>
+
+  <!-- axis -->
+  <text x="580" y="492" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">TURN →</text>
+  <text x="90" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">一次问诊的轮次</text>
+
+  <!-- panel -->
+  <rect x="620" y="120" width="300" height="350" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="640" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">压的时候留什么</text>
+
+  <text x="640" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#2d3142">KEEP</text>
+  <text x="640" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">· 全部 user query，原话不摘</text>
+  <text x="640" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">· 结构化槽位：症状 / 指标 / 用药</text>
+  <text x="640" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">· 尚未解决的冲突与待确认项</text>
+  <text x="640" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">· 上一轮的结论与引用编号</text>
+
+  <text x="640" y="284" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DROP</text>
+  <text x="640" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">· 寒暄、重复追问、已解释过的段落</text>
+  <text x="640" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">· 工具返回的原始 JSON（留 index）</text>
+  <text x="640" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">· 已经过期的旧结论</text>
+
+  <line x1="640" y1="362" x2="900" y2="362" stroke="#eeeeee"/>
+  <text x="640" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">摘要是索引，不是替代品：原文留在外部，</text>
+  <text x="640" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">需要时按 index 再取一次。</text>
+
+  <text x="640" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">压缩阈值不是拍的：每个场景跑实验，</text>
+  <text x="640" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">用评测集搜出来的。</text>
+
+  <text x="40" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">为什么不是 128K 全塞：几十页指南进去，模型反而找不到那一条；成本和首字延迟也按长度线性涨。</text>
+  <text x="40" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">用户的问题远比模型的回答更重要：压掉寒暄可以，压掉「我怀孕 7 个月」不行。</text>
+</svg>

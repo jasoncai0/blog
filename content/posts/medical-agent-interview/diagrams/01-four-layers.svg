@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">医疗 Agent 的四层与两侧支撑</title>
+  <desc id="f01-desc">应用、Agent、模型与 Agent RL、数据四层自下而上供给能力；左侧是迭代效率，右侧是风险防控，两根柱子决定这套系统能不能持续转。</desc>
+
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">01 / FOUR LAYERS</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">医疗 Agent 是四层，不是一层</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">模型只在第三层；上面两层决定体验，下面一层决定能力上限</text>
+
+  <!-- left pillar -->
+  <rect x="40" y="120" width="180" height="356" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">迭代效率</text>
+  <text x="56" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">改一次要多久、看什么信号</text>
+
+  <text x="56" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">Benchmark 牵引能力</text>
+  <text x="56" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">Badcase 分拣与回灌</text>
+  <text x="56" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">合成难问题 + 在线蒸馏</text>
+  <text x="56" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">自动化评测：12 天 → 小时</text>
+  <text x="56" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">以天为单位的发布节奏</text>
+
+  <text x="56" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">没有这条，四层只是 PPT</text>
+  <text x="56" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">有这条，普通人也 2–3 成提效</text>
+
+  <!-- right pillar -->
+  <rect x="740" y="120" width="180" height="356" rx="8" fill="#ffffff" stroke="#bf4520"/>
+  <text x="756" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">风险防控</text>
+  <text x="756" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">出事时能不能兜住</text>
+
+  <text x="756" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">数据单独存、可审计</text>
+  <text x="756" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">输出围栏：不冒充医生</text>
+  <text x="756" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">高危干预：自杀/急症</text>
+  <text x="756" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">指南与政策的版本追溯</text>
+  <text x="756" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">人工兜底与转诊</text>
+
+  <text x="756" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">医疗数据泄露 50 条</text>
+  <text x="756" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">就可能要坐牢</text>
+
+  <!-- stack -->
+  <rect x="250" y="120" width="460" height="74" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="266" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">L1</text>
+  <text x="300" y="147" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">应用与客户端</text>
+  <text x="300" y="167" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">阿福 App · 医生端 · 电话与语音</text>
+  <text x="300" y="183" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">高危干预、合规审计、人工兜底都在这一层落地</text>
+
+  <rect x="250" y="214" width="460" height="74" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="266" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">L2</text>
+  <text x="300" y="241" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">Agent 层</text>
+  <text x="300" y="261" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">检索 · 记忆 · 多智能体 · 研发范式</text>
+  <text x="300" y="277" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">决定一次会话里模型看到什么、记住什么、什么时候停</text>
+
+  <rect x="250" y="308" width="460" height="74" rx="7" fill="#ffffff" stroke="#8a93a6"/>
+  <text x="266" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">L3</text>
+  <text x="300" y="335" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">模型与 Agent RL</text>
+  <text x="300" y="355" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">Agent model · Agent ENV · Tool env · Reward</text>
+  <text x="300" y="371" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">把「会查、会停、会承认不知道」训进模型，而不是写进 prompt</text>
+
+  <rect x="250" y="402" width="460" height="74" rx="7" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="266" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">L4</text>
+  <text x="300" y="429" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">数据层</text>
+  <text x="300" y="449" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">指南 / 教科书 / 权威网页 · 医生与医院 · 后训练数据</text>
+  <text x="300" y="465" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">决定能力上限，也决定每条引用能不能落回原文</text>
+
+  <!-- up arrows -->
+  <line x1="480" y1="402" x2="480" y2="386" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="480" y1="308" x2="480" y2="292" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="480" y1="214" x2="480" y2="198" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <!-- side links -->
+  <line x1="220" y1="298" x2="246" y2="298" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="740" y1="298" x2="714" y2="298" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <text x="40" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">上下是能力供给，左右决定这套东西能不能持续转：左边回答「怎么变快」，右边回答「怎么不出事」。</text>
+  <text x="40" y="548" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#8a93a6">SOURCE: QCON BEIJING 2026 / GUO CHUNXIAO / INFOQ TRANSCRIPT</text>
+</svg>

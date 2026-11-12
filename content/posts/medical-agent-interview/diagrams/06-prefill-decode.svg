@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f06-title f06-desc">
+  <title id="f06-title">Prefill 与 decode 的瓶颈不同，所以 PD 分离</title>
+  <desc id="f06-desc">Prefill 计算密集、决定首字延迟；decode 带宽密集、决定每 token 延迟。PD 分离把两类负载放到不同卡上，KV cache 在两者之间传输并被前缀缓存复用。</desc>
+
+  <defs>
+    <marker id="f06-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f06-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">06 / PREFILL &amp; DECODE</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">两段负载，两种瓶颈，两套卡</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">先把 KV cache 保住，再谈 PD 分离、FP8 和投机解码；顺序反了，收益会被抵消</text>
+
+  <!-- card A -->
+  <rect x="40" y="110" width="430" height="190" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#8a93a6">TTFT · COMPUTE BOUND</text>
+  <text x="60" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">Prefill：一次算完整个前缀</text>
+  <text x="60" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">32K token 并行进矩阵乘，GPU 打满，算力决定多久出第一个字。</text>
+  <text x="60" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">同一条前缀再算一遍 = 白烧一遍钱，所以 prompt cache 命中率是命门。</text>
+  <text x="60" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">卡要的是高 FLOPS，显存反而可以小。</text>
+
+  <text x="60" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">算力</text>
+  <rect x="96" y="237" width="300" height="7" rx="3" fill="#e8e8e8"/>
+  <rect x="96" y="237" width="270" height="7" rx="3" fill="#2d3142"/>
+  <text x="60" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">带宽</text>
+  <rect x="96" y="259" width="300" height="7" rx="3" fill="#e8e8e8"/>
+  <rect x="96" y="259" width="70" height="7" rx="3" fill="#bf4520"/>
+
+  <!-- card B -->
+  <rect x="490" y="110" width="430" height="190" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="510" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#8a93a6">TPOT · MEMORY BOUND</text>
+  <text x="510" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">Decode：一个 token 一个 token 挤</text>
+  <text x="510" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">每步要把权重和 KV cache 全读一遍，算得很少，等数据很久。</text>
+  <text x="510" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">卡要的是 HBM 带宽与容量：显存装得下多少 KV，就决定能并发多少路。</text>
+  <text x="510" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">长上下文尤其吃显存，32K 单路就可能吃掉 10GB。</text>
+
+  <text x="510" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">算力</text>
+  <rect x="546" y="237" width="300" height="7" rx="3" fill="#e8e8e8"/>
+  <rect x="546" y="237" width="70" height="7" rx="3" fill="#2d3142"/>
+  <text x="510" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">带宽</text>
+  <rect x="546" y="259" width="300" height="7" rx="3" fill="#e8e8e8"/>
+  <rect x="546" y="259" width="270" height="7" rx="3" fill="#bf4520"/>
+
+  <!-- PD row -->
+  <text x="40" y="340" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">PD DISAGGREGATION</text>
+
+  <rect x="40" y="354" width="210" height="104" rx="7" fill="#ffffff" stroke="#2d3142"/>
+  <text x="58" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">Prefill 池</text>
+  <text x="58" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">高 FLOPS 卡，堆算力</text>
+  <text x="58" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">长 prompt 的 SP 切分也在这</text>
+  <text x="58" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">TTFT ↓</text>
+
+  <line x1="250" y1="406" x2="312" y2="406" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f06-r)"/>
+  <text x="281" y="394" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">KV cache</text>
+  <text x="281" y="424" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">RDMA</text>
+
+  <rect x="320" y="354" width="210" height="104" rx="7" fill="#ffffff" stroke="#2d3142"/>
+  <text x="338" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">Decode 池</text>
+  <text x="338" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">高 HBM 卡，堆显存带宽</text>
+  <text x="338" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">异构混部，按负载比例扩缩</text>
+  <text x="338" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">TPOT ↓</text>
+
+  <rect x="570" y="354" width="230" height="104" rx="7" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <text x="588" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">KV / Prompt Cache</text>
+  <text x="588" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">前缀一样就命中，跳过 prefill</text>
+  <text x="588" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">路由要按前缀亲和，不是轮询</text>
+  <text x="588" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">缓存没命中，前面全省的都还回去</text>
+
+  <line x1="530" y1="406" x2="566" y2="406" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#f06-a)"/>
+
+  <text x="812" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">什么时候</text>
+  <text x="812" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不划算：</text>
+  <text x="812" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">请求短、并发低，</text>
+  <text x="812" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">KV 传得比算得慢</text>
+
+  <text x="40" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">一笔账：70B 级 GQA 模型，每 token 的 KV 约 320KB（FP16，80 层 / 8 个 KV 头 / head_dim 128）。32K 上下文 = 约 10GB，一路会话就吃掉一张卡的显存。</text>
+  <text x="40" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">重算一遍 32K 的 prefill ≈ 4.6 PFLOP；按有效 400 TFLOPS 估，十几秒。所以「别把 KV cache 搞丢」是省钱，也是保命。</text>
+  <text x="40" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">再往后才是 FP8 / INT8 量化、投机解码（小模型起草、大模型验证）、长短请求分开部署。量化要用 QAT 或精细校准，不然医疗这种长尾会先崩。</text>
+</svg>

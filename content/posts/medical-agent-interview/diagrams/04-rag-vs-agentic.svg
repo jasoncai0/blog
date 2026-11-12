@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">普通 RAG 与 Agentic RAG 的控制流差别</title>
+  <desc id="f03-desc">普通 RAG 是查询、召回、拼接、回答的一次性流水线；Agentic RAG 在分解、检索、判断之间循环，直到证据够用才融合作答。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">04 / RAG VS AGENTIC RAG</text>
+  <text x="40" y="64" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">检索是输入，还是手段</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一条问题：肝功能不好又发烧，吃什么药、怎么吃、怎么报销</text>
+
+  <!-- lane A -->
+  <text x="40" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">A / 一次到底</text>
+
+  <rect x="60" y="142" width="140" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="130" y="164" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">用户 query</text>
+  <text x="130" y="180" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">一整句话</text>
+
+  <rect x="220" y="142" width="140" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="290" y="164" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">向量化</text>
+  <text x="290" y="180" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">embed(query)</text>
+
+  <rect x="380" y="142" width="140" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="450" y="164" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">top-k 召回</text>
+  <text x="450" y="180" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">一个库，一次排序</text>
+
+  <rect x="540" y="142" width="140" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="610" y="164" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">拼进 prompt</text>
+  <text x="610" y="180" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">固定窗口</text>
+
+  <rect x="700" y="142" width="140" height="52" rx="6" fill="#ffffff" stroke="#8a93a6"/>
+  <text x="770" y="164" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">一次生成</text>
+  <text x="770" y="180" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">答完即止</text>
+
+  <line x1="200" y1="168" x2="216" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="360" y1="168" x2="376" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="520" y1="168" x2="536" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="680" y1="168" x2="696" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <text x="60" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">三跳问题只召回了一跳：药答得对，吃法漏了，报销完全没提。检索错了，后面写得再顺也是错的。</text>
+
+  <!-- divider -->
+  <line x1="40" y1="248" x2="920" y2="248" stroke="#e2e2e2" stroke-dasharray="3 4"/>
+
+  <!-- lane B -->
+  <text x="40" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">B / 循环到证据够</text>
+
+  <rect x="60" y="308" width="120" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="120" y="332" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">问题</text>
+  <text x="120" y="348" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">多跳 · 带条件</text>
+
+  <rect x="198" y="308" width="120" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="258" y="332" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">分解 + 路由</text>
+  <text x="258" y="348" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">拆成三个子问题</text>
+
+  <rect x="336" y="308" width="120" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="396" y="332" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">循证检索</text>
+  <text x="396" y="348" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">PICO · 多库并发</text>
+
+  <rect x="474" y="308" width="120" height="56" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="534" y="332" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">够不够？</text>
+  <text x="534" y="348" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">唯一新增的控制器</text>
+
+  <rect x="612" y="308" width="120" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="672" y="332" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">冲突融合</text>
+  <text x="672" y="348" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">权威分 · 专家裁</text>
+
+  <rect x="750" y="308" width="120" height="56" rx="6" fill="#ffffff" stroke="#8a93a6"/>
+  <text x="810" y="332" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">带引用作答</text>
+  <text x="810" y="348" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每条落到原文</text>
+
+  <line x1="180" y1="336" x2="194" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="318" y1="336" x2="332" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="456" y1="336" x2="470" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="594" y1="336" x2="608" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <line x1="732" y1="336" x2="746" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- loop -->
+  <path d="M 534 364 L 534 396 L 258 396 L 258 368" fill="none" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-r)"/>
+  <text x="286" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">不够：换库、再分解，或者反问用户（有没有化验单？在吃什么药？）</text>
+
+  <text x="336" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">指南库 · 药品说明书 · 医保政策 · 文献库</text>
+
+  <!-- bottom contrast -->
+  <rect x="40" y="470" width="880" height="86" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">差别不在「有没有向量库」，而在三个开关归谁：</text>
+  <text x="60" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">查什么（子问题怎么拆） · 查几次（够不够的判定） · 什么时候停（预算与置信度）</text>
+  <text x="60" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">三个开关都写死在代码里，就是普通 RAG；交给模型在循环里按证据决定，才是 Agentic。</text>
+</svg>
