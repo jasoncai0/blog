@@ -357,7 +357,7 @@ function initNotes() {
   const fmtTime = (t) =>
     new Date(t).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
-  function openPopById(id) {
+  function openPopById(id, { focus = true } = {}) {
     const mark = body.querySelector(`mark.note-hl[data-note="${id}"]`);
     const note = notesFor(all, slug).find((n) => n.id === id);
     if (!mark || !note) return;
@@ -474,9 +474,20 @@ function initNotes() {
     document.body.append(pop);
 
     const rect = mark.getBoundingClientRect();
-    pop.style.top = `${Math.min(window.innerHeight - pop.offsetHeight - 12, rect.bottom + 8)}px`;
+    // 优先放在高亮下面；下面放不下就翻到上面，两边都放不下才退回「贴着视口底」。
+    const height = pop.offsetHeight;
+    const below = rect.bottom + 8;
+    const above = rect.top - height - 8;
+    const top =
+      below + height <= window.innerHeight - 12
+        ? below
+        : above >= 12
+          ? above
+          : Math.min(window.innerHeight - height - 12, below);
+    pop.style.top = `${Math.max(12, top)}px`;
     pop.style.left = `${Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, rect.left))}px`;
-    input.focus();
+    // 从列表跳转过来时不抢焦点：焦点留在高亮上，键盘用户不会突然被扔进 textarea。
+    if (focus) input.focus();
 
     saveBtn.addEventListener("click", () => {
       all = save(setThreadText(all, slug, id, input.value, Date.now()));
@@ -588,11 +599,15 @@ function initNotes() {
         event.preventDefault();
         const mark = body.querySelector(`mark.note-hl[data-note="${note.id}"]`);
         if (!mark) return;
-        mark.scrollIntoView({ block: "center", behavior: "instant" });
+        // 高亮停在视口上方 140px：下面留出放气泡的地方，不会被自己挡住。
+        const y = mark.getBoundingClientRect().top + window.scrollY - 140;
+        window.scrollTo({ top: Math.max(0, y), behavior: "instant" });
         mark.setAttribute("tabindex", "-1");
         mark.focus({ preventScroll: true });
         mark.classList.add("is-flash");
         setTimeout(() => mark.classList.remove("is-flash"), 1200);
+        // 列表点进来是为了看这条批注，直接把气泡和楼层一起展开。
+        openPopById(note.id, { focus: false });
       });
       li.append(link);
       items.append(li);

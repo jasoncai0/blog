@@ -240,6 +240,28 @@ def test_note_list_jumps_to_highlight(page, base):
     assert "note-hl" in focused, f"点列表应把焦点落到高亮上，实际 {focused!r}"
 
 
+def test_note_list_click_opens_thread_floors(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    anchor = page.evaluate(ANCHOR_JS, "收敛是必要条件")
+    assert anchor, "文章里找不到锚点"
+    seed(page, {SLUG: [{
+        "id": "n2", "q": anchor["q"], "pre": anchor["pre"], "post": anchor["post"],
+        "block": anchor["block"], "t": 1,
+        "thread": [
+            {"author": "我", "text": "批注一", "t": 1},
+            {"author": "AI", "text": "这是 AI 的回复", "t": 2},
+        ],
+    }]})
+    page.reload()
+    page.wait_for_timeout(400)
+    page.locator(".note-list .note-items li a").first.click()
+    page.wait_for_selector(".nt-pop", state="visible", timeout=5000)
+    assert "2 层" in page.locator(".nt-floors").inner_text()
+    assert page.locator(".nt-thread .nt-floor").count() == 1, "楼层应展开显示"
+    assert "这是 AI 的回复" in page.locator(".nt-thread").inner_text()
+
+
 def test_export_produces_json(page, base):
     page.goto(base + ARTICLE)
     page.wait_for_timeout(300)
@@ -425,6 +447,7 @@ CASES = [
     (test_annotate_then_edit_and_delete, False, DESKTOP),
     (test_escape_closes_the_bubble, False, DESKTOP),
     (test_note_list_jumps_to_highlight, False, {**DESKTOP, "accept_downloads": True}),
+    (test_note_list_click_opens_thread_floors, False, DESKTOP),
     (test_export_produces_json, False, {**DESKTOP, "accept_downloads": True}),
     (test_home_marks_articles_with_notes, False, DESKTOP),
     (test_selection_spanning_inline_code_is_wrapped_in_parts, False, DESKTOP),
