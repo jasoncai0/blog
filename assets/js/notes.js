@@ -1,5 +1,14 @@
 // 划词高亮 + 批注。锚点用「原文 + 前后各 32 字 + 段落下标」，文章改字后失配就静默跳过。
-import { NOTES_KEY, ANCHOR_PAD, makeNote, readNotes, writeNotes, notesFor } from "./notes-core.mjs";
+import {
+  NOTES_KEY,
+  ANCHOR_PAD,
+  makeNote,
+  readNotes,
+  writeNotes,
+  notesFor,
+  setThreadText,
+  removeNote,
+} from "./notes-core.mjs";
 
 let openPop = null;
 
@@ -141,6 +150,91 @@ export function initNotes() {
     bar = null;
   };
 
+  let pop = null;
+  const closePop = () => {
+    pop?.remove();
+    pop = null;
+  };
+
+  const fmtTime = (t) =>
+    new Date(t).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+
+  function openPopById(id) {
+    const mark = body.querySelector(`mark.note-hl[data-note="${id}"]`);
+    const note = notesFor(all, slug).find((n) => n.id === id);
+    if (!mark || !note) return;
+    closePop();
+
+    pop = document.createElement("div");
+    pop.className = "nt-pop";
+
+    const head = document.createElement("div");
+    head.className = "nt-head";
+    const author = document.createElement("span");
+    author.className = "nt-author";
+    author.textContent = note.thread[0]?.author || "我";
+    const when = document.createElement("span");
+    when.className = "nt-time";
+    when.textContent = fmtTime(note.t);
+    head.append(author, when);
+
+    const input = document.createElement("textarea");
+    input.className = "nt-input";
+    input.rows = 3;
+    input.placeholder = "写点批注…";
+    input.value = note.thread[0]?.text || "";
+
+    const foot = document.createElement("div");
+    foot.className = "nt-acts";
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.dataset.act = "save";
+    saveBtn.textContent = "保存";
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.dataset.act = "delete";
+    delBtn.textContent = "删除";
+    foot.append(saveBtn, delBtn);
+
+    pop.append(head, input);
+
+    for (const msg of note.thread.slice(1)) {
+      const row = document.createElement("div");
+      row.className = "nt-msg";
+      const who = document.createElement("span");
+      who.className = "nt-author";
+      who.textContent = msg.author;
+      const bodyText = document.createElement("p");
+      bodyText.textContent = msg.text;
+      row.append(who, bodyText);
+      pop.append(row);
+    }
+
+    pop.append(foot);
+    document.body.append(pop);
+
+    const rect = mark.getBoundingClientRect();
+    const top = rect.bottom + 8;
+    pop.style.top = `${Math.min(window.innerHeight - pop.offsetHeight - 12, top)}px`;
+    pop.style.left = `${Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, rect.left))}px`;
+    input.focus();
+
+    saveBtn.addEventListener("click", () => {
+      all = save(setThreadText(all, slug, id, input.value, Date.now()));
+      closePop();
+    });
+    delBtn.addEventListener("click", () => {
+      all = save(removeNote(all, slug, id));
+      body.querySelectorAll(`mark.note-hl[data-note="${id}"]`).forEach((el) => {
+        const parent = el.parentNode;
+        el.replaceWith(...el.childNodes);
+        parent.normalize();
+      });
+      closePop();
+    });
+  }
+  openPop = openPopById;
+
   const addNote = (anchor, text, openBubble) => {
     const note = makeNote({ ...anchor, t: Date.now(), text, author: "我" });
     all = save({ ...all, [slug]: [...notesFor(all, slug), note] });
@@ -204,6 +298,21 @@ export function initNotes() {
 
   document.addEventListener("selectionchange", schedule);
   document.addEventListener("mouseup", schedule);
+  body.addEventListener("click", (event) => {
+    const mark = event.target.closest?.("mark.note-hl");
+    if (mark) openPopById(mark.dataset.note);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closePop();
+  });
+
+  document.addEventListener("mousedown", (event) => {
+    if (!pop || pop.contains(event.target)) return;
+    if (event.target.closest?.("mark.note-hl")) return;
+    closePop();
+  });
+
   window.addEventListener("scroll", hideBar, { passive: true });
 }
 

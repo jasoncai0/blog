@@ -524,3 +524,28 @@ mark.note-hl {
   background: rgba(191, 69, 32, 0.13); color: inherit;
   border-bottom: 1px solid rgba(191, 69, 32, 0.42); padding: 0 1px;
 }
+.nt-pop {
+  position: fixed; z-index: 70; width: min(320px, calc(100vw - 24px));
+  padding: 10px 12px 12px; background: var(--paper);
+  border: 1px solid var(--rule); border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(45, 49, 66, 0.18);
+  font-size: 13px;
+}
+.nt-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.nt-author { font-size: 11px; letter-spacing: 0.04em; color: var(--accent); }
+.nt-time { font-family: var(--mono); font-size: 10px; color: var(--soft); }
+.nt-input {
+  width: 100%; box-sizing: border-box; resize: vertical;
+  font: inherit; font-size: 13px; line-height: 1.6; color: var(--ink);
+  background: rgba(255, 255, 255, 0.5); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 6px 8px;
+}
+.nt-input:focus { outline: 2px solid rgba(191, 69, 32, 0.25); outline-offset: 1px; }
+.nt-msg { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--rule); }
+.nt-msg p { margin: 4px 0 0; white-space: pre-wrap; }
+.nt-acts { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+.nt-acts button {
+  font: inherit; font-size: 12px; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer;
+}
+.nt-acts button:hover { background: rgba(45, 49, 66, 0.06); }

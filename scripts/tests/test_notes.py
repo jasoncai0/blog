@@ -158,11 +158,52 @@ def test_toolbar_hides_when_selection_cleared(page, base):
     assert page.locator(".nt-actions").count() == 0, "清空选区后工具条应消失"
 
 
+def test_annotate_then_edit_and_delete(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    select_text(page, "收敛是必要条件")
+    page.click(".nt-actions button[data-action='annotate']")
+    pop = page.locator(".nt-pop")
+    pop.wait_for(state="visible")
+    page.fill(".nt-pop textarea", "这里要补一个反例")
+    page.click(".nt-pop button[data-act='save']")
+    page.wait_for_timeout(300)
+    page.click("mark.note-hl")
+    pop.wait_for(state="visible")
+    assert "我" in pop.inner_text(), "气泡里应署名"
+    assert "这里要补一个反例" in pop.locator("textarea").input_value()
+    page.fill(".nt-pop textarea", "改成：补两个反例")
+    page.click(".nt-pop button[data-act='save']")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.click("mark.note-hl")
+    pop.wait_for(state="visible")
+    assert "改成：补两个反例" in page.locator(".nt-pop textarea").input_value()
+    page.click(".nt-pop button[data-act='delete']")
+    page.wait_for_timeout(300)
+    assert page.locator("mark.note-hl").count() == 0, "删掉笔记后高亮应消失"
+
+
+def test_escape_closes_the_bubble(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.click("mark.note-hl")
+    page.locator(".nt-pop").wait_for(state="visible")
+    page.keyboard.press("Escape")
+    page.wait_for_timeout(200)
+    assert page.locator(".nt-pop").count() == 0
+
+
 CASES = [
     (test_highlight_persists_across_reload, False, DESKTOP),
     (test_highlight_paints_only_the_selected_occurrence, False, DESKTOP),
     (test_toolbar_appears_above_selection, False, DESKTOP),
     (test_toolbar_hides_when_selection_cleared, False, DESKTOP),
+    (test_annotate_then_edit_and_delete, False, DESKTOP),
+    (test_escape_closes_the_bubble, False, DESKTOP),
 ]
 
 
