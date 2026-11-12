@@ -507,3 +507,20 @@ ul.posts .read-mark {
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
+
+/* ---- 划词高亮与笔记 ---- */
+.nt-actions {
+  position: fixed; z-index: 60; transform: translateX(-50%);
+  display: flex; gap: 4px; padding: 4px;
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(45, 49, 66, 0.16);
+}
+.nt-actions button {
+  font: inherit; font-size: 12px; line-height: 1; padding: 5px 10px;
+  border: 0; border-radius: 5px; background: transparent; color: var(--ink); cursor: pointer;
+}
+.nt-actions button:hover { background: rgba(45, 49, 66, 0.07); }
+mark.note-hl {
+  background: rgba(191, 69, 32, 0.13); color: inherit;
+  border-bottom: 1px solid rgba(191, 69, 32, 0.42); padding: 0 1px;
+}

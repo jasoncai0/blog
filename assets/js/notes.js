@@ -1,0 +1,188 @@
+// 划词高亮 + 批注。锚点用「原文 + 前后各 32 字 + 段落下标」，文章改字后失配就静默跳过。
+import { NOTES_KEY, ANCHOR_PAD, makeNote, readNotes, writeNotes, notesFor } from "./notes-core.mjs";
+
+const SKIP = new Set(["CODE", "PRE", "FIGCAPTION", "SCRIPT", "STYLE", "SVG"]);
+
+function skipped(el) {
+  for (let node = el; node; node = node.parentElement) {
+    if (SKIP.has(node.tagName)) return true;
+  }
+  return false;
+}
+
+function blockOf(node, body) {
+  let el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+  while (el && el.parentElement !== body) el = el.parentElement;
+  return el && el.parentElement === body ? el : null;
+}
+
+function textBefore(block, node, offset) {
+  const range = document.createRange();
+  range.setStart(block, 0);
+  range.setEnd(node, offset);
+  return range.toString();
+}
+
+function textAfter(block, node, offset) {
+  const range = document.createRange();
+  range.setStart(node, offset);
+  range.setEnd(block, block.childNodes.length);
+  return range.toString();
+}
+
+export function anchorOf(range, body) {
+  if (!range || range.collapsed) return null;
+  const startBlock = blockOf(range.startContainer, body);
+  const endBlock = blockOf(range.endContainer, body);
+  if (!startBlock || startBlock !== endBlock) return null;
+  if (skipped(range.startContainer)) return null;
+  const q = range.toString();
+  if (!q.trim()) return null;
+  const before = textBefore(startBlock, range.startContainer, range.startOffset);
+  const after = textAfter(startBlock, range.endContainer, range.endOffset);
+  return {
+    q,
+    pre: before.slice(-ANCHOR_PAD),
+    post: after.slice(0, ANCHOR_PAD),
+    block: Array.prototype.indexOf.call(body.children, startBlock),
+  };
+}
+
+export function locate(anchor, body) {
+  const block = body.children[anchor.block];
+  if (!block) return [];
+  const text = block.textContent;
+  const hits = [];
+  let at = text.indexOf(anchor.q);
+  while (at >= 0) {
+    const preOk = !anchor.pre || text.slice(Math.max(0, at - anchor.pre.length), at).endsWith(anchor.pre);
+    const after = at + anchor.q.length;
+    const postOk = !anchor.post || text.slice(after, after + anchor.post.length).startsWith(anchor.post);
+    if (preOk && postOk) hits.push({ node: block, start: at, end: after });
+    at = text.indexOf(anchor.q, at + 1);
+  }
+  if (hits.length) return hits;
+  // 文章被改过：前后文对不上时，只要这句在本段里只出现一次，仍然认它。
+  const only = text.indexOf(anchor.q);
+  if (only >= 0 && text.indexOf(anchor.q, only + 1) < 0) {
+    return [{ node: block, start: only, end: only + anchor.q.length }];
+  }
+  return [];
+}
+
+function textNodesOf(block) {
+  const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+  const out = [];
+  let pos = 0;
+  let node;
+  while ((node = walker.nextNode())) {
+    out.push({ node, start: pos, end: pos + node.length });
+    pos += node.length;
+  }
+  return out;
+}
+
+function wrapRange(block, start, end, id) {
+  const nodes = textNodesOf(block).filter((n) => n.end > start && n.start < end);
+  let wrapped = 0;
+  for (let i = nodes.length - 1; i >= 0; i -= 1) {
+    const { node } = nodes[i];
+    const from = Math.max(0, start - nodes[i].start);
+    const to = Math.min(node.length, end - nodes[i].start);
+    if (to <= from) continue;
+    let target = node;
+    if (to < target.length) target.splitText(to);
+    if (from > 0) target = target.splitText(from);
+    if (skipped(target.parentElement)) continue;
+    const mark = document.createElement("mark");
+    mark.className = "note-hl";
+    mark.dataset.note = id;
+    target.parentNode.insertBefore(mark, target);
+    mark.appendChild(target);
+    wrapped += 1;
+  }
+  return wrapped;
+}
+
+export function paint(body, anchor, id) {
+  const hits = locate(anchor, body);
+  let wrapped = 0;
+  for (const hit of hits) wrapped += wrapRange(hit.node, hit.start, hit.end, id);
+  return wrapped;
+}
+
+function save(all) {
+  if (!writeNotes(localStorage, all)) console.warn("笔记没存进去：本地存储已满或被禁用");
+  return all;
+}
+
+function currentSelection() {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
+  return sel.getRangeAt(0);
+}
+
+export function initNotes() {
+  const body = document.querySelector(".post-body[data-progress-post]");
+  if (!body) return;
+  const slug = body.dataset.progressPost;
+
+  let all = readNotes(localStorage);
+  for (const note of notesFor(all, slug)) {
+    const wrapped = paint(body, note, note.id);
+    if (!wrapped) console.debug("笔记锚点失配，跳过", note.id);
+  }
+
+  let bar = null;
+  const hideBar = () => {
+    bar?.remove();
+    bar = null;
+  };
+
+  const showBar = (range) => {
+    hideBar();
+    const rect = range.getBoundingClientRect();
+    bar = document.createElement("div");
+    bar.className = "nt-actions";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.action = "highlight";
+    button.textContent = "高亮";
+    button.addEventListener("mousedown", (event) => event.preventDefault());
+    button.addEventListener("click", () => {
+      const anchor = anchorOf(range, body);
+      if (!anchor) return;
+      const note = makeNote({ ...anchor, t: Date.now(), text: "", author: "我" });
+      all = save({ ...all, [slug]: [...notesFor(all, slug), note] });
+      paint(body, note, note.id);
+      hideBar();
+      window.getSelection()?.removeAllRanges();
+    });
+    bar.append(button);
+    bar.style.top = `${Math.max(8, rect.top - 44)}px`;
+    bar.style.left = `${rect.left + rect.width / 2}px`;
+    document.body.append(bar);
+  };
+
+  document.addEventListener("selectionchange", () => {
+    const range = currentSelection();
+    if (!range) {
+      hideBar();
+      return;
+    }
+    const anchor = anchorOf(range, body);
+    if (!anchor) {
+      hideBar();
+      return;
+    }
+    showBar(range);
+  });
+
+  window.addEventListener("scroll", hideBar, { passive: true });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initNotes);
+} else {
+  initNotes();
+}
