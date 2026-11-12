@@ -67,6 +67,25 @@ scripts/publish.sh --final         # 带 --delete 收尾（清理线上旧文件
 rsync -a --delete ~/backups/blog-<时间戳>/ ubuntu@62.234.122.22:/var/www/blog/
 ```
 
+## 同步服务（笔记 + 阅读进度）
+
+笔记和阅读进度都存在浏览器 `localStorage`，只在本机有效。为了让换浏览器、换设备也还在，站点旁边跑了一个极小的同步服务 `server/notesd.py`（Python 标准库 + SQLite，无第三方依赖）：
+
+- 接口挂在 `https://jasoncai.site/api/`（nginx 反代到 `127.0.0.1:8099`），客户端 `assets/js/sync.js` 用它做「本地优先 + 后台同步」。
+- 页面先读本地（离线照常用），连上服务端后合并：笔记按更新时间取新的、删掉的用墓碑同步；进度取最大值，读完状态只增不减。
+- 写操作先落本地再排队上行；断网时队列留在 `jasoncai:sync-queue:v1`，恢复后自动补发。
+- 读公开；写默认也公开，设了 `NOTES_EDIT_KEY` 才要求 `X-Edit-Key`。
+
+本地跑服务与测试：
+
+```bash
+python3 server/notesd.py --port 8099 --db /tmp/notes.db   # 起服务
+python3 server/test_notesd.py                             # 接口测试（7 例）
+python3 scripts/tests/test_notes_sync.py                  # 跨浏览器同步（5 例，自带 notesd）
+```
+
+部署见 `~/.dsh/hosts/blog-jasoncai.site.md` §14（systemd + nginx 两段）。
+
 ## 阅读进度
 
 文章页顶部有一条 2px 的进度条，右下角在滚动后出现百分比胶囊（≥95% 显示「读完」）；再次打开同一篇会回到上次位置，并提示「从 N% 继续」。首页每篇的 tag 行后会标出读到哪了。

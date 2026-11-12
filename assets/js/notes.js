@@ -11,6 +11,14 @@ import {
   removeNote,
   serializeStore,
 } from "./notes-core.mjs";
+import {
+  pullNotes,
+  pullSummary,
+  queueNote,
+  queueDelete,
+  mergeNotes,
+  uploadLocalOnly,
+} from "./sync.js";
 
 let openPop = null;
 
@@ -157,10 +165,13 @@ function currentSelection() {
   return sel.getRangeAt(0);
 }
 
+let serverCounts = {};
+
 export function markHome() {
   const all = readNotes(safeStore());
   for (const li of document.querySelectorAll("li[data-progress-post]")) {
-    const count = countFor(all, li.dataset.progressPost);
+    const slug = li.dataset.progressPost;
+    const count = countFor(all, slug) || serverCounts[slug] || 0;
     let mark = li.querySelector(".note-mark");
     if (!count) {
       mark?.remove();
@@ -181,6 +192,12 @@ function initNotes() {
   const body = document.querySelector(".post-body[data-progress-post]");
   if (!body) {
     markHome();
+    pullSummary()
+      .then((data) => {
+        serverCounts = data.notes || {};
+        markHome();
+      })
+      .catch(() => {});
     window.addEventListener("pageshow", (event) => {
       if (event.persisted) markHome();
     });
@@ -190,10 +207,30 @@ function initNotes() {
   const slug = body.dataset.progressPost;
 
   let all = readNotes(safeStore());
-  for (const note of notesFor(all, slug)) {
-    const wrapped = paint(body, note, note.id);
-    if (!wrapped) console.debug("笔记锚点失配，跳过", note.id);
-  }
+  const paintAll = () => {
+    for (const mark of body.querySelectorAll("mark.note-hl")) {
+      const parent = mark.parentNode;
+      mark.replaceWith(...mark.childNodes);
+      parent.normalize();
+    }
+    for (const note of notesFor(all, slug)) {
+      const wrapped = paint(body, note, note.id);
+      if (!wrapped) console.debug("笔记锚点失配，跳过", note.id);
+    }
+  };
+  paintAll();
+
+  // 本地先行，连上服务端后再合并（服务端更新的取服务端，本地独有的推上去）。
+  pullNotes(slug)
+    .then(({ notes, deleted }) => {
+      const local = notesFor(all, slug);
+      const { merged, adopted } = mergeNotes(local, notes, deleted);
+      all = save({ ...all, [slug]: merged });
+      uploadLocalOnly(slug, local, adopted);
+      paintAll();
+      renderList();
+    })
+    .catch(() => {});
 
   let bar = null;
   const hideBar = () => {
@@ -271,11 +308,13 @@ function initNotes() {
 
     saveBtn.addEventListener("click", () => {
       all = save(setThreadText(all, slug, id, input.value, Date.now()));
+      queueNote(slug, notesFor(all, slug).find((n) => n.id === id));
       renderList();
       closePop();
     });
     delBtn.addEventListener("click", () => {
       all = save(removeNote(all, slug, id));
+      queueDelete(slug, id);
       body.querySelectorAll(`mark.note-hl[data-note="${id}"]`).forEach((el) => {
         const parent = el.parentNode;
         el.replaceWith(...el.childNodes);
@@ -290,6 +329,7 @@ function initNotes() {
   const addNote = (anchor, text, openBubble) => {
     const note = makeNote({ ...anchor, t: Date.now(), text, author: "我" });
     all = save({ ...all, [slug]: [...notesFor(all, slug), note] });
+    queueNote(slug, note);
     paint(body, note, note.id);
     renderList();
     if (openBubble) openBubble(note);
@@ -412,6 +452,7 @@ function initNotes() {
         });
       }
       all = save({ ...all, [slug]: [] });
+      for (const note of notes) queueDelete(slug, note.id);
       renderList();
     });
     acts.append(exportBtn, clearBtn);

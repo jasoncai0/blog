@@ -242,8 +242,9 @@ def test_home_marks(context, base):
     assert hello.inner_text().strip() == "62%"
     assert hello.is_visible(), "进度标记应可见"
     assert lww.inner_text().strip() == "读完"
-    # 没读过的篇目不留空壳
-    assert page.locator('li[data-progress-post="agent-vs-computer"] .read-mark').count() == 0
+    # 没读过的篇目不留可见空壳（节点留着，等服务器上的进度晚到）
+    empty = page.locator('li[data-progress-post="agent-vs-computer"] .read-mark')
+    assert empty.inner_text().strip() == "" and not empty.is_visible()
 
 
 CASES = [

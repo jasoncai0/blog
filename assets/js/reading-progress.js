@@ -12,6 +12,7 @@ import {
   RESUME_MIN,
   DONE_THRESHOLD,
 } from "./progress-core.mjs";
+import { pullSummary, queueProgress, mergeProgress } from "./sync.js";
 
 const FLUSH_MS = 1000;
 const HINT_MS = 2500;
@@ -37,7 +38,9 @@ function saveEntry(slug, percent) {
   if (!slug) return;
   // 每次落盘都从 localStorage 重新读，合并其他标签页写进来的条目。
   const store = parseStore(safeGet() || "");
-  safeSet(serializeStore(writeEntry(store, slug, percent, Date.now())));
+  const next = writeEntry(store, slug, percent, Date.now());
+  safeSet(serializeStore(next));
+  queueProgress(slug, next[slug]); // 服务器上取最大值，晚到的旧进度不会把它拉回去
 }
 
 // 首页：把每篇的最大进度标在标题下方，没读过的篇目不留空壳。
@@ -46,16 +49,37 @@ function markHome() {
   for (const item of document.querySelectorAll("[data-progress-post]")) {
     const mark = item.querySelector(".read-mark");
     if (!mark) continue;
+    // 节点留着、只切 hidden：服务端进度晚到时还要往里写（remove 掉就找不回来了）
     const text = formatMark(readEntry(store, item.dataset.progressPost));
-    if (text) mark.textContent = text;
-    else mark.remove();
+    mark.textContent = text;
+    mark.hidden = !text;
   }
+}
+
+// 与服务端对账：取每篇的最大进度，合并进本地后再决定要不要推回。
+function syncProgress() {
+  return pullSummary()
+    .then((data) => {
+      const local = parseStore(safeGet() || "");
+      const merged = mergeProgress(local, data.progress);
+      safeSet(serializeStore(merged));
+      // 只把「本地更新」的进度推回去；服务端本来就有的条目不用回环一遍。
+      for (const [slug, entry] of Object.entries(merged)) {
+        const cur = local[slug];
+        if (cur && (cur.p > (entry.p || 0) || (cur.d && !entry.d))) queueProgress(slug, cur);
+      }
+      return merged;
+    })
+    .catch(() => null);
 }
 
 function boot() {
   const host = document.querySelector(".post-body[data-progress-post]");
   if (!host) {
     markHome();
+    syncProgress().then((merged) => {
+      if (merged) markHome();
+    });
     // 从文章页后退回来时页面可能直接来自 bfcache，标记要在恢复后重算一次
     window.addEventListener("pageshow", (event) => {
       if (event.persisted) markHome();
@@ -239,6 +263,16 @@ function boot() {
   } else {
     window.addEventListener("load", resume, { once: true });
   }
+  // 服务端的进度可能比本地新（换了设备）：合并后重画一次胶囊与虚线。
+  syncProgress().then((merged) => {
+    if (!merged) return;
+    const entry = readEntry(merged, slug);
+    if (!entry) return;
+    paint(entry.p);
+    const marker = document.querySelector(".rp-marker");
+    if (marker) marker.remove();
+    placeMarker(entry);
+  });
 }
 
 if (document.readyState === "loading") {
