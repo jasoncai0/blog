@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="768" viewBox="0 0 960 768" role="img" aria-labelledby="d8t d8d">
+  <title id="d8t">多实例写入：客户端打到非 leader 实例，提案经日志复制后提交</title>
+  <desc id="d8d">客户端把写发给实例 A，A 转发给 leader B，B 向副本 C 提案并在多数派持久化后返回 200，随后广播 commit 让各副本按同一 index 应用。最后客户端超时重发到实例 C，状态机去重命中，返回同一结果。</desc>
+  <defs>
+    <marker id="d8a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2d3142"/>
+    </marker>
+    <marker id="d8g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b93a4"/>
+    </marker>
+    <marker id="d8aA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="768" fill="#f5f5f5"/>
+
+  <text x="48" y="46" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.6" fill="#bf4520">MULTI-INSTANCE</text>
+  <text x="48" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="26" font-weight="600" fill="#2d3142">一次写入穿过四个进程</text>
+  <text x="48" y="108" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#5a6580">任何实例都能接写，但同一个分片只有一条日志——顺序由日志决定，不由收包的实例决定</text>
+  <line x1="48" y1="128" x2="912" y2="128" stroke="#ddd8d0" stroke-width="1"/>
+
+  <rect x="48" y="150" width="180" height="46" rx="6" fill="#ffffff" stroke="#d8d5cf"/>
+  <text x="138" y="178" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" fill="#2d3142">客户端</text>
+
+  <rect x="276" y="150" width="180" height="46" rx="6" fill="#ffffff" stroke="#d8d5cf"/>
+  <text x="366" y="178" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" fill="#2d3142">实例 A</text>
+
+  <rect x="504" y="150" width="180" height="46" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="594" y="178" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" fill="#2d3142">实例 B · leader</text>
+
+  <rect x="732" y="150" width="180" height="46" rx="6" fill="#ffffff" stroke="#d8d5cf"/>
+  <text x="822" y="178" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" fill="#2d3142">实例 C · 副本</text>
+
+  <line x1="138" y1="196" x2="138" y2="642" stroke="#cfcac2" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="366" y1="196" x2="366" y2="642" stroke="#cfcac2" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="594" y1="196" x2="594" y2="642" stroke="#cfcac2" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="822" y1="196" x2="822" y2="642" stroke="#cfcac2" stroke-width="1" stroke-dasharray="3 4"/>
+
+  <line x1="138" y1="250" x2="272" y2="250" stroke="#2d3142" stroke-width="1.2" marker-end="url(#d8a)"/>
+  <text x="146" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">① PUT title = B1 · clientSeq 7</text>
+
+  <line x1="366" y1="302" x2="500" y2="302" stroke="#2d3142" stroke-width="1.2" marker-end="url(#d8a)"/>
+  <text x="374" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">② 转发 leader（我不是）</text>
+
+  <line x1="594" y1="354" x2="728" y2="354" stroke="#2d3142" stroke-width="1.2" marker-end="url(#d8a)"/>
+  <text x="602" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">③ append(index = 1025)</text>
+
+  <line x1="732" y1="398" x2="598" y2="398" stroke="#8b93a4" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#d8g)"/>
+  <text x="602" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">④ 多数派持久化</text>
+
+  <line x1="594" y1="448" x2="142" y2="448" stroke="#8b93a4" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#d8g)"/>
+  <text x="146" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">⑤ 200 { index: 1025, stamp 1001.0@B }</text>
+
+  <line x1="594" y1="512" x2="370" y2="512" stroke="#bf4520" stroke-width="1.2" marker-end="url(#d8aA)"/>
+  <line x1="594" y1="512" x2="818" y2="512" stroke="#bf4520" stroke-width="1.2" marker-end="url(#d8aA)"/>
+  <text x="378" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">⑥ commit(1025) 广播</text>
+  <text x="602" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">按下标 apply</text>
+
+  <line x1="138" y1="572" x2="818" y2="572" stroke="#8b93a4" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#d8g)"/>
+  <text x="146" y="564" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">⑦ 超时重发：这次落到了实例 C，clientSeq 还是 7</text>
+
+  <line x1="822" y1="616" x2="142" y2="616" stroke="#bf4520" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#d8aA)"/>
+  <text x="146" y="608" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">⑧ 去重命中：同一个 index、同一个结果，不重复提案</text>
+
+  <text x="48" y="666" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">所有写都走同一条日志，所以「谁先谁后」只有一个答案。④ 是 ⑤ 的前提：多数派没落盘就不能回 200。</text>
+  <text x="48" y="690" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">⑦⑧ 是同一个请求的第二次投递——去重放在状态机里，所以换哪个实例（甚至换了 leader）都认得出。</text>
+
+  <line x1="48" y1="716" x2="912" y2="716" stroke="#ddd8d0" stroke-width="1"/>
+  <line x1="52" y1="740" x2="72" y2="740" stroke="#2d3142" stroke-width="1.2"/>
+  <text x="80" y="744" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">请求方向</text>
+  <line x1="152" y1="740" x2="172" y2="740" stroke="#8b93a4" stroke-width="1.1" stroke-dasharray="4 3"/>
+  <text x="180" y="744" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">返回方向</text>
+  <line x1="252" y1="740" x2="272" y2="740" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="280" y="744" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">值在这里变得可见</text>
+  <text x="912" y="744" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#8b93a4">虚线不代表「不持久」，只代表方向</text>
+</svg>

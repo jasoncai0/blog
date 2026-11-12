@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="d9t d9d">
+  <title id="d9t">Yjs 与 Automerge 的真源差异：文档结构 vs 变更历史</title>
+  <desc id="d9d">左边 Yjs 的真源是一条 Item 链，删除的内容被回收成占位符，同步靠 state vector 求差集。右边 Automerge 的真源是 change 组成的哈希图，文档状态是它的投影，所以可以检出任意历史版本。</desc>
+  <defs>
+    <marker id="d9a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b93a4"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="48" y="46" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.6" fill="#bf4520">TWO LIBRARIES</text>
+  <text x="48" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="26" font-weight="600" fill="#2d3142">同一份文本，两种真源</text>
+  <text x="48" y="108" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#5a6580">体积、时间旅行、GC 的差别不来自合并算法，来自「什么才算文档」</text>
+  <line x1="48" y1="128" x2="912" y2="128" stroke="#ddd8d0" stroke-width="1"/>
+
+  <rect x="48" y="150" width="420" height="312" rx="8" fill="#ffffff" stroke="#d8d5cf"/>
+  <text x="68" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" letter-spacing="2" fill="#bf4520">YJS &#183; YATA</text>
+  <text x="68" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">文档即结构</text>
+
+  <rect x="68" y="216" width="84" height="32" rx="5" fill="#f5f5f5" stroke="#d8d5cf"/>
+  <text x="110" y="237" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" fill="#2d3142">h</text>
+  <rect x="172" y="216" width="84" height="32" rx="5" fill="#f5f5f5" stroke="#d8d5cf"/>
+  <text x="214" y="237" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" fill="#2d3142">e</text>
+  <rect x="276" y="216" width="84" height="32" rx="5" fill="#f5f5f5" stroke="#d8d5cf"/>
+  <text x="318" y="237" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" fill="#2d3142">y</text>
+  <rect x="380" y="216" width="64" height="32" rx="5" fill="none" stroke="#cfcac2" stroke-dasharray="3 3"/>
+  <text x="412" y="237" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#8b93a4">gc</text>
+
+  <line x1="152" y1="232" x2="170" y2="232" stroke="#8b93a4" stroke-width="1" marker-end="url(#d9a)"/>
+  <line x1="256" y1="232" x2="274" y2="232" stroke="#8b93a4" stroke-width="1" marker-end="url(#d9a)"/>
+  <line x1="360" y1="232" x2="378" y2="232" stroke="#8b93a4" stroke-width="1" marker-end="url(#d9a)"/>
+
+  <text x="110" y="266" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a4">1000@A</text>
+  <text x="214" y="266" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a4">1001@A</text>
+  <text x="318" y="266" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a4">1002@B</text>
+  <text x="412" y="266" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a4">只剩占位</text>
+
+  <text x="68" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#8b93a4">每项带 (client, clock) 与左右锚点，插入时只比邻居</text>
+
+  <text x="68" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">同步：交换 state vector，只补差集</text>
+  <text x="68" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">增量：encodeStateAsUpdate &#8594; 一段二进制</text>
+  <text x="68" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">删除：内容被回收，历史默认不留</text>
+  <text x="68" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#bf4520">省下来的就是体积与内存</text>
+
+  <rect x="492" y="150" width="420" height="312" rx="8" fill="#ffffff" stroke="#d8d5cf"/>
+  <text x="512" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" letter-spacing="2" fill="#bf4520">AUTOMERGE &#183; JSON CRDT</text>
+  <text x="512" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142">历史即结构</text>
+
+  <rect x="512" y="236" width="64" height="26" rx="5" fill="#f5f5f5" stroke="#d8d5cf"/>
+  <text x="544" y="253" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">3f2a</text>
+  <rect x="600" y="200" width="64" height="26" rx="5" fill="#f5f5f5" stroke="#d8d5cf"/>
+  <text x="632" y="217" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">9c01</text>
+  <rect x="600" y="272" width="64" height="26" rx="5" fill="#f5f5f5" stroke="#d8d5cf"/>
+  <text x="632" y="289" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">b7de</text>
+  <rect x="712" y="236" width="64" height="26" rx="5" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="744" y="253" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">e410</text>
+
+  <line x1="576" y1="242" x2="598" y2="222" stroke="#8b93a4" stroke-width="1" marker-end="url(#d9a)"/>
+  <line x1="576" y1="256" x2="598" y2="276" stroke="#8b93a4" stroke-width="1" marker-end="url(#d9a)"/>
+  <line x1="664" y1="213" x2="710" y2="240" stroke="#8b93a4" stroke-width="1" marker-end="url(#d9a)"/>
+  <line x1="664" y1="285" x2="710" y2="258" stroke="#8b93a4" stroke-width="1" marker-end="url(#d9a)"/>
+
+  <text x="512" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#8b93a4">每个 change 是一批 op，父哈希把因果钉死</text>
+
+  <text x="512" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">同步：交换 change 图，缺哪支补哪支</text>
+  <text x="512" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">存储：save(doc) &#8594; 全部 change 的列式编码</text>
+  <text x="512" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">删除：op 留在历史里，可 checkout 回看</text>
+  <text x="512" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#bf4520">代价是历史一直在</text>
+
+  <rect x="48" y="492" width="864" height="60" rx="6" fill="#ffffff" stroke="#d8d5cf"/>
+  <text x="68" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">体积差与能力差是同一件事的两面：Yjs 把历史当开销，能扔就扔；Automerge 把历史当资产，代价是它永远在。</text>
+  <text x="68" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">所以这不是「谁更先进」的对比——你如果本来就要版本、审计、分支，一边是白送，另一边得自己造。</text>
+</svg>
