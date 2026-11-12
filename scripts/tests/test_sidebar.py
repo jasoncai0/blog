@@ -181,6 +181,22 @@ def test_no_marker_when_resume_jumped(page, base):
     assert page.locator(".rp-marker").count() == 0
 
 
+def test_no_js_home_keeps_rail_content(ctx, base):
+    page = ctx.new_page()
+    page.goto(base + "/")
+    assert page.locator("aside.rail-home nav.calendar").count() == 1
+    assert page.locator("aside.rail-home a.tag-chip").count() >= 15
+    assert page.locator("ul.posts li").count() > 50
+    assert not page.locator(".cal-controls").is_visible(), "无 JS 时不显示日历控件"
+
+
+def test_no_js_article_keeps_toc_but_hides_toggle(ctx, base):
+    page = ctx.new_page()
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    assert page.locator("nav.toc a").count() > 3
+    assert not page.locator(".toc-toggle").is_visible(), "无 JS 时不显示折叠按钮"
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
@@ -199,6 +215,8 @@ CASES = [
     (test_marker_shows_where_reading_stopped, False, DESKTOP),
     (test_marker_disappears_after_scrolling_past, False, DESKTOP),
     (test_no_marker_when_resume_jumped, False, DESKTOP),
+    (test_no_js_home_keeps_rail_content, True, {**DESKTOP, "java_script_enabled": False}),
+    (test_no_js_article_keeps_toc_but_hides_toggle, True, {**DESKTOP, "java_script_enabled": False}),
 ]
 
 

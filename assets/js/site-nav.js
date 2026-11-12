@@ -25,6 +25,7 @@ function initCalendar() {
     });
   };
 
+  root.querySelector(".cal-controls")?.removeAttribute("hidden");
   const scroller = root.querySelector(".cal-scroll");
   const revealWeek = (index) => {
     const week = weeks[index];
@@ -108,6 +109,7 @@ function initToc() {
   const rail = document.querySelector("aside.rail-article");
   if (!rail) return;
   const btn = rail.querySelector(".toc-toggle");
+  btn?.removeAttribute("hidden");
   const apply = (collapsed) => {
     rail.classList.toggle("is-collapsed", collapsed);
     if (!btn) return;

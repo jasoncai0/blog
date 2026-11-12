@@ -274,6 +274,7 @@ figcaption {
 .cal-legend-label { margin: 0 4px; }
 .cal-scroll { overflow-x: auto; overflow-y: hidden; padding: 14px 0 2px; }
 .cal-grid { display: grid; grid-auto-flow: column; grid-auto-columns: 10px; gap: 3px; }
+[hidden] { display: none !important; } /* 组件自己设了 display，会盖掉 UA 的 [hidden] */
 .cal-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 8px; }
 .cal-btn, .cal-prev, .cal-next {
   border: 1px solid var(--rule); border-radius: 999px; background: transparent;

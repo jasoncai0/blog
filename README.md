@@ -11,8 +11,9 @@ content/posts/<slug>/index.md     # 文章（page bundle），slug 决定 URL /p
 content/posts/<slug>/diagrams/    # 该篇的 SVG，正文里用 {{< fig "diagrams/x.svg" "图注" >}} 内联
 data/tags.yaml                    # tag 词表，唯一权威
 layouts/                          # baseof / single / list / terms / taxonomy / rss / 404
+layouts/partials/                 # calendar（写作日历）/ rail-home（首页左栏）/ rail-article（文章页目录）
 assets/css/site.css               # 纸感主题（全站统一，无暗色模式）
-assets/js/                        # 阅读进度：progress-core.mjs（纯逻辑）+ reading-progress.js（DOM）
+assets/js/                        # progress-core.mjs / reading-progress.js（阅读进度）、calendar-core.mjs / site-nav.js（侧栏）
 static/favicon.*                  # 站点图标（ico / svg / 32 / 512 / apple-touch），由 scripts/make-favicon.py 生成
 scripts/                          # check-tags / verify-site / publish / blockstats / migrate / reverse-convert
 docs/baseline/local.json          # 每篇的结构块数量基线，verify-site 用来防回归
@@ -74,12 +75,22 @@ rsync -a --delete ~/backups/blog-<时间戳>/ ubuntu@62.234.122.22:/var/www/blog
 - 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有进度功能。
 - 内部实现见 `docs/superpowers/specs/2026-11-10-reading-progress-design.md`。
 
+## 侧栏
+
+宽屏（≥900px）首页左栏是写作日历和标签云，文章页左栏是目录；窄屏时它们堆到正文上方。
+
+- 日历：服务端直接渲染整年的格子，默认只显示最近 12 周，可切「全年」；‹ › 平移，日期框跳到某天并高亮那一周；点有文章的格子会滚到并闪一下当天在首页的条目。
+- 目录：点标题旁的「收起」缩到 44px，状态存在 `jasoncai:toc:collapsed`；滚动时当前小节以左侧竖线标出；点链接不会自动收起。
+- 「上次读到这」：文章页在你离开的百分比位置画一条虚线，滚过去后淡出；自动续读时不画（人已经在那个位置了）。
+- 没有 JS 时：日历停在整年视图、目录常开、不出现折叠按钮和日历控件，正文照常读。
+
 ## 校验
 
 ```bash
 python3 -m unittest discover -s tests      # 脚本单测
 node --test "scripts/tests/*.test.mjs"     # 阅读进度纯逻辑
 hugo --minify && python3 scripts/tests/test_reading_progress.py   # 阅读进度浏览器回归
+hugo --minify && python3 scripts/tests/test_sidebar.py            # 侧栏 / 目录 / 标记浏览器回归
 bash tests/test_publish.sh                 # 发布流程行为测试（全在临时目录）
 python3 scripts/check-tags.py content/posts data/tags.yaml
 python3 scripts/verify-site.py --public public
