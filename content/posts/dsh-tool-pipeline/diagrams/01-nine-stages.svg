@@ -15,7 +15,7 @@
 
   <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">10 / PIPELINE</text>
   <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次调用穿过九段，三种形状决定它跳过谁</text>
-  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">allow 之后的四段执行；拒绝不是异常，而是 post-result —— 所以它仍然会被投影、被策略改写</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">allow 之后的四段执行；拒绝也是一种结果，post-result 因此仍要投影、仍会被策略改写</text>
 
   <!-- row 1 -->
   <rect x="40" y="112" width="190" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
@@ -92,5 +92,5 @@
   <text x="508" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">参数错 / pre 抛错 / wrapper 抛错 → final-result：跳过 ⑤⑥</text>
 
   <text x="40" y="552" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">post-result = { content, isError, error?, meta?, additionalContexts? }</text>
-  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">两条旁路的差别不在「成功还是失败」，而在「结果是否已经存在」。</text>
+  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">两条旁路的区别是「结果是否已经存在」，跟「成功还是失败」无关。</text>
 </svg>

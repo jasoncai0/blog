@@ -73,7 +73,7 @@
   <text x="782" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">query</text>
   <text x="782" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">索引 + 检索 + 注入</text>
 
-  <text x="90" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">三条路都不删源日志；真正贵的是把读到的内容再塞回上下文。</text>
+  <text x="90" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">三条路都不删源日志；贵的是把读到的内容再塞回上下文。</text>
 
   <text x="40" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">packages/core/session/src/fork.ts · packages/context/session-reference · packages/session-query</text>
 </svg>

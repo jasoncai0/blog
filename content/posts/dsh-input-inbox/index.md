@@ -116,7 +116,7 @@ claim(target: InboxTarget, turn: number): UserMessage[] {
 | 未进入请求时 | 轮次可能以空批次关闭（`completed`） | 批次可能被 pre-step 改写或 reject |
 | 谁决定「有没有下一步」 | `turn()` 尾部的 `hasPending` | `step()` 返回值 + `turnEnds` |
 
-这张表能纠正一个常见误解。`next-step` 不是「下一步专用」，它在轮次的第一步同样会被领走。所谓「steer 挤进最近的 step」，在轮次还没开始时，最近的 step 就是第一步。
+这张表能纠正一个常见误解。`next-step` 不是「下一步专用」，它在轮次的第一步同样会被领走。「steer 挤进最近的 step」，在轮次还没开始时，最近的 step 就是第一步。
 
 {{< fig "diagrams/01-inbox-two-queues.svg" "状态机：两条队列与一条消息的四种归宿。消息先按投递方式进入 next-turn 或 next-step；轮次边界从 next-turn 领一条，step 边界把 next-step 整批领走；认领后进入当前 step 的准入，未被准入就停在 claimed（既不算丢弃，也不会成为 user/message）。只有显式删除、clear() 或取消才发 discarded。" >}}
 

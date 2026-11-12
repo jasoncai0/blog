@@ -94,7 +94,7 @@
   <rect x="40" y="508" width="880" height="34" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="56" y="529" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">assistant/message → pending ｜ tool/call → 填 callSeq ｜ tool/result(append, 同 turn/step) → 删除 ｜ turn/start · turn/end · step/end → 清空</text>
 
-  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">配对不是“尽量保持”，而是进入下一轮的硬条件；缺一条，整个会话都不能继续。</text>
+  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">配对是进入下一轮的硬条件，不能“尽量保持”；缺一条，整个会话都不能继续。</text>
 
   <text x="40" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 12</text>
 </svg>

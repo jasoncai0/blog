@@ -105,7 +105,7 @@
   <!-- bottom note -->
   <rect x="40" y="510" width="880" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="56" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">判断一份结果该进哪条路径，只问三个问题：模型下一步需要它吗？用户需要它的结构吗？以后还能重放吗？</text>
-  <text x="56" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">三者都答“是”时，也不是复制三份原文，而是让每条路径各自决定保真度。</text>
+  <text x="56" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">三者都答“是”时，也不复制三份原文，每条路径各自决定保真度。</text>
 
   <text x="40" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 12</text>
 </svg>

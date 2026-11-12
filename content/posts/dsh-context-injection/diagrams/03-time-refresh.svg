@@ -10,7 +10,7 @@
 
   <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">CONTEXT / TIME</text>
   <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">时间注入：按间隔补发，不按 turn 重置</text>
-  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具跑了很久、用户隔了半小时才回话——时间快照应该反映「现在」，而不是 turn 开始的那一刻</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具跑了很久、用户隔了半小时才回话，时间快照应该反映「现在」，而不是 turn 开始的那一刻</text>
 
   <!-- turn brackets -->
   <line x1="90" y1="150" x2="420" y2="150" stroke="#d8d8d8" stroke-width="1.2"/>

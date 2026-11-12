@@ -66,7 +66,7 @@
   <!-- log event -->
   <rect x="48" y="466" width="852" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="64" y="488" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#7a5aa8">permission/preset { preset }</text>
-  <text x="64" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">仅日志的用户意图，不进 transcript。先记选择，再写真正变化的 knob；重选当前预设不追加任何事件。</text>
+  <text x="64" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">仅日志的用户意图，不进 transcript。先记选择，再写实际变化的 knob；重选当前预设不追加任何事件。</text>
 
   <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">为什么保留选择事件：两个预设可能共享同一组 knob，只有它能把「用户选的是哪一个」留住。</text>
   <text x="48" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">为什么 custom 不可选：它是「当前组合不匹配任何预设」的派生结论，把它写回日志会制造一个假选择。</text>

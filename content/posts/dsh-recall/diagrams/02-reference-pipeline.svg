@@ -10,7 +10,7 @@
 
   <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-RECALL / SESSION-REFERENCE</text>
   <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">一次引用，七道收缩</text>
-  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">引用不是把另一个会话接进来，而是把它压成一段可解释的文本，再挂到当前请求上。</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">引用没有把另一个会话接进来，它被压成一段可解释的文本，再挂到当前请求上。</text>
 
   <rect x="40" y="104" width="600" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="56" y="125" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">① CANDIDATES</text>
@@ -74,7 +74,7 @@
   <text x="674" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">text.replaceAll('&lt;', '\u003c')</text>
 
   <text x="40" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">这七步里没有一步调用模型。引用是宿主做的上下文工程，模型只看到最后那条消息，看不到管线。</text>
-  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">如果源会话在读取过程中继续增长，快照仍然只到 capturedThroughSeq —— 引用要可复现，就不能追新。</text>
+  <text x="40" y="570" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">如果源会话在读取过程中继续增长，快照仍然只到 capturedThroughSeq：引用要可复现，就不能追新。</text>
 
   <text x="40" y="592" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">packages/context/session-reference/src/{index,uri,projection,spill,serialization}.ts</text>
 </svg>

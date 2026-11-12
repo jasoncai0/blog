@@ -68,7 +68,7 @@
 
   <text x="512" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">item 2 在 s1 结束后立刻进 s2，不等 item 1 的整条链</text>
   <text x="512" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">某项失败只丢该项，其余 item 继续</text>
-  <text x="512" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">阶段进度只来自真正开始过的成员</text>
+  <text x="512" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">阶段进度只来自开始过的成员</text>
 
   <!-- bottom notes -->
   <path d="M 40 380 L 920 380" stroke="#d8d8d8" stroke-width="1"/>

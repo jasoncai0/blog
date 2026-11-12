@@ -92,5 +92,5 @@
   <text x="62" y="489" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">9</text>
   <text x="62" y="543" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">10</text>
 
-  <text x="48" y="596" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">「同步返回」不等于「只做了一点」：真正决定轮次是否开始的工作，都发生在返回之前。</text>
+  <text x="48" y="596" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">「同步返回」不等于「只做了一点」：决定轮次是否开始的工作，都发生在返回之前。</text>
 </svg>

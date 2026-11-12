@@ -13,7 +13,7 @@
 
   <text x="40" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SESSION / READ PATHS</text>
   <text x="40" y="56" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">同一份日志，三种读法</text>
-  <text x="40" y="76" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">区别不在格式，而在「写不写」与「从哪里写」</text>
+  <text x="40" y="76" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">区别在于「写不写」与「从哪里写」，跟格式无关</text>
 
   <!-- log bar -->
   <rect x="60" y="104" width="840" height="54" rx="4" fill="#2d3142"/>

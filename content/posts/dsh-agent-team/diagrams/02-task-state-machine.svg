@@ -15,7 +15,7 @@
 
   <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#bf4520">TASK STATE MACHINE</text>
   <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">四个状态，八条迁移，一条没有迁移的路径</text>
-  <text x="48" y="88" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">实线是任务动作；虚线是成员失败——状态原地不动，等 Lead 显式收拾</text>
+  <text x="48" y="88" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">实线是任务动作；虚线是成员失败，状态原地不动，等 Lead 显式收拾</text>
 
   <!-- states -->
   <rect x="90" y="210" width="170" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>

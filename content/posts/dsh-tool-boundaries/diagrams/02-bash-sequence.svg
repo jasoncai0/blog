@@ -112,7 +112,7 @@
   <text x="742" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">08 分类：runner failure ≠ denial</text>
 
   <line x1="742" y1="292" x2="904" y2="292" stroke="#d8d8d8"/>
-  <text x="742" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一条命令越界时，真正的</text>
+  <text x="742" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一条命令越界时，要问的</text>
   <text x="742" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">问题是“它走到第几步”。</text>
   <text x="742" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">第 6 步之前失败，进程从未</text>
   <text x="742" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">存在；第 7 步之后失败，</text>

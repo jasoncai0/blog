@@ -86,5 +86,5 @@
   <text x="56" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">② attempt 事件永远不产生模型消息。</text>
   <text x="56" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#d7dbe4">③ 结算失败不能吞掉原始错误：两个一起抛。</text>
 
-  <text x="40" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">「有内容但被中断」是最容易写错的分支：它不是失败，也不是成功，而是一条打了标记的正式消息。</text>
+  <text x="40" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">「有内容但被中断」是最容易写错的分支：它既不算失败，也不算成功，是一条打了标记的正式消息。</text>
 </svg>

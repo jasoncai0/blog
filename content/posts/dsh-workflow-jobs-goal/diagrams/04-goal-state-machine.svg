@@ -87,6 +87,6 @@
   <rect x="70" y="466" width="820" height="94" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
   <text x="90" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">active + disarmed 是合法状态：目标仍在进行，只是没有人被授权自动开下一轮。</text>
   <text x="90" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">driver 只在 phase=active 且 activation=armed 时驱动；disarm 不改 phase，也不改 revision。</text>
-  <text x="90" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">自动续跑是一种授权，授权不能从磁盘上长出来——所以恢复与 fork 之后都从 disarmed 开始。</text>
+  <text x="90" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">自动续跑是一种授权，授权不能从磁盘上长出来，所以恢复与 fork 之后都从 disarmed 开始。</text>
   <text x="90" y="552" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">NEVER INHERITS HIDDEN AUTOMATIC AUTHORITY</text>
 </svg>

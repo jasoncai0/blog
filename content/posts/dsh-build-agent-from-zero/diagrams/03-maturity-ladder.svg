@@ -120,7 +120,7 @@
   <rect x="40" y="504" width="560" height="72" fill="#ffffff" stroke="#d8d8d8" rx="6"/>
   <text x="58" y="524" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".12em" fill="#bf4520">跳级的代价</text>
   <text x="58" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">跳过 L3 直接做 L4/L5，功能都能演示；但取消之后「这轮到底算不算结束」、压缩之后「哪条被遮蔽」都没有答案。</text>
-  <text x="58" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">补 L3 不是加功能，是把「数组」换成「日志 + 投影」——这会重写每一个写历史的地方。</text>
+  <text x="58" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">补 L3 不加功能，它把「数组」换成「日志 + 投影」，会重写每一个写历史的地方。</text>
 
   <text x="40" y="592" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing=".1em" fill="#8a8f9c">03 / SEVEN LEVELS</text>
 </svg>

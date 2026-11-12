@@ -68,7 +68,7 @@
   <rect x="48" y="474" width="864" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
   <text x="64" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">HOW TO CHOOSE</text>
   <text x="64" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">默认选 false：用户按「停止」时，通常不希望下一句悄悄开始执行。需要保留时显式传 true，</text>
-  <text x="64" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">并在产品层面安排下一次唤醒——keepInbox 不会替你续跑。</text>
+  <text x="64" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">并在产品层面安排下一次唤醒；keepInbox 不会替你续跑。</text>
 
   <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">排除项：初始化失败时内部用 keepInbox: true，避免把排队输入放行成一个从未启动成功的轮次。</text>
 </svg>

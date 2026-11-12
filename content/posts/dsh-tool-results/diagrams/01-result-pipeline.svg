@@ -89,7 +89,7 @@
   <rect x="40" y="338" width="270" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="56" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">post block</text>
   <text x="56" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">content → feedback，isError = true</text>
-  <text x="56" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不是删除结果，而是改写结果</text>
+  <text x="56" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">结果没有被删除，只是被改写</text>
 
   <rect x="40" y="414" width="270" height="62" rx="6" fill="#ffffff" stroke="#bf4520"/>
   <text x="56" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">pipeline failure 绕过 post</text>

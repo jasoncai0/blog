@@ -241,7 +241,7 @@ if (current.revision !== request.expectedRevision) {
 
 成员失败不会触发任何迁移，`in_progress` 就是 `in_progress`。
 
-所谓「重新入队」在 DSH 里对应两个显式动作：Lead 用 `release` 清掉 owner、状态回 `pending`；或者 Lead 用 `reassign` 直接换一个 owner（省略 owner 时等于清空并回 `pending`）。
+「重新入队」在 DSH 里对应两个显式动作：Lead 用 `release` 清掉 owner、状态回 `pending`；或者 Lead 用 `reassign` 直接换一个 owner（省略 owner 时等于清空并回 `pending`）。
 
 `reassign` 只有 Lead 能做，`release` 则 owner 与 Lead 都能做。
 

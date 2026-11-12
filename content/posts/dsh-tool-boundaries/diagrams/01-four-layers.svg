@@ -125,6 +125,6 @@
   <text x="512" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">对每个可写根做 isPathUnder 判定。</text>
   <text x="512" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">SIDECAR 是这条路径的唯一边界</text>
 
-  <text x="40" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">四层不是同心圆：任意一层单独存在，都有一条完整的旁路。真正的判据是“这条路径经过了哪几层”。</text>
+  <text x="40" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">四层不构成同心圆：任意一层单独存在，都有一条完整的旁路。判据是“这条路径经过了哪几层”。</text>
   <text x="40" y="578" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.08em" fill="#bf4520">DSH TOOL EXECUTION PLANE / 11</text>
 </svg>

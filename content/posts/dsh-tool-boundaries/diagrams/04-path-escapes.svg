@@ -12,7 +12,7 @@
 
   <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">11 / PATH ESCAPES</text>
   <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">三种输入，一个判据：检查最终目标</text>
-  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">字符串前缀、resolve 之前检查、只看输入——三种常见实现分别被下面三个案例绕过</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">字符串前缀、resolve 之前检查、只看输入，三种常见实现分别被下面三个案例绕过</text>
 
   <!-- column headers -->
   <text x="40" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#8a93a6">CASE</text>
