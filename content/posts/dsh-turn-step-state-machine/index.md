@@ -186,7 +186,25 @@ const startsRequestSeries = firstAttempt && decision.startsRequestSeries
 
 把 `additionalContexts` 注入 next-step。顺序是：先写 `tool/result`，再把上下文 splice 进 `inbox.nextStep`。这保证了「工具结果」和「由它产生的上下文」在模型看来是相邻的，不会被别的消息插队。
 
-## 7. `agent/turn-stopping`：唯一允许反悔的窗口
+## 7. 一次 turn 的完整时序
+
+{{< fig "diagrams/06-turn-timeline.svg" "一次 turn 的六泳道时序：claim 之后依次是 tools.resolve、systemPrompt.assemble、agent/pre-step、step/start、请求组装、流式、工具、step/end、turn-stopping、turn/end；底部三个压缩入口分别挂在 pre-step、agent/request 与 request-error 上。" >}}
+
+这张图把前面几节拼到一起。竖着读是一条 turn 的时间线，横着看是六个参与者。五个位置容易记错：
+
+组装在 claim 之后、pre-step 之前。 `preStep()` 的顺序是 claim → `model.current()` → `tools.resolve()` → `systemPrompt.assemble()` → `agent/pre-step` waterfall。每个拟议 step 都重新组装一次系统提示词与工具 schema，哪怕 pre-step 随后 reject。reject 的代价不只是丢一批消息，还包含一次组装。
+
+压缩有两个入口，都不在 turn 开头。 入口 ① 挂在 `agent/pre-step` 上，跑在 assemble 之后、`step/start` 之前：这时还没有 step，摘要调用不计入 attempt。入口 ③ 挂在 `agent/request-error` 上，跑在 step 之内：请求因 `CONTEXT_WINDOW_EXCEEDED` 失败后压缩，返回 `retry`，同一个 step 发新 attempt。入口 ② 是模型切换，挂在 `agent/request` 的 prepend 上，按新模型的窗口重新定价；压不下去就抛 `MODEL_SWITCH_COMPACTION_FAILED`，拒绝这次切换。
+
+摘要调用不是 step。 `compaction/start`、`compaction/summary`、`compaction/end` 都写在打开着的 turn 里，但不产生 `step/start`、`step/end`。日志里看到的是一段 turn 内的压缩事务，不是一次模型步骤。这也是压缩能夹在两次请求之间、却不污染 attempt 账本的原因。
+
+用户消息只在第一次 attempt 提交。 `system/message` 与 `user/message` 的提交发生在 step 之内、请求之前：首轮提交整批用户消息，后续 attempt 不重复提交；system 节点按内容变化决定追加还是替换。被 reject 的批次停在 pre-step，走不到这里。
+
+失败分支回到 `agent/request`，不是 turn 头。 重试在同一 step 内新建 attempt，revision 递增；历史里留下 `assistant/attempt`，或者一条带 `interrupted: true` 的 `assistant/message`。
+
+读图的方法：LOG 泳道上的每个箭头都是一个持久事件，其他泳道之间的箭头只是调用。想知道崩溃后能恢复什么，只看 LOG 那一列就够了。
+
+## 8. `agent/turn-stopping`：唯一允许反悔的窗口
 
 {{< fig "diagrams/05-turn-stopping.svg" "收尾时序：step 结束、next-step 为空时进入 serial 的 turn-stopping；监听器可以 steer 来反对关闭，机器重读收件箱后决定再跑一步还是关轮。" >}}
 
@@ -204,7 +222,7 @@ const startsRequestSeries = firstAttempt && decision.startsRequestSeries
 
 反方向的「提前结束」也走数据：工具结果带 `concludesTurn`，turn 在那一步结束。它不会短路已经提交的 next-step 工作，同一步的 `additionalContexts` 或并发进来的 steering 仍要跑完，收件箱排空才关轮。
 
-## 8. 取消与唤醒的竞态
+## 9. 取消与唤醒的竞态
 
 取消有三条规则：
 
@@ -247,7 +265,7 @@ if (this.inbox.hasPending) {
 
 新 controller 让「上一次的 abort」不会污染下一次。这是很多人自己写 Agent 时会漏的一步：复用一个 controller，结果第二次任务一开始就处于已取消状态。
 
-## 9. 设计取舍
+## 10. 设计取舍
 
 外部两态 vs 内部四阶段。两态让 UI 和 SDK 保持简单，代价是「正在 pre-step」和「正在等工具」从外面分不出来。诊断只能看事件流（`step/start`、`tool/call`），status 帮不上忙。
 
@@ -261,7 +279,7 @@ max-tokens 粘住整个 turn。一旦某一步以 max-tokens 结束，turn 的 r
 
 turn-stopping 用 serial，不用 waterfall。放弃了「监听器能否决前一个监听器」的能力，换来顺序无关和不易误用。
 
-## 10. 踩坑点
+## 11. 踩坑点
 
 - 以为一个 step 只有一次模型调用。工具 `concluded: false` 时同一步会再请求；日志里会出现多条 `assistant/message`，夹在同一个 `step/start`/`step/end` 之间。
 - 用 `step/end` 判断成功。它在 `finally` 里，异常也会写。成功与否要看 `assistant/message` 是否存在、`turn/end.reason` 是什么。
@@ -273,7 +291,7 @@ turn-stopping 用 serial，不用 waterfall。放弃了「监听器能否决前�
 - 复用同一个 `AbortController`。下一轮一开始就是 aborted；必须每轮新建。
 - 以为 `turn/end` 已落盘。检查点是按请求的，turn 边界不 flush。
 
-## 11. 源码索引
+## 12. 源码索引
 
 - `packages/core/agent-loop/src/agent.ts:162-180`：`send` 的 abort-latch 逻辑。
 - `:199-228`：`runMaintenance` 与「公开状态保持 idle」。
