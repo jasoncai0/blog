@@ -88,6 +88,17 @@ rsync -a --delete ~/backups/blog-<时间戳>/ ubuntu@62.234.122.22:/var/www/blog
 - 「上次读到这」：文章页在你离开的百分比位置画一条虚线，滚过去后淡出；自动续读时不画（人已经在那个位置了）。
 - 没有 JS 时：日历停在整年视图、目录常开、不出现折叠按钮和日历控件，正文照常读。
 
+## 笔记与高亮
+
+选中正文里的任意一段（同一段落内），工具条会浮出来：点「高亮」就把它标成浅橙色；点「批注」再加一句自己的话。点高亮或左栏「本文笔记 ·N」列表里的条目，可以重新打开批注改字或删除。
+
+- 全部存在**读者自己的浏览器**里，键名 `jasoncai:notes:v1`，不上传服务器；换浏览器、清缓存就没了，所以左栏给了「导出」，导出内容是这篇的 JSON。
+- 一条笔记记的是「原文 + 前后各 32 字 + 段落下标」，文章改字后如果对不上就安静跳过（不会标错句子）；同一句话出现多次时标你选的那一处。
+- 批注是 `thread` 数组，人写的是第一条（作者「我」），将来 AI 追加回答不会覆盖原文。
+- 首页有笔记的文章会在 tag 行后标「有笔记 ·N」，bfcache 返回时也会刷新。
+- 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有笔记功能。
+- 内部实现见 `docs/superpowers/specs/2026-11-12-notes-highlight-design.md`。
+
 ## 校验
 
 ```bash
@@ -95,6 +106,8 @@ python3 -m unittest discover -s tests      # 脚本单测
 node --test "scripts/tests/*.test.mjs"     # 阅读进度纯逻辑
 hugo --minify && python3 scripts/tests/test_reading_progress.py   # 阅读进度浏览器回归
 hugo --minify && python3 scripts/tests/test_sidebar.py            # 侧栏 / 目录 / 标记浏览器回归
+hugo --minify && python3 scripts/tests/test_figure_zoom.py        # 图放大（lightbox）浏览器回归
+hugo --minify && python3 scripts/tests/test_notes.py              # 划词高亮 / 批注浏览器回归
 bash tests/test_publish.sh                 # 发布流程行为测试（全在临时目录）
 python3 scripts/check-tags.py content/posts data/tags.yaml
 python3 scripts/verify-site.py --public public
