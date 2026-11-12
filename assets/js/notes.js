@@ -8,6 +8,7 @@ import {
   notesFor,
   setThreadText,
   removeNote,
+  serializeStore,
 } from "./notes-core.mjs";
 
 let openPop = null;
@@ -221,6 +222,7 @@ export function initNotes() {
 
     saveBtn.addEventListener("click", () => {
       all = save(setThreadText(all, slug, id, input.value, Date.now()));
+      renderList();
       closePop();
     });
     delBtn.addEventListener("click", () => {
@@ -230,6 +232,7 @@ export function initNotes() {
         el.replaceWith(...el.childNodes);
         parent.normalize();
       });
+      renderList();
       closePop();
     });
   }
@@ -239,6 +242,7 @@ export function initNotes() {
     const note = makeNote({ ...anchor, t: Date.now(), text, author: "我" });
     all = save({ ...all, [slug]: [...notesFor(all, slug), note] });
     paint(body, note, note.id);
+    renderList();
     if (openBubble) openBubble(note);
     return note;
   };
@@ -298,6 +302,80 @@ export function initNotes() {
 
   document.addEventListener("selectionchange", schedule);
   document.addEventListener("mouseup", schedule);
+  const listRoot = document.querySelector(".note-list");
+  const renderList = () => {
+    if (!listRoot) return;
+    const notes = [...notesFor(all, slug)].sort((a, b) => a.t - b.t);
+    listRoot.replaceChildren();
+    if (!notes.length) {
+      listRoot.hidden = true;
+      return;
+    }
+    listRoot.hidden = false;
+
+    const head = document.createElement("div");
+    head.className = "note-head";
+    head.textContent = `本文笔记 ·${notes.length}`;
+
+    const items = document.createElement("ol");
+    items.className = "note-items";
+    for (const note of notes) {
+      const li = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = "#";
+      const snippet = note.q.length > 28 ? `${note.q.slice(0, 28)}…` : note.q;
+      const text = (note.thread[0]?.text || "").split("\n")[0].slice(0, 24);
+      link.textContent = text ? `${snippet} — ${text}` : snippet;
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const mark = body.querySelector(`mark.note-hl[data-note="${note.id}"]`);
+        if (!mark) return;
+        mark.scrollIntoView({ block: "center", behavior: "instant" });
+        mark.setAttribute("tabindex", "-1");
+        mark.focus({ preventScroll: true });
+        mark.classList.add("is-flash");
+        setTimeout(() => mark.classList.remove("is-flash"), 1200);
+      });
+      li.append(link);
+      items.append(li);
+    }
+
+    const acts = document.createElement("div");
+    acts.className = "note-acts";
+    const exportBtn = document.createElement("button");
+    exportBtn.type = "button";
+    exportBtn.dataset.act = "export";
+    exportBtn.textContent = "导出";
+    exportBtn.addEventListener("click", () => {
+      const blob = new Blob([serializeStore({ [slug]: notes })], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `notes-${slug}.json`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    const clearBtn = document.createElement("button");
+    clearBtn.type = "button";
+    clearBtn.dataset.act = "clear";
+    clearBtn.textContent = "清空";
+    clearBtn.addEventListener("click", () => {
+      if (!window.confirm(`清空本文的 ${notes.length} 条笔记？`)) return;
+      for (const note of notes) {
+        body.querySelectorAll(`mark.note-hl[data-note="${note.id}"]`).forEach((el) => {
+          const parent = el.parentNode;
+          el.replaceWith(...el.childNodes);
+          parent.normalize();
+        });
+      }
+      all = save({ ...all, [slug]: [] });
+      renderList();
+    });
+    acts.append(exportBtn, clearBtn);
+
+    listRoot.append(head, items, acts);
+  };
+
   body.addEventListener("click", (event) => {
     const mark = event.target.closest?.("mark.note-hl");
     if (mark) openPopById(mark.dataset.note);
@@ -312,6 +390,8 @@ export function initNotes() {
     if (event.target.closest?.("mark.note-hl")) return;
     closePop();
   });
+
+  renderList();
 
   window.addEventListener("scroll", hideBar, { passive: true });
 }

@@ -521,8 +521,8 @@ ul.posts .read-mark {
 }
 .nt-actions button:hover { background: rgba(45, 49, 66, 0.07); }
 mark.note-hl {
-  background: rgba(191, 69, 32, 0.13); color: inherit;
-  border-bottom: 1px solid rgba(191, 69, 32, 0.42); padding: 0 1px;
+  background: rgba(191, 69, 32, 0.17); color: inherit;
+  border-bottom: 1px solid rgba(191, 69, 32, 0.55); padding: 0 1px;
 }
 .nt-pop {
   position: fixed; z-index: 70; width: min(320px, calc(100vw - 24px));
@@ -549,3 +549,20 @@ mark.note-hl {
   border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer;
 }
 .nt-acts button:hover { background: rgba(45, 49, 66, 0.06); }
+.note-list { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.note-head { font-size: 12px; letter-spacing: 0.04em; color: var(--muted); }
+.note-items { margin: 8px 0 0; padding: 0; list-style: none; }
+.note-items li { margin: 0 0 6px; }
+.note-items a {
+  display: block; font-size: 12px; line-height: 1.55; color: var(--muted);
+  text-decoration: none; padding-left: 8px; border-left: 2px solid transparent;
+}
+.note-items a:hover { color: var(--ink); border-left-color: rgba(191, 69, 32, 0.4); }
+.note-acts { display: flex; gap: 8px; margin-top: 10px; }
+.note-acts button {
+  font: inherit; font-size: 11px; padding: 3px 8px; border-radius: 4px;
+  border: 1px solid var(--rule); background: transparent; color: var(--soft); cursor: pointer;
+}
+.note-acts button:hover { color: var(--ink); background: rgba(45, 49, 66, 0.05); }
+mark.note-hl.is-flash { background: rgba(191, 69, 32, 0.28); }
+mark.note-hl:focus { outline: 2px solid rgba(191, 69, 32, 0.35); outline-offset: 1px; }

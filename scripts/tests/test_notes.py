@@ -197,6 +197,34 @@ def test_escape_closes_the_bubble(page, base):
     assert page.locator(".nt-pop").count() == 0
 
 
+def test_note_list_jumps_to_highlight(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.reload()
+    page.wait_for_timeout(400)
+    listing = page.locator(".note-list")
+    assert listing.is_visible(), "有笔记时应显示左栏列表"
+    assert "本文笔记 ·1" in listing.locator(".note-head").inner_text()
+    page.locator(".note-list .note-items li a").first.click()
+    page.wait_for_timeout(400)
+    focused = page.evaluate("() => document.activeElement.className")
+    assert "note-hl" in focused, f"点列表应把焦点落到高亮上，实际 {focused!r}"
+
+
+def test_export_produces_json(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.reload()
+    page.wait_for_timeout(400)
+    with page.expect_download() as download:
+        page.click(".note-list button[data-act='export']")
+    path = download.value.path()
+    text = open(path, encoding="utf-8").read()
+    assert "批注一" in text, text[:200]
+
+
 CASES = [
     (test_highlight_persists_across_reload, False, DESKTOP),
     (test_highlight_paints_only_the_selected_occurrence, False, DESKTOP),
@@ -204,6 +232,8 @@ CASES = [
     (test_toolbar_hides_when_selection_cleared, False, DESKTOP),
     (test_annotate_then_edit_and_delete, False, DESKTOP),
     (test_escape_closes_the_bubble, False, DESKTOP),
+    (test_note_list_jumps_to_highlight, False, {**DESKTOP, "accept_downloads": True}),
+    (test_export_produces_json, False, {**DESKTOP, "accept_downloads": True}),
 ]
 
 

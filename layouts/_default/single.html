@@ -11,6 +11,9 @@
 <div class="post-body" data-progress-post="{{ .File.ContentBaseName }}">
 {{ .Content }}
 </div>
+{{- if not $hasToc }}
+<div class="note-list" hidden></div>
+{{- end }}
 </div>
 </div>
 {{ end }}
