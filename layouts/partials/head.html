@@ -20,5 +20,9 @@
 {{- $js := resources.Get "js/reading-progress.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $js.RelPermalink }}"></script>
 {{- end }}
+{{- if .IsHome }}
+{{- $nav := resources.Get "js/site-nav.js" | js.Build (dict "minify" true) | fingerprint }}
+<script type="module" src="{{ $nav.RelPermalink }}"></script>
+{{- end }}
 {{- $css := resources.Get "css/site.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">

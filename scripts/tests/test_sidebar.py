@@ -81,6 +81,36 @@ def test_list_items_carry_dates(page, base):
     assert page.locator('ul.posts li[data-date="2026-11-11"]').count() >= 5
 
 
+def test_only_recent_12_weeks_visible_by_default(page, base):
+    page.goto(base + "/")
+    assert page.locator("nav.calendar .cal-week:not(.is-hidden)").count() == 12
+
+
+def test_year_toggle_shows_all_weeks(page, base):
+    page.goto(base + "/")
+    page.click('[data-cal-range="year"]')
+    assert page.locator("nav.calendar .cal-week:not(.is-hidden)").count() > 50
+
+
+def test_clicking_a_day_flashes_that_day(page, base):
+    page.goto(base + "/")
+    day = "2026-11-11"
+    n = page.locator(f'ul.posts li[data-date="{day}"]').count()
+    page.locator(f'a.heat-cell[data-date="{day}"]').click()
+    page.wait_for_selector(f'ul.posts li[data-date="{day}"].is-flash')
+    page.wait_for_timeout(350)  # 等平滑滚动起步
+    assert page.locator("ul.posts li.is-flash").count() == n
+    assert page.evaluate("window.scrollY") > 0
+
+
+def test_date_input_moves_window_and_marks_target(page, base):
+    page.goto(base + "/")
+    page.fill("input.cal-jump", "2026-11-09")
+    page.wait_for_timeout(200)
+    assert page.locator(".cal-week.is-target").count() == 1
+    assert page.locator('a.heat-cell[data-date="2026-11-09"]').is_visible()
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
@@ -88,6 +118,10 @@ CASES = [
     (test_calendar_renders_year_grid, False, DESKTOP),
     (test_calendar_empty_days_are_not_links, False, DESKTOP),
     (test_list_items_carry_dates, False, DESKTOP),
+    (test_only_recent_12_weeks_visible_by_default, False, DESKTOP),
+    (test_year_toggle_shows_all_weeks, False, DESKTOP),
+    (test_clicking_a_day_flashes_that_day, False, DESKTOP),
+    (test_date_input_moves_window_and_marks_target, False, DESKTOP),
 ]
 
 

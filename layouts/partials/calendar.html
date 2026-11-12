@@ -12,15 +12,21 @@
 {{- $end := $last.AddDate 0 0 (sub 6 $tail) -}}
 {{- $days := add (int (div ($end.Sub $start).Hours 24)) 1 -}}
 {{- $weeks := div $days 7 -}}
-<nav class="calendar" aria-label="写作日历">
-<p class="cal-legend"><span class="cal-legend-label">少</span>{{ range seq 1 4 }}<span class="heat-cell lv{{ . }}"></span>{{ end }}<span class="cal-legend-label">多</span></p>
+<nav class="calendar" aria-label="写作日历" data-today="{{ dateFormat "2006-01-02" now }}">
+<div class="cal-controls">
+<button type="button" class="cal-btn is-on" data-cal-range="12" aria-pressed="true">近 12 周</button>
+<button type="button" class="cal-btn" data-cal-range="year" aria-pressed="false">全年</button>
+<button type="button" class="cal-prev" aria-label="往前">‹</button>
+<button type="button" class="cal-next" aria-label="往后">›</button>
+<input type="date" class="cal-jump" aria-label="跳到日期" value="{{ dateFormat "2006-01-02" now }}" min="{{ printf "%d-01-01" $year }}" max="{{ printf "%d-12-31" $year }}">
+</div>
+<div class="cal-scroll">
 <div class="cal-grid">
 {{- range $w := seq 0 (sub $weeks 1) }}
-{{- $weekStart := $start.AddDate 0 0 (mul $w 7) }}
 {{- $label := "" }}
 {{- range $d := seq 0 6 }}
 {{- $day := $start.AddDate 0 0 (add (mul $w 7) $d) }}
-{{- if eq $day.Day 1 }}{{ $label = dateFormat "1月" $day }}{{ end }}
+{{- if and (eq $day.Day 1) (eq (int (dateFormat "2006" $day)) $year) }}{{ $label = dateFormat "1月" $day }}{{ end }}
 {{- end }}
 <div class="cal-week" data-week="{{ $w }}">
 {{- if $label }}<span class="cal-month">{{ $label }}</span>{{ end }}
@@ -28,7 +34,9 @@
 {{- $day := $start.AddDate 0 0 (add (mul $w 7) $d) }}
 {{- $iso := dateFormat "2006-01-02" $day }}
 {{- $n := index $byDay $iso | default 0 }}
-{{- if gt $n 0 }}
+{{- if gt (int (dateFormat "2006" $day)) $year }}
+<span class="heat-cell is-out" aria-hidden="true"></span>
+{{- else if gt $n 0 }}
 {{- $lvl := 1 }}{{ if eq $n 2 }}{{ $lvl = 2 }}{{ else if and (ge $n 3) (le $n 4) }}{{ $lvl = 3 }}{{ else if ge $n 5 }}{{ $lvl = 4 }}{{ end }}
 <a class="heat-cell lv{{ $lvl }}" data-date="{{ $iso }}" data-count="{{ $n }}" href="/#d-{{ $iso }}" aria-label="{{ $iso }}，{{ $n }} 篇" title="{{ $iso }} · {{ $n }} 篇"></a>
 {{- else }}
@@ -37,5 +45,9 @@
 {{- end }}
 </div>
 {{- end }}
+</div>
+</div>
+<div class="cal-footer">
+<p class="cal-legend"><span class="cal-legend-label">{{ $year }} 年</span>{{ range seq 1 4 }}<span class="heat-cell lv{{ . }}"></span>{{ end }}</p>
 </div>
 </nav>
