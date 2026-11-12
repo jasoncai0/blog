@@ -54,10 +54,12 @@ export function setEditKey(key) {
 export class AuthError extends Error {}
 
 const authListeners = [];
+let authPending = false;
 export function onAuthNeeded(fn) {
   authListeners.push(fn);
 }
 function notifyAuthNeeded() {
+  authPending = true;
   for (const fn of authListeners) {
     try {
       fn();
@@ -65,6 +67,23 @@ function notifyAuthNeeded() {
       /* ignore */
     }
   }
+}
+
+// 队列里有没有因为缺口令停下来的操作；读一次就清掉。
+export function takeAuthPending() {
+  const value = authPending;
+  authPending = false;
+  return value;
+}
+
+// 用户主动写完之后调它：把队列推一遍，并告诉调用方要不要弹口令框。
+export async function syncNow() {
+  try {
+    await flush();
+  } catch {
+    /* flush 自己处理重试 */
+  }
+  return { authNeeded: takeAuthPending() };
 }
 
 async function send(op) {

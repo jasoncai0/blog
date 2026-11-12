@@ -13,11 +13,12 @@ import {
 } from "./notes-core.mjs";
 import {
   AuthError,
-  onAuthNeeded,
+  getEditKey,
   postReply,
   pullNotes,
   pullSummary,
   queueNote,
+  syncNow,
   queueDelete,
   mergeNotes,
   setEditKey,
@@ -240,12 +241,13 @@ function promptForKey(retry) {
   wrap.className = "nt-key";
   const card = document.createElement("div");
   card.className = "nt-key-card";
+  const hasKey = Boolean(getEditKey());
   const title = document.createElement("p");
   title.className = "nt-key-title";
-  title.textContent = "写批注需要一个口令";
+  title.textContent = hasKey ? "口令不对，重新输入" : "写批注需要一个口令";
   const hint = document.createElement("p");
   hint.className = "nt-key-hint";
-  hint.textContent = "输入一次就会存在本机，之后不用再输。";
+  hint.textContent = "输入一次就永久存在这台浏览器里，之后不用再输。";
   const input = document.createElement("input");
   input.type = "password";
   input.className = "nt-key-input";
@@ -481,10 +483,12 @@ function initNotes() {
       queueNote(slug, notesFor(all, slug).find((n) => n.id === id));
       renderList();
       closePop();
+      syncNow().then(({ authNeeded }) => authNeeded && promptForKey());
     });
     delBtn.addEventListener("click", () => {
       all = save(removeNote(all, slug, id));
       queueDelete(slug, id);
+      syncNow().then(({ authNeeded }) => authNeeded && promptForKey());
       body.querySelectorAll(`mark.note-hl[data-note="${id}"]`).forEach((el) => {
         const parent = el.parentNode;
         el.replaceWith(...el.childNodes);
@@ -495,12 +499,12 @@ function initNotes() {
     });
   }
   openPop = openPopById;
-  onAuthNeeded(() => promptForKey());
 
   const addNote = (anchor, text, openBubble) => {
     const note = makeNote({ ...anchor, t: Date.now(), text, author: "我" });
     all = save({ ...all, [slug]: [...notesFor(all, slug), note] });
     queueNote(slug, note);
+    syncNow().then(({ authNeeded }) => authNeeded && promptForKey());
     paint(body, note, note.id);
     renderList();
     if (openBubble) openBubble(note);

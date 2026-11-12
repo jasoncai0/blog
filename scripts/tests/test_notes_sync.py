@@ -273,6 +273,45 @@ def test_ai_reply_is_marked_as_ai(page, base):
     assert "AI 的回答" in page.locator(".nt-thread .is-ai").inner_text()
 
 
+class keyed_server:
+    """起一个带口令的 notesd，返回 (api_base, stop)。"""
+
+    def __init__(self):
+        self.port = free_port()
+        self.tmp = tempfile.TemporaryDirectory()
+
+    def __enter__(self):
+        env = dict(os.environ, NOTES_EDIT_KEY="test-secret")
+        self.proc = subprocess.Popen(
+            [sys.executable, "server/notesd.py", "--port", str(self.port), "--db",
+             os.path.join(self.tmp.name, "k.db")],
+            env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        wait_for_server(f"http://127.0.0.1:{self.port}/healthz")
+        return f"http://127.0.0.1:{self.port}/api"
+
+    def __exit__(self, *exc):
+        self.proc.terminate()
+        self.proc.wait(timeout=10)
+        self.tmp.cleanup()
+
+
+def test_stale_key_does_not_pop_on_page_load(context, base):
+    with keyed_server() as keyed:
+        context.add_init_script(
+            f"window.__NOTES_API__ = {json.dumps(keyed)};"
+            "localStorage.setItem('jasoncai:notes:key', 'wrong-key');"
+        )
+        page = context.new_page()
+        page.goto(base + ARTICLE)
+        page.wait_for_timeout(1500)
+        assert page.locator(".nt-key").count() == 0, "加载页面时不该主动弹口令框"
+        page.evaluate(SELECT_JS, "收敛是必要条件")
+        page.click(".nt-actions button[data-action='highlight']")
+        page.wait_for_selector(".nt-key", state="visible", timeout=8000)
+        assert "口令不对" in page.locator(".nt-key-title").inner_text()
+
+
 def test_write_without_key_prompts_and_then_succeeds(context, base):
     # 另起一个带口令的 notesd，客户端指过去；输入口令后队列应自己补发。
     port = free_port()
@@ -360,6 +399,7 @@ CASES = [
     (test_reply_creates_a_floor, False, DESKTOP),
     (test_ai_reply_is_marked_as_ai, False, DESKTOP),
     (test_write_without_key_prompts_and_then_succeeds, True, DESKTOP),
+    (test_stale_key_does_not_pop_on_page_load, True, DESKTOP),
 ]
 
 
