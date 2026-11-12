@@ -149,6 +149,38 @@ def test_active_section_follows_scroll(page, base):
     assert active.get_attribute("href").endswith("#" + target.get_attribute("id"))
 
 
+def seed_progress(page, base, percent=62):
+    page.goto(base + "/")
+    page.evaluate(
+        """p => localStorage.setItem('jasoncai:read:v1',
+             JSON.stringify({'ot-crdt-lww': {p, t: Date.now(), d: false}}))""",
+        percent,
+    )
+
+
+def test_marker_shows_where_reading_stopped(page, base):
+    seed_progress(page, base)
+    page.goto(base + "/posts/ot-crdt-lww.html#keep")  # 带锚点=不触发续读
+    page.wait_for_selector(".rp-marker")
+    assert "62%" in page.locator(".rp-marker").inner_text()
+
+
+def test_marker_disappears_after_scrolling_past(page, base):
+    seed_progress(page, base)
+    page.goto(base + "/posts/ot-crdt-lww.html#keep")
+    page.wait_for_selector(".rp-marker")
+    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    page.wait_for_timeout(900)
+    assert page.locator(".rp-marker").count() == 0
+
+
+def test_no_marker_when_resume_jumped(page, base):
+    seed_progress(page, base)
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.wait_for_timeout(600)
+    assert page.locator(".rp-marker").count() == 0
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
@@ -164,6 +196,9 @@ CASES = [
     (test_toc_collapse_persists, False, DESKTOP),
     (test_rail_absent_where_there_is_no_toc, False, DESKTOP),
     (test_active_section_follows_scroll, False, DESKTOP),
+    (test_marker_shows_where_reading_stopped, False, DESKTOP),
+    (test_marker_disappears_after_scrolling_past, False, DESKTOP),
+    (test_no_marker_when_resume_jumped, False, DESKTOP),
 ]
 
 

@@ -372,6 +372,18 @@ ul.posts .summary { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; lin
 }
 .rp-chip[hidden] { display: none; }
 .rp-chip.is-done { color: var(--accent); border-color: rgba(191, 69, 32, 0.35); }
+.post-body { position: relative; }
+.rp-marker {
+  position: absolute; left: -12px; right: -12px;
+  border-top: 1px dashed rgba(191, 69, 32, 0.45);
+  pointer-events: none; transition: opacity 0.3s ease;
+}
+.rp-marker span {
+  position: absolute; top: -1.5em; left: 0;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+  color: var(--soft); background: var(--paper); padding-right: 6px;
+}
+.rp-marker.is-passed { opacity: 0; }
 .rp-hint {
   position: fixed;
   right: 20px;

@@ -9,6 +9,8 @@ import {
   readEntry,
   shouldResume,
   formatMark,
+  RESUME_MIN,
+  DONE_THRESHOLD,
 } from "./progress-core.mjs";
 
 const FLUSH_MS = 1000;
@@ -126,6 +128,7 @@ function boot() {
 
   function onScroll() {
     revealed = true;
+    watchMarker();
     if (frame) return;
     frame = requestAnimationFrame(update);
   }
@@ -150,11 +153,11 @@ function boot() {
   // 续读：只在「干净地打开这一页」时接手。锚点、后退/前进、浏览器已经恢复过
   // 滚动位置（scrollY !== 0）这三种情况都不抢——浏览器比我们知道得更多。
   function maybeResume() {
-    if (location.hash) return;
-    if (navType() === "back_forward") return;
-    if (window.scrollY !== 0) return;
+    if (location.hash) return false;
+    if (navType() === "back_forward") return false;
+    if (window.scrollY !== 0) return false;
     const entry = readEntry(parseStore(safeGet() || ""), slug);
-    if (!shouldResume(entry)) return;
+    if (!shouldResume(entry)) return false;
 
     const target = Math.max(
       0,
@@ -168,6 +171,46 @@ function boot() {
     revealed = true;
     if (target > 0) showHint(entry.p); // 没真跳（目标被 clamp 到 0）就别提示
     onScroll();
+    return true;
+  }
+
+  // 「上次读到这」：一条虚线 + 小标签，标在离开时那个百分比的位置。
+  // 续读自动跳过去了就不画——用户已经在那个位置了。
+  let marker = null;
+  function placeMarker(entry) {
+    if (!entry || entry.p < RESUME_MIN || entry.p >= DONE_THRESHOLD) return;
+    if (document.querySelector(".rp-marker")) return;
+    const y = Math.min(
+      Math.max(scrollForProgress(entry.p, window.innerHeight, metrics.top, metrics.height) - metrics.top, 0),
+      metrics.height,
+    );
+    // 线画在段落边界上，而不是穿字而过：取第一块「底边在 y 之下」的正文块。
+    let snapped = metrics.height;
+    for (const block of host.children) {
+      if (!block.offsetHeight) continue;
+      if (block.offsetTop + block.offsetHeight > y) {
+        snapped = block.offsetTop;
+        break;
+      }
+    }
+    marker = document.createElement("div");
+    marker.className = "rp-marker";
+    marker.setAttribute("aria-hidden", "true"); // 纯视觉的辅助线，读屏不必念
+    const label = document.createElement("span");
+    label.textContent = `上次读到这 · ${Math.round(entry.p)}%`;
+    marker.append(label);
+    marker.style.top = `${Math.min(snapped, metrics.height)}px`;
+    host.append(marker);
+  }
+
+  function watchMarker() {
+    if (!marker || marker.classList.contains("is-passed")) return;
+    if (marker.getBoundingClientRect().bottom < 0) {
+      marker.classList.add("is-passed");
+      const dying = marker;
+      marker = null;
+      setTimeout(() => dying.remove(), 320);
+    }
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -186,7 +229,8 @@ function boot() {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         metrics = measure(); // 图片加载完可能改变正文高度
-        maybeResume();
+        const jumped = maybeResume();
+        if (!jumped) placeMarker(readEntry(parseStore(safeGet() || ""), slug));
         update();
       }),
     );
