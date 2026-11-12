@@ -119,5 +119,29 @@ class NotesdTest(unittest.TestCase):
             notesd.Handler.edit_key = ""
 
 
+    def test_reply_appends_a_floor(self):
+        slug = "thread-test"
+        self.call("PUT", f"/api/notes/{slug}/thr-0001", self.note("thr-0001"))
+        status, body = self.call("POST", f"/api/notes/{slug}/thr-0001/replies",
+                                 {"author": "AI", "text": "这是 AI 的回复", "t": 2000})
+        self.assertEqual(status, 200)
+        self.assertEqual([m["author"] for m in body["note"]["thread"]], ["我", "AI"])
+        _, fetched = self.call("GET", f"/api/notes/{slug}")
+        got = next(n for n in fetched["notes"] if n["id"] == "thr-0001")
+        self.assertEqual(len(got["thread"]), 2)
+        self.assertEqual(got["thread"][1]["text"], "这是 AI 的回复")
+
+    def test_reply_requires_an_existing_note(self):
+        status, _ = self.call("POST", "/api/notes/thread-test/ghost-0001/replies",
+                              {"author": "AI", "text": "hi"})
+        self.assertEqual(status, 404)
+
+    def test_reply_rejects_empty_text(self):
+        self.call("PUT", "/api/notes/thread-test/thr-0002", self.note("thr-0002"))
+        status, _ = self.call("POST", "/api/notes/thread-test/thr-0002/replies", {"author": "AI", "text": "   "})
+        self.assertEqual(status, 400)
+
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

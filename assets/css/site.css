@@ -587,3 +587,53 @@ mark.note-hl {
 .note-acts button:hover { color: var(--ink); background: rgba(45, 49, 66, 0.05); }
 mark.note-hl.is-flash { background: rgba(191, 69, 32, 0.28); }
 mark.note-hl:focus { outline: 2px solid rgba(191, 69, 32, 0.35); outline-offset: 1px; }
+
+/* ——— 批注楼层与口令 ——— */
+.nt-floors {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--soft);
+  font-variant-numeric: tabular-nums;
+}
+.nt-thread { list-style: none; margin: 0; padding: 0; }
+.nt-floor { margin: 10px 0 0; padding-top: 8px; border-top: 1px dashed var(--rule); }
+.nt-floor.is-first { border-top: 0; padding-top: 0; }
+.nt-floor.is-ai { border-left: 2px solid var(--accent); padding-left: 8px; }
+.nt-floor-head { display: flex; align-items: baseline; gap: 6px; font-size: 11px; color: var(--muted); }
+.nt-floor-no { color: var(--soft); font-variant-numeric: tabular-nums; }
+.nt-floor.is-ai .nt-author { color: var(--accent); font-weight: 500; }
+.nt-text { margin: 6px 0 0; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+.nt-reply { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.nt-reply-input,
+.nt-key-input {
+  width: 100%;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 6px 8px;
+  resize: vertical;
+}
+.nt-reply-send { align-self: flex-end; }
+.nt-reply-hint { margin: 0; font-size: 11px; color: var(--accent); min-height: 0; }
+.nt-key {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: rgba(45, 49, 66, 0.35);
+}
+.nt-key-card {
+  width: min(320px, calc(100vw - 32px));
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 18px 48px rgba(45, 49, 66, 0.18);
+}
+.nt-key-title { margin: 0 0 4px; font-size: 14px; font-weight: 600; }
+.nt-key-hint { margin: 0 0 10px; font-size: 12px; color: var(--muted); }
+.nt-key-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }

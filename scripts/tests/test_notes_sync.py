@@ -78,10 +78,13 @@ def free_port():
 API = ""
 
 
-def api(path, method="GET", body=None):
+def api(path, method="GET", body=None, base=None, headers=None):
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(
-        API + path, data=data, method=method, headers={"Content-Type": "application/json"}
+        (base or API) + path,
+        data=data,
+        method=method,
+        headers={"Content-Type": "application/json", **(headers or {})},
     )
     try:
         with urllib.request.urlopen(req, timeout=3) as resp:
@@ -130,8 +133,8 @@ def add_highlight(page, base, needle="收敛是必要条件", text="服务器上
     page.wait_for_timeout(300)
     assert page.evaluate(SELECT_JS, needle), "没选中文字"
     page.click(".nt-actions button[data-action='annotate']")
-    page.wait_for_selector(".nt-pop textarea", state="visible")
-    page.fill(".nt-pop textarea", text)
+    page.wait_for_selector(".nt-pop .nt-input", state="visible")
+    page.fill(".nt-pop .nt-input", text)
     page.click(".nt-pop button[data-act='save']")
     page.wait_for_selector("mark.note-hl")
 
@@ -148,8 +151,8 @@ def test_note_written_in_one_browser_shows_up_in_another(page, base):
         fresh.wait_for_selector("mark.note-hl", timeout=8000)
         assert fresh.locator("mark.note-hl").count() == 1, "新上下文里应出现同一条高亮"
         fresh.click("mark.note-hl")
-        fresh.wait_for_selector(".nt-pop textarea", state="visible")
-        assert "服务器上的一条批注" in fresh.locator(".nt-pop textarea").input_value()
+        fresh.wait_for_selector(".nt-pop .nt-input", state="visible")
+        assert "服务器上的一条批注" in fresh.locator(".nt-pop .nt-input").input_value()
     finally:
         other.close()
 
@@ -232,6 +235,78 @@ def test_offline_write_is_queued_and_flushed_later(page, base):
     wait_until(lambda: api(f"/notes/{SLUG}")["notes"], timeout=10)
 
 
+def test_reply_creates_a_floor(page, base):
+    add_highlight(page, base, text="第一层：这条是提问")
+    page.click("mark.note-hl")
+    page.wait_for_selector(".nt-reply-input", state="visible")
+    page.fill(".nt-reply-input", "第二层：这是回复")
+    page.click(".nt-reply-send")
+    page.wait_for_selector(".nt-thread .nt-floor", timeout=8000)
+    page.wait_for_timeout(600)
+    assert page.locator(".nt-thread .nt-floor").count() == 1
+    assert "2 楼" in page.locator(".nt-thread .nt-floor").first.inner_text()
+    assert "第二层：这是回复" in page.locator(".nt-thread").inner_text()
+    assert "2 层" in page.locator(".nt-floors").inner_text()
+    # 换一个浏览器看得到（服务端真的存了）
+    other = page.context.browser.new_context(**DESKTOP)
+    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    try:
+        fresh = other.new_page()
+        fresh.goto(base + ARTICLE)
+        fresh.wait_for_selector("mark.note-hl", timeout=10000)
+        fresh.click("mark.note-hl")
+        fresh.wait_for_selector(".nt-thread .nt-floor", timeout=8000)
+        assert "第二层：这是回复" in fresh.locator(".nt-thread").inner_text()
+    finally:
+        other.close()
+
+
+def test_ai_reply_is_marked_as_ai(page, base):
+    add_highlight(page, base, text="我想问一个问题")
+    nid = api(f"/notes/{SLUG}")["notes"][0]["id"]
+    result = api(f"/notes/{SLUG}/{nid}/replies", "POST", {"author": "AI", "text": "AI 的回答", "t": 2000})
+    assert result.get("ok") or result.get("note"), result
+    page.reload()
+    page.wait_for_selector("mark.note-hl", timeout=10000)
+    page.click("mark.note-hl")
+    page.wait_for_selector(".nt-thread .is-ai", timeout=8000)
+    assert "AI 的回答" in page.locator(".nt-thread .is-ai").inner_text()
+
+
+def test_write_without_key_prompts_and_then_succeeds(context, base):
+    # 另起一个带口令的 notesd，客户端指过去；输入口令后队列应自己补发。
+    port = free_port()
+    tmp = tempfile.TemporaryDirectory()
+    env = dict(os.environ, NOTES_EDIT_KEY="test-secret")
+    proc = subprocess.Popen(
+        [sys.executable, "server/notesd.py", "--port", str(port), "--db", os.path.join(tmp.name, "k.db")],
+        env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    try:
+        wait_for_server(f"http://127.0.0.1:{port}/healthz")
+        keyed = f"http://127.0.0.1:{port}/api"
+        context.add_init_script(f"window.__NOTES_API__ = {json.dumps(keyed)};")
+        page = context.new_page()
+        page.goto(base + ARTICLE)
+        page.wait_for_timeout(400)
+        page.evaluate(SELECT_JS, "收敛是必要条件")
+        page.click(".nt-actions button[data-action='highlight']")
+        page.wait_for_selector(".nt-key", state="visible", timeout=8000)
+        page.fill(".nt-key-input", "test-secret")
+        page.click(".nt-key-ok")
+        page.wait_for_timeout(200)
+        deadline = time.time() + 15
+        got = []
+        while time.time() < deadline and not got:
+            got = api(f"/notes/{SLUG}", base=keyed)["notes"]
+            time.sleep(0.2)
+        assert got, "输入口令后队列应补发到带口令的服务端"
+    finally:
+        proc.terminate()
+        proc.wait(timeout=10)
+        tmp.cleanup()
+
+
 def test_all_local_notes_upload_from_any_page(context, base):
     """换服务器前写在浏览器里的笔记，打开首页就该全部补传（不用逐篇打开）。"""
     stamp = int(time.time() * 1000)
@@ -282,6 +357,9 @@ CASES = [
     (test_offline_write_is_queued_and_flushed_later, False, DESKTOP),
     (test_progress_arriving_after_load_still_resumes, False, DESKTOP),
     (test_all_local_notes_upload_from_any_page, True, DESKTOP),
+    (test_reply_creates_a_floor, False, DESKTOP),
+    (test_ai_reply_is_marked_as_ai, False, DESKTOP),
+    (test_write_without_key_prompts_and_then_succeeds, True, DESKTOP),
 ]
 
 

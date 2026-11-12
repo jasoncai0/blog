@@ -7,8 +7,9 @@ Type=simple
 User=notesd
 Group=notesd
 Environment=NOTES_DB=/var/lib/notesd/notes.db
-# 想让写操作需要口令时，取消下面这行的注释并改成自己的口令（客户端第一次写会问一次）
-# Environment=NOTES_EDIT_KEY=change-me
+# 口令放单独的文件（600），别写在这个 unit 里：
+#   /etc/notesd.env  ->  NOTES_EDIT_KEY=...
+EnvironmentFile=-/etc/notesd.env
 ExecStart=/usr/bin/python3 /opt/notesd/notesd.py --host 127.0.0.1 --port 8099 --db /var/lib/notesd/notes.db
 Restart=on-failure
 RestartSec=2

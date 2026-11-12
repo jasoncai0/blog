@@ -5,6 +5,7 @@
 export const API = window.__NOTES_API__ || "/api";
 
 const QUEUE_KEY = "jasoncai:sync-queue:v1";
+const KEY_STORE = "jasoncai:notes:key";
 const MAX_QUEUE = 200;
 
 function readQueue() {
@@ -28,11 +29,53 @@ let flushing = null;
 let retryTimer = 0;
 let backoff = 4000;
 
+export function getEditKey() {
+  try {
+    return localStorage.getItem(KEY_STORE) || "";
+  } catch {
+    return "";
+  }
+}
+
+export function setEditKey(key) {
+  try {
+    if (key) localStorage.setItem(KEY_STORE, key);
+    else localStorage.removeItem(KEY_STORE);
+  } catch {
+    /* ignore */
+  }
+  if (key) {
+    clearTimeout(retryTimer);
+    backoff = 4000;
+    flush();
+  }
+}
+
+export class AuthError extends Error {}
+
+const authListeners = [];
+export function onAuthNeeded(fn) {
+  authListeners.push(fn);
+}
+function notifyAuthNeeded() {
+  for (const fn of authListeners) {
+    try {
+      fn();
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 async function send(op) {
   const url = `${API}/${op.path}`;
-  const init = { method: op.method, headers: { "Content-Type": "application/json" } };
+  const headers = { "Content-Type": "application/json" };
+  const key = getEditKey();
+  if (key) headers["X-Edit-Key"] = key;
+  const init = { method: op.method, headers };
   if (op.body !== undefined) init.body = JSON.stringify(op.body);
   const res = await fetch(url, init);
+  if (res.status === 401) throw new AuthError("edit key required");
   if (res.status >= 500) throw new Error(`server ${res.status}`);
   if (!res.ok) {
     // 4xx 说明这条数据本身不被接受，再重试也没用，丢掉并留一行日志。
@@ -53,7 +96,12 @@ export async function flush() {
       const op = pending[0];
       try {
         await send(op);
-      } catch {
+      } catch (err) {
+        if (err instanceof AuthError) {
+          // 没口令就停在这儿，等用户输入后 setEditKey() 再继续，别无限重试。
+          notifyAuthNeeded();
+          return;
+        }
         clearTimeout(retryTimer);
         retryTimer = setTimeout(() => {
           backoff = Math.min(backoff * 2, 60000);
@@ -101,6 +149,20 @@ export const queueProgress = (slug, entry) =>
 async function getJSON(path) {
   const res = await fetch(`${API}/${path}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`GET ${path} ${res.status}`);
+  return res.json();
+}
+
+export async function postReply(slug, noteId, text, author = "我") {
+  const headers = { "Content-Type": "application/json" };
+  const key = getEditKey();
+  if (key) headers["X-Edit-Key"] = key;
+  const res = await fetch(`${API}/notes/${slug}/${noteId}/replies`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ author, text, t: Date.now() }),
+  });
+  if (res.status === 401) throw new AuthError("edit key required");
+  if (!res.ok) throw new Error(`reply ${res.status}`);
   return res.json();
 }
 

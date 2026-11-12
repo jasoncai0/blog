@@ -35,7 +35,7 @@ from urllib.parse import unquote, urlparse
 MAX_BODY = 64 * 1024
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,79}$")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{5,63}$")
-MAX_THREAD = 20
+MAX_THREAD = 50
 MAX_THREAD_TEXT = 4000
 MAX_Q = 400
 MAX_CONTEXT = 80
@@ -138,6 +138,37 @@ class Store:
             )
             self.rev(payload["id"], slug, "put", payload)
             self.conn.commit()
+
+    def add_reply(self, slug: str, note_id: str, reply: dict) -> tuple[str, dict | None]:
+        """把一条回复追加到楼层末尾。返回 (状态, 笔记)。"""
+        with self._lock:
+            row = self.conn.execute(
+                "SELECT * FROM notes WHERE slug = ? AND id = ? AND deleted = 0", (slug, note_id)
+            ).fetchone()
+            if row is None:
+                return "missing", None
+            thread = json.loads(row["thread"])
+            if len(thread) >= MAX_THREAD:
+                return "full", None
+            thread.append(reply)
+            updated = now()
+            self.conn.execute(
+                "UPDATE notes SET thread = ?, updated = ? WHERE slug = ? AND id = ?",
+                (json.dumps(thread, ensure_ascii=False), updated, slug, note_id),
+            )
+            self.rev(note_id, slug, "reply", reply)
+            self.conn.commit()
+            note = {
+                "id": row["id"],
+                "q": row["q"],
+                "pre": row["pre"],
+                "post": row["post"],
+                "block": row["block"],
+                "t": row["t"],
+                "thread": thread,
+                "updated": updated,
+            }
+            return "ok", note
 
     def delete_note(self, slug: str, note_id: str) -> bool:
         with self._lock:
@@ -261,7 +292,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key")
         self.end_headers()
         if self.command != "HEAD":
@@ -294,7 +325,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:  # noqa: N802
         self.send_response(HTTPStatus.NO_CONTENT)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key")
         self.send_header("Access-Control-Max-Age", "86400")
         self.end_headers()
@@ -306,6 +337,9 @@ class Handler(BaseHTTPRequestHandler):
         self.route(write=True)
 
     def do_DELETE(self) -> None:  # noqa: N802
+        self.route(write=True)
+
+    def do_POST(self) -> None:  # noqa: N802
         self.route(write=True)
 
     def route(self, write: bool) -> None:
@@ -386,6 +420,34 @@ class Handler(BaseHTTPRequestHandler):
                     {"notes": notes, "deleted": self.store.deleted_ids(slug)},
                 )
                 return
+            if len(parts) == 4 and parts[3] == "replies" and self.command == "POST":
+                slug, note_id = parts[1], parts[2]
+                if not SLUG_RE.match(slug) or not ID_RE.match(note_id):
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad path"})
+                    return
+                body = self.read_json()
+                if body is None:
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad json"})
+                    return
+                text = clean_text(body.get("text"), MAX_THREAD_TEXT).strip()
+                if not text:
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "empty reply"})
+                    return
+                reply = {
+                    "author": clean_text(body.get("author"), 20) or "我",
+                    "text": text,
+                    "t": int(body.get("t") or now()),
+                }
+                status, note = self.store.add_reply(slug, note_id, reply)
+                if status == "missing":
+                    self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
+                    return
+                if status == "full":
+                    self.send_json(HTTPStatus.CONFLICT, {"error": "thread full"})
+                    return
+                self.send_json(HTTPStatus.OK, {"ok": True, "note": note})
+                return
+
             if len(parts) == 3 and self.command == "PUT":
                 slug, note_id = parts[1], parts[2]
                 if not SLUG_RE.match(slug) or not ID_RE.match(note_id):

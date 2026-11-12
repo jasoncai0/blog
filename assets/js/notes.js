@@ -12,11 +12,15 @@ import {
   serializeStore,
 } from "./notes-core.mjs";
 import {
+  AuthError,
+  onAuthNeeded,
+  postReply,
   pullNotes,
   pullSummary,
   queueNote,
   queueDelete,
   mergeNotes,
+  setEditKey,
   uploadLocalOnly,
 } from "./sync.js";
 
@@ -227,6 +231,69 @@ async function pushLocalSlugs(currentSlug) {
   }
 }
 
+let keyDialog = null;
+
+// 写操作要口令：401 时弹一次，存本地后自动继续（队列里的操作也会跟着补发）。
+function promptForKey(retry) {
+  if (keyDialog) return;
+  const wrap = document.createElement("div");
+  wrap.className = "nt-key";
+  const card = document.createElement("div");
+  card.className = "nt-key-card";
+  const title = document.createElement("p");
+  title.className = "nt-key-title";
+  title.textContent = "写批注需要一个口令";
+  const hint = document.createElement("p");
+  hint.className = "nt-key-hint";
+  hint.textContent = "输入一次就会存在本机，之后不用再输。";
+  const input = document.createElement("input");
+  input.type = "password";
+  input.className = "nt-key-input";
+  input.autocomplete = "current-password";
+  input.placeholder = "口令";
+  const acts = document.createElement("div");
+  acts.className = "nt-key-acts";
+  const ok = document.createElement("button");
+  ok.type = "button";
+  ok.className = "nt-key-ok";
+  ok.textContent = "确定";
+  const cancel = document.createElement("button");
+  cancel.type = "button";
+  cancel.className = "nt-key-cancel";
+  cancel.textContent = "取消";
+  acts.append(ok, cancel);
+  card.append(title, hint, input, acts);
+  wrap.append(card);
+
+  const close = () => {
+    wrap.remove();
+    keyDialog = null;
+  };
+  const submit = () => {
+    const value = input.value.trim();
+    if (!value) {
+      input.focus();
+      return;
+    }
+    setEditKey(value);
+    close();
+    if (typeof retry === "function") retry();
+  };
+  ok.addEventListener("click", submit);
+  cancel.addEventListener("click", close);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") submit();
+    if (event.key === "Escape") close();
+  });
+  wrap.addEventListener("click", (event) => {
+    if (event.target === wrap) close();
+  });
+
+  keyDialog = wrap;
+  document.body.append(wrap);
+  input.focus();
+}
+
 function initNotes() {
   const body = document.querySelector(".post-body[data-progress-post]");
   if (!body) {
@@ -305,13 +372,89 @@ function initNotes() {
     const when = document.createElement("span");
     when.className = "nt-time";
     when.textContent = fmtTime(note.t);
-    head.append(author, when);
+    const floors = document.createElement("span");
+    floors.className = "nt-floors";
+    floors.textContent = `${note.thread.length} 层`;
+    head.append(author, when, floors);
+
+    const first = document.createElement("div");
+    first.className = "nt-floor is-first";
+    const firstHead = document.createElement("div");
+    firstHead.className = "nt-floor-head";
+    const firstNo = document.createElement("span");
+    firstNo.className = "nt-floor-no";
+    firstNo.textContent = "1 楼";
+    firstHead.append(firstNo);
 
     const input = document.createElement("textarea");
     input.className = "nt-input";
     input.rows = 3;
-    input.placeholder = "写点批注…";
+    input.placeholder = "写点批注…（可以只高亮不写字）";
     input.value = note.thread[0]?.text || "";
+
+    first.append(firstHead, input);
+
+    const list = document.createElement("ol");
+    list.className = "nt-thread";
+    note.thread.slice(1).forEach((msg, index) => {
+      const row = document.createElement("li");
+      row.className = "nt-floor";
+      if (msg.author === "AI") row.classList.add("is-ai");
+      const rowHead = document.createElement("div");
+      rowHead.className = "nt-floor-head";
+      const no = document.createElement("span");
+      no.className = "nt-floor-no";
+      no.textContent = `${index + 2} 楼`;
+      const who = document.createElement("span");
+      who.className = "nt-author";
+      who.textContent = msg.author;
+      const at = document.createElement("span");
+      at.className = "nt-time";
+      at.textContent = fmtTime(msg.t || note.t);
+      rowHead.append(no, who, at);
+      const bodyText = document.createElement("p");
+      bodyText.className = "nt-text";
+      bodyText.textContent = msg.text;
+      row.append(rowHead, bodyText);
+      list.append(row);
+    });
+
+    const replyBox = document.createElement("div");
+    replyBox.className = "nt-reply";
+    const replyInput = document.createElement("textarea");
+    replyInput.className = "nt-reply-input";
+    replyInput.rows = 2;
+    replyInput.placeholder = "回复这一条…";
+    const replyBtn = document.createElement("button");
+    replyBtn.type = "button";
+    replyBtn.className = "nt-reply-send";
+    replyBtn.dataset.act = "reply";
+    replyBtn.textContent = "回复";
+    const replyHint = document.createElement("p");
+    replyHint.className = "nt-reply-hint";
+    replyBtn.addEventListener("click", async () => {
+      const text = replyInput.value.trim();
+      if (!text) {
+        replyInput.focus();
+        return;
+      }
+      replyBtn.disabled = true;
+      try {
+        const data = await postReply(slug, id, text);
+        all = save({ ...all, [slug]: notesFor(all, slug).map((n) => (n.id === id ? data.note : n)) });
+        closePop();
+        openPopById(id);
+        renderList();
+      } catch (err) {
+        replyBtn.disabled = false;
+        if (err instanceof AuthError) {
+          promptForKey(() => replyBtn.click());
+        } else {
+          replyHint.textContent = "回复没发出去，稍后再试";
+        }
+      }
+    });
+    replyBox.append(replyInput, replyBtn, replyHint);
 
     const foot = document.createElement("div");
     foot.className = "nt-acts";
@@ -325,21 +468,7 @@ function initNotes() {
     delBtn.textContent = "删除";
     foot.append(saveBtn, delBtn);
 
-    pop.append(head, input);
-
-    for (const msg of note.thread.slice(1)) {
-      const row = document.createElement("div");
-      row.className = "nt-msg";
-      const who = document.createElement("span");
-      who.className = "nt-author";
-      who.textContent = msg.author;
-      const bodyText = document.createElement("p");
-      bodyText.textContent = msg.text;
-      row.append(who, bodyText);
-      pop.append(row);
-    }
-
-    pop.append(foot);
+    pop.append(head, first, list, replyBox, foot);
     document.body.append(pop);
 
     const rect = mark.getBoundingClientRect();
@@ -366,6 +495,7 @@ function initNotes() {
     });
   }
   openPop = openPopById;
+  onAuthNeeded(() => promptForKey());
 
   const addNote = (anchor, text, openBubble) => {
     const note = makeNote({ ...anchor, t: Date.now(), text, author: "我" });
