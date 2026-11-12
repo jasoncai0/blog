@@ -88,6 +88,20 @@ body {
   }
 }
 
+/* ---- 文章页右栏：本文笔记 ---- */
+.rail-notes { display: none; }
+.note-list[data-empty="1"] { display: none; }
+@media (min-width: 1440px) {
+  .layout > .rail-notes {
+    display: block;
+    grid-column: 3; grid-row: 1;
+    justify-self: stretch;
+    width: auto; max-width: 300px;
+    margin-left: var(--rail-gap); margin-right: 0;
+  }
+  .main-col > .note-list { display: none; }
+}
+
 /* ---- 文章页左栏目录 ---- */
 .rail-article { width: 240px; transition: width 0.18s ease; }
 .toc-head {
@@ -534,12 +548,7 @@ mark.note-hl {
 .nt-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
 .nt-author { font-size: 11px; letter-spacing: 0.04em; color: var(--accent); }
 .nt-time { font-family: var(--mono); font-size: 10px; color: var(--soft); }
-.nt-pop[data-placement="rail"] {
-  right: 28px; left: auto;
-  border-left: 2px solid rgba(191, 69, 32, 0.38);
-  max-height: min(70vh, 620px);
-  overflow-y: auto;
-}
+.nt-pop { max-height: min(70vh, 620px); overflow-y: auto; }
 
 .nt-input {
   width: 100%; box-sizing: border-box; resize: vertical;

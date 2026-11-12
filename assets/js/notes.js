@@ -265,23 +265,8 @@ function initNotes() {
     document.body.append(pop);
 
     const rect = mark.getBoundingClientRect();
-    const column = document.querySelector(".main-col");
-    const gutter = column
-      ? document.documentElement.clientWidth - column.getBoundingClientRect().right
-      : 0;
-    if (gutter >= 230) {
-      const width = Math.max(200, Math.min(300, gutter - 40));
-      pop.style.width = `${width}px`;
-      pop.dataset.placement = "rail";
-      const top = Math.max(88, Math.min(rect.top - 8, window.innerHeight - pop.offsetHeight - 16));
-      pop.style.top = `${top}px`;
-      pop.style.left = "auto";
-      pop.style.right = "28px";
-    } else {
-      pop.dataset.placement = "float";
-      pop.style.top = `${Math.min(window.innerHeight - pop.offsetHeight - 12, rect.bottom + 8)}px`;
-      pop.style.left = `${Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, rect.left))}px`;
-    }
+    pop.style.top = `${Math.min(window.innerHeight - pop.offsetHeight - 12, rect.bottom + 8)}px`;
+    pop.style.left = `${Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, rect.left))}px`;
     input.focus();
 
     saveBtn.addEventListener("click", () => {
@@ -366,16 +351,10 @@ function initNotes() {
 
   document.addEventListener("selectionchange", schedule);
   document.addEventListener("mouseup", schedule);
-  const listRoot = document.querySelector(".note-list");
-  const renderList = () => {
-    if (!listRoot) return;
-    const notes = [...notesFor(all, slug)].sort((a, b) => a.t - b.t);
-    listRoot.replaceChildren();
-    if (!notes.length) {
-      listRoot.hidden = true;
-      return;
-    }
-    listRoot.hidden = false;
+  // 两个挂载点：正文末尾（窄屏）和右栏（≥1440px）；两边都渲染，由 CSS 决定露哪个。
+  const listRoots = [...document.querySelectorAll(".note-list")];
+
+  const buildList = (root, notes) => {
 
     const head = document.createElement("div");
     head.className = "note-head";
@@ -437,7 +416,16 @@ function initNotes() {
     });
     acts.append(exportBtn, clearBtn);
 
-    listRoot.append(head, items, acts);
+    root.append(head, items, acts);
+  };
+
+  const renderList = () => {
+    const notes = [...notesFor(all, slug)].sort((a, b) => a.t - b.t);
+    for (const root of listRoots) {
+      root.replaceChildren();
+      root.dataset.empty = notes.length ? "0" : "1";
+      if (notes.length) buildList(root, notes);
+    }
   };
 
   body.addEventListener("click", (event) => {

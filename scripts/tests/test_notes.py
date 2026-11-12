@@ -231,7 +231,7 @@ def test_note_list_jumps_to_highlight(page, base):
     seed_note(page, "收敛是必要条件", "批注一")
     page.reload()
     page.wait_for_timeout(400)
-    listing = page.locator(".note-list")
+    listing = page.locator(".main-col > .note-list")
     assert listing.is_visible(), "有笔记时应显示左栏列表"
     assert "本文笔记 ·1" in listing.locator(".note-head").inner_text()
     page.locator(".note-list .note-items li a").first.click()
@@ -308,7 +308,7 @@ def test_storage_disabled_does_not_break_the_page(ctx, base):
     page.goto(base + ARTICLE)
     page.wait_for_timeout(500)
     assert "收敛是必要条件" in page.locator(".post-body").inner_text()
-    assert page.locator(".note-list").count() == 0 or not page.locator(".note-list").is_visible()
+    assert page.locator(".note-list").count() == 0 or not page.locator(".main-col > .note-list").is_visible()
     assert not errors, f"存储被禁时不应抛错：{errors}"
 
 
@@ -373,7 +373,36 @@ def test_seeded_note_inside_figure_does_not_break_the_svg(page, base):
     assert page.evaluate("() => document.querySelectorAll('.post-body svg text').length") > 10
 
 
-def test_bubble_sits_in_the_right_gutter_on_wide_screen(page, base):
+def test_note_list_moves_to_the_right_rail_on_wide_screen(page, base):
+    page.set_viewport_size({"width": 1500, "height": 950})
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.reload()
+    page.wait_for_timeout(500)
+    rail = page.locator(".rail-notes .note-list")
+    assert rail.is_visible(), "宽屏时本文笔记应在右栏"
+    assert "本文笔记 ·1" in rail.inner_text()
+    article = page.locator(".main-col").bounding_box()
+    box = rail.bounding_box()
+    assert box["x"] >= article["x"] + article["width"] - 2, f"笔记栏压住了正文：{box} vs {article}"
+    assert not page.locator(".main-col > .note-list").is_visible(), "宽屏时正文末尾那份应隐藏"
+
+
+def test_note_list_stays_below_the_article_when_narrow(page, base):
+    page.set_viewport_size({"width": 1100, "height": 900})
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.reload()
+    page.wait_for_timeout(500)
+    with_notes = page.locator(".main-col > .note-list")
+    assert with_notes.is_visible(), "窄屏时本文笔记在正文末尾"
+    assert "本文笔记 ·1" in with_notes.inner_text()
+    assert not page.locator(".rail-notes").is_visible(), "窄屏没有右栏"
+
+
+def test_bubble_still_follows_the_mark_on_wide_screen(page, base):
     page.set_viewport_size({"width": 1500, "height": 950})
     page.goto(base + ARTICLE)
     page.wait_for_timeout(300)
@@ -383,26 +412,9 @@ def test_bubble_sits_in_the_right_gutter_on_wide_screen(page, base):
     page.click("mark.note-hl")
     pop = page.locator(".nt-pop")
     pop.wait_for(state="visible")
-    assert pop.get_attribute("data-placement") == "rail", "宽屏时应放到右侧留白"
-    article = page.locator(".main-col").bounding_box()
-    box = pop.bounding_box()
-    assert box["x"] >= article["x"] + article["width"] - 2, f"气泡压住了正文：{box} vs {article}"
-
-
-def test_bubble_falls_back_below_when_there_is_no_gutter(page, base):
-    page.set_viewport_size({"width": 700, "height": 900})
-    page.goto(base + ARTICLE)
-    page.wait_for_timeout(300)
-    seed_note(page, "收敛是必要条件", "批注一")
-    page.reload()
-    page.wait_for_timeout(400)
-    page.click("mark.note-hl")
-    pop = page.locator(".nt-pop")
-    pop.wait_for(state="visible")
-    assert pop.get_attribute("data-placement") == "float", pop.get_attribute("data-placement")
     box = pop.bounding_box()
     mark = page.locator("mark.note-hl").first.bounding_box()
-    assert abs(box["x"] - mark["x"]) <= 2, f"跟随高亮的左边缘，实际 {box} vs {mark}"
+    assert abs(box["x"] - mark["x"]) <= 2, f"气泡应贴住高亮，实际 {box} vs {mark}"
 
 
 CASES = [
@@ -421,8 +433,9 @@ CASES = [
     (test_no_js_has_no_toolbar_and_no_marks, True, {**DESKTOP, "java_script_enabled": False}),
     (test_figure_text_is_not_wrapped_by_marks, False, DESKTOP),
     (test_seeded_note_inside_figure_does_not_break_the_svg, False, DESKTOP),
-    (test_bubble_sits_in_the_right_gutter_on_wide_screen, False, DESKTOP),
-    (test_bubble_falls_back_below_when_there_is_no_gutter, False, DESKTOP),
+    (test_note_list_moves_to_the_right_rail_on_wide_screen, False, DESKTOP),
+    (test_note_list_stays_below_the_article_when_narrow, False, DESKTOP),
+    (test_bubble_still_follows_the_mark_on_wide_screen, False, DESKTOP),
 ]
 
 

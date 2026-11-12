@@ -11,9 +11,12 @@
 <div class="post-body" data-progress-post="{{ .File.ContentBaseName }}">
 {{ .Content }}
 </div>
-{{- if not $hasToc }}
-<div class="note-list" hidden></div>
-{{- end }}
+<div class="note-list" data-empty="1"></div>
 </div>
+{{- if $hasToc }}
+<aside class="rail rail-notes" aria-label="本文笔记">
+<div class="note-list" data-empty="1"></div>
+</aside>
+{{- end }}
 </div>
 {{ end }}
