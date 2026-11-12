@@ -135,9 +135,34 @@ def test_highlight_paints_only_the_selected_occurrence(page, base):
     assert marks.first.inner_text() == "收敛是必要条件"
 
 
+def test_toolbar_appears_above_selection(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    select_text(page, "收敛是必要条件")
+    bar = page.locator(".nt-actions")
+    bar.wait_for(state="visible")
+    assert bar.locator("button[data-action='highlight']").is_visible()
+    assert bar.locator("button[data-action='annotate']").is_visible()
+    box = bar.bounding_box()
+    top = page.evaluate("() => getSelection().getRangeAt(0).getBoundingClientRect().top")
+    assert box["y"] + box["height"] <= top + 2, "工具条应在选区上方"
+
+
+def test_toolbar_hides_when_selection_cleared(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    select_text(page, "收敛是必要条件")
+    page.locator(".nt-actions").wait_for(state="visible")
+    page.evaluate("() => getSelection().removeAllRanges()")
+    page.wait_for_timeout(400)
+    assert page.locator(".nt-actions").count() == 0, "清空选区后工具条应消失"
+
+
 CASES = [
     (test_highlight_persists_across_reload, False, DESKTOP),
     (test_highlight_paints_only_the_selected_occurrence, False, DESKTOP),
+    (test_toolbar_appears_above_selection, False, DESKTOP),
+    (test_toolbar_hides_when_selection_cleared, False, DESKTOP),
 ]
 
 

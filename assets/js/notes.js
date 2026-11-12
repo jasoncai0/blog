@@ -1,6 +1,8 @@
 // 划词高亮 + 批注。锚点用「原文 + 前后各 32 字 + 段落下标」，文章改字后失配就静默跳过。
 import { NOTES_KEY, ANCHOR_PAD, makeNote, readNotes, writeNotes, notesFor } from "./notes-core.mjs";
 
+let openPop = null;
+
 const SKIP = new Set(["CODE", "PRE", "FIGCAPTION", "SCRIPT", "STYLE", "SVG"]);
 
 function skipped(el) {
@@ -139,45 +141,69 @@ export function initNotes() {
     bar = null;
   };
 
+  const addNote = (anchor, text, openBubble) => {
+    const note = makeNote({ ...anchor, t: Date.now(), text, author: "我" });
+    all = save({ ...all, [slug]: [...notesFor(all, slug), note] });
+    paint(body, note, note.id);
+    if (openBubble) openBubble(note);
+    return note;
+  };
+
   const showBar = (range) => {
     hideBar();
     const rect = range.getBoundingClientRect();
+    const anchor = anchorOf(range, body);
+    if (!anchor) return;
+
     bar = document.createElement("div");
     bar.className = "nt-actions";
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.action = "highlight";
-    button.textContent = "高亮";
-    button.addEventListener("mousedown", (event) => event.preventDefault());
-    button.addEventListener("click", () => {
-      const anchor = anchorOf(range, body);
-      if (!anchor) return;
-      const note = makeNote({ ...anchor, t: Date.now(), text: "", author: "我" });
-      all = save({ ...all, [slug]: [...notesFor(all, slug), note] });
-      paint(body, note, note.id);
+    const make = (action, label) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.action = action;
+      button.textContent = label;
+      button.addEventListener("mousedown", (event) => event.preventDefault());
+      return button;
+    };
+
+    const highlight = make("highlight", "高亮");
+    highlight.addEventListener("click", () => {
+      addNote(anchor, "");
       hideBar();
       window.getSelection()?.removeAllRanges();
     });
-    bar.append(button);
-    bar.style.top = `${Math.max(8, rect.top - 44)}px`;
-    bar.style.left = `${rect.left + rect.width / 2}px`;
+
+    const annotate = make("annotate", "批注");
+    annotate.addEventListener("click", () => {
+      const note = addNote(anchor, "");
+      hideBar();
+      window.getSelection()?.removeAllRanges();
+      if (typeof openPop === "function") openPop(note.id);
+    });
+
+    bar.append(highlight, annotate);
     document.body.append(bar);
+    const height = bar.offsetHeight;
+    const above = rect.top - height - 8;
+    bar.style.top = `${above >= 8 ? above : rect.bottom + 8}px`;
+    bar.style.left = `${Math.min(window.innerWidth - 12, Math.max(12, rect.left + rect.width / 2))}px`;
   };
 
-  document.addEventListener("selectionchange", () => {
-    const range = currentSelection();
-    if (!range) {
-      hideBar();
-      return;
-    }
-    const anchor = anchorOf(range, body);
-    if (!anchor) {
-      hideBar();
-      return;
-    }
-    showBar(range);
-  });
+  let timer = null;
+  const schedule = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const range = currentSelection();
+      if (!range || !anchorOf(range, body)) {
+        hideBar();
+        return;
+      }
+      showBar(range);
+    }, 120);
+  };
 
+  document.addEventListener("selectionchange", schedule);
+  document.addEventListener("mouseup", schedule);
   window.addEventListener("scroll", hideBar, { passive: true });
 }
 
