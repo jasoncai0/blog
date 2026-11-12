@@ -1,4 +1,13 @@
 {
+ "agent-asset-lineage": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 11,
+  "h3": 24,
+  "hr": 0,
+  "pre": 5,
+  "table": 6
+ },
  "agent-loop-tao-compaction": {
   "figure": 5,
   "h1": 1,
@@ -71,6 +80,204 @@
   "pre": 6,
   "table": 12
  },
+ "dsh-agent-team": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 16,
+  "h3": 0,
+  "hr": 0,
+  "pre": 2,
+  "table": 4
+ },
+ "dsh-architecture-anatomy": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 10,
+  "h3": 0,
+  "hr": 0,
+  "pre": 4,
+  "table": 5
+ },
+ "dsh-build-agent-from-zero": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 14,
+  "h3": 0,
+  "hr": 0,
+  "pre": 13,
+  "table": 2
+ },
+ "dsh-compaction": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 14,
+  "h3": 12,
+  "hr": 1,
+  "pre": 11,
+  "table": 6
+ },
+ "dsh-context-injection": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 12,
+  "h3": 42,
+  "hr": 1,
+  "pre": 11,
+  "table": 2
+ },
+ "dsh-error-retry-recovery": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 12,
+  "h3": 0,
+  "hr": 0,
+  "pre": 10,
+  "table": 4
+ },
+ "dsh-human-in-the-loop": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 11,
+  "hr": 1,
+  "pre": 14,
+  "table": 5
+ },
+ "dsh-input-inbox": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 14,
+  "h3": 10,
+  "hr": 0,
+  "pre": 17,
+  "table": 5
+ },
+ "dsh-memory-architecture": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 28,
+  "hr": 0,
+  "pre": 1,
+  "table": 4
+ },
+ "dsh-recall": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 18,
+  "hr": 1,
+  "pre": 4,
+  "table": 9
+ },
+ "dsh-request-assembly": {
+  "figure": 7,
+  "h1": 1,
+  "h2": 10,
+  "h3": 1,
+  "hr": 0,
+  "pre": 13,
+  "table": 5
+ },
+ "dsh-session-event-sourcing": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 10,
+  "h3": 0,
+  "hr": 0,
+  "pre": 8,
+  "table": 1
+ },
+ "dsh-steering-and-cancel": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 3,
+  "hr": 1,
+  "pre": 10,
+  "table": 4
+ },
+ "dsh-subagent-control": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 15,
+  "h3": 6,
+  "hr": 0,
+  "pre": 9,
+  "table": 7
+ },
+ "dsh-subagent-lifecycle": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 15,
+  "h3": 5,
+  "hr": 0,
+  "pre": 10,
+  "table": 11
+ },
+ "dsh-tool-boundaries": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 16,
+  "h3": 5,
+  "hr": 0,
+  "pre": 8,
+  "table": 7
+ },
+ "dsh-tool-pipeline": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 20,
+  "h3": 2,
+  "hr": 0,
+  "pre": 8,
+  "table": 6
+ },
+ "dsh-tool-registry-scope": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 15,
+  "h3": 0,
+  "hr": 0,
+  "pre": 16,
+  "table": 4
+ },
+ "dsh-tool-results": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 16,
+  "h3": 16,
+  "hr": 0,
+  "pre": 4,
+  "table": 8
+ },
+ "dsh-tool-vs-skill-sequence": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 12,
+  "h3": 11,
+  "hr": 0,
+  "pre": 0,
+  "table": 2
+ },
+ "dsh-turn-step-state-machine": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "hr": 0,
+  "pre": 7,
+  "table": 2
+ },
+ "dsh-workflow-jobs-goal": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 2,
+  "hr": 0,
+  "pre": 0,
+  "table": 4
+ },
  "grill-resume-agent-arch": {
   "figure": 0,
   "h1": 1,
@@ -124,6 +331,15 @@
   "hr": 0,
   "pre": 9,
   "table": 2
+ },
+ "memory-as-projection": {
+  "figure": 8,
+  "h1": 1,
+  "h2": 13,
+  "h3": 30,
+  "hr": 1,
+  "pre": 4,
+  "table": 7
  },
  "opencode-architecture": {
   "figure": 4,
@@ -267,6 +483,15 @@
   "h3": 7,
   "hr": 0,
   "pre": 1,
+  "table": 5
+ },
+ "video-asset-lineage": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 7,
+  "h3": 11,
+  "hr": 0,
+  "pre": 9,
   "table": 5
  }
 }

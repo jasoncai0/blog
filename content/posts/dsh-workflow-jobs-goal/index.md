@@ -26,31 +26,31 @@ slug: "dsh-workflow-jobs-goal"
 
 它们共享的只有一点：都不在 agent loop 里。触发源、状态存放、失败恢复、记账单位全都不一样。混用会出事，而且出得很隐蔽。
 
-## 0. 一句话结论
+## 0. 结论
 
-Workflow 是「脚本里的并发」：模型写一段跑在受限 VM 里的脚本，脚本通过 `agent()` 开子代理，记账单位是启动的子代理数。
+Workflow 管的是脚本里的并发。模型写一段跑在受限 VM 里的脚本，脚本通过 `agent()` 开子代理，账本记的是启动了多少子代理。
 
-Jobs 是「进程级的后台」：生产者交出 `run()` 与输出源，registry 管身份、并发、输出环与结算，记账单位是进程记录。
+Jobs 管进程级后台。生产者交出 `run()` 和输出源，registry 负责身份、并发、输出环与结算，账本记的是进程记录。
 
-Goal 是「状态 + 一个进程本地的续跑授权」：持久的是目标与轮次计数，调度器是另一个插件，记账单位是轮次。
+Goal 管状态，外加一个进程本地的续跑授权。持久的是目标和轮次计数，调度器在另一个插件里，账本记的是轮次。
 
-Schedule 是「宿主时钟」：任务不在会话里，记账单位是触发次数与投递回执。
+Schedule 靠宿主时钟。任务不在会话里，账本记的是触发次数和投递回执。
 
 ## 1. 四条出口：先看它们各自缺了什么
 
-把这四种机制并排，最容易看清的不是功能，而是它们各自拒绝承担什么。
+把这四种机制并排，最容易看清的是它们各自不做什么，功能反而退到后面。
 
 Workflow 不持久。它是一次工具调用里的脚本执行，run 结束就没了；结果通过 `WorkflowResult` 返回，取消走 `WorkflowRun.cancel`。
 
 Jobs 不对话。它托管一个进程或一个输出源，没有会话、没有工具、没有模型；模型只能通过 `job_output` 看输出。
 
-Goal 不调度。它只存目标与阶段，真正决定「什么时候再跑一轮」的是 goal-round-driver 这个独立插件。
+Goal 不调度。它只存目标与阶段，决定「什么时候再跑一轮」的是 goal-round-driver 这个独立插件。
 
 Schedule 不在会话里。任务存在宿主存储，目标会话只是投递地址；读取任务从不激活会话。
 
 {{< fig "diagrams/01-four-mechanisms.svg" "图注：四种机制按触发源、生命周期、状态存放与失败恢复排成四列；共同点只有「不在当前轮次里」，其余四行没有一格相同。" >}}
 
-这张图值得从下往上看：先看失败恢复，再看状态存放。
+这张图从下往上看更清楚：先看失败恢复，再看状态存放。
 
 Workflow 失败就是一次工具调用失败，错误进对话，模型自己决定重试不重试。
 
@@ -71,21 +71,21 @@ Schedule 投递失败保留任务并报错，没有通用重试循环。
 
 ## 2. Workflow：模型写脚本，脚本开子代理
 
-Workflow 的定位一句话能说完：让 agent 运行一段「模型编写、会启动 subagent 的编排脚本」。
+Workflow 的定位：让 agent 运行一段模型编写、会启动 subagent 的编排脚本。
 
 它是可选能力，不在 agent loop 内；和 bash 一样，每个 context 只允许一个引擎实现提供 `ctx.workflowEngine`，没有命名 provider 注册表。
 
 请求的形状是 `WorkflowStartRequest`：
 
 - `script`：脚本文本。
-- `meta`：`{ name, description, whenToUse?, phases? }`，引擎用 schema 校验，**绝不 eval 脚本文本**去取它。
+- `meta`：`{ name, description, whenToUse?, phases? }`，引擎用 schema 校验，绝不 eval 脚本文本去取它。
 - `args`：普通 JSON 数据。
 - `parent`：必填，脚本启动的每个子 agent 都归属于它。
 - `subagentProvider` / `maxTotalAgents`：引擎级策略，脚本观察不到，也改不了。
 
-`parent` 必填这一条很关键。脚本里的 `agent()` 不是凭空造一个会话，它走的是 subagent seam，cwd、谱系、深度都从父级继承。所以 workflow 不能用来「绕过组织结构」：它开的每个子代理都还在同一棵树里。
+`parent` 必填这一点很重要。脚本里的 `agent()` 不凭空造会话，它走 subagent seam，cwd、谱系、深度都从父级继承。所以 workflow 绕不过组织结构：它开的每个子代理都还在同一棵树里。
 
-脚本怎么执行？
+脚本的执行方式：
 
 `packages/workflow/workflow-ptc/src/runtime.ts` 把它包成一个 async IIFE，编译成 `vm.Script`（:75），然后 `vm.createContext({})`（:83），只注入五个东西：`agent`、`parallel`、`pipeline`、`phase`、`log`，外加 `args`（:85 起）。
 
@@ -93,13 +93,13 @@ Workflow 的定位一句话能说完：让 agent 运行一段「模型编写、�
 
 {{< fig "diagrams/02-workflow-timeline.svg" "图注：脚本先 fan-out 三个成员，parallel 等齐后进入下一阶段；pipeline 则是每个 item 独立跑完整条 stage 链，没有跨 stage 的屏障。" >}}
 
-这就是「脚本为什么不能直接碰文件系统」的答案：脚本是模型写的代码，模型写的代码不该直接拿到宿主能力。
+脚本不能直接碰文件系统，原因在这里：脚本是模型写的代码，不该直接拿到宿主能力。
 
 它要读文件，就 `agent()` 开一个子代理，让子代理用它自己的工具、自己的审批策略、自己的沙箱去读。
 
 文件策略仍然生效，但生效的位置在子代理的工具调用上，不在脚本的 `fs.readFile` 上。
 
-这不是沙箱强弱的问题，是权限归属的问题：脚本没有身份，子代理有。
+这跟沙箱强弱无关，是权限归属问题：脚本没有身份，子代理有。
 
 并发模型分两种，语义不同。
 
@@ -109,7 +109,7 @@ Workflow 的定位一句话能说完：让 agent 运行一段「模型编写、�
 
 两者都受 `maxItemsPerCall` 限制，`agent()` 受 `maxTotalAgents` 限制，超了抛 `AGENT_CAP`（:171）。
 
-失败纪律是这套设计里最容易被忽略的一段。
+失败处理是这套设计里最容易漏看的一段。
 
 脚本内钩子误用（参数错、未知选项、超出结构化输出子集的 schema、超上限、seam 启动失败、取消）都抛 `fatal: true`。
 
@@ -117,13 +117,13 @@ Workflow 的定位一句话能说完：让 agent 运行一段「模型编写、�
 
 逐项 `null` 只留给「子运行失败（非 completed）」和「阶段内普通脚本错误」。
 
-为什么分这么细？
+分这么细，是因为两类故障的处理方式不同。
 
-因为「拼错选项」和「子代理失败」是两种完全不同的故障。前者是脚本 bug，必须立刻终止并让写脚本的模型看见；后者是运行结果，可以过滤掉继续。
+「拼错选项」和「子代理失败」是两种故障。前者是脚本 bug，必须立刻终止，让写脚本的模型看见；后者是运行结果，可以过滤掉继续。
 
 把 fatal 消融成 null，会让一个拼错的 `model` 参数看起来像「那个子任务没做成」，然后脚本带着错误继续跑完。
 
-### 2.1 事件是观察，不是控制
+### 2.1 事件只用于观察
 
 `workflow/start`、`phase`、`log`、`agent-start`、`agent-end`、`end` 六个事件只用于观察。
 
@@ -133,11 +133,11 @@ payload 以 `WorkflowRunInfo`（id 加 meta）开头，而不是活的 `Workflow
 
 每次 emit 还对每个监听器隔离：一个订阅者抛错只记日志，不阻止后续监听器，每个监听器拿到自己的 payload 克隆。
 
-`agent-start` 与 `agent-end` 按 `agent.seq` 配对，每个真正开始的调用在每条停止路径上恰好一次；引擎终止路径会合成 `outcome: 'cancelled'`。
+`agent-start` 和 `agent-end` 按 `agent.seq` 配对。每个实际开始的调用在每条停止路径上都恰好出现一次；引擎终止路径会合成 `outcome: 'cancelled'`。
 
-这条边界值得抄：观察者不能因为「看到了」就获得控制权。
+观察者不能因为「看到了」就获得控制权，这条边界可以照抄。
 
-> 如果自己搭：把「脚本能做什么」做成一份白名单钩子，而不是给脚本一个 `eval` 加一堆全局对象。参数校验放在进入钩子之前，拼错就 fatal；不要在脚本层提供「忽略错误继续」的开关，那个开关会让参数错误看起来像子任务失败。
+> 如果自己搭：把「脚本能做什么」做成白名单钩子，别给脚本一个 `eval` 加一堆全局对象。参数校验放在进入钩子之前，拼错就 fatal；脚本层不要提供「忽略错误继续」的开关，它会让参数错误看起来像子任务失败。
 
 ## 3. Jobs：脱离轮次的后台进程
 
@@ -151,13 +151,13 @@ runtime 在调用 `run` 之前做完访问预检与清理，之后提交注册�
 
 这个顺序保证「注册成功」意味着「生产者已经开始」，不会出现注册了但没启动的空记录。
 
-`done` 的语义值得单独说：它在生产方释放资源之后 resolve，而不是工作一完成就 resolve。
+`done` 的语义单独说一下：它在生产方释放资源之后 resolve，工作一完成并不会 resolve。
 
 所以 `job/settled` 的时间戳描述的是「注册表提交结算的时刻」，不是 CPU 时间，也不是 OS 进程边界。
 
 缺结算就保持不完整，消费者不得虚构结束时间。
 
-输出不是一条流，是一个带绝对偏移的有界环。
+输出是一个带绝对偏移的有界环，并不像一条流。
 
 `JobHandle.append(text)` 整块落地，`updateProgress(line)` 只更新一行状态；拉取源（`JobOutputSource.read(fromByte)`）由 registry 按 `pumpPollMs` 泵入。
 
@@ -169,7 +169,7 @@ runtime 在调用 `run` 之前做完访问预检与清理，之后提交注册�
 
 {{< fig "diagrams/03-job-lifecycle.svg" "图注：job 从 start 进入 running，kill 后进入 stopping，最终以 completed/killed/failed 结算；detach 只是观察者断开，attach 是另一个观察者接上，生产者与输出环都不受影响。" >}}
 
-图里 detach/attach 这一对需要解释。
+图里的 detach/attach 需要解释一下。
 
 Job 的所有权属于 owner 会话，不属于某个 controller。
 
@@ -181,7 +181,7 @@ Job 的所有权属于 owner 会话，不属于某个 controller。
 
 理由是避免生产者启动一个 owner 无法收集、也无法停止的工作。
 
-Job 与 subagent 的区别，可以用三句话概括：
+Job 与 subagent 的区别，可以归成三条：
 
 - 进程 vs 会话：job 没有会话日志、没有对话、没有工具调用；subagent 有完整的会话与轮次。
 - 可观测性：job 通过输出环与 `job_list`/`job_output` 观察；subagent 通过 `wait_agent` 与返回消息观察。
@@ -201,7 +201,7 @@ Job 与 subagent 的区别，可以用三句话概括：
 
 ## 4. Goal：状态不是调度器
 
-Goal 最容易被误解成「定时让 agent 继续跑」。它其实只做两件事：记住目标，记准入过的轮次数。
+Goal 常被误解成定时让 agent 继续跑。它只做两件事：记住目标，记准入过的轮次数。
 
 持久状态是 `GoalPhase = 'active' | 'paused' | 'blocked' | 'complete'`，加一个 `GoalRef { id, revision }`，每次获准变更 revision +1。
 
@@ -219,11 +219,11 @@ Goal 最容易被误解成「定时让 agent 继续跑」。它其实只做两�
 
 消息是 `createUserMessage({ source: { kind: 'goal', goalId, revision, round } })`，正文来自 `<goal_round>` 模板（`prompt.ts:12`），包含 `Objective`、`Round: n/max`，并要求「same session」「treat workspace/tool results/durable state as authoritative」。
 
-超过预算时不是静默停止，而是 `ctx.goals.block(..., { code: 'round-limit' })`（:184）。
+超过预算时会写 `ctx.goals.block(..., { code: 'round-limit' })`（:184），不会静默停止。
 
 {{< fig "diagrams/04-goal-state-machine.svg" "图注：上半是持久 phase，下半是进程本地 activation；resume 同时改两者，pause/complete/block 把 phase 停下并 disarm，而 disarm 本身不改 phase。" >}}
 
-图里最重要的是「activation 不是 phase」。
+图里最要紧的一点：activation 不是 phase。
 
 一个 goal 可以 `active` 但 `disarmed`：目标还在，但没人有权限自动开下一轮。
 
@@ -245,15 +245,15 @@ goal-round-driver 在加载时对 `ctx.agents.list()` 里的每个 agent 执行 
 
 卸载时也 disarm，并取消运行中的 attempt（:463 起）。
 
-这不是防御性代码，是权限模型：自动续跑是一种授权，授权不能从磁盘上长出来。
+这是权限模型的设计，跟防御性代码无关：自动续跑是一种授权，授权不能从磁盘上长出来。
 
 恢复之后要重新开始，只能通过 `/goal` 或模型工具执行一次经人类授权的 resume 变更。
 
 fork 同理：子会话拿到的是目标的持久状态，不是父会话的授权。
 
-这条规则在自建系统里值得照抄。
+自建系统里可以照抄这条规则。
 
-> 如果自己搭：把「目标状态」和「自动执行授权」拆成两个字段，后者永不落盘。恢复时默认 disarmed，必须有人点一次「继续」。如果你觉得这很麻烦，想想相反的设计：进程崩溃后自动重启，agent 带着一个三周前的目标继续花钱，而没有人批准过这次续跑。
+> 如果自己搭：把「目标状态」和「自动执行授权」拆成两个字段，后者永不落盘。恢复时默认 disarmed，必须有人点一次「继续」。反过来想：进程崩溃后自动重启，agent 带着一个三周前的目标继续花钱，却没有人批准过这次续跑。
 
 ## 5. Schedule：时钟在宿主，不在会话
 
@@ -265,7 +265,7 @@ Schedule 的定位是「独立于 Session 激活状态、在宿主存任务」�
 
 Cron 用五字段加显式时区，保留 Vixie 的「日或周」匹配语义；RRULE 是有界 RFC 5545 子集，DTSTART 必须是 UTC Z 或显式 IANA TZID，拒绝浮动本地时间。
 
-最关键的一条语义是「只追赶最新一次」。
+有一条语义最要紧：只追赶最新一次。
 
 `resolveRecurringOccurrence(record, acceptedAt)`（`packages/schedule/schedule/src/domain.ts:820`）在已提交的下界内找最近一次到期时点。
 
@@ -279,7 +279,7 @@ Cron 用五字段加显式时区，保留 Vixie 的「日或周」匹配语义�
 
 代价是「错过的那几次真的没了」，回执里只有最近一次。
 
-七种时间类型各自要求什么：
+七种时间类型各自的要求：
 
 | kind | 必填字段 | 锚点 |
 | --- | --- | --- |
@@ -312,14 +312,14 @@ Cron 用五字段加显式时区，保留 Vixie 的「日或周」匹配语义�
 
 ## 6. 四种账本不能混用
 
-现在可以回答「记账单位」了。
+回到「记账单位」。
 
-- Workflow 记的是**子代理数**：`agentsStarted`，上限 `maxTotalAgents`。它不记轮次，也不记 token。
-- Jobs 记的是**进程记录**：一个 job id、一个状态、一个输出环、一个 owner。上限是每 owner 10 个并发。
-- Goal 记的是**轮次**：`roundsStarted`，上限 `maxGoalRounds`。无关的人类轮次不消耗它。
-- Schedule 记的是**触发次数与回执**：每个任务保留有界历史（默认 200 条、30 天），回执只证明消息进了收件箱。
+- Workflow 记的是子代理数：`agentsStarted`，上限 `maxTotalAgents`。它不记轮次，也不记 token。
+- Jobs 记的是进程记录：一个 job id、一个状态、一个输出环、一个 owner。上限是每 owner 10 个并发。
+- Goal 记的是轮次：`roundsStarted`，上限 `maxGoalRounds`。无关的人类轮次不消耗它。
+- Schedule 记的是触发次数与回执：每个任务保留有界历史（默认 200 条、30 天），回执只证明消息进了收件箱。
 
-混用会出什么事？
+混用的后果：
 
 把 goal 当调度器：你会期待「每分钟检查一次」，但 goal 只在 idle 时驱动，且必须 armed。一个长期 busy 的会话永远不会触发它。
 
@@ -339,11 +339,11 @@ Cron 用五字段加显式时区，保留 Vixie 的「日或周」匹配语义�
 
 如果需求是「修到绿为止」，结束条件由目标持有，它其实是 goal；如果需求是「定期看一眼」，结束条件由触发器持有，它是 schedule。
 
-两者真正的差别不在触发频率，而在「谁判断结束」。
+两者的差别在「谁判断结束」，跟触发频率无关。
 
 如果「检查、修、复验」的步骤固定、可以写成脚本，workflow 更合适，因为结束条件是脚本的返回值。
 
-> 如果自己搭：先给每种「循环外」能力定一个账本，再写 API。账本决定了上限、配额、可观测性和失败语义。最忌讳的是所有能力共用一个「task」表，最后没人说得清一个 task 到底消耗的是轮次、进程还是 token。
+> 如果自己搭：先给每种「循环外」能力定一个账本，再写 API。账本决定了上限、配额、可观测性和失败语义。所有能力共用一个「task」表最麻烦，最后没人说得清一个 task 到底消耗的是轮次、进程还是 token。
 
 ## 7. 设计取舍
 
@@ -358,7 +358,7 @@ Cron 用五字段加显式时区，保留 Vixie 的「日或周」匹配语义�
 | schedule 补发 | 只投最新一次 | 完整补发、精确次数保证 | 计费或审计需要「每次触发都留痕」时，得另建触发日志 |
 | schedule 存储 | 宿主存储，与会话解耦 | 会话内自描述、随会话迁移 | 多宿主部署时，任务归属与迁移要自己解决 |
 
-最值得展开的是第一行。
+第一行可以直接展开。
 
 把脚本关进 VM，等于放弃了「用脚本做一切」的灵活性。模型不能写 `fs.readdir` 再过滤，只能开一个子代理让它去读，再把结果返回。
 
@@ -368,7 +368,7 @@ Cron 用五字段加显式时区，保留 Vixie 的「日或周」匹配语义�
 
 如果让脚本直接读文件，日志里就只剩「workflow 读了什么」，没有「谁批准的、按什么策略批准的」。
 
-第二行也值得说。
+第二行也说明一下。
 
 fatal 立即终止意味着脚本作者要自己处理「某个子任务失败但整体可继续」的情况。DSH 不提供「忽略错误继续」的开关，因为那个开关一旦存在，拼错的参数就会被当成子任务失败吞掉。
 
@@ -376,21 +376,21 @@ fatal 立即终止意味着脚本作者要自己处理「某个子任务失败�
 
 ## 8. 踩坑点
 
-1. **在 workflow 脚本里找 `fs`，或把 fatal 当普通失败。** 现象：`require is not defined`；或拼错选项后 `parallel` 返回一堆 null，脚本带着错误跑完。原因：VM 上下文只有五个钩子加 `args`；只有 fatal 才重抛，普通子运行失败映射 null。对策：把 IO 交给 `agent()` 的子任务；不要用 `try/catch` 吞掉 `WorkflowError`，让 fatal 终止并把错误暴露给模型。
+1. 在 workflow 脚本里找 `fs`，或把 fatal 当普通失败。现象：`require is not defined`；或拼错选项后 `parallel` 返回一堆 null，脚本带着错误跑完。原因：VM 上下文只有五个钩子加 `args`；只有 fatal 才重抛，普通子运行失败映射 null。对策：把 IO 交给 `agent()` 的子任务；不要用 `try/catch` 吞掉 `WorkflowError`，让 fatal 终止并把错误暴露给模型。
 
-2. **以为 job 会随轮次结束。** 现象：轮次结束了，job 还在跑，`job/settled` 出现在 `turn/end` 之后。原因：job 生命周期长于轮次，结算事件可能晚到。对策：不要在 `turn/end` 时假设所有 job 已停；用 `job_list` 或 `wait`。
+2. 以为 job 会随轮次结束。现象：轮次结束了，job 还在跑，`job/settled` 出现在 `turn/end` 之后。原因：job 生命周期长于轮次，结算事件可能晚到。对策：不要在 `turn/end` 时假设所有 job 已停；用 `job_list` 或 `wait`。
 
-3. **job 输出读两次。** 现象：第二次 `job_output` 拿到空或重复。原因：`read` 是消耗式游标，`readAt` 才是非消耗。对策：需要重复读就用绝对偏移，别复用消耗游标。
+3. job 输出读两次。现象：第二次 `job_output` 拿到空或重复。原因：`read` 是消耗式游标，`readAt` 才是非消耗。对策：需要重复读就用绝对偏移，别复用消耗游标。
 
-4. **重启后期待 goal 自动继续。** 现象：进程重启，目标还在 `active`，但没有任何轮次开始。原因：activation 是进程本地的，加载时统一 disarm。对策：把「继续」做成显式的人类动作；无人值守场景用外部调度器重新授权。
+4. 重启后期待 goal 自动继续。现象：进程重启，目标还在 `active`，但没有任何轮次开始。原因：activation 是进程本地的，加载时统一 disarm。对策：把「继续」做成显式的人类动作；无人值守场景用外部调度器重新授权。
 
-5. **以为 resume 能突破轮次预算。** 现象：resume 报 exhausted。原因：`roundsStarted >= maxGoalRounds` 时 resume 被拒。对策：先调大 `maxGoalRounds` 再 resume，或把目标拆成新目标。
+5. 以为 resume 能突破轮次预算。现象：resume 报 exhausted。原因：`roundsStarted >= maxGoalRounds` 时 resume 被拒。对策：先调大 `maxGoalRounds` 再 resume，或把目标拆成新目标。
 
-6. **期待 schedule 补发错过的每一次。** 现象：停机两小时后只收到一条提醒。原因：只追赶最新一次，不枚举积压。对策：需要「每次都要」的审计场景，另建触发日志；提醒类任务接受丢中间次数。
+6. 期待 schedule 补发错过的每一次。现象：停机两小时后只收到一条提醒。原因：只追赶最新一次，不枚举积压。对策：需要「每次都要」的审计场景，另建触发日志；提醒类任务接受丢中间次数。
 
-7. **在 schedule 目标会话里等模型完成。** 现象：回执有了，任务却没做。原因：回执只证明消息进了收件箱，不等于模型完成。对策：把回执当投递凭证，完成状态要另建（或让 agent 回报）。
+7. 在 schedule 目标会话里等模型完成。现象：回执有了，任务却没做。原因：回执只证明消息进了收件箱，不等于模型完成。对策：把回执当投递凭证，完成状态要另建（或让 agent 回报）。
 
-8. **给 schedule 传一个已归档的会话。** 现象：保存成功，投递失败。原因：arm 时在 FIFO 内检查可用性，但归档可能发生在之后。对策：把归档与活动任务当成互斥操作，归档前先停任务。
+8. 给 schedule 传一个已归档的会话。现象：保存成功，投递失败。原因：arm 时在 FIFO 内检查可用性，但归档可能发生在之后。对策：把归档与活动任务当成互斥操作，归档前先停任务。
 
 ## 9. 源码索引
 
@@ -425,10 +425,10 @@ fatal 立即终止意味着脚本作者要自己处理「某个子任务失败�
 
 DSH 没有把它们合并成一个「长任务」抽象，因为合并之后，记账就没法做对了。
 
-一个任务到底消耗了三个子代理、一个进程、两轮目标，还是一次定时触发？如果只有一个计数器，这个问题永远答不清。
+一个任务可能消耗三个子代理、一个进程、两轮目标，或者一次定时触发。只有一个计数器，这笔账永远算不清。
 
-自建 Agent 时，最值得先做的不是加功能，而是给每种「继续跑」的方式定一个账本，再把授权与状态分开。
+自建 Agent 时，先给每种「继续跑」的方式定一个账本，再把授权与状态分开。加功能可以往后放。
 
-Goal 的 disarm 是这条原则最尖锐的体现：状态可以持久，授权不能。
+Goal 的 disarm 把这条原则摆得最清楚：状态可以持久，授权不行。
 
 上一篇：[15 Agent Teams：共享任务板与委派策略](/posts/dsh-agent-team.html) ｜ 下一篇：[17 记忆架构](/posts/dsh-memory-architecture.html) ｜ [系列目录](/posts/dsh-architecture-anatomy.html)
