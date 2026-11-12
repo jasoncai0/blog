@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="424" viewBox="0 0 960 424" role="img" aria-labelledby="f03-t f03-d">
+  <title id="f03-t">同一个请求，两个位置</title>
+  <desc id="f03-d">请求解剖对比：上半部分工具的声明位于请求前缀，任何增删都会重写从该段起的全部内容；下半部分技能的目录与正文都在消息尾部，只追加，前面的前缀保持不变。</desc>
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f03-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f03-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker>
+    <marker id="f03-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a5aa8"/></marker>
+  </defs>
+  <rect width="960" height="424" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">LAYOUT 03 / CACHE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">同一个请求，两个位置</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具声明在 system 之后的前缀，技能目录在 messages 的尾部——改哪个，代价完全不同</text>
+  <text x="40" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">TOOL</text>
+  <text x="40" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">声明在头</text>
+  <rect x="150" y="146" width="118" height="40" rx="2" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="209.0" y="169.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">system</text>
+  <rect x="272" y="146" width="128" height="40" rx="2" fill="rgba(191,69,32,0.10)" stroke="#bf4520" stroke-width="1"/>
+  <text x="336.0" y="169.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520" text-anchor="middle">tools[]</text>
+  <rect x="404" y="146" width="416" height="40" rx="2" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="612.0" y="169.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">messages …</text>
+  <text x="272" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">改这里 → 前缀失效，从这一格起全部重算</text>
+  <line x1="272" y1="140" x2="400" y2="140" stroke="#bf4520" stroke-width="1"/>
+  <text x="150" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">step 4 装了 MCP server：新 request/header + 一条 developer/message</text>
+  <text x="150" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">{ type: "tool-addition" } —— deferLoading 就是为了不整个重写声明表</text>
+  <text x="40" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#2f6f5e">SKILL</text>
+  <text x="40" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">正文在尾</text>
+  <rect x="150" y="294" width="118" height="40" rx="2" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="209.0" y="317.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">system</text>
+  <rect x="272" y="294" width="128" height="40" rx="2" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="336.0" y="317.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">tools[]</text>
+  <rect x="404" y="294" width="300" height="40" rx="2" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="554.0" y="317.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="middle">messages …</text>
+  <rect x="708" y="294" width="56" height="40" rx="2" fill="rgba(47,111,94,0.14)" stroke="#2f6f5e" stroke-width="1"/>
+  <text x="736.0" y="317.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e" text-anchor="middle">catalog</text>
+  <rect x="766" y="294" width="56" height="40" rx="2" fill="rgba(47,111,94,0.07)" stroke="#2f6f5e" stroke-width="1" stroke-dasharray="3 2"/>
+  <text x="794.0" y="317.0" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e" text-anchor="middle">body</text>
+  <text x="708" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">加这里 → 只追加</text>
+  <line x1="708" y1="288" x2="822" y2="288" stroke="#2f6f5e" stroke-width="1"/>
+  <text x="150" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">step 4 激活了一个技能：一条 user/message（目录）＋ 一条 tool/result（正文）</text>
+  <text x="150" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">前面一格都没动，缓存照常命中；目录还靠 digest 去重，连"重复追加"都省了</text>
+  <line x1="40" y1="394" x2="848" y2="394" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="2 4"/>
+  <text x="40" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">同一段前缀才能命中同一份缓存：改头 = 断，加尾 = 不断</text>
+</svg>

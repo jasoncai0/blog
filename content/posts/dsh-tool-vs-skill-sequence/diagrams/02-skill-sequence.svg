@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1044" viewBox="0 0 960 1044" role="img" aria-labelledby="f02-t f02-d">
+  <title id="f02-t">一次技能激活，是工具链里的一次调用</title>
+  <desc id="f02-d">技能链时序：pre-step 汇总 provider 目录并按摘要是否变化决定是否注入，模型读目录后调用 skill 工具，registry 通过 locator 让 provider 读取 SKILL.md，正文作为工具结果进入上下文；下方虚线是用户 /name 手势入口。</desc>
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f02-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f02-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f02-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker>
+    <marker id="f02-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a5aa8"/></marker>
+  </defs>
+  <rect width="960" height="1044" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">SEQ 02 / SKILL</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次技能激活，是工具链里的一次调用</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">目录先在消息里，正文后进上下文；真正被执行的永远是工具，不是技能</text>
+  <text x="84" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">USER</text>
+  <line x1="84" y1="136" x2="84" y2="966" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <text x="228" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">AGENT LOOP</text>
+  <text x="228" y="123" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">pre-step · step</text>
+  <line x1="228" y1="136" x2="228" y2="966" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <text x="372" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">SKILL PLUGIN</text>
+  <text x="372" y="123" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">tool-skill</text>
+  <line x1="372" y1="136" x2="372" y2="966" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <text x="516" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">MODEL</text>
+  <line x1="516" y1="136" x2="516" y2="966" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <text x="660" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">SKILLS REGISTRY</text>
+  <text x="660" y="123" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">list · get</text>
+  <line x1="660" y1="136" x2="660" y2="966" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <text x="804" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">PROVIDER</text>
+  <text x="804" y="123" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">SKILL.md</text>
+  <line x1="804" y1="136" x2="804" y2="966" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="228" y1="196" x2="372" y2="196" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="234" y="189" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">agent/pre-step</text>
+  <text x="234" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">每个 step 都跑一次</text>
+  <line x1="372" y1="240" x2="660" y2="240" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="378" y="233" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">snapshot({ cwd, scope })</text>
+  <rect x="664" y="226" width="176" height="44" rx="3" fill="#ffffff" stroke="#2f6f5e" stroke-width="0.8" opacity="0.96"/>
+  <line x1="664" y1="230" x2="664" y2="266" stroke="#2f6f5e" stroke-width="2" opacity="0.55"/>
+  <text x="673" y="239" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">revision + cwd 命中</text>
+  <text x="673" y="250.5" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">→ 直接返回，不问 provider</text>
+  <line x1="660" y1="292" x2="804" y2="292" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="666" y="285" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">list()</text>
+  <line x1="804" y1="330" x2="660" y2="330" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="614" y="323" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">SkillCandidate[]</text>
+  <text x="614" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">某个 provider 失败只标 incomplete</text>
+  <line x1="660" y1="372" x2="372" y2="372" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="378" y="365" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">{ skills, complete }</text>
+  <rect x="378" y="386" width="216" height="52" rx="3" fill="#ffffff" stroke="#2f6f5e" stroke-width="0.8" opacity="0.96"/>
+  <line x1="378" y1="390" x2="378" y2="434" stroke="#2f6f5e" stroke-width="2" opacity="0.55"/>
+  <text x="387" y="399" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">digest 没变 → 一条都不发</text>
+  <text x="387" y="410.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">变了 → catalog / catalog-update</text>
+  <text x="387" y="422.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">顺带删掉本步带进来的旧表</text>
+  <line x1="372" y1="456" x2="228" y2="456" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="234" y="449" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">messages[]</text>
+  <rect x="236" y="470" width="152" height="42" rx="3" fill="#ffffff" stroke="#2f6f5e" stroke-width="0.8" opacity="0.96"/>
+  <line x1="236" y1="474" x2="236" y2="508" stroke="#2f6f5e" stroke-width="2" opacity="0.55"/>
+  <text x="245" y="483" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">append user/message</text>
+  <text x="245" y="494.5" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">source: 'skill-catalog'</text>
+  <line x1="228" y1="552" x2="516" y2="552" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="234" y="545" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">request</text>
+  <text x="234" y="564" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">目录就挂在 messages 末尾</text>
+  <rect x="524" y="566" width="200" height="46" rx="3" fill="#ffffff" stroke="#3b6ea5" stroke-width="0.8" opacity="0.96"/>
+  <line x1="524" y1="570" x2="524" y2="608" stroke="#3b6ea5" stroke-width="2" opacity="0.55"/>
+  <text x="533" y="579" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">目录只是摘要</text>
+  <text x="533" y="590.5" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">照着猜内容 = 幻觉</text>
+  <line x1="516" y1="626" x2="228" y2="626" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="234" y="619" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">tool_call: skill({ name })</text>
+  <line x1="228" y1="668" x2="372" y2="668" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="234" y="661" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">execute(name)</text>
+  <text x="234" y="680" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">batch → prepare → dispatch → complete</text>
+  <line x1="372" y1="712" x2="660" y2="712" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="378" y="705" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">get(name)</text>
+  <text x="378" y="724" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">先 list 找 winner，再取正文</text>
+  <line x1="660" y1="754" x2="804" y2="754" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="666" y="747" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">get(locator)</text>
+  <text x="666" y="766" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">locator 是发现时留下的不透明句柄</text>
+  <line x1="804" y1="800" x2="372" y2="800" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="380" y="793" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">content</text>
+  <text x="380" y="812" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">与候选名不符 → invalidate</text>
+  <line x1="372" y1="846" x2="516" y2="846" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="378" y="839" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">tool/result &lt;skill_content&gt;</text>
+  <text x="378" y="858" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">正文走普通工具结果通道</text>
+  <rect x="524" y="862" width="200" height="56" rx="3" fill="#ffffff" stroke="#3b6ea5" stroke-width="0.8" opacity="0.96"/>
+  <line x1="524" y1="866" x2="524" y2="914" stroke="#3b6ea5" stroke-width="2" opacity="0.55"/>
+  <text x="533" y="875" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">此后按正文行事</text>
+  <text x="533" y="886.5" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">bash / write / read 照常调</text>
+  <text x="533" y="898.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">不再经过 skill 工具</text>
+  <line x1="40" y1="950" x2="848" y2="950" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="2 4"/>
+  <line x1="84" y1="976" x2="228" y2="976" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="90" y="969" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">/office-xlsx</text>
+  <line x1="228" y1="1002" x2="372" y2="1002" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="232" y="995" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">扫描 user 文本</text>
+  <text x="96" y="1026" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">get → 作为 user/message 注入</text>
+  <text x="96" y="1038" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">只有 userInvocable 的技能能走这条路</text>
+  <text x="40" y="942" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">可选入口：用户手势</text>
+</svg>

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="690" viewBox="0 0 960 690" role="img" aria-labelledby="f04-t f04-d">
+  <title id="f04-t">六级台阶，五级台阶</title>
+  <desc id="f04-d">状态阶梯对照：左侧工具从注册到结算共六级，右侧技能从注册到遵循共五级；中间的虚线表示技能目录的发布受工具可见性约束。</desc>
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f04-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f04-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f04-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker>
+    <marker id="f04-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a5aa8"/></marker>
+  </defs>
+  <rect width="960" height="690" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">LADDER 04 / LIFECYCLE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">六级台阶，五级台阶</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一件事在两边的说法：存在、被看见、被点名，然后才轮到"执行"</text>
+  <text x="40" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">TOOL</text>
+  <text x="84" y="124" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">注册 → 可见 → 准入 → 声明 → 调用 → 结算</text>
+  <rect x="40" y="146" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="62" cy="175" r="10" fill="#bf4520" opacity="0.10"/>
+  <text x="62" y="178" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">1</text>
+  <text x="80" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">注册</text>
+  <text x="80" y="183" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">register(def, { when })</text>
+  <text x="80" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">同层重名直接抛错；注册即 effect</text>
+  <rect x="40" y="222" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="62" cy="251" r="10" fill="#bf4520" opacity="0.10"/>
+  <text x="62" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">2</text>
+  <text x="80" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">可见</text>
+  <text x="80" y="259" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">view(scope)</text>
+  <text x="80" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">全局 + 祖先链，近者覆盖；restrict 过滤</text>
+  <rect x="40" y="298" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="62" cy="327" r="10" fill="#bf4520" opacity="0.10"/>
+  <text x="62" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">3</text>
+  <text x="80" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">准入</text>
+  <text x="80" y="335" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">resolve({ agent, signal })</text>
+  <text x="80" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">when 求值失败 = 整步准备失败</text>
+  <rect x="40" y="374" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="62" cy="403" r="10" fill="#bf4520" opacity="0.10"/>
+  <text x="62" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">4</text>
+  <text x="80" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">声明</text>
+  <text x="80" y="411" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">request/header.tools[]</text>
+  <text x="80" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">只投影 name / description / parameters</text>
+  <rect x="40" y="450" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="62" cy="479" r="10" fill="#bf4520" opacity="0.10"/>
+  <text x="62" y="482" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">5</text>
+  <text x="80" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">调用</text>
+  <text x="80" y="487" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">tool_call</text>
+  <text x="80" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">批调度：exclusive 屏障或并行池</text>
+  <rect x="40" y="526" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="62" cy="555" r="10" fill="#bf4520" opacity="0.10"/>
+  <text x="62" y="558" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">6</text>
+  <text x="80" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">结算</text>
+  <text x="80" y="563" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">tool/result</text>
+  <text x="80" y="576" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">输出 schema 校验通过才算成功</text>
+  <text x="488" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#2f6f5e">SKILL</text>
+  <text x="540" y="124" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">注册 → 发现 → 发布 → 激活 → 遵循</text>
+  <rect x="488" y="146" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="510" cy="175" r="10" fill="#2f6f5e" opacity="0.10"/>
+  <text x="510" y="178" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e" text-anchor="middle">1</text>
+  <text x="528" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">注册</text>
+  <text x="528" y="183" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">registerProvider(create)</text>
+  <text x="528" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">provider 工厂 + 失效回调</text>
+  <rect x="488" y="222" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="510" cy="251" r="10" fill="#2f6f5e" opacity="0.10"/>
+  <text x="510" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e" text-anchor="middle">2</text>
+  <text x="528" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">发现</text>
+  <text x="528" y="259" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">snapshot({ cwd, scope })</text>
+  <text x="528" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">六个根，rank 排序，按 revision 缓存</text>
+  <rect x="488" y="298" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="510" cy="327" r="10" fill="#2f6f5e" opacity="0.10"/>
+  <text x="510" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e" text-anchor="middle">3</text>
+  <text x="528" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">发布</text>
+  <text x="528" y="335" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">user/message 'skill-catalog'</text>
+  <text x="528" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">digest 没变就一条都不发</text>
+  <rect x="488" y="374" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="510" cy="403" r="10" fill="#2f6f5e" opacity="0.10"/>
+  <text x="510" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e" text-anchor="middle">4</text>
+  <text x="528" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">激活</text>
+  <text x="528" y="411" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">skill({ name })</text>
+  <text x="528" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">一次普通工具调用，复用整条流水线</text>
+  <rect x="488" y="450" width="352" height="58" rx="4" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <circle cx="510" cy="479" r="10" fill="#2f6f5e" opacity="0.10"/>
+  <text x="510" y="482" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e" text-anchor="middle">5</text>
+  <text x="528" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">遵循</text>
+  <text x="528" y="487" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">bash / write / read …</text>
+  <text x="528" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">正文进上下文之后，动手的是模型</text>
+  <path d="M 392,251.0 h 44 v 76.0 h 32" fill="none" stroke="#7a5aa8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f04-p)"/>
+  <text x="398" y="243.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#7a5aa8">skill 工具不可见</text>
+  <text x="398" y="269.0" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#7a5aa8">→ 目录也不发</text>
+  <text x="488" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2f6f5e">技能没有第六步</text>
+  <text x="488" y="568" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">正文进上下文之后，技能就从流程里退场了——</text>
+  <text x="488" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">后面每一次 bash / read 都只是普通工具调用</text>
+  <line x1="40" y1="620" x2="848" y2="620" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="2 4"/>
+  <text x="40" y="638" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">层内同名：工具抛错（部署错误），技能按 rank 排序后静默丢弃（优先级表达）</text>
+  <text x="40" y="654" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">跨层遮蔽两边一致：近者覆盖远者，skill 的实现里直接写着"和 tools 注册表同一条规则"</text>
+</svg>
