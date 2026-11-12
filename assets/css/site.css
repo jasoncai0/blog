@@ -549,6 +549,10 @@ mark.note-hl {
   border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer;
 }
 .nt-acts button:hover { background: rgba(45, 49, 66, 0.06); }
+.note-mark {
+  font-size: 11px; color: var(--accent); letter-spacing: 0.01em;
+}
+
 .note-list { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--rule); }
 .note-head { font-size: 12px; letter-spacing: 0.04em; color: var(--muted); }
 .note-items { margin: 8px 0 0; padding: 0; list-style: none; }

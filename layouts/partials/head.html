@@ -24,9 +24,11 @@
 {{- $nav := resources.Get "js/site-nav.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $nav.RelPermalink }}"></script>
 {{- end }}
-{{- if .IsPage }}
+{{- if or .IsPage .IsHome }}
 {{- $notes := resources.Get "js/notes.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $notes.RelPermalink }}"></script>
+{{- end }}
+{{- if .IsPage }}
 {{- $zoom := resources.Get "js/figure-zoom.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $zoom.RelPermalink }}"></script>
 {{- end }}

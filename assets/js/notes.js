@@ -6,6 +6,7 @@ import {
   readNotes,
   writeNotes,
   notesFor,
+  countFor,
   setThreadText,
   removeNote,
   serializeStore,
@@ -134,8 +135,35 @@ function currentSelection() {
   return sel.getRangeAt(0);
 }
 
-export function initNotes() {
+export function markHome() {
+  const all = readNotes(localStorage);
+  for (const li of document.querySelectorAll("li[data-progress-post]")) {
+    const count = countFor(all, li.dataset.progressPost);
+    let mark = li.querySelector(".note-mark");
+    if (!count) {
+      mark?.remove();
+      continue;
+    }
+    if (!mark) {
+      const foot = li.querySelector(".post-foot");
+      if (!foot) continue;
+      mark = document.createElement("span");
+      mark.className = "note-mark";
+      foot.append(mark);
+    }
+    mark.textContent = `有笔记 ·${count}`;
+  }
+}
+
+function initNotes() {
   const body = document.querySelector(".post-body[data-progress-post]");
+  if (!body) {
+    markHome();
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) markHome();
+    });
+    return;
+  }
   if (!body) return;
   const slug = body.dataset.progressPost;
 

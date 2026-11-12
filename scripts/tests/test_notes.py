@@ -225,6 +225,19 @@ def test_export_produces_json(page, base):
     assert "批注一" in text, text[:200]
 
 
+def test_home_marks_articles_with_notes(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.goto(base + "/")
+    page.wait_for_timeout(500)
+    mark = page.locator("li[data-progress-post='ot-crdt-lww'] .note-mark")
+    assert mark.count() == 1, "有笔记的篇目应在首页标出"
+    assert mark.inner_text().strip() == "有笔记 ·1", mark.inner_text()
+    empty = page.locator("li[data-progress-post='hello'] .note-mark")
+    assert empty.count() == 0 or empty.inner_text().strip() == ""
+
+
 CASES = [
     (test_highlight_persists_across_reload, False, DESKTOP),
     (test_highlight_paints_only_the_selected_occurrence, False, DESKTOP),
@@ -234,6 +247,7 @@ CASES = [
     (test_escape_closes_the_bubble, False, DESKTOP),
     (test_note_list_jumps_to_highlight, False, {**DESKTOP, "accept_downloads": True}),
     (test_export_produces_json, False, {**DESKTOP, "accept_downloads": True}),
+    (test_home_marks_articles_with_notes, False, DESKTOP),
 ]
 
 
