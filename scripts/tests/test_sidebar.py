@@ -133,6 +133,22 @@ def test_rail_absent_where_there_is_no_toc(page, base):
     assert page.locator("ul.posts li").count() > 0
 
 
+def test_active_section_follows_scroll(page, base):
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    target = page.locator(".post-body h2").nth(2)
+    # scroll_into_view_if_needed 只保证「可见」，标题停在视口 430px 处时上一节仍是当前节；
+    # 要断言高亮就得把标题顶到视口顶部附近。
+    target.evaluate("el => el.scrollIntoView({block: 'start'})")
+    # html{scroll-behavior:smooth} 让这段滚动要 ~1s，等到标题真的贴近顶部再看高亮
+    page.wait_for_function(
+        "el => el.getBoundingClientRect().top < 130", arg=target.element_handle()
+    )
+    page.wait_for_timeout(120)
+    active = page.locator("nav.toc a.is-active")
+    assert active.count() == 1
+    assert active.get_attribute("href").endswith("#" + target.get_attribute("id"))
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
@@ -147,6 +163,7 @@ CASES = [
     (test_article_toc_in_left_rail, False, DESKTOP),
     (test_toc_collapse_persists, False, DESKTOP),
     (test_rail_absent_where_there_is_no_toc, False, DESKTOP),
+    (test_active_section_follows_scroll, False, DESKTOP),
 ]
 
 

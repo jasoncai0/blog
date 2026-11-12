@@ -55,6 +55,11 @@ body {
 .toc-toggle:hover { color: var(--accent); }
 .rail-article .toc { margin: 0; padding: 0; background: none; border: 0; border-radius: 0; }
 .rail-article .toc-body { border-top: 1px solid var(--rule); padding-top: 12px; }
+.rail-article nav.toc a {
+  display: inline-block; padding-left: 8px;
+  border-left: 2px solid transparent;
+}
+.rail-article nav.toc a.is-active { border-left-color: var(--accent); color: var(--ink); font-weight: 500; }
 .rail-article.is-collapsed { width: 44px; }
 .rail-article.is-collapsed .toc-body { display: none; }
 .rail-article.is-collapsed .toc-toggle { font-size: 13px; color: var(--muted); }

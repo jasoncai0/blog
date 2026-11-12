@@ -136,10 +136,70 @@ function initToc() {
   });
 }
 
+function initTocSpy() {
+  const rail = document.querySelector("aside.rail-article");
+  if (!rail) return;
+  const links = new Map();
+  rail.querySelectorAll('nav.toc a[href^="#"]').forEach((a) => {
+    let id = a.getAttribute("href").slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      // href 里不是合法编码就按原样用
+    }
+    links.set(id, a);
+  });
+  const heads = [...document.querySelectorAll(".post-body h2[id], .post-body h3[id]")].filter((h) =>
+    links.has(h.id)
+  );
+  if (!heads.length) return;
+
+  const PROBE = 120; // 视口顶部往下多少像素算「当前段落」
+  let current = "";
+  const setActive = (id) => {
+    if (id === current) return;
+    current = id;
+    links.forEach((a, key) => a.classList.toggle("is-active", key === id));
+    const active = links.get(id);
+    if (!active || rail.scrollHeight <= rail.clientHeight) return;
+    // 只滚左栏自己，不能用 scrollIntoView（会连带滚页面）
+    const r = rail.getBoundingClientRect();
+    const a = active.getBoundingClientRect();
+    if (a.top < r.top + 8) rail.scrollTop += a.top - r.top - 40;
+    else if (a.bottom > r.bottom - 8) rail.scrollTop += a.bottom - r.bottom + 40;
+  };
+
+  const update = () => {
+    let id = heads[0].id;
+    for (const h of heads) {
+      if (h.getBoundingClientRect().top <= PROBE) id = h.id;
+      else break;
+    }
+    setActive(id);
+  };
+
+  let queued = false;
+  const schedule = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      update();
+    });
+  };
+
+  const io = new IntersectionObserver(schedule, { rootMargin: "-88px 0px -70% 0px" });
+  heads.forEach((h) => io.observe(h));
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule);
+  update();
+}
+
 export function boot() {
   initCalendar();
   initDayClick();
   initToc();
+  initTocSpy();
 }
 
 if (document.readyState === "loading") {
