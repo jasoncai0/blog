@@ -1,0 +1,95 @@
+<svg width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f07w-title f07w-desc" xmlns="http://www.w3.org/2000/svg" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <title id="f07w-title">when 条件的求值时序</title>
+  <desc id="f07w-desc">AgentLoop 在 claim 之后、system prompt 组装之前调用 tools.resolve，逐个 await 每个可见工具的 when 条件，串行求值；条件返回 false 的工具被排除，抛错则整步准备失败，取消时不发布部分集合。准入集合冻结后随请求声明，执行时再按同一性复核，批次结算后 dispose。</desc>
+  <defs>
+    <marker id="f07w-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f07w-arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5b6572"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="24" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">WHEN EVALUATION</text>
+  <text x="24" y="52" font-size="15" font-weight="600" fill="#2d3142">when：每步求值一次，串行，失败即中止</text>
+  <text x="24" y="74" font-size="9" fill="#4f5d75">准入集合属于「这一步」，不属于注册；它同时决定声明与派发。</text>
+
+  <!-- lanes -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142" text-anchor="middle">
+    <rect x="24" y="88" width="128" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="88" y="108">AgentLoop</text>
+    <rect x="200" y="88" width="128" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="264" y="108">Inbox</text>
+    <rect x="376" y="88" width="128" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="440" y="108">ctx.tools</text>
+    <rect x="552" y="88" width="128" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="616" y="108">when(ctx)</text>
+    <rect x="728" y="88" width="128" height="32" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="792" y="108">LLM / 请求</text>
+  </g>
+
+  <g stroke="#c9c9c9" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="88" y1="120" x2="88" y2="470"/>
+    <line x1="264" y1="120" x2="264" y2="470"/>
+    <line x1="440" y1="120" x2="440" y2="470"/>
+    <line x1="616" y1="120" x2="616" y2="470"/>
+    <line x1="792" y1="120" x2="792" y2="470"/>
+  </g>
+
+  <g font-size="8" fill="#4f5d75">
+    <!-- 1 claim -->
+    <line x1="88" y1="150" x2="258" y2="150" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="100" y="144">① claim(next-step, turn)</text>
+    <!-- 2 claimed back -->
+    <line x1="264" y1="172" x2="94" y2="172" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="100" y="166">claimed[]（已出队）</text>
+    <!-- 3 resolve -->
+    <line x1="88" y1="202" x2="434" y2="202" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f07w-arrow)"/>
+    <text x="100" y="196" fill="#a33d1c">② resolve({ agent, modelSelection, signal })</text>
+    <!-- 4 view self -->
+    <path d="M 440 224 h 18 v 10 h -18" fill="none" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="466" y="222">view(agent)：静态过滤</text>
+    <!-- 5 when -->
+    <line x1="440" y1="254" x2="610" y2="254" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f07w-arrow)"/>
+    <text x="450" y="248" fill="#a33d1c">③ await when(ctx)：串行</text>
+    <!-- 6 result -->
+    <line x1="616" y1="276" x2="446" y2="276" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f07w-arrow)"/>
+    <text x="470" y="270" fill="#a33d1c">true / false</text>
+    <!-- 7 abort check self -->
+    <path d="M 440 300 h 18 v 10 h -18" fill="none" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="466" y="298">④ throwIfAborted()</text>
+    <!-- 8 resolved set -->
+    <line x1="440" y1="330" x2="94" y2="330" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f07w-arrow)"/>
+    <text x="100" y="324" fill="#a33d1c">⑤ ResolvedToolSet（frozen）</text>
+    <text x="300" y="324" fill="#8a8a8a">每步一次，不是每次调用</text>
+    <!-- 9 schemas in request -->
+    <line x1="88" y1="358" x2="786" y2="358" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="100" y="352">⑥ schemas(toolSet) 随请求发出</text>
+    <!-- 10 tool calls -->
+    <line x1="792" y1="382" x2="94" y2="382" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="600" y="376">tool_call(s)，PTC 子调用同集合</text>
+    <!-- 11 executable -->
+    <line x1="88" y1="410" x2="434" y2="410" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f07w-arrow)"/>
+    <text x="100" y="404" fill="#a33d1c">⑦ executable(name, scope, toolSet)</text>
+    <!-- 12 revalidation -->
+    <line x1="440" y1="432" x2="94" y2="432" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="200" y="426">definition | undefined（同一性复核）</text>
+    <!-- 13 dispose -->
+    <line x1="88" y1="460" x2="434" y2="460" stroke="#5b6572" stroke-width="1.2" marker-end="url(#f07w-arrow-gray)"/>
+    <text x="100" y="454">⑧ dispose()（该步批次结算后）</text>
+  </g>
+
+  <!-- outcomes -->
+  <rect x="24" y="486" width="912" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="36" y="506" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">THREE OUTCOMES</text>
+  <g font-size="8">
+    <text x="36" y="528" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#bf4520">false</text>
+    <text x="82" y="528" fill="#2d3142">不声明、不派发；模型看不见也调不动，报错与「不存在」相同</text>
+    <text x="36" y="547" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#bf4520">throw</text>
+    <text x="82" y="547" fill="#2d3142">ToolActivationError / TOOL_ACTIVATION_FAILED：整步准备失败，turn 以 error 关闭，已 claim 的输入不回队</text>
+    <text x="36" y="566" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" fill="#bf4520">abort</text>
+    <text x="82" y="566" fill="#2d3142">前后两次 throwIfAborted()：已求值的结果全部丢弃，不发布部分集合</text>
+  </g>
+</svg>

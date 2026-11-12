@@ -200,7 +200,7 @@ const toolSet = await ctx.tools.resolve({ agent, modelSelection, signal })
 
 1. **scope shadowing**：最具体的注册胜出。
 2. **restriction**：对全局工具取 allow/deny 交集；scope-local 注册在过滤后合并。
-3. **`when` 条件**：每步求值一次，可以异步，必须观察 `signal`。
+3. **`when` 条件**：每步求值一次，可以异步，必须观察 `signal`（细节见 6.1）。
 4. 结果就是这一步的 schema 集合。
 
 被过滤掉的工具**既不出现于提示词，也拒绝执行**，而且与「根本不存在」无法区分。这是一个安全设计：不要让模型通过错误信息推断出「有个工具被禁了」，那会诱导它去尝试绕过。
@@ -212,6 +212,111 @@ content: [{ type: 'tool-addition' | 'tool-removal', toolName }]
 ```
 
 它告诉模型「你的工具变了」，而不是让模型在下一轮突然发现「我记得有个工具，怎么没了」。这条消息带 `headerSeq`（当有新增时），指向定义这些工具的那份 header——这样模型看到工具变更时，能对应到具体的 schema 快照。
+
+### 6.1 `when` 的处理形式：一个每步求值的谓词
+
+注册时可以带一个可选的激活条件。它的类型原文在 `packages/core/tools/src/contracts.ts`：
+
+```ts
+/** Inputs for a tool's step-time activation condition. */
+interface ToolActivationContext {
+  /** Agent preparing the step. */
+  readonly agent: Agent
+  /** Provider, model, and optional reasoning effort captured for the step. */
+  readonly modelSelection: Readonly<ModelSelection>
+  /** Cancellation of step preparation; asynchronous conditions must observe it. */
+  readonly signal: AbortSignal
+}
+
+interface ToolRegistrationOptions {
+  readonly when?: (context: ToolActivationContext) => boolean | Promise<boolean>
+}
+```
+
+用法是注册的第二个参数，不是定义里的字段：
+
+```ts
+const dispose = ctx.tools.register(definition, {
+  when: ({ agent, modelSelection, signal }) =>
+    modelSelection.model.includes('pro') && !signal.aborted,
+})
+```
+
+三个语义要分开记：
+
+| 返回值 | 含义 | 后果 |
+| --- | --- | --- |
+| `true`（或省略 `when`） | 这一步开放 | 进入声明与派发 |
+| `false` | 这一步不开放，等价于「没注册过」 | 不出现在 schema 里，调用报 `UNKNOWN_TOOL` |
+| 抛出 / reject | 条件本身坏了 | 包成 `ToolActivationError`（code `TOOL_ACTIVATION_FAILED`），**整步准备失败** |
+
+`false` 与 `throw` 的区别是刻意的：前者是「这一步不需要你」，后者是「判断不了」。把故障伪装成不可用，会让模型在缺工具的情况下硬做；把不可用当成故障，则会让一次临时网络抖动毁掉整轮。DSH 选择了后者——条件函数要自己决定哪些异常可以吞成 `false`。
+
+**求值位置。** 在 `agent-loop/src/agent.ts` 的 `preStep` 里，顺序是固定的：
+
+```ts
+const claimed = this.inbox.claim(target, position.turn)   // 先把输入出队
+const selection = this.model.current()
+const toolSet = await this.loopCtx.tools.resolve({
+  agent: this, modelSelection: selection, signal,
+})
+const assembly = await this.loopCtx.systemPrompt.assemble({
+  ...assembleContextFor(this, signal), modelSelection: selection, toolSet,
+})
+```
+
+也就是说 `when` 在 **system prompt 组装之前** 跑完——提示词里「有哪些工具」必须已经确定，而不是组装完再筛。
+
+**求值方式。** `resolve()` 的实现很短，但每行都有约束：
+
+```ts
+for (const [name, definition] of view.visible) {
+  const registration = view.registrations.get(name)
+  let enabled: boolean
+  try {
+    enabled = registration?.when === undefined || await registration.when(context)
+  } catch (cause: unknown) {
+    signal.throwIfAborted()
+    throw new ToolActivationError(name, cause)
+  }
+  signal.throwIfAborted()
+  if (enabled) admitted.set(name, definition)
+}
+```
+
+- **串行**：一个 `await` 接一个，不是 `Promise.all`。N 个条件的延迟相加，条件必须便宜。
+- **按可见集合的迭代序**：已经过 shadowing 与 restriction 的 `view.visible`。
+- **前后都查取消**：`signal.throwIfAborted()` 在循环前、每个条件后各一次，取消时**不发布部分集合**。
+- **失败即中止**：任何一个条件抛错，整个 `resolve()` 失败，前面已经求得的结果全部丢弃。
+
+{{< fig "diagrams/07-when-sequence.svg" "when 的求值时序：claim 之后、system prompt 组装之前，AgentLoop 调一次 resolve；ctx.tools 对可见集合逐个 await 条件，false 排除、throw 中止整步、abort 丢弃全部结果；集合冻结后随请求声明，执行时按同一性复核，批次结算后 dispose。" >}}
+
+**生命周期。** 拿到集合之后，约束还在继续：
+
+- **每步一次，不是每次调用**：一步内多个 tool call、PTC 程序里的子调用，共享同一份准入集合。
+- **冻结**：返回的对象被 `Object.freeze`，批次结束由循环 `dispose()`；关闭后 `view()` 返回空。
+- **同一性复核**：`toolSet.view(scope)` 会把当前注册表与准入时的 `definition`、`registration` 逐项比对。同名替换或新增 restriction 会让**尚未开始**的调用失败，已开始的调用不受影响。
+- **步骤之外不可用**：`executable(name, scope)` 不传 `toolSet` 时，带 `when` 的注册一律返回 `undefined`。手动调用（不经过模型步骤）跑不了条件工具——这是有意的，条件语义绑定在「步骤」上。
+
+**它和别的拦截机制不是一回事。** 这四个机制经常被混用：
+
+| 机制 | 作用域 | 求值时机 | 能看到什么 | 拒绝的可见性 |
+| --- | --- | --- | --- | --- |
+| **restriction** | scope（agent） | 可见性计算时 | 工具名 | 完全不可见 |
+| **when** | 单条注册 | 每个拟议步骤 | agent、本步模型选择、signal | 这一步不可见 |
+| **guard** | 单次调用 | 流水线 pre-execute | 参数、agent、signal | 模型看到拒绝原因 |
+| **approval** | 单次调用 | guard 之后 | 参数 | 模型看到拒绝/未批准 |
+
+所以「这个工具只对 pro 模型开放」用 `when`；「这个 agent 不许用 shell」用 `restriction`；「这条命令要不要问人」用 `approval`。用 `when` 做权限判断是错的：它只决定「这一步是否出现」，不决定「这次调用是否允许」，而且它的求值发生在参数存在之前。
+
+**踩坑点。**
+
+1. **条件卡住 = 这一步卡住**。`when` 没有自己的超时，只有 step 的取消信号；条件里必须 `signal` 透传，否则用户取消后这一步仍然挂着。
+2. **别在条件里改注册表或启动工具工作**。合同明确禁止；`resolve()` 正在遍历 `view`，改注册表属于未定义行为。需要预热就缓存到自己的状态，条件只读。
+3. **一个条件抛错会让整轮失败，而输入已经被 claim 走了**。`preStep` 先 `claim` 再 `resolve`，失败时那一批消息已经出队、不会回插，`turn/end` 以 `error`（code `TOOL_ACTIVATION_FAILED`）关闭，日志里能看到 claim 却没有 `step/start`。条件里的「临时故障」要自己决定吞不吞。
+4. **串行求值，别写贵的条件**。每个条件一次磁盘/网络访问，十步就是十次；把它做成纯内存判断，或自己在条件外缓存。
+5. **不要在条件之间建立顺序依赖**。迭代序是可见集合的顺序，不是声明顺序；今天能跑不代表改个注册顺序还能跑。
+6. **`when` 不是「每次调用重新判断」**。模型在一步里连续调同一个工具十次，条件只跑一次；需要按参数判断就用 guard 或 approval。
 
 ## 7. 冻结、去重与缓存
 
@@ -259,6 +364,7 @@ Object.freeze(messages)
 - **以为 header 每次请求都写。** 只有 initial/resume/change/series 四种情况写；不变的请求沿用最新快照。
 - **以为工具 `when` 条件在每次调用时求值。** 它在**每个拟议步骤**求值一次；同一步内的多次调用共享同一个准入集合。
 - **在工具被 restriction 移除后继续持有旧 `ToolDefinition` 调用。** 执行时会拒绝；`dispose()` 之后更不能再使用。
+- **让 `when` 抛错却不接受「整轮失败」。** 条件失败会把已 claim 的输入一起带走（不回队），turn 以 `TOOL_ACTIVATION_FAILED` 关闭。
 - **把运行时上下文当普通 user 消息插在任意位置。** 必须在第一条用户消息之前，且只插一次。
 - **手写非规范 header（带 `system`、带空 `tools`）。** seed/append/读取都会拒绝，不会帮你修。
 
@@ -271,6 +377,11 @@ Object.freeze(messages)
 - `packages/core/system-prompt/src/index.ts:296`：`renderPrompt` 的插值、空段过滤与空行连接。
 - `:588`：`refreshContext`，准入时的上下文刷新。
 - `docs/subsystems/system-prompt.zh.md`：`PromptSection` / `PromptContext` / `complete` / 排序规则。
+- `packages/core/tools/src/contracts.ts:105-143`：`ToolActivationContext`、`ToolRegistrationOptions.when`、`ToolActivationError`。
+- `packages/core/tools/src/index.ts:264-305`：`resolve()` 的串行求值、取消检查与冻结集合。
+- `:251`：`executable()` 在没有 `toolSet` 时排除条件注册。
+- `:150`：`register()` 把 `when` 与定义一起存进注册层。
+- `packages/core/agent-loop/src/agent.ts:287-292`：`claim` 之后、`assemble` 之前调用 `resolve`。
 - `docs/subsystems/tools.zh.md:182-220`：`resolve`、`ResolvedToolSet`、`when` 条件与批次生命周期。
 
 请求组装是「模型看到什么」的最后一公里。它看起来只是拼字符串，实际上每个字段背后都有一条日志、一种失效规则和一个缓存后果。把这层想清楚，后面讨论压缩、上下文注入、工具权限时，才不会把它们当成互不相干的补丁。
