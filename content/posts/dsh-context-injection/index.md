@@ -203,7 +203,7 @@ const entered = decision.messages.toSpliced(lastClaimedIndex + 1, 0, desired)
 
 ### 4.1 采样点在 pre-step 的末尾
 
-`time-context` 的监听器注册在 `agent/pre-step`，并且是 `prepend: true`（`packages/context/time-context/src/index.ts:199`）。它先 `await next()`，拿到其他监听器（包括 AGENTS.md 增量）处理完的 `decision`，再决定要不要追加时间消息。先等下游跑完再追加，是为了让时间快照排在指令增量与 runtime-context 之后：模型先读任务与规则，最后读「现在几点」，时间戳也因此最接近实际发请求的时刻。
+`time-context` 的监听器注册在 `agent/pre-step`，并且是 `prepend: true`（`packages/context/time-context/src/index.ts:199`）。它先 `await next()`，拿到其他监听器（包括 AGENTS.md 增量）处理完的 `decision`，再决定要不要追加时间消息。追加的是一条 `user/message`（`source.kind === 'time-context'`），落在历史尾部，不进 system prompt。先等下游跑完再追加，是为了让时间快照排在指令增量与 runtime-context 之后：模型先读任务与规则，最后读「现在几点」，时间戳也因此最接近实际发请求的时刻。
 
 采样文本包含三行：
 
