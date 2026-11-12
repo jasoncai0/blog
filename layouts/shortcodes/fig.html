@@ -7,4 +7,4 @@
 {{- $svg := $res.Content | replaceRE `(?s)<\?xml[^>]*\?>\s*` "" -}}
 {{- $n := add (.Page.Scratch.Get "figcounter" | default 0) 1 -}}
 {{- .Page.Scratch.Set "figcounter" $n -}}
-<figure id="fig-{{ $n }}"><div class="diagram">{{ $svg | safeHTML }}</div><figcaption><span class="fig-no">图 {{ $n }}</span>{{ $alt }}</figcaption></figure>
+<figure id="fig-{{ $n }}"><div class="diagram">{{ $svg | safeHTML }}</div><button class="fig-zoom" type="button" hidden aria-label="放大图 {{ $n }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="4" cy="4" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M6.2 6.2 9 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>放大</button><figcaption><span class="fig-no">图 {{ $n }}</span>{{ $alt }}</figcaption></figure>

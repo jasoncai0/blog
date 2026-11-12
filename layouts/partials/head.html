@@ -24,5 +24,9 @@
 {{- $nav := resources.Get "js/site-nav.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $nav.RelPermalink }}"></script>
 {{- end }}
+{{- if .IsPage }}
+{{- $zoom := resources.Get "js/figure-zoom.js" | js.Build (dict "minify" true) | fingerprint }}
+<script type="module" src="{{ $zoom.RelPermalink }}"></script>
+{{- end }}
 {{- $css := resources.Get "css/site.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">

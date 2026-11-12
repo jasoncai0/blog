@@ -59,13 +59,14 @@ body {
 /* 宽屏：正文列固定行宽并相对页面居中，左栏（日历/目录）落进左边距。
    1439 及以下用「左栏占一列」的排法：正文本来就是 848，不必为了居中把它压窄。 */
 @media (min-width: 1440px) {
-  .page { max-width: 1560px; }
+  /* 左右留白从 48 收到 24：省下的 48px 全给正文（目录仍落在左边距里） */
+  .page { max-width: 1680px; padding-left: 24px; padding-right: 24px; }
   .layout {
-    --rail-w: 200px;
-    --rail-gap: 48px;
+    --rail-w: clamp(180px, 13vw, 210px);
+    --rail-gap: 40px;
     grid-template-columns:
       minmax(0, 1fr)
-      minmax(0, min(848px, calc(100% - 2 * (var(--rail-w) + var(--rail-gap)))))
+      minmax(0, min(1040px, calc(100% - 2 * (var(--rail-w) + var(--rail-gap)))))
       minmax(0, 1fr);
     column-gap: 0;
   }
@@ -216,8 +217,46 @@ th {
 }
 tr:last-child td { border-bottom: 0; }
 figure { margin: 36px 0 40px; }
-.diagram { width: 100%; overflow-x: auto; }
-.diagram svg { display: block; width: 100%; min-width: 960px; height: auto; }
+figure { position: relative; }
+/* 图一律收进正文宽度：不再横向滚动，想看细节点右上角的放大 */
+.diagram { width: 100%; overflow: visible; }
+.diagram svg { display: block; width: 100%; height: auto; }
+.fig-zoom {
+  position: absolute; top: 6px; right: 6px;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border: 1px solid var(--rule); border-radius: 999px;
+  background: rgba(245, 245, 245, 0.92); color: var(--muted);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+  cursor: zoom-in; opacity: 0; transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+figure:hover .fig-zoom, .fig-zoom:focus-visible { opacity: 1; }
+.fig-zoom:hover { color: var(--accent); border-color: rgba(191, 69, 32, 0.4); }
+@media (hover: none) { .fig-zoom { opacity: 1; } }
+.lb {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: rgba(45, 49, 66, 0.86);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  opacity: 0; transition: opacity 0.16s ease;
+}
+.lb.is-open { opacity: 1; }
+.lb-stage {
+  background: var(--paper); border-radius: 6px; padding: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  line-height: 0;
+}
+.lb-close {
+  position: absolute; top: 14px; right: 16px;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(245, 245, 245, 0.28); background: transparent;
+  color: var(--paper); font-size: 18px; line-height: 1; cursor: pointer;
+}
+.lb-close:hover { background: rgba(245, 245, 245, 0.12); }
+.lb-cap {
+  position: absolute; left: 24px; right: 24px; bottom: 14px; margin: 0;
+  text-align: center; font-size: 12px; line-height: 1.6;
+  color: rgba(245, 245, 245, 0.92);
+}
 figcaption {
   margin-top: 12px;
   font-size: 12px;
