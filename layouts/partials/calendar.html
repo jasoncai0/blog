@@ -1,0 +1,41 @@
+{{- $year := now.Year -}}
+{{- $first := time (printf "%d-01-01" $year) -}}
+{{- $last := time (printf "%d-12-31" $year) -}}
+{{- $byDay := dict -}}
+{{- range where site.RegularPages "Section" "posts" -}}
+{{- $key := dateFormat "2006-01-02" .Date -}}
+{{- $byDay = merge $byDay (dict $key (add (index $byDay $key | default 0) 1)) -}}
+{{- end -}}
+{{- $back := mod (add (int $first.Weekday) 6) 7 -}}
+{{- $start := $first.AddDate 0 0 (int (sub 0 $back)) -}}
+{{- $tail := mod (add (int $last.Weekday) 6) 7 -}}
+{{- $end := $last.AddDate 0 0 (sub 6 $tail) -}}
+{{- $days := add (int (div ($end.Sub $start).Hours 24)) 1 -}}
+{{- $weeks := div $days 7 -}}
+<nav class="calendar" aria-label="写作日历">
+<p class="cal-legend"><span class="cal-legend-label">少</span>{{ range seq 1 4 }}<span class="heat-cell lv{{ . }}"></span>{{ end }}<span class="cal-legend-label">多</span></p>
+<div class="cal-grid">
+{{- range $w := seq 0 (sub $weeks 1) }}
+{{- $weekStart := $start.AddDate 0 0 (mul $w 7) }}
+{{- $label := "" }}
+{{- range $d := seq 0 6 }}
+{{- $day := $start.AddDate 0 0 (add (mul $w 7) $d) }}
+{{- if eq $day.Day 1 }}{{ $label = dateFormat "1月" $day }}{{ end }}
+{{- end }}
+<div class="cal-week" data-week="{{ $w }}">
+{{- if $label }}<span class="cal-month">{{ $label }}</span>{{ end }}
+{{- range $d := seq 0 6 }}
+{{- $day := $start.AddDate 0 0 (add (mul $w 7) $d) }}
+{{- $iso := dateFormat "2006-01-02" $day }}
+{{- $n := index $byDay $iso | default 0 }}
+{{- if gt $n 0 }}
+{{- $lvl := 1 }}{{ if eq $n 2 }}{{ $lvl = 2 }}{{ else if and (ge $n 3) (le $n 4) }}{{ $lvl = 3 }}{{ else if ge $n 5 }}{{ $lvl = 4 }}{{ end }}
+<a class="heat-cell lv{{ $lvl }}" data-date="{{ $iso }}" data-count="{{ $n }}" href="/#d-{{ $iso }}" aria-label="{{ $iso }}，{{ $n }} 篇" title="{{ $iso }} · {{ $n }} 篇"></a>
+{{- else }}
+<span class="heat-cell is-empty" data-date="{{ $iso }}" data-count="0"></span>
+{{- end }}
+{{- end }}
+</div>
+{{- end }}
+</div>
+</nav>

@@ -57,10 +57,37 @@ def test_home_rail_stacks_below_900(page, base):
     assert rail["y"] < posts["y"]
 
 
+def test_calendar_renders_year_grid(page, base):
+    page.goto(base + "/")
+    weeks = page.locator("nav.calendar .cal-week")
+    assert weeks.count() >= 52, f"整年应有 52+ 列，实际 {weeks.count()}"
+    day = "2026-11-11"
+    n = page.locator(f'ul.posts li[data-date="{day}"]').count()
+    cell = page.locator(f'a.heat-cell[data-date="{day}"]')
+    assert cell.count() == 1
+    assert cell.get_attribute("data-count") == str(n)
+    assert "lv4" in cell.get_attribute("class")
+
+
+def test_calendar_empty_days_are_not_links(page, base):
+    page.goto(base + "/")
+    assert page.locator('span.heat-cell.is-empty[data-date="2026-03-03"]').count() == 1
+    assert page.locator('a.heat-cell[data-date="2026-03-03"]').count() == 0
+
+
+def test_list_items_carry_dates(page, base):
+    page.goto(base + "/")
+    assert page.locator("ul.posts li").count() == page.locator("ul.posts li[data-date]").count()
+    assert page.locator('ul.posts li[data-date="2026-11-11"]').count() >= 5
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
     (test_home_rail_stacks_below_900, False, DESKTOP),
+    (test_calendar_renders_year_grid, False, DESKTOP),
+    (test_calendar_empty_days_are_not_links, False, DESKTOP),
+    (test_list_items_carry_dates, False, DESKTOP),
 ]
 
 

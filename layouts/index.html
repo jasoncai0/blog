@@ -13,7 +13,7 @@
 
 <ul class="posts">
 {{- range $pages.ByDate.Reverse }}
-<li data-progress-post="{{ .File.ContentBaseName }}"><time>{{ .Date.Format "2006-01-02" }}</time><div class="entry"><a href="{{ .RelPermalink }}">{{ .Title }}</a><p class="summary">{{ .Params.summary }}</p><div class="post-foot">{{ partial "tag-chips.html" . }}<span class="read-mark"></span></div></div></li>
+<li data-date="{{ .Date.Format "2006-01-02" }}" data-progress-post="{{ .File.ContentBaseName }}"><time>{{ .Date.Format "2006-01-02" }}</time><div class="entry"><a href="{{ .RelPermalink }}">{{ .Title }}</a><p class="summary">{{ .Params.summary }}</p><div class="post-foot">{{ partial "tag-chips.html" . }}<span class="read-mark"></span></div></div></li>
 {{- end }}
 </ul>
 </div>

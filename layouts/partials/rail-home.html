@@ -1,5 +1,7 @@
 {{- $pages := where site.RegularPages "Section" "posts" -}}
-<div class="rail-block" data-block="calendar"></div>
+<div class="rail-block" data-block="calendar">
+{{ partial "calendar.html" . }}
+</div>
 <div class="rail-block" data-block="tags">
 <nav class="tag-cloud" aria-label="标签">
 {{- range $key, $meta := hugo.Data.tags }}
