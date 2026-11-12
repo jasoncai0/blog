@@ -95,6 +95,34 @@ def seed(page, notes):
     )
 
 
+CROSS_SELECT_JS = """(needle) => {
+  const body = document.querySelector('.post-body');
+  for (const block of [...body.children]) {
+    const at = block.textContent.indexOf(needle);
+    if (at < 0) continue;
+    const end = at + needle.length;
+    const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+    let pos = 0, node, startNode = null, startOff = 0, endNode = null, endOff = 0;
+    while ((node = walker.nextNode())) {
+      const len = node.textContent.length;
+      if (!startNode && pos + len > at) { startNode = node; startOff = at - pos; }
+      if (startNode && !endNode && pos + len >= end) { endNode = node; endOff = end - pos; }
+      pos += len;
+    }
+    if (!startNode || !endNode) continue;
+    const range = document.createRange();
+    range.setStart(startNode, startOff);
+    range.setEnd(endNode, endOff);
+    const sel = getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+    return true;
+  }
+  return false;
+}"""
+
+
 def wait_for_server(url, timeout=15.0):
     deadline = time.time() + timeout
     last = None
@@ -238,6 +266,60 @@ def test_home_marks_articles_with_notes(page, base):
     assert empty.count() == 0 or empty.inner_text().strip() == ""
 
 
+def test_selection_spanning_inline_code_is_wrapped_in_parts(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    needle = "CRDT——max 满足"
+    assert page.evaluate(SCROLL_JS, "它当然是合法的"), "找不到跨 <code> 的段落"
+    page.wait_for_timeout(250)
+    assert page.evaluate(CROSS_SELECT_JS, needle), f"选区跨不过 <code>：{needle}"
+    page.click(".nt-actions button[data-action='highlight']")
+    page.wait_for_timeout(300)
+    marks = page.evaluate("""() => [...document.querySelectorAll('mark.note-hl')].map(m => ({
+      id: m.dataset.note, text: m.textContent }))""")
+    assert len(marks) >= 2, f"跨节点选区应拆成多段，实际 {marks}"
+    assert len({m["id"] for m in marks}) == 1, "多段应共享同一个 data-note"
+    assert "".join(m["text"] for m in marks) == needle
+
+
+def test_anchor_miss_is_silent_and_paints_nothing(page, base):
+    errors = []
+    page.on("pageerror", lambda exc: errors.append(str(exc)))
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed(page, {SLUG: [{
+        "id": "gone", "q": "这句话已经不在这篇文章里了", "pre": "无", "post": "无",
+        "block": 2, "t": 1, "thread": [{"author": "我", "text": "旧批注", "t": 1}],
+    }]})
+    page.reload()
+    page.wait_for_timeout(400)
+    assert page.locator("mark.note-hl").count() == 0, "锚点对不上时不应画高亮"
+    assert not errors, f"不应抛错：{errors}"
+    assert "收敛是必要条件" in page.locator(".post-body").inner_text()
+
+
+def test_storage_disabled_does_not_break_the_page(ctx, base):
+    errors = []
+    ctx.add_init_script("""Object.defineProperty(window, 'localStorage', {
+      get() { throw new Error('denied'); },
+    });""")
+    page = ctx.new_page()
+    page.on("pageerror", lambda exc: errors.append(str(exc)))
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(500)
+    assert "收敛是必要条件" in page.locator(".post-body").inner_text()
+    assert page.locator(".note-list").count() == 0 or not page.locator(".note-list").is_visible()
+    assert not errors, f"存储被禁时不应抛错：{errors}"
+
+
+def test_no_js_has_no_toolbar_and_no_marks(ctx, base):
+    page = ctx.new_page()
+    page.goto(base + ARTICLE)
+    assert page.locator(".nt-actions").count() == 0
+    assert page.locator("mark.note-hl").count() == 0
+    assert "收敛是必要条件" in page.locator(".post-body").inner_text()
+
+
 CASES = [
     (test_highlight_persists_across_reload, False, DESKTOP),
     (test_highlight_paints_only_the_selected_occurrence, False, DESKTOP),
@@ -248,6 +330,10 @@ CASES = [
     (test_note_list_jumps_to_highlight, False, {**DESKTOP, "accept_downloads": True}),
     (test_export_produces_json, False, {**DESKTOP, "accept_downloads": True}),
     (test_home_marks_articles_with_notes, False, DESKTOP),
+    (test_selection_spanning_inline_code_is_wrapped_in_parts, False, DESKTOP),
+    (test_anchor_miss_is_silent_and_paints_nothing, False, DESKTOP),
+    (test_storage_disabled_does_not_break_the_page, True, DESKTOP),
+    (test_no_js_has_no_toolbar_and_no_marks, True, {**DESKTOP, "java_script_enabled": False}),
 ]
 
 

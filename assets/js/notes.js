@@ -14,6 +14,15 @@ import {
 
 let openPop = null;
 
+const BLOCKED = new Set(["PRE", "SCRIPT", "STYLE", "SVG", "FIGCAPTION"]);
+
+function blockedInside(element) {
+  for (let node = element; node && node !== document.body; node = node.parentElement) {
+    if (BLOCKED.has(node.tagName)) return true;
+  }
+  return false;
+}
+
 const SKIP = new Set(["CODE", "PRE", "FIGCAPTION", "SCRIPT", "STYLE", "SVG"]);
 
 function skipped(el) {
@@ -106,7 +115,7 @@ function wrapRange(block, start, end, id) {
     let target = node;
     if (to < target.length) target.splitText(to);
     if (from > 0) target = target.splitText(from);
-    if (skipped(target.parentElement)) continue;
+    if (blockedInside(target.parentElement)) continue;
     const mark = document.createElement("mark");
     mark.className = "note-hl";
     mark.dataset.note = id;
@@ -124,8 +133,18 @@ export function paint(body, anchor, id) {
   return wrapped;
 }
 
+function safeStore() {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
 function save(all) {
-  if (!writeNotes(localStorage, all)) console.warn("笔记没存进去：本地存储已满或被禁用");
+  const store = safeStore();
+  if (!store) return all;
+  if (!writeNotes(store, all)) console.warn("笔记没存进去：本地存储已满或被禁用");
   return all;
 }
 
@@ -136,7 +155,7 @@ function currentSelection() {
 }
 
 export function markHome() {
-  const all = readNotes(localStorage);
+  const all = readNotes(safeStore());
   for (const li of document.querySelectorAll("li[data-progress-post]")) {
     const count = countFor(all, li.dataset.progressPost);
     let mark = li.querySelector(".note-mark");
@@ -167,7 +186,7 @@ function initNotes() {
   if (!body) return;
   const slug = body.dataset.progressPost;
 
-  let all = readNotes(localStorage);
+  let all = readNotes(safeStore());
   for (const note of notesFor(all, slug)) {
     const wrapped = paint(body, note, note.id);
     if (!wrapped) console.debug("笔记锚点失配，跳过", note.id);
