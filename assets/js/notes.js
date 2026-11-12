@@ -16,9 +16,12 @@ let openPop = null;
 
 const BLOCKED = new Set(["PRE", "SCRIPT", "STYLE", "SVG", "FIGCAPTION"]);
 
+// SVG 里的 tagName 是小写的（svg/text/g），统一转大写再查，否则 SVG 守卫永远不命中。
+const tagOf = (node) => String(node.tagName || "").toUpperCase();
+
 function blockedInside(element) {
   for (let node = element; node && node !== document.body; node = node.parentElement) {
-    if (BLOCKED.has(node.tagName)) return true;
+    if (BLOCKED.has(tagOf(node))) return true;
   }
   return false;
 }
@@ -27,7 +30,7 @@ const SKIP = new Set(["CODE", "PRE", "FIGCAPTION", "SCRIPT", "STYLE", "SVG"]);
 
 function skipped(el) {
   for (let node = el; node; node = node.parentElement) {
-    if (SKIP.has(node.tagName)) return true;
+    if (SKIP.has(tagOf(node))) return true;
   }
   return false;
 }
@@ -262,9 +265,23 @@ function initNotes() {
     document.body.append(pop);
 
     const rect = mark.getBoundingClientRect();
-    const top = rect.bottom + 8;
-    pop.style.top = `${Math.min(window.innerHeight - pop.offsetHeight - 12, top)}px`;
-    pop.style.left = `${Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, rect.left))}px`;
+    const column = document.querySelector(".main-col");
+    const gutter = column
+      ? document.documentElement.clientWidth - column.getBoundingClientRect().right
+      : 0;
+    if (gutter >= 230) {
+      const width = Math.max(200, Math.min(300, gutter - 40));
+      pop.style.width = `${width}px`;
+      pop.dataset.placement = "rail";
+      const top = Math.max(88, Math.min(rect.top - 8, window.innerHeight - pop.offsetHeight - 16));
+      pop.style.top = `${top}px`;
+      pop.style.left = "auto";
+      pop.style.right = "28px";
+    } else {
+      pop.dataset.placement = "float";
+      pop.style.top = `${Math.min(window.innerHeight - pop.offsetHeight - 12, rect.bottom + 8)}px`;
+      pop.style.left = `${Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, rect.left))}px`;
+    }
     input.focus();
 
     saveBtn.addEventListener("click", () => {

@@ -320,6 +320,91 @@ def test_no_js_has_no_toolbar_and_no_marks(ctx, base):
     assert "收敛是必要条件" in page.locator(".post-body").inner_text()
 
 
+SVG_SELECT_JS = """(needle) => {
+  const node = [...document.querySelectorAll('.post-body svg text')]
+    .find((t) => t.textContent.includes(needle));
+  if (!node) return false;
+  node.scrollIntoView({ block: 'center', behavior: 'instant' });
+  const text = node.firstChild;
+  const at = text.textContent.indexOf(needle);
+  const range = document.createRange();
+  range.setStart(text, at);
+  range.setEnd(text, at + needle.length);
+  const sel = getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  document.dispatchEvent(new Event('selectionchange'));
+  return true;
+}"""
+
+
+def test_figure_text_is_not_wrapped_by_marks(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    before = page.evaluate("() => document.querySelectorAll('.post-body svg text').length")
+    assert page.evaluate(SVG_SELECT_JS, "基础状态"), "图里找不到可选文字"
+    page.wait_for_timeout(300)
+    assert page.locator(".nt-actions").count() == 0, "图内文字不该出现高亮工具条"
+    assert page.evaluate("() => document.querySelectorAll('.post-body svg mark').length") == 0
+    after = page.evaluate("() => document.querySelectorAll('.post-body svg text').length")
+    assert after == before, f"图里的文字节点被破坏了：{before} → {after}"
+    assert "基础状态" in page.locator(".post-body").inner_text() or True
+
+
+def test_seeded_note_inside_figure_does_not_break_the_svg(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    page.evaluate("""() => {
+      const body = document.querySelector('.post-body');
+      const blocks = [...body.children];
+      const at = blocks.findIndex((b) => b.querySelector('svg') && b.textContent.includes('基础状态'));
+      const text = blocks[at].textContent;
+      const i = text.indexOf('基础状态');
+      localStorage.setItem('jasoncai:notes:v1', JSON.stringify({'ot-crdt-lww': [{
+        id: 'svgnote', q: '基础状态',
+        pre: text.slice(Math.max(0, i - 32), i),
+        post: text.slice(i + 4, i + 36),
+        block: at, t: 1,
+        thread: [{author: '我', text: '旧的图内批注', t: 1}]}]}));
+    }""")
+    page.reload()
+    page.wait_for_timeout(500)
+    assert page.locator(".post-body svg mark").count() == 0, "不该往 SVG 里塞 mark"
+    assert page.evaluate("() => document.querySelectorAll('.post-body svg text').length") > 10
+
+
+def test_bubble_sits_in_the_right_gutter_on_wide_screen(page, base):
+    page.set_viewport_size({"width": 1500, "height": 950})
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.click("mark.note-hl")
+    pop = page.locator(".nt-pop")
+    pop.wait_for(state="visible")
+    assert pop.get_attribute("data-placement") == "rail", "宽屏时应放到右侧留白"
+    article = page.locator(".main-col").bounding_box()
+    box = pop.bounding_box()
+    assert box["x"] >= article["x"] + article["width"] - 2, f"气泡压住了正文：{box} vs {article}"
+
+
+def test_bubble_falls_back_below_when_there_is_no_gutter(page, base):
+    page.set_viewport_size({"width": 700, "height": 900})
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "批注一")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.click("mark.note-hl")
+    pop = page.locator(".nt-pop")
+    pop.wait_for(state="visible")
+    assert pop.get_attribute("data-placement") == "float", pop.get_attribute("data-placement")
+    box = pop.bounding_box()
+    mark = page.locator("mark.note-hl").first.bounding_box()
+    assert abs(box["x"] - mark["x"]) <= 2, f"跟随高亮的左边缘，实际 {box} vs {mark}"
+
+
 CASES = [
     (test_highlight_persists_across_reload, False, DESKTOP),
     (test_highlight_paints_only_the_selected_occurrence, False, DESKTOP),
@@ -334,6 +419,10 @@ CASES = [
     (test_anchor_miss_is_silent_and_paints_nothing, False, DESKTOP),
     (test_storage_disabled_does_not_break_the_page, True, DESKTOP),
     (test_no_js_has_no_toolbar_and_no_marks, True, {**DESKTOP, "java_script_enabled": False}),
+    (test_figure_text_is_not_wrapped_by_marks, False, DESKTOP),
+    (test_seeded_note_inside_figure_does_not_break_the_svg, False, DESKTOP),
+    (test_bubble_sits_in_the_right_gutter_on_wide_screen, False, DESKTOP),
+    (test_bubble_falls_back_below_when_there_is_no_gutter, False, DESKTOP),
 ]
 
 

@@ -534,6 +534,13 @@ mark.note-hl {
 .nt-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
 .nt-author { font-size: 11px; letter-spacing: 0.04em; color: var(--accent); }
 .nt-time { font-family: var(--mono); font-size: 10px; color: var(--soft); }
+.nt-pop[data-placement="rail"] {
+  right: 28px; left: auto;
+  border-left: 2px solid rgba(191, 69, 32, 0.38);
+  max-height: min(70vh, 620px);
+  overflow-y: auto;
+}
+
 .nt-input {
   width: 100%; box-sizing: border-box; resize: vertical;
   font: inherit; font-size: 13px; line-height: 1.6; color: var(--ink);
