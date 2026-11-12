@@ -9,6 +9,8 @@ import json
 import os
 import socket
 import sqlite3
+import threading
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import subprocess
 import sys
 import tempfile
@@ -40,6 +42,31 @@ SELECT_JS = """(needle) => {
   }
   return false;
 }"""
+
+
+class SlowProxy(BaseHTTPRequestHandler):
+    """把 /api/* 延迟 1 秒再转发给真的 notesd，用来复现「进度比页面晚到」。"""
+
+    target = ""
+    delay = 1.0
+
+    def log_message(self, *args):
+        pass
+
+    def do_GET(self):  # noqa: N802
+        time.sleep(self.delay)
+        try:
+            with urllib.request.urlopen(self.target + self.path, timeout=5) as resp:
+                body = resp.read()
+                status = resp.status
+        except Exception:  # noqa: BLE001
+            body, status = b"{}", 502
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(body)
 
 
 def free_port():
@@ -205,12 +232,32 @@ def test_offline_write_is_queued_and_flushed_later(page, base):
     wait_until(lambda: api(f"/notes/{SLUG}")["notes"], timeout=10)
 
 
+def test_progress_arriving_after_load_still_resumes(page, base):
+    """服务端响应晚于 load 事件时，也要接手续读（首屏读完才拿到进度的情况）。"""
+    api(f"/progress/{SLUG}", "PUT", {"p": 62, "t": int(time.time() * 1000), "d": False})
+    port = free_port()
+    SlowProxy.target = API.rsplit("/api", 1)[0]  # 只保留 http://host:port
+
+    proxy = ThreadingHTTPServer(("127.0.0.1", port), SlowProxy)
+    threading.Thread(target=proxy.serve_forever, daemon=True).start()
+    try:
+        page.add_init_script(f"window.__NOTES_API__ = 'http://127.0.0.1:{port}/api';")
+        page.goto(base + ARTICLE)
+        page.wait_for_function("() => window.scrollY > 200", timeout=10000)
+        top = page.evaluate("() => Math.round(window.scrollY)")
+        assert top > 200, f"晚到的进度也应续读，实际 scrollY={top}"
+    finally:
+        proxy.shutdown()
+        proxy.server_close()
+
+
 CASES = [
     (test_note_written_in_one_browser_shows_up_in_another, False, DESKTOP),
     (test_deleted_note_does_not_come_back, False, DESKTOP),
     (test_progress_from_server_resumes_on_a_new_device, False, DESKTOP),
     (test_home_shows_server_side_marks, False, DESKTOP),
     (test_offline_write_is_queued_and_flushed_later, False, DESKTOP),
+    (test_progress_arriving_after_load_still_resumes, False, DESKTOP),
 ]
 
 

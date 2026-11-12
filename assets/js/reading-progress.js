@@ -176,13 +176,8 @@ function boot() {
 
   // 续读：只在「干净地打开这一页」时接手。锚点、后退/前进、浏览器已经恢复过
   // 滚动位置（scrollY !== 0）这三种情况都不抢——浏览器比我们知道得更多。
-  function maybeResume() {
-    if (location.hash) return false;
-    if (navType() === "back_forward") return false;
-    if (window.scrollY !== 0) return false;
-    const entry = readEntry(parseStore(safeGet() || ""), slug);
+  function applyResume(entry) {
     if (!shouldResume(entry)) return false;
-
     const target = Math.max(
       0,
       Math.round(scrollForProgress(entry.p, window.innerHeight, metrics.top, metrics.height)),
@@ -196,6 +191,13 @@ function boot() {
     if (target > 0) showHint(entry.p); // 没真跳（目标被 clamp 到 0）就别提示
     onScroll();
     return true;
+  }
+
+  function maybeResume() {
+    if (location.hash) return false;
+    if (navType() === "back_forward") return false;
+    if (window.scrollY !== 0) return false;
+    return applyResume(readEntry(parseStore(safeGet() || ""), slug));
   }
 
   // 「上次读到这」：一条虚线 + 小标签，标在离开时那个百分比的位置。
@@ -268,9 +270,12 @@ function boot() {
     if (!merged) return;
     const entry = readEntry(merged, slug);
     if (!entry) return;
+    // 用户还没动过页面（刚打开）才接手续读；已经自己滚了就别拽回去。
+    if (window.scrollY === 0 && !location.hash && navType() !== "back_forward" && applyResume(entry)) {
+      return;
+    }
     paint(entry.p);
-    const marker = document.querySelector(".rp-marker");
-    if (marker) marker.remove();
+    document.querySelector(".rp-marker")?.remove();
     placeMarker(entry);
   });
 }
