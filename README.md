@@ -86,6 +86,15 @@ python3 scripts/tests/test_notes_sync.py                  # 跨浏览器同步�
 
 部署见 `~/.dsh/hosts/blog-jasoncai.site.md` §14（systemd + nginx 两段）。
 
+从「导出」文件导入（换设备、清缓存后恢复旧笔记）：
+
+```bash
+python3 server/import_notes.py ~/Downloads/notes-<slug>.json              # 导入线上
+python3 server/import_notes.py notes-<slug>.json --dry-run                # 先看会写什么
+```
+
+文件格式就是导出按钮产出的 `{slug: [notes]}`；同 id 重复导入是幂等的，会覆盖成文件里的版本。
+
 ## 阅读进度
 
 文章页顶部有一条 2px 的进度条，右下角在滚动后出现百分比胶囊（≥95% 显示「读完」）；再次打开同一篇会回到上次位置，并提示「从 N% 继续」。首页每篇的 tag 行后会标出读到哪了。
