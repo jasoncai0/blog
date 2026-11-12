@@ -102,9 +102,44 @@ function initDayClick() {
   });
 }
 
+const TOC_KEY = "jasoncai:toc:collapsed";
+
+function initToc() {
+  const rail = document.querySelector("aside.rail-article");
+  if (!rail) return;
+  const btn = rail.querySelector(".toc-toggle");
+  const apply = (collapsed) => {
+    rail.classList.toggle("is-collapsed", collapsed);
+    if (!btn) return;
+    btn.setAttribute("aria-expanded", String(!collapsed));
+    btn.textContent = collapsed ? "»" : "收起";
+    btn.title = collapsed ? "展开目录" : "收起目录";
+  };
+  let stored = null;
+  try {
+    stored = window.localStorage.getItem(TOC_KEY);
+  } catch {
+    // 存储被禁用：只在本次会话内折叠
+  }
+  // 窄屏首次进来默认收起：展开的目录会把标题挤到屏幕外
+  const narrow = window.matchMedia("(max-width: 900px)").matches;
+  let collapsed = stored === null ? narrow : stored === "1";
+  apply(collapsed);
+  btn?.addEventListener("click", () => {
+    collapsed = !rail.classList.contains("is-collapsed");
+    apply(collapsed);
+    try {
+      window.localStorage.setItem(TOC_KEY, collapsed ? "1" : "0");
+    } catch {
+      // 同上
+    }
+  });
+}
+
 export function boot() {
   initCalendar();
   initDayClick();
+  initToc();
 }
 
 if (document.readyState === "loading") {

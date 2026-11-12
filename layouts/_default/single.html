@@ -1,14 +1,16 @@
 {{ define "main" }}
+{{- $toc := .TableOfContents }}
+{{- $hasToc := and $toc (gt (len $toc) 30) }}
+<div class="layout{{ if not $hasToc }} layout-narrow{{ end }}">
+{{- if $hasToc }}{{ partial "rail-article.html" . }}{{ end }}
+<div class="main-col">
 <p class="back"><a href="{{ "/" | relURL }}">← 返回首页</a></p>
 <h1>{{ .Title }}</h1>
 <p class="post-meta">{{ .Date.Format "2006-01-02" }}</p>
 {{ partial "tag-chips.html" . }}
-{{ with .TableOfContents }}
-{{- if gt (len .) 30 }}
-<nav class="toc" aria-label="目录"><div class="toc-title">Contents</div>{{ . }}</nav>
-{{- end }}
-{{ end }}
 <div class="post-body" data-progress-post="{{ .File.ContentBaseName }}">
 {{ .Content }}
+</div>
+</div>
 </div>
 {{ end }}

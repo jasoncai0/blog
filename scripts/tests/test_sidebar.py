@@ -111,6 +111,28 @@ def test_date_input_moves_window_and_marks_target(page, base):
     assert page.locator('a.heat-cell[data-date="2026-11-09"]').is_visible()
 
 
+def test_article_toc_in_left_rail(page, base):
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    assert page.locator("aside.rail-article nav.toc").count() == 1
+    rail_box = page.locator("aside.rail-article").bounding_box()
+    body_box = page.locator(".post-body").bounding_box()
+    assert rail_box["x"] + rail_box["width"] <= body_box["x"] + 1
+
+
+def test_toc_collapse_persists(page, base):
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.click(".toc-toggle")
+    assert page.locator("aside.rail-article.is-collapsed").count() == 1
+    page.reload()
+    assert page.locator("aside.rail-article.is-collapsed").count() == 1
+
+
+def test_rail_absent_where_there_is_no_toc(page, base):
+    page.goto(base + "/tags/agent.html")
+    assert page.locator("aside.rail-article").count() == 0
+    assert page.locator("ul.posts li").count() > 0
+
+
 CASES = [
     (test_home_tags_live_in_rail, False, DESKTOP),
     (test_home_rail_is_left_of_list_on_desktop, False, DESKTOP),
@@ -122,6 +144,9 @@ CASES = [
     (test_year_toggle_shows_all_weeks, False, DESKTOP),
     (test_clicking_a_day_flashes_that_day, False, DESKTOP),
     (test_date_input_moves_window_and_marks_target, False, DESKTOP),
+    (test_article_toc_in_left_rail, False, DESKTOP),
+    (test_toc_collapse_persists, False, DESKTOP),
+    (test_rail_absent_where_there_is_no_toc, False, DESKTOP),
 ]
 
 

@@ -1,0 +1,13 @@
+{{- with .TableOfContents }}
+{{- if gt (len .) 30 }}
+<aside class="rail rail-article" data-toc>
+<div class="toc-head">
+<span class="toc-label">目录</span>
+<button type="button" class="toc-toggle" aria-expanded="true" aria-controls="toc-body" title="收起目录">收起</button>
+</div>
+<div class="toc-body" id="toc-body">
+<nav class="toc" aria-label="目录">{{ . }}</nav>
+</div>
+</aside>
+{{- end }}
+{{- end }}

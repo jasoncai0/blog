@@ -20,7 +20,7 @@
 {{- $js := resources.Get "js/reading-progress.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $js.RelPermalink }}"></script>
 {{- end }}
-{{- if .IsHome }}
+{{- if or .IsHome .IsPage }}
 {{- $nav := resources.Get "js/site-nav.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $nav.RelPermalink }}"></script>
 {{- end }}
