@@ -52,3 +52,7 @@ memory:
 llm-training:
   name: 模型训练
   description: 预训练、后训练、微调与对齐的机制和取舍
+
+lineage:
+  name: 血缘
+  description: 资产依赖、影响分析与运行溯源
