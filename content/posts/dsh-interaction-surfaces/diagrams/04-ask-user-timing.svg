@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d4-title f01-d4-desc">
+  <title id="f01-d4-title">一次计时提问的三条结局</title>
+  <desc id="f01-d4-desc">工具发起带 deadline 的提问，客户端 attachWait 后本地倒计时；到点无人接手时返回 pending，Turn 继续；迟到的回答排成一条用户消息，获准后才进入 settled。</desc>
+  <defs>
+    <marker id="f01-d4-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-d4-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">ASK USER · WAIT / TIMEOUT / LATE ANSWER</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">等人这件事，超时不是失败</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">计时等待到点只结算这一次工具调用；Turn 继续，问题留在 continued 状态等一个迟到的回答。</text>
+
+  <!-- lanes -->
+  <text x="200" y="140" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">工具调用</text>
+  <text x="480" y="140" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">ctx.userQuestions</text>
+  <text x="780" y="140" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">客户端 · 用户</text>
+  <line x1="200" y1="154" x2="200" y2="452" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="480" y1="154" x2="480" y2="452" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="780" y1="154" x2="780" y2="452" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- 1 ask -->
+  <text x="340" y="184" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">ask({ wait: { callId, timed: true } })</text>
+  <path d="M 200 192 H 480" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d4-a)"/>
+
+  <!-- 2 card -->
+  <text x="630" y="216" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">问题卡片（问题集合）</text>
+  <path d="M 480 224 H 780" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d4-a)"/>
+
+  <!-- 3 attachWait -->
+  <text x="630" y="248" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">attachWait(callId, signal)</text>
+  <path d="M 780 256 H 480" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d4-a)"/>
+
+  <!-- 4 remaining -->
+  <text x="630" y="280" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">{ remainingMs } · 本地倒计时</text>
+  <path d="M 480 288 H 780" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d4-a)"/>
+
+  <!-- 5 timeout -->
+  <text x="340" y="320" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">deadline 到，无人接手</text>
+  <path d="M 480 328 H 200" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 4" fill="none" marker-end="url(#f01-d4-b)"/>
+
+  <!-- 6 pending result -->
+  <rect x="48" y="348" width="140" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">{ pending: true,</text>
+  <text x="60" y="382" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">  callId }</text>
+  <text x="60" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">Turn 继续</text>
+  <line x1="188" y1="374" x2="200" y2="374" stroke="#8a93a6" stroke-width="1"/>
+
+  <!-- 7 late answer -->
+  <text x="630" y="368" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">迟到的回答：answer</text>
+  <path d="M 780 376 H 480" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f01-d4-b)"/>
+
+  <!-- 8 queue -->
+  <text x="492" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">排成 user/message（answer_to_pending_question）</text>
+  <text x="492" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">获准成为用户消息后移入 settled</text>
+  <path d="M 480 422 V 440" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 4" fill="none" marker-end="url(#f01-d4-b)"/>
+  <text x="492" y="436" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">continued → settled</text>
+
+  <!-- note -->
+  <rect x="48" y="470" width="864" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">超时只结算这一次工具调用：返回 pending，Turn 与模型都没被取消。问题进入 continued，仍可被回答。</text>
+  <text x="64" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">剩余时间由客户端用自己的时钟算，Host 只留 deadline；最后一个接手方离开后恢复原 deadline，不会被关页面提前判超时。</text>
+  <text x="64" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">失败码：ASK_TIMED_OUT、ASK_ABORTED、REPLY_QUEUED、BAD_ANSWER、EMPTY_QUESTIONS、BAD_INTENT、NO_PROVIDER。</text>
+
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">与 approval 的分界：审批回答「能不能继续」，只有四种结果；提问回答「内容是什么」，结果是一组选项。</text>
+</svg>

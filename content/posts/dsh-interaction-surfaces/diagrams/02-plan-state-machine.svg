@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d2-title f01-d2-desc">
+  <title id="f01-d2-title">计划模式的状态机</title>
+  <desc id="f01-d2-desc">未激活、待生效、激活、评审中、待生效退出五个状态；进入与退出都要等下一个 pre-step 追加，放弃与继续规划回到激活，off 走底部回轨。</desc>
+  <defs>
+    <marker id="f01-d2-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-d2-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">PLAN MODE · STATE MACHINE</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">计划模式的五个状态</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">用户的选择先挂起，等下一个被接受的轮内 pre-step 追加；请求已经派生时，状态不能当场翻转。</text>
+
+  <!-- nodes -->
+  <rect x="48" y="170" width="136" height="78" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">未激活</text>
+  <text x="62" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">无 pending</text>
+  <text x="62" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">active: false</text>
+
+  <rect x="228" y="170" width="136" height="78" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 4"/>
+  <text x="242" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#bf4520">已选择 · pending</text>
+  <text x="242" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">有开放轮次时进入</text>
+  <text x="242" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">{ active, pending }</text>
+
+  <rect x="408" y="170" width="136" height="78" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="422" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#bf4520">激活</text>
+  <text x="422" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">pre-step 追加</text>
+  <text x="422" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">plan/mode</text>
+
+  <rect x="588" y="170" width="136" height="78" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="602" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">评审中</text>
+  <text x="602" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">exit_plan_mode</text>
+  <text x="602" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">userQuestions</text>
+
+  <rect x="768" y="170" width="136" height="78" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="782" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2f6f5e">待生效退出</text>
+  <text x="782" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">用户批准后记录</text>
+  <text x="782" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">静默，不叙述</text>
+
+  <!-- forward arrows -->
+  <path d="M 184 209 H 228" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+  <path d="M 364 209 H 408" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+  <path d="M 544 209 H 588" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+  <path d="M 724 209 H 768" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+
+  <!-- review loop back to active -->
+  <path d="M 656 170 V 132 H 476 V 170" stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-b)"/>
+  <text x="566" y="126" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">继续规划（带反馈失败）/ 放弃（结束本轮）</text>
+
+  <!-- off rail -->
+  <line x1="118" y1="430" x2="840" y2="430" stroke="#8a93a6" stroke-width="1.2"/>
+  <path d="M 118 430 V 248" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+  <line x1="296" y1="248" x2="296" y2="430" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="476" y1="248" x2="476" y2="430" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="840" y1="248" x2="840" y2="430" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <text x="304" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">/plan off 取消 pending</text>
+  <text x="484" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">/plan off</text>
+  <text x="832" y="300" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">下一个 pre-step 追加 false</text>
+  <text x="478" y="446" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">plan/mode { active: false }</text>
+
+  <!-- note -->
+  <rect x="48" y="468" width="864" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">批准后先记一条待生效退出，再由下一个 pre-step 追加 plan/mode；当前轮的请求已经派生过，当场翻转会让日志顺序与请求内容对不上。</text>
+  <text x="64" y="510" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">放弃返回 { approved: false } 并结束当前轮，计划模式保持激活，直到用户的下一条消息；继续规划是一次带反馈的失败调用。</text>
+  <text x="64" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">标题不合法（不以 # 开头）或交互通道缺失，都让调用失败，不会静默退出；工具本身从计划状态首次激活的那个步骤起一直准入。</text>
+
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">读图：实线是立即记录的选择或事件，底部虚线是「先挂起、由 pre-step 补齐」的路径。</text>
+</svg>

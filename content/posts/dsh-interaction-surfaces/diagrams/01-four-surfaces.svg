@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">四个交互面的入口与状态归属</title>
+  <desc id="f01-d1-desc">命令、计划、待办与提问四列并排，每列列出入口、写入的日志、投影、模型可见内容与失败姿态；底部一行标出共同点与差异。</desc>
+  <defs>
+    <marker id="f01-d1-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">INTERACTION SURFACES · ENTRY &amp; OWNERSHIP</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">四个入口，四种落账方式</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">同一张表看两件事：用户动作写成了哪条事件，以及模型到底能不能看见它。</text>
+
+  <!-- column 1 -->
+  <rect x="48" y="120" width="200" height="300" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="62" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#bf4520">/name 命令</text>
+  <text x="62" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">输入行首，直接执行</text>
+  <line x1="62" y1="166" x2="234" y2="166" stroke="#e3e3e3"/>
+  <text x="62" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">日志</text>
+  <text x="62" y="197" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">command/run</text>
+  <text x="62" y="209" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">command/done</text>
+  <text x="62" y="229" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">投影</text>
+  <text x="62" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">客户端按 sourceEventSeq</text>
+  <text x="62" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">并入目标投影</text>
+  <text x="62" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">模型可见</text>
+  <text x="62" y="287" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">看不到，除非 handler</text>
+  <text x="62" y="299" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">自己追加消息</text>
+  <text x="62" y="319" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">失败</text>
+  <text x="62" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">error result，不写日志</text>
+
+  <!-- column 2 -->
+  <rect x="269" y="120" width="200" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="283" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142">/plan · exit_plan_mode</text>
+  <text x="283" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">命令选择，工具退出</text>
+  <line x1="283" y1="166" x2="455" y2="166" stroke="#e3e3e3"/>
+  <text x="283" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">日志</text>
+  <text x="283" y="197" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">plan/mode</text>
+  <text x="283" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">仅日志，不进 transcript</text>
+  <text x="283" y="229" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">投影</text>
+  <text x="283" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">plan 单元折叠为</text>
+  <text x="283" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">{ active, pending }</text>
+  <text x="283" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">模型可见</text>
+  <text x="283" y="287" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">请求里的一段</text>
+  <text x="283" y="299" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">plan:policy</text>
+  <text x="283" y="319" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">失败</text>
+  <text x="283" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">排队到 pre-step 或评审失败</text>
+
+  <!-- column 3 -->
+  <rect x="490" y="120" width="200" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="504" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142">todo_write</text>
+  <text x="504" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">工具调用，整表替换</text>
+  <line x1="504" y1="166" x2="676" y2="166" stroke="#e3e3e3"/>
+  <text x="504" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">日志</text>
+  <text x="504" y="197" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">todo/write</text>
+  <text x="504" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">携带完整列表</text>
+  <text x="504" y="229" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">投影</text>
+  <text x="504" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">todos</text>
+  <text x="504" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">turn/start 清空</text>
+  <text x="504" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">模型可见</text>
+  <text x="504" y="287" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">工具结果里的计数</text>
+  <text x="504" y="299" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">3 pending · 1 done</text>
+  <text x="504" y="319" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">失败</text>
+  <text x="504" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">工具报错，清单不动</text>
+
+  <!-- column 4 -->
+  <rect x="711" y="120" width="200" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="725" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142">ask_user_question</text>
+  <text x="725" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">工具调用，等人回答</text>
+  <line x1="725" y1="166" x2="897" y2="166" stroke="#e3e3e3"/>
+  <text x="725" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">日志</text>
+  <text x="725" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">问题集合与结算集合</text>
+  <text x="725" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">等待与焦点不落账</text>
+  <text x="725" y="229" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">投影</text>
+  <text x="725" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">userQuestions</text>
+  <text x="725" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">open / continued</text>
+  <text x="725" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">模型可见</text>
+  <text x="725" y="287" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">答案，或 pending</text>
+  <text x="725" y="319" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">失败</text>
+  <text x="725" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">超时返回 pending</text>
+
+  <!-- bottom band -->
+  <rect x="48" y="440" width="863" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <text x="64" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">共同点：用户动作先落成一条日志记录，再由各自的投影决定界面怎么画；日志是唯一事实，界面与模型文本都是派生物。</text>
+  <text x="64" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">差异：只有待办与提问进入 Turn；只有计划会在每个请求里追加文本；只有命令完全不经过模型，也不需要模型可用。</text>
+  <text x="64" y="502" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">commands/src/index.ts:362 · plan-mode/src/index.ts:53 · tool-todo/src/index.ts:120 · user-questions/src/index.ts:221</text>
+
+  <text x="48" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">四个面都有一处「选择先挂起」的设计：命令在 handler 前先写 run，计划在 pre-step 才追加，待办整表覆盖，提问的超时也不改 Turn 状态。</text>
+  <text x="48" y="564" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">共同目的是让日志顺序与实际生效顺序一致，回放时不会出现「记录说改了、请求里没改」的错位。</text>
+
+  <text x="48" y="586" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">读图顺序：从左到右是介入程度，从上到下是「入口 → 日志 → 投影 → 可见性 → 失败」。</text>
+</svg>

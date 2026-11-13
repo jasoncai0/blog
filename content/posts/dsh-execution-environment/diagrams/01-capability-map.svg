@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f01-d01-title f01-d01-desc">
+  <title id="f01-d01-title">执行环境的四个 seam 与能力地图</title>
+  <desc id="f01-d01-desc">左列是消费方，中列是 ctx.fs、ctx.shell、ctx.terminals、ctx.sandbox 四个 seam，右列是本地与远端提供方；底部是七个共用服务。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f01-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">EXECUTION ENVIRONMENT / SEAMS</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">四个 seam，一张能力地图</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9.5" fill="#4f5d75">每个 seam 只被自己的消费方调用；提供方按执行坐标成组替换。</text>
+
+  <text x="40" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">CONSUMERS</text>
+  <text x="352" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SEAMS</text>
+  <text x="686" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">PROVIDERS</text>
+
+  <!-- row 1 fs -->
+  <rect x="40" y="134" width="250" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">tool-fs · LSP · 附件</text>
+  <text x="54" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">读文件、写文件、列目录</text>
+  <text x="54" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">不拼命令行</text>
+
+  <rect x="340" y="134" width="300" height="66" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="354" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">ctx.fs / FileSystem</text>
+  <text x="354" y="174" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">resolve · stat · readByteRange</text>
+  <text x="354" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">writeText · editText · moveFile</text>
+
+  <rect x="680" y="134" width="240" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="694" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">fs-local</text>
+  <text x="694" y="174" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">fs-ssh</text>
+  <text x="694" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">再包一层 fs-sandbox</text>
+
+  <!-- row 2 shell -->
+  <rect x="40" y="212" width="250" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">tool-bash · hooks</text>
+  <text x="54" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">一次性命令、超时、退出码</text>
+  <text x="54" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">沙箱提权也在这里</text>
+
+  <rect x="340" y="212" width="300" height="66" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="354" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">ctx.shell / ShellExecutor</text>
+  <text x="354" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">resolve(request) → spec</text>
+  <text x="354" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">execute(spec) → ShellExecution</text>
+
+  <rect x="680" y="212" width="240" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="694" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">bash-local</text>
+  <text x="694" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">bash-sandbox</text>
+  <text x="694" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">后者才调 confine()</text>
+
+  <!-- row 3 terminals -->
+  <rect x="40" y="290" width="250" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">tool-terminal</text>
+  <text x="54" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">长驻会话、反复读写</text>
+  <text x="54" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">带等待原因</text>
+
+  <rect x="340" y="290" width="300" height="66" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="354" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">ctx.terminals / TerminalSessionService</text>
+  <text x="354" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">spawn · startSend · read</text>
+  <text x="354" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">signal · kill · list</text>
+
+  <rect x="680" y="290" width="240" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="694" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">terminal-bash</text>
+  <text x="694" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">后端很薄</text>
+  <text x="694" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">PTY 来自 subprocess</text>
+
+  <!-- row 4 sandbox -->
+  <rect x="40" y="368" width="250" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">bash-sandbox · fs-sandbox</text>
+  <text x="54" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">只问一句：这段 argv 能跑吗</text>
+  <text x="54" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">不执行</text>
+
+  <rect x="340" y="368" width="300" height="66" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="354" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">ctx.sandbox / SandboxProvider</text>
+  <text x="354" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">confine(argv, policy) → ConfinedArgv</text>
+  <text x="354" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">enforcement · denialSignatures</text>
+
+  <rect x="680" y="368" width="240" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="694" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">sandbox-local</text>
+  <text x="694" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">sandbox-ssh</text>
+  <text x="694" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">bwrap / Seatbelt / Landlock</text>
+
+  <!-- connectors -->
+  <g stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f01-ar)">
+    <line x1="292" y1="167" x2="334" y2="167"/>
+    <line x1="292" y1="245" x2="334" y2="245"/>
+    <line x1="292" y1="323" x2="334" y2="323"/>
+    <line x1="292" y1="401" x2="334" y2="401"/>
+    <line x1="642" y1="167" x2="674" y2="167"/>
+    <line x1="642" y1="245" x2="674" y2="245"/>
+    <line x1="642" y1="323" x2="674" y2="323"/>
+    <line x1="642" y1="401" x2="674" y2="401"/>
+  </g>
+
+  <!-- base services -->
+  <rect x="40" y="452" width="880" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="474" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">SHARED BASE — 不在模型可见面上，但每次调用都会碰到</text>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+    <text x="56" y="498">ctx.subprocess</text>
+    <text x="196" y="498">resolveExecutable · spawn · spawnTerminal</text>
+    <text x="56" y="518">ctx.sandboxPolicy</text>
+    <text x="196" y="518">resolve({session, mode}) → 本次策略</text>
+    <text x="56" y="538">ctx.spillStore</text>
+    <text x="196" y="538">saveText() → 不透明定位符</text>
+    <text x="520" y="498">ctx.approval</text>
+    <text x="628" y="498">一次性批准，绑定 callId</text>
+    <text x="520" y="518">ctx.shellEnv</text>
+    <text x="628" y="518">register / collect → DSH_* 快照</text>
+    <text x="520" y="538">ctx.workingDirectory</text>
+    <text x="628" y="538">ensure(agent, signal)</text>
+  </g>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">图 4 · 插件生命周期与卸载顺序</title>
+  <desc id="f04-desc">安装自上而下、自左向右；卸载沿相反路径，先取消选择再释放，最后删包。</desc>
+  <defs>
+    <marker id="f04-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="46" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">图 4 · 插件生命周期与卸载顺序</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">磁盘事实、profile 选择、运行时激活是三层状态，各有独立的可逆点。</text>
+  <text x="48" y="116" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">INSTALL</text>
+  <rect x="120" y="126" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="132" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">inspect(spec)</text>
+  <text x="132" y="159" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">registry: pnpm view</text>
+  <text x="132" y="171" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">path: 读 package.json</text>
+  <text x="132" y="183" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">拒绝非 bundle</text>
+  <line x1="314" y1="163" x2="344" y2="163" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-arrow)"/>
+  <rect x="348" y="126" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="360" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">pnpm add</text>
+  <text x="360" y="159" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">改 node_modules</text>
+  <text x="360" y="171" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">改 lockfile</text>
+  <line x1="542" y1="163" x2="572" y2="163" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-arrow)"/>
+  <rect x="576" y="126" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="588" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">写 dsh.profile.bundles</text>
+  <text x="588" y="159" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">有序数组</text>
+  <text x="588" y="171" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">默认追加到末尾</text>
+  <line x1="671" y1="204" x2="671" y2="244" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-arrow)"/>
+  <rect x="576" y="248" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="588" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">重组</text>
+  <text x="588" y="281" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">recomposeProfile</text>
+  <text x="588" y="293" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">移除 → 释放 → 应用</text>
+  <line x1="572" y1="285" x2="542" y2="285" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-arrow)"/>
+  <rect x="348" y="248" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="360" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">激活 fiber</text>
+  <text x="360" y="281" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">按 inject 依赖</text>
+  <text x="360" y="293" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">required 失败拆整树</text>
+  <line x1="344" y1="285" x2="314" y2="285" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-arrow)"/>
+  <rect x="120" y="248" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="132" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">运行</text>
+  <text x="132" y="281" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">serving requests</text>
+  <text x="132" y="293" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">HMR 可热替换</text>
+  <text x="48" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">UNINSTALL</text>
+  <rect x="120" y="396" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="132" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">取消选择</text>
+  <text x="132" y="429" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">从 bundles 移除</text>
+  <text x="132" y="441" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">保留依赖</text>
+  <line x1="314" y1="433" x2="344" y2="433" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-arrow)"/>
+  <rect x="348" y="396" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="360" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">释放 fiber</text>
+  <text x="360" y="429" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">dispose scope</text>
+  <text x="360" y="441" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">跑 effect 清理</text>
+  <line x1="542" y1="433" x2="572" y2="433" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-arrow)"/>
+  <rect x="576" y="396" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="588" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">pnpm remove</text>
+  <text x="588" y="429" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">最后删包</text>
+  <text x="588" y="441" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">store 缓存仍在</text>
+  <text x="790" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">失败恢复</text>
+  <text x="790" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">package.json +</text>
+  <text x="790" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">pnpm-lock.yaml</text>
+  <text x="790" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#bf4520" text-anchor="start">allowBuilds 不恢复</text>
+  <text x="790" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">无 HMR 时</text>
+  <text x="790" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#bf4520" text-anchor="start">restart-required</text>
+  <text x="790" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">原因：no-hmr /</text>
+  <text x="790" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">package-moved /</text>
+  <text x="790" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">overridden</text>
+  <text x="48" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">可逆：patch 覆盖项、disabled、bundle 列表、effect disposer。</text>
+  <text x="48" y="526" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">不可逆或半可逆：pnpm store、构建批准、已加载的模块缓存、激活失败的半状态。</text>
+  <text x="48" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">装新版必须先卸旧版：模块缓存无法原地替换。</text>
+</svg>

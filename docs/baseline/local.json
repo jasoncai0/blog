@@ -107,6 +107,15 @@
   "pre": 13,
   "table": 2
  },
+ "dsh-client-architecture": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 21,
+  "hr": 0,
+  "pre": 5,
+  "table": 7
+ },
  "dsh-compaction": {
   "figure": 4,
   "h1": 1,
@@ -125,6 +134,15 @@
   "pre": 11,
   "table": 2
  },
+ "dsh-embedding-protocols": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 12,
+  "h3": 16,
+  "hr": 0,
+  "pre": 4,
+  "table": 5
+ },
  "dsh-error-retry-recovery": {
   "figure": 5,
   "h1": 1,
@@ -133,6 +151,24 @@
   "hr": 0,
   "pre": 10,
   "table": 4
+ },
+ "dsh-execution-environment": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 14,
+  "h3": 9,
+  "hr": 0,
+  "pre": 9,
+  "table": 4
+ },
+ "dsh-host-composition": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 14,
+  "h3": 8,
+  "hr": 0,
+  "pre": 4,
+  "table": 5
  },
  "dsh-human-in-the-loop": {
   "figure": 4,
@@ -152,6 +188,24 @@
   "pre": 17,
   "table": 5
  },
+ "dsh-interaction-surfaces": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 10,
+  "h3": 26,
+  "hr": 0,
+  "pre": 9,
+  "table": 6
+ },
+ "dsh-mcp": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 15,
+  "h3": 0,
+  "hr": 0,
+  "pre": 5,
+  "table": 9
+ },
  "dsh-memory-architecture": {
   "figure": 4,
   "h1": 1,
@@ -159,6 +213,15 @@
   "h3": 28,
   "hr": 0,
   "pre": 1,
+  "table": 4
+ },
+ "dsh-model-layer": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 7,
+  "hr": 0,
+  "pre": 13,
   "table": 4
  },
  "dsh-recall": {
@@ -179,6 +242,24 @@
   "pre": 13,
   "table": 5
  },
+ "dsh-request-journey-end-to-end": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 12,
+  "h3": 9,
+  "hr": 0,
+  "pre": 9,
+  "table": 6
+ },
+ "dsh-season-two": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 3
+ },
  "dsh-session-event-sourcing": {
   "figure": 4,
   "h1": 1,
@@ -187,6 +268,24 @@
   "hr": 0,
   "pre": 8,
   "table": 1
+ },
+ "dsh-skill-system": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 17,
+  "h3": 7,
+  "hr": 0,
+  "pre": 10,
+  "table": 5
+ },
+ "dsh-state-and-extension-atlas": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 10,
+  "h3": 21,
+  "hr": 0,
+  "pre": 10,
+  "table": 11
  },
  "dsh-steering-and-cancel": {
   "figure": 4,

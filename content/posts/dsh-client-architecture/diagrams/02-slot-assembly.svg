@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d2-title f01-d2-desc">
+  <title id="f01-d2-title">一张工具卡从注册到出现</title>
+  <desc id="f01-d2-desc">上半是两个时刻：ui-tool 在 children 里声明 tool.call.toolview，search-row 通过 slots.inject 注册 key。下半是事件到达后按 entryKey 分发，命中则渲染 SearchRow，未命中退到 GenericToolCard。</desc>
+  <defs>
+    <marker id="f01-d2-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">SLOT · DECLARE → REGISTER → DISPATCH</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">声明在前，注册在后，分发看 key</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">父组件先声明子位置并授权，业务包才能往里注册；插件激活顺序不影响结果，只看 key 是否被认领。</text>
+
+  <!-- step 1 declaration -->
+  <rect x="48" y="120" width="380" height="126" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="64" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">1 · 声明 · ui-tool/src/client/apply.ts:36</text>
+  <text x="64" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">register conversation.chat.node</text>
+  <text x="64" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">key: 'tool-call'</text>
+  <text x="64" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">children: { 'tool.call.toolview':</text>
+  <text x="64" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">  { kind: 'keyed',</text>
+  <text x="64" y="228" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">    scope: 'session' } }</text>
+
+  <!-- step 2 register -->
+  <rect x="456" y="120" width="456" height="126" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="472" y="142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">2 · 注册 · toolviews/search-row.tsx:48</text>
+  <text x="472" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">ctx.slots.inject('tool.call.toolview', () =&gt;</text>
+  <text x="472" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">  ctx.slots.register({</text>
+  <text x="472" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">    name: 'tool.call.toolview',</text>
+  <text x="472" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">    key: 'grep' }, SearchRow))</text>
+  <text x="472" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">inject 等到声明出现再执行；声明折叠时贡献一起撤掉。</text>
+
+  <path d="M 428 183 H 456" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+
+  <!-- dispatch row -->
+  <rect x="48" y="286" width="196" height="112" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">3 · 事件到达</text>
+  <text x="64" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">ToolCallBlock</text>
+  <text x="64" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">callId: call_8f2</text>
+  <text x="64" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">name: 'grep'</text>
+  <text x="64" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">phase: 'result'</text>
+
+  <rect x="288" y="286" width="326" height="112" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="304" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">4 · keyed 分发</text>
+  <text x="304" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">renderSlot('tool.call.toolview', owner, {</text>
+  <text x="304" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">  entryKey: toolName,</text>
+  <text x="304" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">  fallback: renderFallback(owner) })</text>
+  <text x="304" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">entryKey 是 wire 上的工具名，拼错不会报错，只会回落。</text>
+
+  <rect x="658" y="286" width="254" height="112" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="674" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">5 · 结果</text>
+  <text x="674" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2f6f5e">grep → SearchRow</text>
+  <text x="674" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">skill → SkillRow</text>
+  <text x="674" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">todo_write → TodoRow</text>
+  <text x="674" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">其余 → GenericToolCard</text>
+
+  <path d="M 244 342 H 288" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+  <path d="M 614 342 H 658" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d2-a)"/>
+
+  <!-- note -->
+  <rect x="48" y="428" width="864" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="450" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">children 里的 key 同时是渲染许可与运行时规格：没声明就 renderSlot、或两个 entry 声明同一个 child，都在插件激活时直接失败。</text>
+  <text x="64" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">冲突不合并：single 与 keyed 用 priority 遮蔽，值越小越先；替换某个 cell 的展示是有意为之，增量贡献应该新开 list id 或新的 keyed key。</text>
+  <text x="64" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">Sub-call（PTC）走同一个 keyed slot：子调用递归渲染，key 仍是工具名，因此一层 dispatch 覆盖主调用与子调用。</text>
+  <text x="64" y="510" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">packages/client/ui-tool/src/client/contract/slots.ts:23 · ui-tool/src/client/tool/ToolCallTree.tsx</text>
+
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">注册方拿不到调用现场，只能拿到 owner props：name、lazy args、callId、cwd 与三个回调。想读别的东西只能新开 owner 字段。</text>
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">这也是为什么工具卡不查 store：一次调用一条数据，走 props 比走订阅更省事，也更容易重放。</text>
+</svg>

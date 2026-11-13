@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">图 1 · 从进程启动到第一个 turn</title>
+  <desc id="f01-desc">九步启动序列：launcher 固定环境与解析表，Loader 按服务依赖激活，审计通过后发布 appReady，surface 才提交第一条消息。</desc>
+  <defs>
+    <marker id="f01-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f01-dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <circle cx="5" cy="5" r="4" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="46" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">图 1 · 从进程启动到第一个 turn</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">launcher 只做四件事；插件树由 Cordis 按 inject 依赖激活；appReady 是启动与接活的分界。</text>
+  <line x1="120" y1="96" x2="120" y2="556" stroke="#d8d8d8" stroke-width="1.5"/>
+  <line x1="120" y1="96" x2="120" y2="556" stroke="#bf4520" stroke-width="1.5" marker-end="url(#f01-arrow)"/>
+  <circle cx="120" cy="110" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="88" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="105" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">解析 argv</text>
+  <text x="162" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">profile 名、--patch 列表、surface</text>
+  <text x="650" y="108" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">参数决定后面读到哪些层</text>
+  <circle cx="120" cy="162" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="140" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="157" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">代理快照</text>
+  <text x="162" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">installProxyFromEnvironment</text>
+  <text x="650" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">在第一个插件之前固定网络出口</text>
+  <circle cx="120" cy="214" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="192" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="209" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">空根 profile</text>
+  <text x="162" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">写 cordis.yml，只有注释与 []</text>
+  <text x="650" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">profile 里不保存完整插件清单</text>
+  <circle cx="120" cy="266" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="244" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="261" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">不可变解析表</text>
+  <text x="162" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">createRuntimeResolution</text>
+  <text x="650" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">任何插件 import 之前算完</text>
+  <circle cx="120" cy="318" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="296" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="313" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">Context + Loader</text>
+  <text x="162" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">provide dshHomePath，挂 diagnostics</text>
+  <text x="650" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">诊断日志走独立 context</text>
+  <circle cx="120" cy="370" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="348" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="365" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">叠 patch</text>
+  <text x="162" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">bundle → profile → home → --patch</text>
+  <text x="650" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">按 id 定位，按 key 覆盖</text>
+  <circle cx="120" cy="422" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="400" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="417" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">等树稳定</text>
+  <text x="162" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">loader.await()，随后审计 required</text>
+  <text x="650" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">行序不参与激活顺序</text>
+  <circle cx="120" cy="474" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="452" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="469" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">发布 appReady</text>
+  <text x="162" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">端口、stdio、升级路由开始接活</text>
+  <text x="650" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">commit 之前到达的请求没有树</text>
+  <circle cx="120" cy="526" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <rect x="150" y="504" width="440" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="521" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">第一个 turn</text>
+  <text x="162" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">agent.followup() 写入 next-turn</text>
+  <text x="650" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">driver 取走消息，写 turn/start</text>
+  <text x="48" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">required 失败 → 拆卸整树并退出非零；optional 失败 → 一条带标签的警告，进程继续。</text>
+</svg>

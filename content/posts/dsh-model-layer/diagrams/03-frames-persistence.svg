@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f03-d03-title f03-d03-desc">
+  <title id="f03-d03-title">流式帧序列与落库边界</title>
+  <desc id="f03-d03-desc">左侧是进程内的三种瞬时帧与其中的 chunk 展开；右侧是落库后的紧凑记录，一条 assistant/message 或 assistant/attempt 事件。虚线是提交点：append 成功并拿到 seq 之后才发 end 帧。</desc>
+  <defs>
+    <marker id="f03-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f03-ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a8f9e"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">MODEL LAYER / FRAMES → LOG</text>
+  <text x="40" y="70" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">帧在内存里走，记录在日志里留</text>
+  <text x="40" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#4f5d75">一个 step 只写一次。chunk 的数量决定日志体积，所以它不逐条落库。</text>
+
+  <text x="40" y="124" font-size="8" letter-spacing="0.12em" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">TRANSIENT FRAMES · agent/assistant-stream</text>
+  <text x="470" y="124" font-size="8" letter-spacing="0.12em" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">DURABLE EVENT · session log</text>
+
+  <rect x="40" y="138" width="380" height="360" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+
+  <rect x="56" y="154" width="348" height="34" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="68" y="168" font-size="8.5" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">start</text>
+  <text x="68" y="181" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">attemptId · revision · turn · step</text>
+
+  <rect x="56" y="196" width="348" height="34" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="68" y="210" font-size="8.5" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">chunk …</text>
+  <text x="68" y="223" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">index 递增 · time · 原始 StreamChunk</text>
+
+  <rect x="56" y="238" width="348" height="34" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="68" y="252" font-size="8.5" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">chunk …</text>
+  <text x="68" y="265" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">text / reasoning / tool-call delta 交错</text>
+
+  <rect x="56" y="280" width="348" height="34" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="68" y="294" font-size="8.5" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">end</text>
+  <text x="68" y="307" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">outcome: committed {eventType, seq} / abandoned</text>
+
+  <rect x="56" y="330" width="348" height="72" rx="6" fill="#fffaf7" stroke="#e8c9b4"/>
+  <text x="68" y="348" font-size="8.5" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">settle(eventType, append)</text>
+  <text x="68" y="364" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">append() 同步执行，拿到 seq</text>
+  <text x="68" y="378" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">然后才 emit end；append 抛错 → abandon() 再抛</text>
+  <text x="68" y="392" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">UI 不会看到未落库的“已完成”</text>
+
+  <rect x="56" y="414" width="348" height="68" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="68" y="432" font-size="8.5" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">AssistantStreamAccumulator</text>
+  <text x="68" y="448" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">同块连续 delta 折成一条记录：time0 + times + members</text>
+  <text x="68" y="462" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">其余 chunk 原样保留；一个 step 的尝试 = 一份快照</text>
+  <text x="68" y="476" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">snapshot() 返回脱离的不可变流</text>
+
+  <line x1="440" y1="138" x2="440" y2="498" stroke="#bf4520" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="456" y="330" font-size="7.5" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" letter-spacing="0.12em" transform="rotate(-90 456 330)">COMMIT</text>
+
+  <rect x="470" y="138" width="450" height="156" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="486" y="158" font-size="10.5" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">assistant/message（有可见消息）</text>
+  <text x="486" y="180" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">{ turn, step, message,</text>
+  <text x="486" y="196" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">  usage: live.usage,</text>
+  <text x="486" y="212" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">  stream: live.stream }</text>
+  <text x="486" y="234" font-size="8" fill="#8a8f9e" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">surfaceOp: append，进 surface，模型下一轮能看到</text>
+
+  <rect x="470" y="302" width="450" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="486" y="322" font-size="10.5" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">assistant/attempt（无可见消息）</text>
+  <text x="486" y="342" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">{ turn, step, usage, stream }</text>
+  <text x="486" y="362" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">零内容的失败尝试也要留 stream：重试发生在下一轮，</text>
+  <text x="486" y="376" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">上一轮的帧不能凭空消失，否则 UI 会跳一下</text>
+  <text x="486" y="394" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">中断时落一条 interrupted: true 的截断消息</text>
+
+  <rect x="470" y="416" width="450" height="82" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="486" y="434" font-size="8.5" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">expandAssistantStream()</text>
+  <text x="486" y="450" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">严格校验键、数量、索引、时间戳、工具调用身份、JSON 无损</text>
+  <text x="486" y="464" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">失败就抛，不做“尽力恢复”；读侧一次扫描折叠成消息</text>
+  <text x="486" y="482" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">firstTokenTime / joinText / assemble 都是记录级读取</text>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f03-ar)">
+    <line x1="404" y1="366" x2="466" y2="366"/>
+  </g>
+  <text x="406" y="358" font-size="7.5" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">append</text>
+
+  <rect x="40" y="516" width="880" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="534" font-size="8" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" letter-spacing="0.12em">WHY NOT PER-CHUNK</text>
+  <text x="56" y="552" font-size="8.5" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">数量：一次回答几百个 delta，逐步写会让事件数与 delta 数同阶，投影成本跟着涨。</text>
+  <text x="56" y="568" font-size="8.5" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">原子性：一次 step 的输出要么整条进 surface，要么整条不进；逐条写会让“半条消息”成为合法状态。</text>
+</svg>

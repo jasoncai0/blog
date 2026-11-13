@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-t f02-d">
+  <title id="f02-t">技能的三段 token 代价与全量预载的对照</title>
+  <desc id="f02-d">十轮对话的成本网格：目录每轮都付约 1.5k；正文只在第 3 轮加载时付 6k，之后随历史保留；资源在第 5 轮与第 8 轮按需读取。对照组把 20 个技能全量预载，每轮 30k，十轮 300k。</desc>
+  <defs>
+    <marker id="f02-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S2-06 / TOKEN BUDGET</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">渐进披露的三段账</text>
+  <text x="40" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一份 6 KB 的技能，放进预载、目录、按需加载，十轮下来的累计差两个数量级</text>
+
+  <rect x="640" y="98" width="12" height="12" rx="2" fill="#f6e3da" stroke="#bf4520"/>
+  <text x="658" y="108" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">该轮付费</text>
+  <rect x="730" y="98" width="12" height="12" rx="2" fill="#e8e8e8" stroke="#8a93a6"/>
+  <text x="748" y="108" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">对照组</text>
+
+  <text x="150" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">1</text>
+  <text x="228" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">2</text>
+  <text x="306" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">3</text>
+  <text x="384" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">4</text>
+  <text x="462" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">5</text>
+  <text x="540" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">6</text>
+  <text x="618" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">7</text>
+  <text x="696" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">8</text>
+  <text x="774" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">9</text>
+  <text x="852" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">10</text>
+  <text x="912" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">轮</text>
+
+  <text x="40" y="148" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">目录</text>
+  <text x="40" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">20 条 × 300 字符</text>
+
+  <rect x="120" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="198" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="276" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="354" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="432" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="510" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="588" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="666" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="744" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <rect x="822" y="132" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <text x="150" y="157" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">1.5k</text>
+  <text x="852" y="157" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">1.5k</text>
+  <text x="150" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">十轮约 15k；目录不变时这段前缀可复用，改动会让缓存从追加处断开</text>
+
+  <text x="40" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">正文</text>
+  <text x="40" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">一个 SKILL.md 6 KB</text>
+
+  <rect x="276" y="222" width="60" height="40" rx="4" fill="#bf4520" stroke="#bf4520"/>
+  <text x="306" y="247" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#ffffff" text-anchor="middle">6k</text>
+  <text x="150" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">第 3 轮付一次，之后作为普通工具结果跟着历史走，压缩时被移出</text>
+
+  <text x="40" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">资源</text>
+  <text x="40" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">正文点名的文件</text>
+
+  <rect x="432" y="312" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <text x="462" y="337" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">2k</text>
+  <rect x="666" y="312" width="60" height="40" rx="4" fill="#f6e3da" stroke="#bf4520"/>
+  <text x="696" y="337" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle">1k</text>
+  <text x="150" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">注册表不枚举资源目录，模型按正文里的相对路径自己 read</text>
+
+  <line x1="120" y1="382" x2="900" y2="382" stroke="#e0e0e0" stroke-width="1"/>
+
+  <text x="40" y="418" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">对照：全量预载</text>
+  <text x="40" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">20 个技能 × 6 KB</text>
+
+  <rect x="120" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="198" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="276" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="354" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="432" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="510" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="588" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="666" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="744" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <rect x="822" y="402" width="60" height="40" rx="4" fill="#e8e8e8" stroke="#8a93a6"/>
+  <text x="150" y="427" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" text-anchor="middle">30k</text>
+  <text x="852" y="427" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" text-anchor="middle">30k</text>
+  <text x="150" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">十轮约 300k；任一技能改动都要重发整段，缓存前缀整体失效</text>
+
+  <rect x="40" y="474" width="880" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="494" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">这套账的四个前提</text>
+  <text x="54" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">目录长度由技能数与描述上限决定，默认最多 500 字符就截断；目录变化只追加，不改写历史</text>
+  <text x="54" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">图中 token 按英文约 4 字符一个估算；同一份中文目录按一比一算，会贵 3 到 4 倍</text>
+  <text x="54" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">正文不在 system prompt，所以不按轮重付；它在历史里，所以压缩会像处理普通工具结果一样处理它</text>
+  <text x="54" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">资源按需读的代价是多一次工具往返；收益是技能包可以很大，而这一轮只为用到的文件付费</text>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">图 3 · bundle 裁剪对比</title>
+  <desc id="f03-desc">能力为行、组合包为列；实心点表示该 bundle 自带，空心点表示由 preset 或上层补齐，横杠表示没有。</desc>
+  <defs>
+    <marker id="f03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f03-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f5d75"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="46" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">图 3 · bundle 裁剪对比</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">同一个可执行文件，靠不同的 patch 层决定挂哪些行。</text>
+  <text x="352" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142" text-anchor="middle">base</text>
+  <text x="456" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142" text-anchor="middle">web-app</text>
+  <text x="560" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142" text-anchor="middle">headless</text>
+  <text x="664" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142" text-anchor="middle">acp-app</text>
+  <text x="768" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142" text-anchor="middle">sdk-app</text>
+  <text x="872" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142" text-anchor="middle">sdk-minimal</text>
+  <text x="48" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">HTTP 服务器</text>
+  <rect x="40" y="119" width="880" height="34" fill="#ffffff" fill-opacity="0.45"/>
+  <line x1="346" y1="132" x2="358" y2="132" stroke="#c9c9c9" stroke-width="2"/>
+  <circle cx="456" cy="132" r="5.5" fill="#bf4520"/>
+  <line x1="554" y1="132" x2="566" y2="132" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="658" y1="132" x2="670" y2="132" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="762" y1="132" x2="774" y2="132" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="866" y1="132" x2="878" y2="132" stroke="#c9c9c9" stroke-width="2"/>
+  <text x="48" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">浏览器客户端</text>
+  <line x1="346" y1="170" x2="358" y2="170" stroke="#c9c9c9" stroke-width="2"/>
+  <circle cx="456" cy="170" r="5.5" fill="#bf4520"/>
+  <line x1="554" y1="170" x2="566" y2="170" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="658" y1="170" x2="670" y2="170" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="762" y1="170" x2="774" y2="170" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="866" y1="170" x2="878" y2="170" stroke="#c9c9c9" stroke-width="2"/>
+  <text x="48" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">session JSONL</text>
+  <rect x="40" y="195" width="880" height="34" fill="#ffffff" fill-opacity="0.45"/>
+  <circle cx="352" cy="208" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="208" r="5.5" fill="#bf4520"/>
+  <circle cx="560" cy="208" r="5.5" fill="#bf4520"/>
+  <circle cx="664" cy="208" r="5.5" fill="#bf4520"/>
+  <circle cx="768" cy="208" r="5.5" fill="#bf4520"/>
+  <circle cx="872" cy="208" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="48" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">shell 工具</text>
+  <circle cx="352" cy="246" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="246" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <circle cx="560" cy="246" r="5.5" fill="#bf4520"/>
+  <circle cx="664" cy="246" r="5.5" fill="#bf4520"/>
+  <circle cx="768" cy="246" r="5.5" fill="#bf4520"/>
+  <circle cx="872" cy="246" r="5.5" fill="#bf4520"/>
+  <text x="48" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">文件工具</text>
+  <rect x="40" y="271" width="880" height="34" fill="#ffffff" fill-opacity="0.45"/>
+  <circle cx="352" cy="284" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="284" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <circle cx="560" cy="284" r="5.5" fill="#bf4520"/>
+  <circle cx="664" cy="284" r="5.5" fill="#bf4520"/>
+  <circle cx="768" cy="284" r="5.5" fill="#bf4520"/>
+  <circle cx="872" cy="284" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="48" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">子代理</text>
+  <circle cx="352" cy="322" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="322" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <circle cx="560" cy="322" r="5.5" fill="#bf4520"/>
+  <circle cx="664" cy="322" r="5.5" fill="#bf4520"/>
+  <circle cx="768" cy="322" r="5.5" fill="#bf4520"/>
+  <line x1="866" y1="322" x2="878" y2="322" stroke="#c9c9c9" stroke-width="2"/>
+  <text x="48" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">skill / jobs</text>
+  <rect x="40" y="347" width="880" height="34" fill="#ffffff" fill-opacity="0.45"/>
+  <circle cx="352" cy="360" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="360" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <circle cx="560" cy="360" r="5.5" fill="#bf4520"/>
+  <circle cx="664" cy="360" r="5.5" fill="#bf4520"/>
+  <circle cx="768" cy="360" r="5.5" fill="#bf4520"/>
+  <line x1="866" y1="360" x2="878" y2="360" stroke="#c9c9c9" stroke-width="2"/>
+  <text x="48" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">设置与凭据</text>
+  <circle cx="352" cy="398" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="398" r="5.5" fill="#bf4520"/>
+  <line x1="554" y1="398" x2="566" y2="398" stroke="#c9c9c9" stroke-width="2"/>
+  <circle cx="664" cy="398" r="5.5" fill="#bf4520"/>
+  <circle cx="768" cy="398" r="5.5" fill="#bf4520"/>
+  <line x1="866" y1="398" x2="878" y2="398" stroke="#c9c9c9" stroke-width="2"/>
+  <text x="48" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">HMR</text>
+  <rect x="40" y="423" width="880" height="34" fill="#ffffff" fill-opacity="0.45"/>
+  <circle cx="352" cy="436" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="436" r="5.5" fill="#bf4520"/>
+  <line x1="554" y1="436" x2="566" y2="436" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="658" y1="436" x2="670" y2="436" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="762" y1="436" x2="774" y2="436" stroke="#c9c9c9" stroke-width="2"/>
+  <line x1="866" y1="436" x2="878" y2="436" stroke="#c9c9c9" stroke-width="2"/>
+  <text x="48" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">遥测</text>
+  <circle cx="352" cy="474" r="5.5" fill="#bf4520"/>
+  <circle cx="456" cy="474" r="5.5" fill="#bf4520"/>
+  <circle cx="560" cy="474" r="5.5" fill="#bf4520"/>
+  <circle cx="664" cy="474" r="5.5" fill="#bf4520"/>
+  <circle cx="768" cy="474" r="5.5" fill="#bf4520"/>
+  <line x1="866" y1="474" x2="878" y2="474" stroke="#c9c9c9" stroke-width="2"/>
+  <circle cx="48" cy="540" r="5.5" fill="#bf4520"/>
+  <text x="62" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">bundle 自带</text>
+  <circle cx="150" cy="540" r="5.5" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="164" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">preset 或上层补齐</text>
+  <line x1="300" y1="540" x2="312" y2="540" stroke="#c9c9c9" stroke-width="2"/>
+  <text x="322" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">没有</text>
+  <text x="48" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#2d3142" text-anchor="start">sdk-minimal 不复用 base：一个 patch 就是完整树，能力最窄，启动面最小。</text>
+</svg>

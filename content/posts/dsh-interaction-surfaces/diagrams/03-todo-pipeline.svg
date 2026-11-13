@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d3-title f01-d3-desc">
+  <title id="f01-d3-title">待办的写入、投影与三个消费方</title>
+  <desc id="f01-d3-desc">模型调用 todo_write，工具把完整列表 append 成 todo/write 事件；todos 投影按写入替换、turn/start 清空；模型文本、界面清单与重连 baseline 都从同一投影派生。</desc>
+  <defs>
+    <marker id="f01-d3-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-d3-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">TODO · WRITE → PROJECT → RENDER</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">一张清单，三个消费方</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">写入只有一种形状：整表替换。之后所有视图都从投影重建，谁也不缓存第二份。</text>
+
+  <!-- row 1 -->
+  <rect x="48" y="136" width="186" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="158" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">1 · 模型</text>
+  <text x="62" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">todo_write({</text>
+  <text x="62" y="194" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">  todos: [...] })</text>
+  <text x="62" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">参数必须是完整列表</text>
+
+  <rect x="270" y="136" width="186" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="284" y="158" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">2 · 工具</text>
+  <text x="284" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">校验有无 exec.agent</text>
+  <text x="284" y="198" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">没有会话就抛错</text>
+  <text x="284" y="216" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">per-agent-session</text>
+
+  <rect x="492" y="136" width="186" height="96" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="506" y="158" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">3 · 写入</text>
+  <text x="506" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">session.append(</text>
+  <text x="506" y="194" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">  'todo/write', { todos })</text>
+  <text x="506" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">提交点，之后才更新派生状态</text>
+
+  <rect x="714" y="136" width="198" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="728" y="158" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">4 · 会话日志</text>
+  <text x="728" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">append-only，带 seq</text>
+  <text x="728" y="198" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">压缩不删事件</text>
+  <text x="728" y="216" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">resume / fork 可重放</text>
+
+  <path d="M 234 184 H 270" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+  <path d="M 456 184 H 492" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+  <path d="M 678 184 H 714" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+
+  <!-- projection -->
+  <rect x="340" y="286" width="480" height="96" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="356" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">todos 投影 · tool-todo/src/index.ts:120</text>
+  <text x="356" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">init: () =&gt; null</text>
+  <text x="356" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">todo/write → event.data.todos</text>
+  <text x="356" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">turn/start → null　　turn/end → 保留</text>
+  <text x="700" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">summary: false</text>
+  <text x="700" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">stateVersion: 2</text>
+
+  <path d="M 813 232 V 286" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+
+  <!-- consumers -->
+  <rect x="48" y="418" width="250" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">模型侧：计数一行</text>
+  <text x="62" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">工具结果返回 counts，</text>
+  <text x="62" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同时渲染成可读的一行。</text>
+  <text x="62" y="490" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">3 pending · 1 completed</text>
+
+  <rect x="330" y="418" width="250" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="344" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">界面：清单与详情</text>
+  <text x="344" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">工具行只显示摘要，</text>
+  <text x="344" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">展开后读同一份投影。</text>
+  <text x="344" y="490" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">ui-tool · todo 行</text>
+
+  <rect x="612" y="418" width="300" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="626" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">重连与 fork：重建</text>
+  <text x="626" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">baseline 带上投影，窗口替换后</text>
+  <text x="626" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">清单自然回到断线前的样子。</text>
+  <text x="626" y="490" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">不需要额外快照</text>
+
+  <path d="M 470 382 L 173 418" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+  <path d="M 560 382 L 455 418" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+  <path d="M 650 382 L 762 418" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+
+  <text x="48" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">为什么不是内存列表：重连会丢、回放读不到、压缩后无法重建、两端各算一份。写成事件以后，这四种情况都由同一个折叠函数回答。</text>
+  <text x="48" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">清单条目故意没有 id：整表替换下，「第三条」这种身份没有意义，模型每次给的都是完整意图。</text>
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">turn/end 不清空是为了让「刚做完什么」多留一会儿；下一个 turn/start 才归零。</text>
+</svg>

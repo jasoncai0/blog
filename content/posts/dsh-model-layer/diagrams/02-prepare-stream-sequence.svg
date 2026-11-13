@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f02-d02-title f02-d02-desc">
+  <title id="f02-d02-title">一次 prepareCall 到 stream 的时序</title>
+  <desc id="f02-d02-desc">四条生命线分别是 agent loop、ctx.llm、适配器实例与 provider。前五步全部在本地完成，第七步才出网；第六步的比较是唯一允许派发的入口，配置不符直接抛 INVALID_PREPARED_CALL。</desc>
+  <defs>
+    <marker id="f02-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f02-ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a8f9e"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">MODEL LAYER / PREPARE → STREAM</text>
+  <text x="40" y="70" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">出网之前的五步，全是本地计算</text>
+  <text x="40" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#4f5d75">准备阶段解析注册、补模型元数据、落地默认值并深冻结；执行阶段的第一个动作已经不是配置。</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="56" y="112" width="150" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="131" y="132" font-size="9.5" fill="#2d3142" text-anchor="middle">agent loop</text>
+    <rect x="306" y="112" width="150" height="30" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="381" y="132" font-size="9.5" fill="#2d3142" text-anchor="middle">ctx.llm</text>
+    <rect x="556" y="112" width="150" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="631" y="132" font-size="9.5" fill="#2d3142" text-anchor="middle">adapter</text>
+    <rect x="806" y="112" width="120" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="866" y="132" font-size="9.5" fill="#2d3142" text-anchor="middle">provider</text>
+  </g>
+
+  <g stroke="#c9ccd4" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="131" y1="142" x2="131" y2="566"/>
+    <line x1="381" y1="142" x2="381" y2="566"/>
+    <line x1="631" y1="142" x2="631" y2="566"/>
+    <line x1="866" y1="142" x2="866" y2="566"/>
+  </g>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">
+    <text x="40" y="171">01</text>
+    <text x="40" y="211">02</text>
+    <text x="40" y="251">03</text>
+    <text x="40" y="291">04</text>
+    <text x="40" y="331">05</text>
+    <text x="40" y="381">06</text>
+    <text x="40" y="421">07</text>
+    <text x="40" y="461">08</text>
+    <text x="40" y="501">09</text>
+  </g>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f02-ar)">
+    <line x1="131" y1="166" x2="377" y2="166"/>
+    <line x1="381" y1="206" x2="627" y2="206"/>
+    <line x1="381" y1="286" x2="135" y2="286"/>
+    <line x1="131" y1="326" x2="377" y2="326"/>
+    <line x1="381" y1="416" x2="627" y2="416"/>
+    <line x1="631" y1="456" x2="862" y2="456"/>
+    <line x1="631" y1="496" x2="135" y2="496"/>
+  </g>
+  <path d="M381,364 L430,364 L430,386 L387,386" stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f02-ar)"/>
+  <g stroke="#8a8f9e" stroke-width="1" fill="none" stroke-dasharray="3 3" marker-end="url(#f02-ar2)">
+    <line x1="556" y1="246" x2="386" y2="246"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9">
+    <text x="140" y="160" fill="#2d3142">prepareCall(config, signal, configure?)</text>
+    <text x="390" y="200" fill="#2d3142">adapter.prepareCall(provider, model)</text>
+    <text x="390" y="240" fill="#4f5d75">resolveModel / resolveModelInfo（本地元数据）</text>
+    <text x="390" y="280" fill="#2d3142">PreparedLlmCall（config 已冻结）</text>
+    <text x="140" y="320" fill="#2d3142">stream(options)</text>
+    <text x="440" y="370" fill="#2d3142">callConfigEquals 校验，不符则 INVALID_PREPARED_CALL</text>
+    <text x="390" y="410" fill="#2d3142">dispatch → adapter.stream(options)</text>
+    <text x="390" y="450" fill="#2d3142">HTTP POST /v1/messages，SSE 逐帧返回</text>
+    <text x="140" y="490" fill="#2d3142">chunk → chunk → usage → finish</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a8f9e">
+    <text x="140" y="182">冻结 config 与 context 副本；计算 adapterDefaults</text>
+    <text x="656" y="226">默认实现：只回一个 model 和一个 stream 转发</text>
+    <text x="140" y="344">已派发过则抛 a prepared LLM call can only be dispatched once</text>
+    <text x="140" y="512">消费方永远只处理一条流，中间最多出现一个 terminal 帧</text>
+  </g>
+
+  <rect x="56" y="528" width="870" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="72" y="546" font-size="9" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" letter-spacing="0.12em">BOUNDARY</text>
+  <text x="72" y="566" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">05 之前没有任何网络 I/O，错误会落在准备的调用栈上；07 之后的一次调用等于一次 provider 尝试，重试由上层新开 turn。</text>
+
+  <line x1="56" y1="356" x2="926" y2="356" stroke="#bf4520" stroke-width="0.8" stroke-dasharray="6 4"/>
+  <text x="926" y="350" font-size="7.5" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" text-anchor="end" letter-spacing="0.12em">PREPARE ABOVE / DISPATCH BELOW</text>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-t f03-d">
+  <title id="f03-t">技能与工具、记忆、子代理的边界</title>
+  <desc id="f03-d">四列矩阵：工具、技能、记忆、子代理，按内容、作者、进入请求的时机、模型能做什么、如何失效五行对比。技能没有执行权，正文按需进入历史；工具每轮出现在 schema 里；记忆由宿主检索；子代理拥有独立会话。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S2-06 / BOUNDARIES</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">四种东西，四条边界</text>
+  <text x="40" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">按同一组问题排成矩阵：它装什么、谁写、什么时候进请求、模型能拿它做什么、怎么失效</text>
+
+  <rect x="40" y="100" width="880" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <line x1="176" y1="100" x2="176" y2="208" stroke="#e4e4e4"/>
+  <line x1="362" y1="100" x2="362" y2="208" stroke="#e4e4e4"/>
+  <line x1="548" y1="100" x2="548" y2="208" stroke="#e4e4e4"/>
+  <line x1="734" y1="100" x2="734" y2="208" stroke="#e4e4e4"/>
+
+  <rect x="176" y="100" width="186" height="3" fill="#4f5d75"/>
+  <rect x="362" y="100" width="186" height="3" fill="#bf4520"/>
+  <rect x="548" y="100" width="186" height="3" fill="#8a93a6"/>
+  <rect x="734" y="100" width="186" height="3" fill="#8a93a6"/>
+
+  <text x="56" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#8a93a6">维度 / 种类</text>
+
+  <text x="190" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">tool</text>
+  <text x="190" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">可执行函数与 JSON schema</text>
+  <text x="190" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">模型调用它，真的做事</text>
+
+  <text x="376" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">skill</text>
+  <text x="376" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">程序性说明与判据</text>
+  <text x="376" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">模型读完自己做，或调工具做</text>
+
+  <text x="562" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">memory</text>
+  <text x="562" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">事实、偏好、历史结论</text>
+  <text x="562" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">宿主在装配时检索进来</text>
+
+  <text x="748" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">subagent</text>
+  <text x="748" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">独立会话与工具集</text>
+  <text x="748" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">父代理派活，它自己跑完再回</text>
+
+  <rect x="40" y="208" width="880" height="62" fill="#fbfbfb" stroke="#e4e4e4"/>
+  <rect x="40" y="270" width="880" height="62" fill="#ffffff" stroke="#e4e4e4"/>
+  <rect x="40" y="332" width="880" height="62" fill="#fbfbfb" stroke="#e4e4e4"/>
+  <rect x="40" y="394" width="880" height="62" fill="#ffffff" stroke="#e4e4e4"/>
+  <rect x="40" y="456" width="880" height="62" fill="#fbfbfb" stroke="#e4e4e4"/>
+  <line x1="176" y1="208" x2="176" y2="518" stroke="#e4e4e4"/>
+  <line x1="362" y1="208" x2="362" y2="518" stroke="#e4e4e4"/>
+  <line x1="548" y1="208" x2="548" y2="518" stroke="#e4e4e4"/>
+  <line x1="734" y1="208" x2="734" y2="518" stroke="#e4e4e4"/>
+
+  <text x="56" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">装什么</text>
+  <text x="56" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">谁写</text>
+  <text x="56" y="358" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">何时进入请求</text>
+  <text x="56" y="420" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">模型能做什么</text>
+  <text x="56" y="482" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">怎么失效</text>
+
+  <text x="190" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">函数、参数、结果</text>
+  <text x="376" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">步骤、判据、模板路径</text>
+  <text x="562" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">事实、偏好、结论</text>
+  <text x="748" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">任务、工具集、上下文</text>
+
+  <text x="190" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">插件作者，写在代码里</text>
+  <text x="376" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">人写文件，provider 读</text>
+  <text x="562" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">宿主抽取，或人直接写</text>
+  <text x="748" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">父代理在运行时派发</text>
+
+  <text x="190" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">每轮 schema，常驻前缀</text>
+  <text x="376" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">目录每步；正文按需</text>
+  <text x="562" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">装配时按需检索</text>
+  <text x="748" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">派发时新建一段历史</text>
+
+  <text x="190" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">调用，走审批与 guard</text>
+  <text x="376" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">阅读，不产生执行</text>
+  <text x="562" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">读，写入由宿主决定</text>
+  <text x="748" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">委派，它有自己的审批</text>
+
+  <text x="190" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">注销即从 schema 消失</text>
+  <text x="376" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">文件变，目录发增量</text>
+  <text x="562" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">压缩、过期、被覆盖</text>
+  <text x="748" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">结束即回收，结果回父</text>
+
+  <rect x="40" y="536" width="880" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">边界不是分类学：技能正文可以要求调用工具，子代理可以加载技能，记忆可以为两者提供事实</text>
+  <text x="54" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">真正的分界在所有权：谁写、谁决定何时进来、有没有执行权，这三件事决定放错地方会出什么事</text>
+</svg>

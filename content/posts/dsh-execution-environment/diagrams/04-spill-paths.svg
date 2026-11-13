@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f04-d04-title f04-d04-desc">
+  <title id="f04-d04-title">截断与溢出的三条路径</title>
+  <desc id="f04-d04-desc">第一条在进程与内存之间保留尾部并落盘全文；第二条在工具结果进入上下文前换成头尾摘录加定位符；第三条由模型按偏移回读文件。虚线右侧是进入模型上下文的内容。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f04-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">SPILL / THREE PATHS</text>
+  <text x="40" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">内容变短的三处，各管一件事</text>
+  <text x="40" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9.5" fill="#4f5d75">前两处自动发生，第三处由模型主动发起；每处都有独立的开关与失败降级。</text>
+
+  <line x1="620" y1="116" x2="620" y2="546" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="628" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">CONTEXT BOUNDARY</text>
+  <text x="40" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#4f5d75">PROCESS · DISK</text>
+
+  <!-- lane 1 -->
+  <text x="40" y="140" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">① 输出环 — 进程内</text>
+  <rect x="40" y="150" width="196" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">进程 stdout / stderr</text>
+  <text x="54" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">数量不设上限</text>
+  <text x="54" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a8f9e">没有反馈就有无限长度</text>
+
+  <rect x="268" y="150" width="252" height="76" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="282" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">SubprocessCollect</text>
+  <text x="282" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">maxBytes 64 KB → 内存保留尾部</text>
+  <text x="282" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">spill.maxBytes 64 MiB → 全文落盘</text>
+  <text x="282" y="220" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a8f9e">丢头时标 lossy，偏移读不消费</text>
+
+  <rect x="640" y="150" width="280" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="654" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">模型看到：尾部 + 溢出路径</text>
+  <text x="654" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">失败信息通常在末尾：断言、退出摘要。</text>
+  <text x="654" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9e">头部信息不在上下文里，但在盘上。</text>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f04-ar)">
+    <line x1="236" y1="188" x2="264" y2="188"/>
+    <line x1="520" y1="188" x2="636" y2="188"/>
+  </g>
+
+  <!-- lane 2 -->
+  <text x="40" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">② 结果预算 — 进上下文之前</text>
+  <rect x="40" y="272" width="196" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">工具结果</text>
+  <text x="54" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">文本 + 图片占位符</text>
+  <text x="54" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">图片按 route 的单价折算</text>
+  <text x="54" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a8f9e">maxInlineTokens 是闸门</text>
+
+  <rect x="268" y="272" width="252" height="86" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="282" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">spill-policy</text>
+  <text x="282" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">未超预算：原样放行</text>
+  <text x="282" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">超出：saveText() 存全文</text>
+  <text x="282" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a8f9e">存失败 → 保留原文，不翻错</text>
+
+  <rect x="640" y="272" width="280" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="654" y="290" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">在预算内：全文进上下文</text>
+  <text x="654" y="305" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9e">最常见的一条，无额外标记</text>
+
+  <rect x="640" y="320" width="280" height="86" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="654" y="340" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">超预算：头 + GAP + 尾 + 定位符</text>
+  <text x="654" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">保留段按原文顺序拼接，中间的 GAP 标明省略</text>
+  <text x="654" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">定位符是不透明句柄，本地是路径、远端是 URI</text>
+  <text x="654" y="394" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a8f9e">全文永远不进上下文</text>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f04-ar)">
+    <line x1="236" y1="315" x2="264" y2="315"/>
+    <path d="M520,300 L560,300 L560,292 L636,292"/>
+    <path d="M520,330 L560,330 L560,363 L636,363"/>
+  </g>
+
+  <!-- lane 3 -->
+  <text x="40" y="404" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">③ 模型回读 — 主动发起</text>
+  <rect x="40" y="414" width="196" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="434" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">模型读到定位符</text>
+  <text x="54" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">决定要不要看细节</text>
+  <text x="54" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9e">不看就只花一次摘要的钱</text>
+
+  <rect x="268" y="414" width="252" height="76" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="282" y="434" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">read 工具 → ctx.fs</text>
+  <text x="282" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">readByteRange(offset, length)</text>
+  <text x="282" y="468" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">streamText · readBytes(maxBytes)</text>
+  <text x="282" y="484" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a8f9e">超大抛 FS_TOO_LARGE，不静默截断</text>
+
+  <rect x="640" y="414" width="280" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="654" y="434" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">读回来的窗口进上下文</text>
+  <text x="654" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">窗口由模型选，不由策略猜</text>
+  <text x="654" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a8f9e">同一份文件可以反复读不同段</text>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f04-ar)">
+    <line x1="236" y1="452" x2="264" y2="452"/>
+    <line x1="520" y1="452" x2="636" y2="452"/>
+  </g>
+
+  <line x1="40" y1="514" x2="920" y2="514" stroke="#d8d8d8"/>
+  <text x="40" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">三条路径的失败降级各不相同：落盘失败仍保留内存尾部；预算保存失败保留全文；回读失败只是一个工具错误。</text>
+  <text x="40" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">判定顺序是"先判断截断，再判断失败"：截断是正常结果，不该让模型以为命令失败了。</text>
+  <text x="40" y="580" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">数量级参考：maxOutputBytes 64_000 B / 流 · maxSpillBytes 64 MiB / 次 · maxInlineTokens 由部署配置</text>
+</svg>

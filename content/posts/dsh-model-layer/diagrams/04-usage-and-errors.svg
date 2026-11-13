@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f04-d04-title f04-d04-desc">
+  <title id="f04-d04-title">usage 计量与配额错误分类</title>
+  <desc id="f04-d04-desc">左半边是 TokenUsage 的四个互不相交计数如何进入计费、压力与增量三条消费路径；右半边是 provider 错误经过适配器阶梯分类后，三个配额码分别对应的恢复动作。</desc>
+  <defs>
+    <marker id="f04-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">MODEL LAYER / USAGE &amp; ERRORS</text>
+  <text x="40" y="70" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">四个计数，三条消费路径；一个错误，三种动作</text>
+  <text x="40" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#4f5d75">计费要相加减法，压力只要输入侧，增量要带符号。配额码分开，是因为用户下一步点的地方不同。</text>
+
+  <text x="40" y="124" font-size="8" letter-spacing="0.12em" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">TOKEN USAGE</text>
+  <text x="470" y="124" font-size="8" letter-spacing="0.12em" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">ERROR → CODE → ACTION</text>
+
+  <rect x="40" y="138" width="380" height="120" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="158" font-size="10" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">TokenUsage（互不相交）</text>
+  <text x="56" y="178" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">inputTokens      未命中的输入</text>
+  <text x="56" y="196" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">cacheReadTokens  读缓存命中</text>
+  <text x="56" y="214" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">cacheWriteTokens 写缓存</text>
+  <text x="56" y="232" font-size="8.5" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">outputTokens     输出（含推理）</text>
+  <text x="56" y="250" font-size="8" fill="#8a8f9e" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">计费输入 = 前三者之和；totalTokens 只在能算准时填</text>
+
+  <rect x="40" y="278" width="196" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="296" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">计费</text>
+  <text x="54" y="313" font-size="8" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">usageTokens()</text>
+  <text x="54" y="329" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">四项相加，决定 measure()</text>
+  <text x="54" y="343" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">选哪个基线</text>
+
+  <rect x="248" y="278" width="172" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="262" y="296" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">压力</text>
+  <text x="262" y="313" font-size="8" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">contextPressure()</text>
+  <text x="262" y="329" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">只取输入侧</text>
+  <text x="262" y="343" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">输出不占下轮窗口</text>
+
+  <rect x="40" y="376" width="380" height="94" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="54" y="394" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">增量（带符号）</text>
+  <text x="54" y="412" font-size="8" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">surfaceDeltaTokens = surface − anchor</text>
+  <text x="54" y="428" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">压缩替换掉一大段后为负，压力必须能下降</text>
+  <text x="54" y="444" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">totalTokens = max(0, baseline + delta)</text>
+  <text x="54" y="460" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">baseline: usage / estimated / none</text>
+
+  <line x1="112" y1="258" x2="112" y2="274" stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f04-ar)"/>
+  <line x1="300" y1="258" x2="300" y2="274" stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f04-ar)"/>
+  <line x1="230" y1="258" x2="230" y2="372" stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f04-ar)"/>
+
+  <rect x="470" y="138" width="450" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="486" y="156" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">provider 报错（状态码 + 文本）</text>
+  <text x="486" y="174" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">适配器按阶梯判码；401/403 → AUTH，402 或配额措辞 → QUOTA，429 → RATE_LIMIT</text>
+  <text x="486" y="190" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">上下文措辞 → CONTEXT_WINDOW_EXCEEDED，≥500 → SERVER，其余 HTTP_&lt;status&gt;</text>
+
+  <rect x="470" y="216" width="450" height="56" rx="6" fill="#fffaf7" stroke="#e8c9b4"/>
+  <text x="486" y="234" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">账号层再分一次（llm-deepseek-account）</text>
+  <text x="486" y="252" font-size="8" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">QUOTA → ACCOUNT_QUOTA</text>
+  <text x="640" y="252" font-size="8" fill="#4f5d75" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">401 → ACCOUNT_TOKEN_INVALID</text>
+  <text x="486" y="266" font-size="8" fill="#8a8f9e" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">无 token 时在发请求前就抛 ACCOUNT_SIGN_IN_REQUIRED</text>
+
+  <rect x="470" y="288" width="140" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="484" y="306" font-size="8" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">QUOTA</text>
+  <text x="484" y="322" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">通用额度耗尽</text>
+  <text x="484" y="338" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">动作：等或换路由</text>
+
+  <rect x="624" y="288" width="150" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="638" y="306" font-size="8" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">ACCOUNT_QUOTA</text>
+  <text x="638" y="322" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">账号配额耗尽</text>
+  <text x="638" y="338" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">动作：打开账单页</text>
+
+  <rect x="788" y="288" width="132" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="802" y="306" font-size="8" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">ACCOUNT_TOKEN_</text>
+  <text x="802" y="318" font-size="8" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">INVALID</text>
+  <text x="802" y="334" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">凭据被拒</text>
+  <text x="802" y="348" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">动作：重新登录</text>
+
+  <path d="M695,272 L695,278 L540,278 M540,278 L540,284 M699,278 L699,284 M854,278 L854,284" stroke="#bf4520" stroke-width="1" fill="none"/>
+  <g stroke="#bf4520" stroke-width="1" fill="none" marker-end="url(#f04-ar)">
+    <line x1="540" y1="278" x2="540" y2="284"/>
+    <line x1="699" y1="278" x2="699" y2="284"/>
+    <line x1="854" y1="278" x2="854" y2="284"/>
+  </g>
+
+  <rect x="470" y="368" width="450" height="102" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="486" y="386" font-size="8.5" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">不是配额的三类，别混进来</text>
+  <text x="486" y="404" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">RATE_LIMIT：429 或 rate_limit_error，等一会儿就好，重试有意义</text>
+  <text x="486" y="420" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">MISSING_CREDENTIAL / INVALID_CREDENTIAL：前者没配，后者配了但格式坏</text>
+  <text x="486" y="436" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">EMPTY_RESPONSE：零内容块的完成，可重试；CONTEXT_WINDOW_EXCEEDED 只认一个码</text>
+  <text x="486" y="456" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">INVALID_CREDENTIAL 刻意不在默认可重试集合里</text>
+
+  <rect x="40" y="488" width="380" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="506" font-size="8" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" letter-spacing="0.12em">DEEPSEEK MAPPING</text>
+  <text x="54" y="524" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">prompt_tokens 把缓存命中折进总数，适配器必须减出来，</text>
+  <text x="54" y="540" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">否则 inputTokens + cacheRead 会重复计费。</text>
+  <text x="54" y="558" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">cache_read_input_tokens → cacheReadTokens</text>
+
+  <rect x="470" y="488" width="450" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="486" y="506" font-size="8" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" letter-spacing="0.12em">IMAGE PRICING</text>
+  <text x="486" y="524" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">imageRequestPricing() 返回按坐标计价的 priceImages(images)，每项给出</text>
+  <text x="486" y="540" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">visualTokens 与占位文本；offloaded 的图按占位文本计价。</text>
+  <text x="486" y="558" font-size="8" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">查不到时返回 undefined，不抛错：历史路由可能已卸载</text>
+</svg>

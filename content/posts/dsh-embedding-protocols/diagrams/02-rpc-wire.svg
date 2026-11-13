@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-desc">
+  <title id="f02-title">图 2 · 一次 RPC 与一次事件过线</title>
+  <desc id="f02-desc">请求按行分帧写入 stdin，服务器回 result 后异步推 session.event；事件本体带 seq，信封不带游标。</desc>
+  <defs>
+    <marker id="f02-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f02-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f5d75"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="46" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">图 2 · 一次 RPC 与一次事件过线</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">换行分帧的 JSON-RPC 2.0：id 关联请求，通知没有 id，事件的连续性由 seq 表达。</text>
+  <text x="64" y="104" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">CLIENT</text>
+  <text x="676" y="104" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">SERVER</text>
+  <line x1="190" y1="112" x2="190" y2="520" stroke="#d8d8d8"/>
+  <line x1="770" y1="112" x2="770" y2="520" stroke="#d8d8d8"/>
+  <rect x="262" y="108" width="436" height="52" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="274" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">id:7  session/prompt</text>
+  <text x="274" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">content: [{type:'text', text:'读 README'}]</text>
+  <line x1="196" y1="124" x2="256" y2="124" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f02-arrow)"/>
+  <rect x="262" y="184" width="436" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="274" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">result { messageId }</text>
+  <text x="274" y="218" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">入队回执，不代表 turn 完成</text>
+  <line x1="768" y1="200" x2="704" y2="200" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#f02-arrow2)"/>
+  <rect x="262" y="260" width="436" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="274" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">session.event</text>
+  <text x="274" y="294" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">turn/start  seq:31</text>
+  <line x1="768" y1="276" x2="704" y2="276" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#f02-arrow2)"/>
+  <rect x="262" y="336" width="436" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="274" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">session.event</text>
+  <text x="274" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">step/start  seq:32</text>
+  <line x1="768" y1="352" x2="704" y2="352" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#f02-arrow2)"/>
+  <rect x="262" y="412" width="436" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="274" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="start">session.event</text>
+  <text x="274" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="start">turn/end   seq:33</text>
+  <line x1="768" y1="428" x2="704" y2="428" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#f02-arrow2)"/>
+  <text x="262" y="506" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">换行分帧</text>
+  <text x="262" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">每帧一行 JSON，以 \n 结束；stdout 只写协议帧，日志走 stderr。</text>
+  <text x="262" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">通知没有 id，客户端按 method + params 分发；同会话事件按 seq 递增。</text>
+</svg>

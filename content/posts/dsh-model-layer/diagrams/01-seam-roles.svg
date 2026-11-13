@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f01-d01-title f01-d01-desc">
+  <title id="f01-d01-title">模型层 seam 的三个角色与依赖方向</title>
+  <desc id="f01-d01-desc">左侧是消费方，中间是 ctx.llm 服务定义，右侧是两个适配器提供方。消费方只通过 ctx.llm 访问，提供方只实现 LlmAdapter 抽象类；依赖箭头单向，没有任何一条从定义层指回具体提供方或会话状态。</desc>
+  <defs>
+    <marker id="f01-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f01-ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a8f9e"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">MODEL LAYER / SEAM</text>
+  <text x="40" y="70" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="17" fill="#2d3142">三个角色，一个依赖方向</text>
+  <text x="40" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#4f5d75">消费方 → 服务定义 ← 提供方。定义层不知道谁在调用，也不知道哪家 provider 在下面。</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <text x="40" y="128" font-size="8" letter-spacing="0.12em" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">CONSUMERS</text>
+    <text x="352" y="128" font-size="8" letter-spacing="0.12em" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">SERVICE DEFINITION</text>
+    <text x="676" y="128" font-size="8" letter-spacing="0.12em" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">PROVIDERS</text>
+  </g>
+
+  <rect x="40" y="140" width="290" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="162" font-size="10.5" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">agent loop</text>
+  <text x="56" y="180" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">preStep 取选择 → prepareCall → stream</text>
+  <text x="56" y="198" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">持有 turn / step / 重试，不碰 provider 细节</text>
+  <text x="56" y="222" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">工具与面板（只读）</text>
+  <text x="56" y="240" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">listModels / resolveCallConfig / imageRequestPricing</text>
+  <text x="56" y="268" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">dsh-tool-bash · dsh-spill-policy · web 面板</text>
+
+  <rect x="40" y="310" width="290" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="332" font-size="10.5" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">不变量：三元组只在这里读一次</text>
+  <text x="56" y="354" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">provider / model / reasoningEffort</text>
+  <text x="56" y="372" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">在 preStep 固化成 selection</text>
+  <text x="56" y="394" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">工具准入、系统提示词、请求头、</text>
+  <text x="56" y="412" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">adapterDefaults、request/context</text>
+  <text x="56" y="430" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">全部从同一个值派生</text>
+  <text x="56" y="448" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">改路由 = 换 step，不换请求</text>
+
+  <rect x="352" y="140" width="296" height="320" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="368" y="164" font-size="11" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">ctx.llm · LlmRuntime</text>
+  <text x="368" y="182" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">packages/llm/llm/src/index.ts</text>
+
+  <rect x="368" y="196" width="264" height="52" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="380" y="214" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">注册</text>
+  <text x="380" y="231" font-size="8.5" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">registerAdapter / registerModelDiscovery</text>
+  <text x="380" y="243" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">DUPLICATE_ADAPTER · 原子失败</text>
+
+  <rect x="368" y="256" width="264" height="44" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="380" y="274" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">查询</text>
+  <text x="380" y="291" font-size="8.5" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">listProviders / listModels / resolveModelInfo</text>
+
+  <rect x="368" y="308" width="264" height="44" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="380" y="326" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">准备</text>
+  <text x="380" y="343" font-size="8.5" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">resolveCallConfig / prepareCall</text>
+
+  <rect x="368" y="360" width="264" height="44" rx="6" fill="#fafafa" stroke="#d8d8d8"/>
+  <text x="380" y="378" font-size="9" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">执行</text>
+  <text x="380" y="395" font-size="8.5" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">stream → llm/stream waterfall</text>
+
+  <text x="368" y="424" font-size="8" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">事件：llm/adapters-updated · llm/models-updated</text>
+  <text x="368" y="442" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">依赖：cordis + 自身类型</text>
+  <text x="368" y="456" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">不 import dsh-fs / dsh-agent</text>
+
+  <rect x="676" y="140" width="244" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="692" y="162" font-size="10.5" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">llm-deepseek</text>
+  <text x="692" y="180" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">直连：自己拼 HTTP、解析 SSE</text>
+  <text x="692" y="198" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">Anthropic Messages 线协议</text>
+  <text x="692" y="216" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">cache_read_input_tokens 映射</text>
+  <text x="692" y="240" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">llm-deepseek-account 另注册路由</text>
+  <text x="692" y="262" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">implementation = stream()</text>
+
+  <rect x="676" y="310" width="244" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="692" y="332" font-size="10.5" fill="#2d3142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">llm-pi-ai</text>
+  <text x="692" y="350" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">库适配：pi-ai 提供方目录</text>
+  <text x="692" y="368" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">providers 字典的键就是路由名</text>
+  <text x="692" y="386" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">OAuth 登录、按请求解析 profile</text>
+  <text x="692" y="410" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">llm-pi-ai/request-headers</text>
+  <text x="692" y="432" font-size="8.5" fill="#8a8f9e" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">两条路由可共存，名字不重叠</text>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#f01-ar)">
+    <line x1="332" y1="215" x2="349" y2="215"/>
+    <line x1="332" y1="385" x2="349" y2="385"/>
+    <line x1="648" y1="215" x2="673" y2="215"/>
+  </g>
+  <g stroke="#8a8f9e" stroke-width="1" fill="none" stroke-dasharray="3 3" marker-end="url(#f01-ar2)">
+    <line x1="676" y1="385" x2="652" y2="385"/>
+  </g>
+
+
+  <rect x="40" y="472" width="880" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="492" font-size="9" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" letter-spacing="0.12em">DEPENDENCY RULES</text>
+  <text x="56" y="512" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">提供方实现同一抽象类，只被要求写 stream()；其余方法有默认实现，想声明能力才覆盖。</text>
+  <text x="56" y="530" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">定义层需要宿主路径时用 ctx.get('fs') 结构化取用，拿不到就退化成不带路径的句柄文本。</text>
+  <text x="56" y="548" font-size="9" fill="#4f5d75" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">消费方拿不到适配器实例，适配器拿不到 session；replayState 只回给产生它的那个实例。</text>
+</svg>

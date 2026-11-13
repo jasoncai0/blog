@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">客户端六层与 60 个 ui 包</title>
+  <desc id="f01-d1-desc">左侧是 9 个不渲染界面的内核包，右侧六个分组共 60 个 ui 包；箭头自上而下，表示依赖与启用顺序，组内数字是包数。</desc>
+  <defs>
+    <marker id="f01-d1-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">CLIENT · PACKAGE LAYERS</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">60 个包，六组所有权</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">分组判据是「谁声明渲染位置、谁拥有状态」，与目录顺序无关；内核 9 个包不画界面，但每一层都依赖它。</text>
+
+  <!-- kernel column -->
+  <rect x="48" y="122" width="196" height="394" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="64" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#bf4520">kernel · 9</text>
+  <text x="64" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">非 ui-* 包，不出界面</text>
+  <text x="64" y="196" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">web</text>
+  <text x="64" y="216" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">modules</text>
+  <text x="64" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">connection</text>
+  <text x="64" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">store</text>
+  <text x="64" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">resources</text>
+  <text x="64" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">hmr</text>
+  <text x="64" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">locale</text>
+  <text x="64" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">shortcuts</text>
+  <text x="64" y="356" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">file-upload</text>
+  <text x="64" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">只有 web 与 modules</text>
+  <text x="64" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">参与启动时序，其余是</text>
+  <text x="64" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">被注入的服务。</text>
+
+  <!-- group cards -->
+  <rect x="284" y="122" width="628" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="300" y="143" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">渲染地基</text>
+  <text x="300" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ui-slots · ui-renderer · ui-session · ui-theme · ui-primitives · ui-dockkit</text>
+  <text x="880" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="16" fill="#bf4520">6</text>
+
+  <rect x="284" y="190" width="628" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="300" y="211" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">外壳</text>
+  <text x="300" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ui-layout · ui-workspace · ui-sidebar · ui-sidebar-right · 三个面板包 · ui-brand-official</text>
+  <text x="880" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="16" fill="#bf4520">8</text>
+
+  <rect x="284" y="258" width="628" height="54" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="300" y="279" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#bf4520">会话视图</text>
+  <text x="300" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ui-conversation · ui-chat · ui-tool · ui-trajectory · ui-workflow-run · ui-attachment …</text>
+  <text x="880" y="292" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="16" fill="#bf4520">8</text>
+
+  <rect x="284" y="326" width="628" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="300" y="347" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">交互面</text>
+  <text x="300" y="366" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ui-approval · ui-user-questions · ui-plan · ui-commands · ui-permission-presets …</text>
+  <text x="880" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="16" fill="#bf4520">16</text>
+
+  <rect x="284" y="394" width="628" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="300" y="415" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">设置</text>
+  <text x="300" y="434" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ui-settings · 11 个分区包 · ui-plugin-manager · ui-plugin-market · ui-entry-customization</text>
+  <text x="880" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="16" fill="#bf4520">14</text>
+
+  <rect x="284" y="462" width="628" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <text x="300" y="483" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">旁路</text>
+  <text x="300" y="502" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ui-context-menu · ui-file-actions · ui-file-drag · 目录选择 · ui-open-in-app · ui-shortcuts</text>
+  <text x="880" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="16" fill="#bf4520">8</text>
+
+  <!-- arrows kernel to groups -->
+  <path d="M 244 149 H 284" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 244 217 H 284" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 244 285 H 284" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 244 353 H 284" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 244 421 H 284" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+  <path d="M 244 489 H 284" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d1-a)"/>
+
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">6 + 8 + 8 + 16 + 14 + 8 = 60。会话视图消费事件窗口，交互面把动作送回 Host，设置与旁路只挂在指定位置。</text>
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">包之间只有两条横向通路：注入的 Cordis service（行为）与 slot 注册（UI）。运行时值只允许放在 store、ui-primitives 这类窄静态 owner 里。</text>
+</svg>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">图 3 · 一次 preset 切换的重建范围</title>
+  <desc id="f03-desc">会话与宿主平面不动；agent 作用域按代重建，旧代 retired 后等 users 归零再释放。</desc>
+  <defs>
+    <marker id="f03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="46" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">图 3 · 一次 preset 切换的重建范围</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">切换只换 agent 子树：工具行、persona、指令、planning / compaction / delegation。</text>
+  <rect x="48" y="104" width="230" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="60" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">会话（不动）</text>
+  <text x="60" y="137" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">session log：只追加</text>
+  <text x="60" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">projections：沿用</text>
+  <text x="60" y="163" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">agent-preset/selected：追加一条</text>
+  <text x="60" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">恢复时读记录里的 preset</text>
+  <rect x="306" y="104" width="270" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="318" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">宿主平面（不动）</text>
+  <text x="318" y="137" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">job / skill registry</text>
+  <text x="318" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">token meter / goal driver</text>
+  <text x="318" y="163" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">subagent registry 与 backends</text>
+  <text x="318" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">agent-loop / tool executor</text>
+  <text x="616" y="96" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">AGENT SCOPE</text>
+  <rect x="616" y="104" width="296" height="90" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="628" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">generation N-1</text>
+  <text x="628" y="137" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">tools / persona / instructions</text>
+  <text x="628" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">planning + compaction + delegation</text>
+  <text x="628" y="163" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">retired: true</text>
+  <line x1="764" y1="196" x2="764" y2="218" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f03-arrow)"/>
+  <rect x="616" y="220" width="296" height="90" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="628" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">generation N</text>
+  <text x="628" y="253" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">新 tools / 新 persona</text>
+  <text x="628" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">新 planning / compaction 子树</text>
+  <text x="628" y="279" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">users 从 0 开始</text>
+  <polyline points="163,104 163,84 930,84 930,265 916,265" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f03-arrow)"/>
+  <text x="470" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#bf4520" text-anchor="start">preset id</text>
+  <polyline points="576,176 598,176 598,265 612,265" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f03-arrow)"/>
+  <text x="576" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#bf4520" text-anchor="start">inject</text>
+  <text x="48" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">重建清单</text>
+  <rect x="48" y="352" width="230" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="385" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">工具注册行</text>
+  <text x="60" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">persona section</text>
+  <text x="60" y="411" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">agent-instructions</text>
+  <text x="60" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">planning / compaction / delegation</text>
+  <text x="306" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">不动清单</text>
+  <rect x="306" y="352" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="318" y="385" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">session log 与 cursor</text>
+  <text x="318" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">projection store</text>
+  <text x="318" y="411" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">job / skill / token registry</text>
+  <text x="318" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">宿主服务与 subagent backends</text>
+  <text x="616" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">回收条件</text>
+  <rect x="616" y="352" width="296" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="628" y="385" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">retired &amp;&amp; users == 0</text>
+  <text x="628" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">才 dispose 旧 scope</text>
+  <text x="628" y="411" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">否则会拆掉正在跑的会话</text>
+  <text x="48" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">mount 失败不清场：记 record.broken 并 warn，diagnostic() 读时重审。</text>
+  <text x="48" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">挂载失败是终局，不会自动回退到上一个能用的 preset。</text>
+  <text x="48" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">realm 隔离：preset 内的行看不到 realm 外的兄弟行，registry 必须留在宿主平面。</text>
+</svg>

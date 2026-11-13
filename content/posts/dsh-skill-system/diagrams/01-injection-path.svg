@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-t f01-d">
+  <title id="f01-t">三类指令文件各自落到请求的哪个位置</title>
+  <desc id="f01-d">三列自上而下：AGENTS.md 经 agent-instructions 变成 baseline user 消息；SKILL.md 的 frontmatter 经 skill-filesystem 与 tool-skill 变成 skill-catalog user 消息；SKILL.md 正文经 skill 工具与注册表变成 tool result。下方请求框里 history 段收纳这三条，system prompt 段只有工具 schema。</desc>
+  <defs>
+    <marker id="f01-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S2-06 / INJECTION PATH</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">三类指令，三个落点</text>
+  <text x="40" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一个仓库里的三种文件，走三条不同的路进请求；只有工具 schema 进 system prompt</text>
+
+  <rect x="40" y="112" width="270" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">1 · AGENTS.md</text>
+  <text x="54" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">仓库根与各级目录，每目录最多两份</text>
+  <text x="54" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">人写、变更慢、每轮都成立</text>
+
+  <rect x="345" y="112" width="270" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="359" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">2 · SKILL.md frontmatter</text>
+  <text x="359" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">name / description / invocation</text>
+  <text x="359" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">决定它出现在目录里的样子</text>
+
+  <rect x="650" y="112" width="270" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="664" y="134" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">3 · SKILL.md 正文</text>
+  <text x="664" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">步骤、命令、模板的相对路径</text>
+  <text x="664" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">只在被加载时出现一次</text>
+
+  <line x1="175" y1="200" x2="175" y2="220" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <line x1="480" y1="200" x2="480" y2="220" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <line x1="785" y1="200" x2="785" y2="220" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+
+  <rect x="40" y="220" width="270" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">agent-instructions</text>
+  <text x="54" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">读取、按 maxBytes 截断</text>
+  <text x="54" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">digest 去重后插到 claimed 批次之后</text>
+  <text x="54" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">pre-step 注入</text>
+
+  <rect x="345" y="220" width="270" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="359" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">skill-filesystem → tool-skill</text>
+  <text x="359" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">六个根发现，rank 排序，层合并</text>
+  <text x="359" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">description 截到 500 字符，sha256 digest</text>
+  <text x="359" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">变了才追加替换消息</text>
+
+  <rect x="650" y="220" width="270" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="664" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">tool-skill → skills.get()</text>
+  <text x="664" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">校验名字与调用策略</text>
+  <text x="664" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">穿透 provider 重读文件</text>
+  <text x="664" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">renderSkillContent 包装</text>
+
+  <line x1="175" y1="312" x2="175" y2="340" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <line x1="480" y1="312" x2="480" y2="340" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <line x1="785" y1="312" x2="785" y2="340" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+
+  <rect x="40" y="340" width="880" height="180" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">一次请求 · 历史段按时间追加</text>
+
+  <rect x="56" y="370" width="848" height="28" rx="4" fill="#faf6f3" stroke="#e4c9bb"/>
+  <text x="66" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">1 · user / baseline=true —— AGENTS.md，超预算时截断并写一条 omitted / truncated 标记</text>
+
+  <rect x="56" y="404" width="848" height="28" rx="4" fill="#faf6f3" stroke="#e4c9bb"/>
+  <text x="66" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">2 · user / skill-catalog —— 只有 name 与 description，变化时追加一条替换消息</text>
+
+  <rect x="56" y="438" width="848" height="28" rx="4" fill="#faf6f3" stroke="#e4c9bb"/>
+  <text x="66" y="456" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">3 · tool result —— &lt;skill_content&gt; 全文，进一次历史，之后跟压缩与回放走</text>
+
+  <rect x="56" y="476" width="848" height="32" rx="4" fill="#f2f2f2" stroke="#d8d8d8"/>
+  <text x="66" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">SYSTEM PROMPT</text>
+  <text x="170" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">工具 schema：skill 的名字与一行描述。这段来自工具注册表，不来自上面三个文件</text>
+
+  <text x="40" y="548" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">为什么不是都放 system prompt</text>
+  <text x="40" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">常驻内容每轮付费，还要在改动时让整段前缀失效；按需内容付一次加载延迟，换来选择权</text>
+  <text x="40" y="582" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">三条路的持久性不同：baseline 每轮重算，目录按 digest 增量，正文只进一次历史</text>
+</svg>

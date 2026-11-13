@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-t f01-d">
+  <title id="f01-t">三个包，三种所有权</title>
+  <desc id="f01-d">mcp-manager 从设置页和插件接收条目，按条目挂载 mcp-client 实例；每个客户端向 ctx.tools 注册工具、向 mcp-resources 注册 provider，resources 反向通过 provider 发请求；客户端通过官方 SDK 走 stdio 或 Streamable HTTP 连到外部服务器。</desc>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f01-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f01-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S2-05 / MCP OWNERSHIP</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">三个包，三种失败归属</text>
+  <text x="40" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">manager 管条目与实例，client 管连接与工具，resources 管目录与共享工具；箭头上的字就是它们之间全部的接口</text>
+
+  <rect x="40" y="116" width="190" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="137" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">设置页 / 插件</text>
+  <text x="54" y="153" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">Config.servers · register()</text>
+  <text x="54" y="167" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">两个来源，一份清单</text>
+
+  <rect x="270" y="108" width="250" height="80" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="270" y="108" width="3" height="80" fill="#bf4520"/>
+  <text x="284" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#bf4520">mcp-manager</text>
+  <text x="284" y="145" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">fleet：校验 · 挂载 · 卸载 · 重启 · 探测</text>
+  <text x="284" y="160" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">reconcileOnce() · watch · probe</text>
+  <text x="284" y="175" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不碰 JSON-RPC，只拥有实例生命周期</text>
+
+  <line x1="230" y1="148" x2="270" y2="148" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <text x="232" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">entries</text>
+
+  <rect x="300" y="244" width="360" height="196" rx="6" fill="none" stroke="#c9cdd6" stroke-dasharray="4 4"/>
+  <text x="314" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#8a93a6">ONE PLUGIN PER serverName</text>
+
+  <rect x="316" y="276" width="104" height="140" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="328" y="295" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">mcp-client</text>
+  <text x="328" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">serverName: pg</text>
+  <text x="328" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">status cell</text>
+  <text x="328" y="343" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">tools 注册</text>
+  <text x="328" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">instructions</text>
+  <text x="328" y="373" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">resources 代理</text>
+  <text x="328" y="396" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">重连预算</text>
+
+  <rect x="424" y="276" width="104" height="140" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="436" y="295" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">mcp-client</text>
+  <text x="436" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">serverName: fs</text>
+  <text x="436" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">status cell</text>
+  <text x="436" y="343" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">tools 注册</text>
+  <text x="436" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">instructions</text>
+  <text x="436" y="373" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">resources 代理</text>
+  <text x="436" y="396" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">重连预算</text>
+
+  <rect x="532" y="276" width="104" height="140" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="3 3"/>
+  <text x="544" y="295" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">mcp-client</text>
+  <text x="544" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">serverName: …</text>
+  <text x="544" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">N 个实例</text>
+  <text x="544" y="343" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">互不影响</text>
+
+  <line x1="395" y1="188" x2="395" y2="244" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <text x="402" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">ctx.plugin(McpClient, config)</text>
+  <text x="402" y="220" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">一个条目一个实例</text>
+
+  <rect x="700" y="244" width="220" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="700" y="244" width="3" height="196" fill="#bf4520"/>
+  <text x="714" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#bf4520">mcp-resources</text>
+  <text x="714" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">三个固定工具，schema 不随服务器变</text>
+  <text x="714" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">list_mcp_resources</text>
+  <text x="714" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">list_mcp_resource_templates</text>
+  <text x="714" y="326" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">read_mcp_resource</text>
+  <line x1="714" y1="340" x2="906" y2="340" stroke="#eceef2"/>
+  <text x="714" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">ScopedLayers：谁看得见哪些 server</text>
+  <text x="714" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">首个 provider 注册工具</text>
+  <text x="714" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">最后一个移除才注销</text>
+  <text x="714" y="408" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">section: mcp-resource-servers</text>
+  <text x="714" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">名字列表进系统提示词</text>
+
+  <line x1="660" y1="300" x2="700" y2="300" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <text x="696" y="294" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2d3142">register()</text>
+  <line x1="700" y1="368" x2="660" y2="368" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f01-a)"/>
+  <text x="696" y="382" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">request()</text>
+
+  <rect x="40" y="470" width="520" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="490" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">ctx.tools（工具注册表）</text>
+  <text x="54" y="507" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">register() 进层；view() 叠出可见集合；schemas() 只投影 name / description / parameters</text>
+  <text x="54" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">MCP 工具没有专属通道，它和内置工具走同一个注册表、同一条执行流水线、同一套审批</text>
+  <text x="54" y="541" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">mcp__&lt;serverName&gt;__&lt;rawName&gt;</text>
+
+  <line x1="420" y1="440" x2="420" y2="470" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <text x="428" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">注册 / 注销</text>
+
+  <rect x="620" y="470" width="300" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="634" y="490" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">@modelcontextprotocol/sdk</text>
+  <text x="634" y="507" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">stdio 子进程 / Streamable HTTP，协议交换全在 SDK 里</text>
+  <text x="634" y="524" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">connect · listTools · callTool · listResources</text>
+  <text x="634" y="541" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">桥只做适配：命名、schema、结果投影、取消</text>
+
+  <line x1="600" y1="440" x2="700" y2="470" stroke="#2d3142" stroke-width="1" marker-end="url(#f01-k)"/>
+  <text x="616" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">一代连接</text>
+</svg>

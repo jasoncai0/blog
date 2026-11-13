@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f04-t f04-d">
+  <title id="f04-t">一次技能加载的时序</title>
+  <desc id="f04-d">四列时序：pre-step 比较工具身份后向注册表取快照；注册表命中缓存或让 provider 扫六个根；快照回到 pre-step，过滤截断算 digest 后发出目录消息；模型调用 skill 工具，注册表穿透到 provider 重读文件，正文作为工具结果回到模型。</desc>
+  <defs>
+    <marker id="f04-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+  </defs>
+  <rect width="960" height="640" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S2-06 / DISCOVERY TO EXECUTION</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">从发现到执行，一次技能加载走多远</text>
+  <text x="40" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">目录在每步的 pre-step 里比对，正文只在模型调用 skill 时读取；两条路径共用同一个注册表</text>
+
+  <text x="110" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">MODEL</text>
+  <text x="330" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">PRE-STEP</text>
+  <text x="330" y="119" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">tool-skill</text>
+  <text x="550" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">REGISTRY</text>
+  <text x="550" y="119" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">ctx.skills</text>
+  <text x="760" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">PROVIDER</text>
+  <text x="760" y="119" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">filesystem / office</text>
+
+  <line x1="110" y1="136" x2="110" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="330" y1="136" x2="330" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="550" y1="136" x2="550" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="760" y1="136" x2="760" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+
+  <line x1="110" y1="160" x2="330" y2="160" stroke="#2d3142" stroke-width="1" marker-end="url(#f04-k)"/>
+  <text x="118" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">user：帮我发一版 release notes</text>
+
+  <text x="340" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">身份比较：skill 工具可见吗</text>
+
+  <line x1="330" y1="196" x2="550" y2="196" stroke="#2d3142" stroke-width="1" marker-end="url(#f04-k)"/>
+  <text x="338" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">snapshot({cwd, scope})</text>
+
+  <text x="558" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">键 {cwd, scopes, revision}</text>
+
+  <line x1="550" y1="232" x2="760" y2="232" stroke="#2d3142" stroke-width="1" marker-end="url(#f04-k)"/>
+  <text x="558" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">list()，仅缓存未命中</text>
+
+  <text x="770" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">六个根 + frontmatter</text>
+
+  <line x1="760" y1="268" x2="550" y2="268" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f04-a)"/>
+  <text x="558" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">candidates + complete</text>
+
+  <line x1="550" y1="304" x2="330" y2="304" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f04-a)"/>
+  <text x="338" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">{skills, complete}</text>
+
+  <text x="340" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">过滤调用策略、截 500、算 digest</text>
+
+  <line x1="330" y1="340" x2="110" y2="340" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f04-a)"/>
+  <text x="118" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">user 消息：skill-catalog（变了才发）</text>
+
+  <line x1="110" y1="376" x2="330" y2="376" stroke="#2d3142" stroke-width="1" marker-end="url(#f04-k)"/>
+  <text x="118" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">skill({name: "release-notes"})</text>
+
+  <line x1="330" y1="412" x2="550" y2="412" stroke="#2d3142" stroke-width="1" marker-end="url(#f04-k)"/>
+  <text x="338" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">get(name)</text>
+
+  <line x1="550" y1="448" x2="760" y2="448" stroke="#2d3142" stroke-width="1" marker-end="url(#f04-k)"/>
+  <text x="558" y="442" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">get(candidate)</text>
+
+  <line x1="760" y1="484" x2="550" y2="484" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f04-a)"/>
+  <text x="558" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">定义（重读文件）</text>
+
+  <line x1="330" y1="520" x2="110" y2="520" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f04-a)"/>
+  <text x="118" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">tool result：&lt;skill_content&gt; + &lt;skill_resources&gt;</text>
+
+  <text x="118" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">结果进历史，之后跟压缩、回放、检索走</text>
+
+  <rect x="40" y="584" width="880" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="602" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">目录路径与正文路径共用注册表，但只有快照走发现缓存；get() 每次都穿透到 provider</text>
+  <text x="54" y="618" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同一个 pre-step 里，快照可能命中缓存（只查表）或触发一次完整发现（遍历 + N 次 frontmatter 解析）</text>
+</svg>

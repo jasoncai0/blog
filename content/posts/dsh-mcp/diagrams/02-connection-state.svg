@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-t f02-d">
+  <title id="f02-t">一代连接的状态机</title>
+  <desc id="f02-d">加载进入 connecting，握手与首次工具同步共享启动预算；成功后 connected 并发布指令。掉线进入 reconnecting，按指数退避重试，回到 connecting；预算耗尽或重连被关闭时进入 failed，工具注销。凭据缺值停在 waiting-credentials，dispose 进入 closed，重载插件从 closed 回到 connecting。</desc>
+  <defs>
+    <marker id="f02-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f02-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S2-05 / CONNECTION LIFECYCLE</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一代连接的状态机</text>
+  <text x="40" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">六种状态，三个预算：启动、退避、关闭；状态存在 fiber 的 WeakMap 里，热替换后不闪回 connecting</text>
+
+  <circle cx="66" cy="207" r="3" fill="#2d3142"/>
+  <line x1="69" y1="207" x2="150" y2="207" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="74" y="199" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">load / reload</text>
+
+  <rect x="150" y="180" width="150" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="162" y="201" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">connecting</text>
+  <text x="162" y="217" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">attempt · startup 预算</text>
+  <text x="162" y="229" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">resolve → connect → sync</text>
+
+  <rect x="430" y="180" width="150" height="54" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <rect x="430" y="180" width="3" height="54" fill="#bf4520"/>
+  <text x="442" y="201" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">connected</text>
+  <text x="442" y="217" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">toolCount · connectedAt</text>
+  <text x="442" y="229" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">工具在表里，指令已发布</text>
+
+  <rect x="730" y="180" width="150" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="742" y="201" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">closed</text>
+  <text x="742" y="217" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">closeConfirmed</text>
+  <text x="742" y="229" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">工具与名字已释放</text>
+
+  <rect x="150" y="380" width="150" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="162" y="401" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">waiting-credentials</text>
+  <text x="162" y="417" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">MissingTemplateValue</text>
+  <text x="162" y="429" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不重试，等引用更新</text>
+
+  <rect x="430" y="380" width="150" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="442" y="401" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">reconnecting</text>
+  <text x="442" y="417" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">attempt / maxAttempts</text>
+  <text x="442" y="429" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">nextRetryAtMs · lastError</text>
+
+  <rect x="730" y="380" width="150" height="54" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="742" y="401" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">failed</text>
+  <text x="742" y="417" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">gave-up / disabled</text>
+  <text x="742" y="429" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">工具已注销，不再重试</text>
+
+  <line x1="300" y1="207" x2="430" y2="207" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="306" y="199" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">handshake + 首次 listTools 成功</text>
+  <text x="306" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">指令在这一刻才发布</text>
+
+  <line x1="505" y1="234" x2="505" y2="380" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="513" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">onclose / 调用失败</text>
+  <text x="513" y="313" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">工具先保留</text>
+
+  <path d="M 455 380 V 352 H 285 V 234" fill="none" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="300" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">timer 到，再试一次</text>
+  <text x="300" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">500ms · 1s · 2s · 4s … 30s</text>
+
+  <line x1="580" y1="407" x2="730" y2="407" stroke="#bf4520" stroke-width="1" marker-end="url(#f02-r)"/>
+  <text x="586" y="399" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">第 11 次失败 / reconnect 关闭</text>
+
+  <line x1="225" y1="234" x2="225" y2="380" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="232" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">模板缺值</text>
+  <text x="232" y="303" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">不进重连预算</text>
+
+  <line x1="170" y1="380" x2="170" y2="234" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="92" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">credentials/</text>
+  <text x="92" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">reference-updated</text>
+
+  <line x1="580" y1="207" x2="730" y2="207" stroke="#2d3142" stroke-width="1" marker-end="url(#f02-k)"/>
+  <text x="586" y="199" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">dispose()</text>
+
+  <path d="M 860 380 V 234" fill="none" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-a)"/>
+  <text x="866" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">插件卸载</text>
+
+  <rect x="40" y="480" width="560" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.08em" fill="#bf4520">三个预算，三个不同的失败含义</text>
+  <text x="54" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">启动：startupTimeoutMs 同时包住模板解析、握手与首次 listTools，默认 30s；超时按普通连接失败处理</text>
+  <text x="54" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">退避：一次 outage 共享 maxAttempts=10 的预算，延迟 500ms 起翻倍，30s 封顶</text>
+  <text x="54" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">关闭：5s 内没确认关干净就记 cleanup incomplete，后续 restart 被拒绝，直到重启 Host</text>
+
+  <rect x="620" y="480" width="300" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="634" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.08em" fill="#bf4520">模型此时看到什么</text>
+  <text x="634" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">connected：全量工具 + 指令章节</text>
+  <text x="634" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">reconnecting：旧工具表，调用立刻报错</text>
+  <text x="634" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">failed：下一轮 header 少掉工具 + tool-removal</text>
+</svg>

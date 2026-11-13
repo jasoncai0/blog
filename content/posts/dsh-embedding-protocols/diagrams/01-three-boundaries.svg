@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">图 1 · 三种嵌入的边界</title>
+  <desc id="f01-desc">SDK 由宿主 spawn 子进程，ACP 由编辑器启动 agent，gateway 由 dsh 监听端口；进程归属、传输与事件范围各不相同。</desc>
+  <defs>
+    <marker id="f01-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f01-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f5d75"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="46" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">图 1 · 三种嵌入的边界</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">三条路径共用同一套 agent 与 session 服务，差别在进程边界画在哪。</text>
+  <text x="48" y="96" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">SDK</text>
+  <rect x="48" y="104" width="280" height="310" rx="8" fill="#ffffff" fill-opacity="0.35" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <rect x="64" y="120" width="248" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="138" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">宿主应用（任意语言）</text>
+  <text x="76" y="153" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">HarnessClient.spawn</text>
+  <text x="76" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">维护 id → Promise</text>
+  <text x="76" y="179" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">订阅 session.event</text>
+  <polyline points="188,212 188,244" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f01-arrow)"/>
+  <text x="198" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#bf4520" text-anchor="start">stdio</text>
+  <rect x="64" y="252" width="248" height="92" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="76" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">dsh 子进程</text>
+  <text x="76" y="285" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">agent-loop + session</text>
+  <text x="76" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">全量转发事件</text>
+  <text x="76" y="311" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">stdio，换行分帧</text>
+  <text x="64" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">宿主控制生命周期；断开即重启</text>
+  <text x="64" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">事件覆盖 runtime 内全部 session</text>
+  <text x="340" y="96" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">ACP</text>
+  <rect x="340" y="104" width="280" height="310" rx="8" fill="#ffffff" fill-opacity="0.35" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <rect x="356" y="120" width="248" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="368" y="138" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">编辑器（client）</text>
+  <text x="368" y="153" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">initialize / session/prompt</text>
+  <text x="368" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">消费 session/update</text>
+  <text x="368" y="179" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">一次性权限批准</text>
+  <polyline points="480,212 480,244" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f01-arrow)"/>
+  <text x="490" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#bf4520" text-anchor="start">stdio</text>
+  <rect x="356" y="252" width="248" height="92" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="368" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">agent 进程（server）</text>
+  <text x="368" y="285" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">agent-loop + session</text>
+  <text x="368" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">只转发本会话</text>
+  <text x="368" y="311" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">stdio，JSON-RPC</text>
+  <text x="356" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">编辑器控制生命周期；resume 不重放</text>
+  <text x="356" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">更新按会话串行，只发已提交语义</text>
+  <text x="632" y="96" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520" text-anchor="start">GATEWAY</text>
+  <rect x="632" y="104" width="280" height="310" rx="8" fill="#ffffff" fill-opacity="0.35" stroke="#d8d8d8" stroke-dasharray="4 4"/>
+  <rect x="648" y="120" width="248" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="660" y="138" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">浏览器 × N（多个 client）</text>
+  <text x="660" y="153" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">cookie + Peer</text>
+  <text x="660" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">HTTP 一元 + WS mux</text>
+  <text x="660" y="179" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">自己维护 cursor</text>
+  <polyline points="772,212 772,244" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f01-arrow)"/>
+  <text x="782" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="400" fill="#bf4520" text-anchor="start">WS + HTTP</text>
+  <rect x="648" y="252" width="248" height="92" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="660" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="start">dsh Host</text>
+  <text x="660" y="285" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">webserver + connection</text>
+  <text x="660" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">按 principal 过滤</text>
+  <text x="660" y="311" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">快照 + 严格 seq</text>
+  <text x="648" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">每请求一个 Peer；按资源授权过滤</text>
+  <text x="648" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="400" fill="#4f5d75" text-anchor="start">多客户端共享一个 Host</text>
+  <text x="48" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing=".12em" fill="#bf4520">HOW TO CHOOSE</text>
+  <rect x="48" y="466" width="280" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="62" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">一次性任务</text>
+  <text x="62" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">headless 跑完即退；SDK 由宿主起停</text>
+  <text x="62" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">接受断线重跑，不需要补发</text>
+  <rect x="340" y="466" width="280" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="354" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">编辑器插件</text>
+  <text x="354" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">ACP，stdio，单客户端</text>
+  <text x="354" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">resume 不重放，界面自己对齐</text>
+  <rect x="632" y="466" width="280" height="66" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="646" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">交互式多用户</text>
+  <text x="646" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">gateway，cookie + Peer + 资源授权</text>
+  <text x="646" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">只有它承诺 gap-free 与补页</text>
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">共同底座：同一份 session 事件日志、同一个 agent loop、同一套工具执行器。</text>
+</svg>

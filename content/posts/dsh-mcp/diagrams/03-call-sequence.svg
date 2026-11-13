@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f03-t f03-d">
+  <title id="f03-t">一次 MCP 工具调用的时序</title>
+  <desc id="f03-d">模型发出 tool-call，共享流水线做参数快照与 pre-execute（可能审批），MCP 桥检查 taskSupport 后经 SDK 发出 tools/call，服务器返回结果；桥校验 schema、把 isError 转成异常、投影内容，流水线把 tool/result 写回会话。</desc>
+  <defs>
+    <marker id="f03-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="960" height="640" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S2-05 / ONE TOOL CALL</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次 MCP 工具调用的时序</text>
+  <text x="40" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">审批、guard、超时都在共享流水线里，MCP 桥只负责协议调用与结果投影</text>
+
+  <text x="110" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">MODEL</text>
+  <text x="300" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">PIPELINE</text>
+  <text x="300" y="119" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">prepare · ask · guard</text>
+  <text x="490" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">MCP BRIDGE</text>
+  <text x="490" y="119" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">tools.ts</text>
+  <text x="670" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">SDK</text>
+  <text x="670" y="119" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">Client</text>
+  <text x="840" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.06em" fill="#4f5d75" text-anchor="middle">SERVER</text>
+  <text x="840" y="119" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6" text-anchor="middle">外部进程</text>
+
+  <line x1="110" y1="136" x2="110" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="300" y1="136" x2="300" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="490" y1="136" x2="490" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="670" y1="136" x2="670" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="840" y1="136" x2="840" y2="570" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+
+  <line x1="110" y1="168" x2="300" y2="168" stroke="#2d3142" stroke-width="1" marker-end="url(#f03-k)"/>
+  <text x="120" y="161" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">tool-call：mcp__pg__query</text>
+  <text x="120" y="181" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">arguments 来自模型</text>
+
+  <path d="M 300 210 h 52 v 28 h -52" fill="none" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#f03-a)"/>
+  <text x="360" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">参数快照 + deepFreeze</text>
+  <text x="360" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">pre-execute 可返回 ask</text>
+
+  <line x1="300" y1="280" x2="490" y2="280" stroke="#2d3142" stroke-width="1" marker-end="url(#f03-k)"/>
+  <text x="308" y="273" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">execute(exec)</text>
+  <text x="308" y="293" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">allow 之后才到这里</text>
+
+  <path d="M 490 322 h 46 v 26 h -46" fill="none" stroke="#8a93a6" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#f03-a)"/>
+  <text x="544" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">taskSupport=required 抛错</text>
+  <text x="544" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">非对象参数 → {}</text>
+
+  <line x1="490" y1="388" x2="670" y2="388" stroke="#2d3142" stroke-width="1" marker-end="url(#f03-k)"/>
+  <text x="498" y="381" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">callTool(raw, args, 60s)</text>
+  <line x1="670" y1="388" x2="840" y2="388" stroke="#2d3142" stroke-width="1" marker-end="url(#f03-k)"/>
+  <text x="690" y="381" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">tools/call</text>
+
+  <line x1="840" y1="430" x2="670" y2="430" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f03-a)"/>
+  <text x="700" y="423" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">result（content / structuredContent）</text>
+
+  <line x1="670" y1="466" x2="490" y2="466" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f03-a)"/>
+  <text x="498" y="459" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">CallToolResult</text>
+
+  <path d="M 490 502 h 46 v 26 h -46" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#f03-r)"/>
+  <text x="544" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">isError → 抛异常</text>
+  <text x="544" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">schema 校验 · 内容投影</text>
+
+  <line x1="490" y1="536" x2="300" y2="536" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f03-a)"/>
+  <text x="308" y="529" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">{content, structuredContent}</text>
+
+  <line x1="300" y1="566" x2="110" y2="566" stroke="#2d3142" stroke-width="1" marker-end="url(#f03-k)"/>
+  <text x="118" y="559" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">tool/result，或 isError 文本</text>
+
+  <rect x="40" y="584" width="880" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="602" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">超时只让等待方放手：withDeadline 到点后服务器可能仍在执行，写操作不要假定未提交</text>
+  <text x="54" y="618" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">结果投影：image 走附件系统，resource_link 变成一行文本，audio 与 embedded resource 给明确 unsupported 诊断</text>
+</svg>

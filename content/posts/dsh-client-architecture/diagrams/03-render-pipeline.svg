@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d3-title f01-d3-desc">
+  <title id="f01-d3-title">从事件窗口到 DOM 的渲染管线</title>
+  <desc id="f01-d3-desc">持久事件与瞬态 live chunk 进入 assembler，按 kind 与 id 折叠成 Context；Definition 产出带 key 与 visibility 的视图节点，交给 keyed slot，再由 React 渲染成 DOM。下方列出五条改变窗口的路径。</desc>
+  <defs>
+    <marker id="f01-d3-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">RENDER · EVENT → CONTEXT → NODE → DOM</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">渲染的输入是事件窗口，不是消息数组</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#4f5d75">一条事件只做一次折叠：match 判定归属，start 建 State，update 改 scalar；物化出的节点才进入 slot 分发。</text>
+
+  <!-- stage 1 -->
+  <rect x="48" y="124" width="190" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">1 · 输入</text>
+  <text x="64" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">{ type: 'event',</text>
+  <text x="64" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">  event }</text>
+  <text x="64" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">持久日志条目</text>
+  <text x="64" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">assistant/</text>
+  <text x="64" y="244" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">live-chunk</text>
+  <text x="64" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">瞬态，只在内存</text>
+  <text x="64" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">换窗来源：open、page()、</text>
+  <text x="64" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">重连 baseline。</text>
+
+  <!-- stage 2 -->
+  <rect x="274" y="124" width="222" height="196" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="290" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">2 · 折叠 · assembler.ts</text>
+  <text x="290" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">match(event)</text>
+  <text x="290" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">→ { id, role }</text>
+  <text x="290" y="210" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">start() 建 State</text>
+  <text x="290" y="228" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">update() 改 scalar</text>
+  <text x="290" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">flush() → replace | apply</text>
+  <text x="290" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每个 Session 一个 assembler，</text>
+  <text x="290" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每个 target 一个 builder。</text>
+  <text x="290" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">key = (kind, id)</text>
+
+  <!-- stage 3 -->
+  <rect x="532" y="124" width="196" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="548" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">3 · 视图节点</text>
+  <text x="548" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">key · kind · id</text>
+  <text x="548" y="194" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">anchorSeq · location</text>
+  <text x="548" y="216" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">visibility: 'hidden'</text>
+  <text x="548" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">data: 该 target 的类型</text>
+  <text x="548" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">节点一旦发布就必须</text>
+  <text x="548" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">返回同一个 key；撤回</text>
+  <text x="548" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">用 hidden，不用 null。</text>
+  <text x="548" y="310" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">groupTree 决定行位置</text>
+
+  <!-- stage 4 -->
+  <rect x="764" y="124" width="148" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="780" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">4 · 渲染</text>
+  <text x="780" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">keyed slot</text>
+  <text x="780" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">React 组件</text>
+  <text x="780" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">DOM</text>
+  <text x="780" y="244" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">data-chat-</text>
+  <text x="780" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">anchor-key</text>
+  <text x="780" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">锚点让滚动与</text>
+  <text x="780" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">跳转不依赖</text>
+  <text x="780" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">组件树形状。</text>
+
+  <path d="M 238 222 H 274" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+  <path d="M 496 222 H 532" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+  <path d="M 728 222 H 764" stroke="#8a93a6" stroke-width="1.2" fill="none" marker-end="url(#f01-d3-a)"/>
+
+  <!-- five window paths -->
+  <text x="48" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#4f5d75">五条改变窗口的路径</text>
+  <rect x="48" y="362" width="160" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">replace</text>
+  <text x="60" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">open / 重连</text>
+  <rect x="220" y="362" width="160" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="232" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">prepend</text>
+  <text x="232" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">page() 更早一页</text>
+  <rect x="392" y="362" width="160" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="404" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">append</text>
+  <text x="404" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">实时事件</text>
+  <rect x="564" y="362" width="160" height="44" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 4"/>
+  <text x="576" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">flush 失败</text>
+  <text x="576" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">整窗重放，rebuilt</text>
+  <rect x="736" y="362" width="176" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="748" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">baseline</text>
+  <text x="748" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">每代快照替换窗口</text>
+
+  <!-- note -->
+  <rect x="48" y="428" width="864" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="450" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">热路径成本按注册的 Definition 数算：注册 D 个，一条新事件只做 D 次 match，Context key 查询常数时间；不遍历窗口，也不遍历已渲染节点。</text>
+  <text x="64" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">同一 callId 的工具 delta 与后续 tool/call 落在同一个 Context：最早一次 Match 调 start，之后的调 update，准备态节点等名称齐了才发布。</text>
+  <text x="64" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">窗口本身不存「一条消息」：Assistant 行是 assistant/message 里内嵌的紧凑 stream，历史回放与实时增量走同一个折叠入口。</text>
+  <text x="64" y="510" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">ui-conversation/src/client/conversation/assembler.ts:399 flush · :1002 replace · :1003 apply</text>
+
+  <text x="48" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">装配层不认识「Chat」「Trajectory」这些名字：它只接收解析后的 target id，因此同一份折叠结果可以喂多个视图。</text>
+  <text x="48" y="578" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8a93a6">视图节点是可序列化的数据结构，渲染器只负责把 data 交给组件；组件里没有事件、没有序号、没有连接。</text>
+</svg>
