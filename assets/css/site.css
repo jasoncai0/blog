@@ -566,6 +566,12 @@ mark.note-hl {
   border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer;
 }
 .nt-acts button:hover { background: rgba(45, 49, 66, 0.06); }
+.note-items li.is-stale a { color: var(--soft); text-decoration: line-through; }
+.note-stale { font-size: 10px; color: var(--accent); margin-left: 6px; letter-spacing: 0.02em; }
+.nt-stale-tip {
+  margin: 0 0 8px; padding: 6px 8px; font-size: 11px; line-height: 1.5;
+  color: var(--soft); background: rgba(191, 69, 32, 0.07); border-radius: 5px;
+}
 .note-mark {
   font-size: 11px; color: var(--accent); letter-spacing: 0.01em;
 }

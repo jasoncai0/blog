@@ -105,6 +105,42 @@ export function locate(anchor, body) {
   if (only >= 0 && text.indexOf(anchor.q, only + 1) < 0) {
     return [{ node: block, start: only, end: only + anchor.q.length }];
   }
+  // 结构也变了（插了段落、换了顺序）：块下标失效，去全篇按「原文 + 前后文」投票。
+  return locateEverywhere(anchor, body);
+}
+
+function commonSuffix(a, b) {
+  let n = 0;
+  while (n < a.length && n < b.length && a[a.length - 1 - n] === b[b.length - 1 - n]) n += 1;
+  return n;
+}
+
+function commonPrefix(a, b) {
+  let n = 0;
+  while (n < a.length && n < b.length && a[n] === b[n]) n += 1;
+  return n;
+}
+
+function locateEverywhere(anchor, body) {
+  const candidates = [];
+  for (const block of body.children) {
+    if (blockedInside(block)) continue;
+    const text = block.textContent;
+    let at = text.indexOf(anchor.q);
+    while (at >= 0) {
+      const score =
+        commonSuffix(text.slice(0, at), anchor.pre) + commonPrefix(text.slice(at + anchor.q.length), anchor.post);
+      candidates.push({ node: block, start: at, end: at + anchor.q.length, score });
+      at = text.indexOf(anchor.q, at + 1);
+    }
+  }
+  if (!candidates.length) return [];
+  const best = Math.max(...candidates.map((c) => c.score));
+  const top = candidates.filter((c) => c.score === best);
+  // 只有一处、或上下文足够多（≥8 字）时才认，避免改出多处同样的句子后乱标。
+  if (top.length === 1 && (best >= 8 || candidates.length === 1)) {
+    return [{ node: top[0].node, start: top[0].start, end: top[0].end }];
+  }
   return [];
 }
 
@@ -316,16 +352,23 @@ function initNotes() {
   const slug = body.dataset.progressPost;
 
   let all = readNotes(safeStore());
+  // 定位不到的批注（原文被改掉了）：列表里标出来，而不是悄悄消失。
+  let staleIds = new Set();
   const paintAll = () => {
     for (const mark of body.querySelectorAll("mark.note-hl")) {
       const parent = mark.parentNode;
       mark.replaceWith(...mark.childNodes);
       parent.normalize();
     }
+    const next = new Set();
     for (const note of notesFor(all, slug)) {
       const wrapped = paint(body, note, note.id);
-      if (!wrapped) console.debug("笔记锚点失配，跳过", note.id);
+      if (!wrapped) {
+        next.add(note.id);
+        console.debug("笔记锚点失配，跳过", note.id);
+      }
     }
+    staleIds = next;
   };
   paintAll();
 
@@ -357,10 +400,10 @@ function initNotes() {
   const fmtTime = (t) =>
     new Date(t).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
-  function openPopById(id, { focus = true } = {}) {
+  function openPopById(id, { focus = true, anchorEl = null } = {}) {
     const mark = body.querySelector(`mark.note-hl[data-note="${id}"]`);
     const note = notesFor(all, slug).find((n) => n.id === id);
-    if (!mark || !note) return;
+    if (!note || (!mark && !anchorEl)) return;
     closePop();
 
     pop = document.createElement("div");
@@ -473,7 +516,13 @@ function initNotes() {
     pop.append(head, first, list, replyBox, foot);
     document.body.append(pop);
 
-    const rect = mark.getBoundingClientRect();
+    if (!mark) {
+      const hint = document.createElement("p");
+      hint.className = "nt-stale-tip";
+      hint.textContent = "原文改动过，这句已经定位不到；批注内容还在，可以复制或删除。";
+      pop.insertBefore(hint, first);
+    }
+    const rect = (mark || anchorEl).getBoundingClientRect();
     // 优先放在高亮下面；下面放不下就翻到上面，两边都放不下才退回「贴着视口底」。
     const height = pop.offsetHeight;
     const below = rect.bottom + 8;
@@ -595,10 +644,21 @@ function initNotes() {
       const snippet = note.q.length > 28 ? `${note.q.slice(0, 28)}…` : note.q;
       const text = (note.thread[0]?.text || "").split("\n")[0].slice(0, 24);
       link.textContent = text ? `${snippet} — ${text}` : snippet;
+      if (staleIds.has(note.id)) {
+        li.classList.add("is-stale");
+        link.title = "原文改动过，这句定位不到了";
+        const tag = document.createElement("span");
+        tag.className = "note-stale";
+        tag.textContent = "定位不到";
+        li.append(tag);
+      }
       link.addEventListener("click", (event) => {
         event.preventDefault();
         const mark = body.querySelector(`mark.note-hl[data-note="${note.id}"]`);
-        if (!mark) return;
+        if (!mark) {
+          if (staleIds.has(note.id)) openPopById(note.id, { focus: false, anchorEl: link });
+          return;
+        }
         // 高亮停在视口上方 140px：下面留出放气泡的地方，不会被自己挡住。
         const y = mark.getBoundingClientRect().top + window.scrollY - 140;
         window.scrollTo({ top: Math.max(0, y), behavior: "instant" });

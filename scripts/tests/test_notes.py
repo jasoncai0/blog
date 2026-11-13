@@ -262,6 +262,43 @@ def test_note_list_click_opens_thread_floors(page, base):
     assert "这是 AI 的回复" in page.locator(".nt-thread").inner_text()
 
 
+def test_note_relocates_when_paragraphs_shift(page, base):
+    """编辑文章插了段落：块下标失效，靠原文 + 前后文重新找回。"""
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    anchor = page.evaluate(ANCHOR_JS, "收敛是必要条件")
+    assert anchor
+    shifted = dict(anchor, block=anchor["block"] + 2)
+    seed(page, {SLUG: [{
+        "id": "n3", "q": shifted["q"], "pre": shifted["pre"], "post": shifted["post"],
+        "block": shifted["block"], "t": 1,
+        "thread": [{"author": "我", "text": "改结构后还在吗", "t": 1}],
+    }]})
+    page.reload()
+    page.wait_for_timeout(500)
+    assert page.locator("mark.note-hl").count() >= 1, "块下标变了也应该重新定位到"
+    assert page.locator(".note-list .note-stale").count() == 0
+
+
+def test_note_whose_text_was_edited_is_marked_stale(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed(page, {SLUG: [{
+        "id": "n4", "q": "这句原文已经被删掉了", "pre": "", "post": "", "block": 3, "t": 1,
+        "thread": [{"author": "我", "text": "旧批注", "t": 1}],
+    }]})
+    page.reload()
+    page.wait_for_timeout(500)
+    assert page.locator("mark.note-hl").count() == 0
+    item = page.locator(".note-list .note-items li").first
+    assert "is-stale" in (item.get_attribute("class") or "")
+    assert item.locator(".note-stale").inner_text() == "定位不到"
+    item.locator("a").click()
+    page.wait_for_selector(".nt-pop", state="visible", timeout=5000)
+    assert "定位不到" in page.locator(".nt-stale-tip").inner_text()
+    assert "旧批注" in page.locator(".nt-input").input_value()
+
+
 def test_export_produces_json(page, base):
     page.goto(base + ARTICLE)
     page.wait_for_timeout(300)
@@ -448,6 +485,8 @@ CASES = [
     (test_escape_closes_the_bubble, False, DESKTOP),
     (test_note_list_jumps_to_highlight, False, {**DESKTOP, "accept_downloads": True}),
     (test_note_list_click_opens_thread_floors, False, DESKTOP),
+    (test_note_relocates_when_paragraphs_shift, False, DESKTOP),
+    (test_note_whose_text_was_edited_is_marked_stale, False, DESKTOP),
     (test_export_produces_json, False, {**DESKTOP, "accept_downloads": True}),
     (test_home_marks_articles_with_notes, False, DESKTOP),
     (test_selection_spanning_inline_code_is_wrapped_in_parts, False, DESKTOP),
