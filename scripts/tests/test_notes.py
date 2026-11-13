@@ -430,6 +430,8 @@ def test_seeded_note_inside_figure_does_not_break_the_svg(page, base):
     page.wait_for_timeout(500)
     assert page.locator(".post-body svg mark").count() == 0, "不该往 SVG 里塞 mark"
     assert page.evaluate("() => document.querySelectorAll('.post-body svg text').length") > 10
+    tag = page.locator(".note-list .note-stale").first
+    assert tag.inner_text() == "图内文字", "图内那条应该标成「图内文字」而不是「定位不到」"
 
 
 def test_note_list_moves_to_the_right_rail_on_wide_screen(page, base):

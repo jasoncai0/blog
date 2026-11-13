@@ -352,20 +352,23 @@ function initNotes() {
   const slug = body.dataset.progressPost;
 
   let all = readNotes(safeStore());
-  // 定位不到的批注（原文被改掉了）：列表里标出来，而不是悄悄消失。
-  let staleIds = new Set();
+  // 定位不到的批注：列表里标出来，而不是悄悄消失。区分两种原因——
+  // 「图内文字」是老笔记落在 SVG 里，本来就包不了 mark；「edited」是原文真的改了。
+  let staleIds = new Map();
   const paintAll = () => {
     for (const mark of body.querySelectorAll("mark.note-hl")) {
       const parent = mark.parentNode;
       mark.replaceWith(...mark.childNodes);
       parent.normalize();
     }
-    const next = new Set();
+    const next = new Map();
+    const bodyText = body.textContent;
     for (const note of notesFor(all, slug)) {
       const wrapped = paint(body, note, note.id);
       if (!wrapped) {
-        next.add(note.id);
-        console.debug("笔记锚点失配，跳过", note.id);
+        const reason = bodyText.includes(note.q) ? "figure" : "edited";
+        next.set(note.id, reason);
+        console.debug("笔记锚点失配，跳过", note.id, reason);
       }
     }
     staleIds = next;
@@ -519,7 +522,10 @@ function initNotes() {
     if (!mark) {
       const hint = document.createElement("p");
       hint.className = "nt-stale-tip";
-      hint.textContent = "原文改动过，这句已经定位不到；批注内容还在，可以复制或删除。";
+      hint.textContent =
+        staleIds.get(note.id) === "figure"
+          ? "这条批注划在示意图里，图内文字不能高亮；批注内容还在，可以复制或删除。"
+          : "原文改动过，这句已经定位不到；批注内容还在，可以复制或删除。";
       pop.insertBefore(hint, first);
     }
     const rect = (mark || anchorEl).getBoundingClientRect();
@@ -645,11 +651,12 @@ function initNotes() {
       const text = (note.thread[0]?.text || "").split("\n")[0].slice(0, 24);
       link.textContent = text ? `${snippet} — ${text}` : snippet;
       if (staleIds.has(note.id)) {
+        const figure = staleIds.get(note.id) === "figure";
         li.classList.add("is-stale");
-        link.title = "原文改动过，这句定位不到了";
+        link.title = figure ? "这条批注划在示意图里，无法高亮" : "原文改动过，这句定位不到了";
         const tag = document.createElement("span");
         tag.className = "note-stale";
-        tag.textContent = "定位不到";
+        tag.textContent = figure ? "图内文字" : "定位不到";
         li.append(tag);
       }
       link.addEventListener("click", (event) => {
