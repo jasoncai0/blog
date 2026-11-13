@@ -650,14 +650,14 @@ function initNotes() {
       const snippet = note.q.length > 28 ? `${note.q.slice(0, 28)}…` : note.q;
       const text = (note.thread[0]?.text || "").split("\n")[0].slice(0, 24);
       link.textContent = text ? `${snippet} — ${text}` : snippet;
+      let tag = null;
       if (staleIds.has(note.id)) {
         const figure = staleIds.get(note.id) === "figure";
         li.classList.add("is-stale");
         link.title = figure ? "这条批注划在示意图里，无法高亮" : "原文改动过，这句定位不到了";
-        const tag = document.createElement("span");
+        tag = document.createElement("span");
         tag.className = "note-stale";
         tag.textContent = figure ? "图内文字" : "定位不到";
-        li.append(tag);
       }
       link.addEventListener("click", (event) => {
         event.preventDefault();
@@ -677,6 +677,7 @@ function initNotes() {
         openPopById(note.id, { focus: false });
       });
       li.append(link);
+      if (tag) li.append(tag);
       items.append(li);
     }
 
