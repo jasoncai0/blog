@@ -1,15 +1,15 @@
 ---
 title: "KV Cache 解剖：从重复计算到分页调度的显存账本"
 date: "2026-11-13T16:30:00+08:00"
-summary: "从 attention 公式一路讲到 PagedAttention 的块表和状态机：KV Cache 存什么、吃多少显存、为什么 decode 被带宽卡住，以及 GQA/MLA、量化、驱逐、PD 分离各自在省什么。"
-description: "一篇把 KV Cache 的数学、显存账本、分页调度和长上下文手段串起来的深度笔记。"
+summary: "从 attention 公式一路讲到 PagedAttention 的块表、状态机和 cache domain 路由：KV Cache 存什么、吃多少显存、为什么 decode 被带宽卡住，以及压缩/量化/驱逐/PD 分离各自在省什么、代价是什么。"
+description: "一篇把 KV Cache 的数学、显存账本、分页调度、前缀命中与集群路由串起来的深度笔记。"
 tags: ["inference", "architecture"]
 slug: "kv-cache-anatomy"
 ---
 
-这篇文档把 KV Cache 从一条 attention 公式讲到一整条推理流水线：先证明它为什么成立、存的到底是什么，再算清它吃多少显存、为什么 decode 会被显存带宽卡住；然后进入工程侧——PagedAttention 的块表、连续批处理、前缀缓存、块的生命周期状态机，最后是 GQA/MLA、量化、驱逐、PD 分离这些手段各自在省什么、代价是什么。
+这篇文档把 KV Cache 从一条 attention 公式讲到一整条推理流水线：先证明它为什么成立、存的到底是什么，再算清它吃多少显存、为什么 decode 会被显存带宽卡住；然后进入工程侧——PagedAttention 的块表、连续批处理、前缀缓存、上下文压缩对命中的影响、块的生命周期状态机、cache domain 与路由，最后是 GQA/MLA、量化、驱逐、PD 分离这些手段各自在省什么、代价是什么。
 
-如果你已经知道“KV Cache 就是缓存 Key 和 Value”，这篇补的是中间那层：为什么只缓存 K/V 不缓存 Q，为什么 70B 模型 8K 上下文的 cache 能到 2.5 GiB，为什么长上下文 decode 会越来越慢，为什么 vLLM 要把 cache 切成 16 个 token 一块，以及为什么“前缀缓存命中”和“语义缓存”完全不是一回事。
+如果你已经知道“KV Cache 就是缓存 Key 和 Value”，这篇补的是中间那层：为什么只缓存 K/V 不缓存 Q，为什么 70B 模型 8K 上下文的 cache 能到 2.5 GiB，为什么长上下文 decode 会越来越慢，为什么压缩一段历史会让后面的前缀缓存全部失效，为什么 vLLM 要把 cache 切成 16 个 token 一块，以及为什么“前缀缓存命中”和“语义缓存”完全不是一回事。
 
 先给结论：KV Cache 用显存换计算，把每步 O(S²) 的重算降成 O(S) 的读取；它不改变模型输出，但改变了整个推理系统的瓶颈——从算力转到显存容量与带宽。后面所有的工程问题，都是这笔交易的利息。
 
@@ -203,6 +203,42 @@ PagedAttention 借用操作系统的分页：
 
 命中后的收益主要在 TTFT：prefill 的计算量从 O(S²) 降到 O(S_new × S)，因为旧 token 的 K/V 直接读现成的，只需要新 token 去 attend。对 8K prompt、90% 命中，在 prefill 计算主导的场景，TTFT 可能降一个数量级。
 
+### 5.4 压缩之后，前缀缓存还剩多少
+
+上下文压缩和 KV Cache 压缩是两件事。前者改的是送进模型的 token 序列，后者改的是已经存下来的 K/V 的精度、数量或位置。改 token 序列会让前缀缓存失效；改精度或数量通常不改变 token 的身份，命中逻辑可以保留。
+
+前缀缓存匹配的是“从第一个 token 开始、连续完整的块”。压缩如果改写了 system、开头示例或历史摘要，命中点就停在第一个被改写的块之前；后面的 token 即使没变，也因为父块哈希对不上而无法命中。
+
+表 2：不同压缩策略对前缀命中的影响
+
+| 做法 | 前缀是否稳定 | 命中情况 | 主要代价 |
+| --- | --- | --- | --- |
+| 只压缩新输入，历史不动 | 稳定 | 历史全命中，只 prefill 新输入 | 压缩收益有限 |
+| 摘要追加，不重写旧摘要 | 单调增长 | 上一轮摘要仍命中 | 摘要越堆越长，最终要 compaction |
+| 每轮重写历史摘要 | 每轮都变 | 只命中稳定 system | 每轮多 prefill 摘要 |
+| 压缩 system / 开头 | 第一块就变 | 几乎全 miss | 最伤命中率 |
+| 每 N 轮 compaction | 周期稳定 | 两次 compaction 之间命中高 | 每次 compaction 一次大 miss |
+| KV 量化 | 不变 | 命中逻辑不变 | 复用有损 K/V，精度下降 |
+| 驱逐 / 丢 token | 变了 | 被丢块之后无法命中 | 信息不可恢复 |
+
+算一笔账。system 2K、history 30K、每轮新增 1K：
+
+- 不压缩：命中 32K，prefill 1K。
+- 每轮把 history 压成 3K 摘要：system 2K 命中，摘要 3K + 新输入 1K 要 prefill，共 4K；命中率从 97% 掉到 33%。
+- 摘要追加而不是重写：上一轮摘要已在 cache，命中 5K，prefill 1K；但摘要会线性增长，迟早要 compaction。
+
+命中率只说明“有多少 token 不用算”，不说明“还剩多少 token 要算”。33% 的命中率听起来差，但 4K prefill 仍然远小于不压缩时的 33K。反过来，热 cache 下每轮重写摘要，会把本来 1K 的 prefill 变成 4K，压缩反而更慢；冷 cache 下，压缩后的 4K 比 33K 便宜。要不要压缩，得看 cache 温度和 prefill 省下的时间，不能只看命中率。
+
+如果要在压缩的前提下保住前缀缓存，按这五条做：
+
+1. 稳定前缀放最前，且 token 级不变：system、工具定义、few-shot 示例不要每轮重排。
+2. 只压新输入，或把摘要追加到末尾；不要每轮重写历史摘要。
+3. 把 compaction 做成周期任务，而不是每轮都做；两次 compaction 之间让前缀保持稳定。
+4. cache key 要包含模型、adapter、dtype/量化、位置编码、压缩模板；换任何一个都当作新前缀。
+5. 监控 `cache_hit_tokens`、`prefill_tokens`、TTFT 三个数；命中率单独看会骗人。
+
+最后区分两种“压缩”：KV 量化把每个元素从 BF16 压到 INT8/INT4，token 序列没变，在同一 engine、同一 cache 格式下前缀缓存照样命中，但复用的是有损的 K/V；驱逐把整块 token 丢掉，缓存命中链在丢掉的位置断开，信息也回不来。前者是精度问题，后者是信息问题。
+
 ## 六、块的生命周期：一个状态机
 
 {{< fig "diagrams/07-block-lifecycle.svg" "KV 块的状态机：Free → Writing → Sealed → Shared/Evictable，以及写时复制和请求侧抢占（preempt）的位置。三条不变量是排查泄漏和前缀污染的依据。" >}}
@@ -268,7 +304,7 @@ FP8 是现在最稳的一档：8-bit，误差小，Hopper 之后有原生支持�
 - **流水并行（PP）**：每层在不同 stage，cache 也跟着分层；stage 之间只传 activation，不传 cache。
 - **PD 分离**：prefill 池和 decode 池分开，prefill 算完把 KV 传给 decode。好处是两类负载独立扩缩容，长 prompt 不会卡住 decode；代价是 KV 传输。70B、8K 上下文的 cache 是 2.5 GiB，NVLink 900 GB/s 约 3 ms，100 Gb RDMA 约 0.2 s——拓扑决定这笔账是否划算。Mooncake、DistServe 是这条路的代表。
 
-表 2：手段与代价
+表 3：手段与代价
 
 | 手段 | 省什么 | 代价 | 适用 |
 | --- | --- | --- | --- |
@@ -279,6 +315,34 @@ FP8 是现在最稳的一档：8-bit，误差小，Hopper 之后有原生支持�
 | 驱逐 | 容量 | 不可逆的信息丢失 | 流式、长对话 |
 | offload | 显存容量 | PCIe 延迟 | 冷前缀 |
 | PD 分离 | TTFT/TPOT 解耦 | 传输、调度复杂 | 大规模服务 |
+
+### 7.5 cache 落在哪：路由、实例与 HBM
+
+{{< fig "diagrams/10-cache-to-hardware.svg" "KV Cache 的三层落点：逻辑块表只存编号，Engine Replica 持有 cache domain，真正的 K/V 按 TP 切分落在 Node/GPU 的 HBM；跨 domain 走 KV transfer，冷前缀可下沉到远端池。P3/P7/P1 与 TP=4 是示意。" >}}
+
+把视角从单机拉到集群，KV Cache 的落点可以分三层：逻辑块表、推理实例（cache domain）、GPU/HBM。块表只存“L0→P3”这样的编号，P3 真正落在哪张卡、哪块 HBM，由实例的分配器和并行策略决定。
+
+先定义 cache domain：能共享同一份前缀索引、并以足够低的延迟读到同一批 KV 块的引擎集合。一个 vLLM engine 通常就是一个 domain；TP/PP 组是一个逻辑实例，组内切分同一段 cache，不要把它拆成单卡看。两个 engine 即使跑在同一张 GPU 上，只要前缀索引不共享，就是两个 domain；反过来，一个 TP 组跨 4 张卡，仍然是一个 domain。
+
+这解释了随机路由的命中率：N 个副本、每个副本各自维护前缀缓存，用户历史随机落到某一个副本，命中概率约 1/N。会话粘滞能把命中率拉回接近 100%，代价是热点和故障丢 cache；prefix-aware routing 按前缀哈希选副本，利用率更高，但需要一张全局索引；KV 传输/共享存储把 cache 搬到 decode 所在 domain，代价是 2.5 GiB/8K 的搬运时间；PD 分离把 prefill 和 decode 拆池，decode 池必须能低延迟读到 prefill 产出的 cache。
+
+表 4：路由与共享方案
+
+| 方案 | 命中范围 | 代价 | 适用 |
+| --- | --- | --- | --- |
+| session sticky | 同一会话固定副本 | 热点、故障即冷 | 会话型产品 |
+| prefix-aware routing | 按前缀找副本 | 全局索引、冷启动 | 多副本、共享 system |
+| KV transfer | 跨 domain 搬运 | 2.5 GiB/8K；NVLink 3ms / RDMA 0.2s | 跨池、跨节点 |
+| 共享远端池 | 多 domain 读同一池 | 池带宽、协议、TTL | 大规模集群 |
+| PD 分离 | prefill 产物给 decode | 传输、调度复杂 | 长 prompt、分离扩缩容 |
+
+三个容易踩的坑：
+
+- **“同一张 GPU”不等于“同一个 cache domain”**。多个 engine 可以共享 HBM，但前缀索引各自独立；路由到同一张卡也可能 miss。
+- **“同一会话”不等于“同一个 domain”**。跨轮可以迁移，decode 循环里不要每一步迁移；迁移成本要摊到后续 token 上。
+- **cache key 不一致，路由再准也没用**。模型、adapter、dtype/量化、位置编码、block size、压缩模板，任意一项不同都应当视为不同前缀。
+
+一句话：路由选的是能读到这段 cache 的 domain；选不中，就只能重新 prefill，或者付一次 KV 传输。
 
 ## 八、容量规划：把公式落到卡上
 
@@ -325,14 +389,17 @@ cache 预算        = 576 - 130 ≈ 446 GiB
 6. **驱逐不是“只丢不重要的 token”**。attention 权重低不等于信息不重要；被丢的信息不可恢复。
 7. **batch 不是越大越好**。长上下文下，KV 带宽会让吞吐提前饱和，延迟还会线性变差。
 8. **PD 分离不是万能**。KV 传输超过 prefill 省下的时间，就不划算；小模型、短上下文通常没必要。
+9. **压缩上下文和压缩 KV cache 是两件事**。前者改 token 前缀，会让改动点之后的完整块全部 miss；后者改精度或数量，命中逻辑通常不变，但复用值可能已经有损。
+10. **会话粘滞不是绑卡**。要的是 cache 亲和：请求落到能读到这段 cache 的 domain；同一张卡上的两个 engine 也可能各自为政。
 
 ## 十、收束
 
-KV Cache 的本质是一笔交易：用 O(N) 的显存和 O(N) 的读取，换掉 O(N²) 的重算。它把推理的瓶颈从算力搬到显存容量和带宽，于是后面所有的工程问题都围绕四个字展开：
+KV Cache 的本质是一笔交易：用 O(N) 的显存和 O(N) 的读取，换掉 O(N²) 的重算。它把推理的瓶颈从算力搬到显存容量和带宽，于是后面所有的工程问题都围绕五个词展开：
 
 - **少存**：MQA/GQA/MLA、滑动窗口、稀疏/线性注意力。
 - **存紧**：FP8/INT8/INT4、K per-channel、V per-token。
 - **放得下**：PagedAttention、前缀共享、COW、驱逐、offload。
+- **找得到**：前缀缓存、cache-aware routing、KV 传输、共享池。
 - **传得快**：连续批处理、chunked prefill、PD 分离、NVLink/RDMA。
 
 选型顺序也别反：先看模型结构能省多少，再算容量，再选调度和前缀缓存，最后才动量化和驱逐。反过来做，通常是在给一个已经装不下的系统调 kernel。
@@ -350,4 +417,6 @@ KV Cache 的本质是一笔交易：用 O(N) 的显存和 O(N) 的读取，换�
 - Dao et al., [FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness](https://arxiv.org/abs/2205.14135), NeurIPS 2022.
 - Zhong et al., [DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving](https://arxiv.org/abs/2401.09670), OSDI 2024.
 - Qin et al., [Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving](https://arxiv.org/abs/2407.00079), 2024.
+- Zheng et al., [SGLang: Efficient Execution of Structured Language Model Programs](https://arxiv.org/abs/2312.07104), 2024.
+- vLLM, [Prefix Caching](https://docs.vllm.ai/en/latest/features/prefix_caching.html), 官方文档.
 - Grattafiori et al., [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783), 2024.
