@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="rw4-title rw4-desc">
+  <title id="rw4-title">文件检查点的生命周期：捕获、暂存、提交、重扫、还原</title>
+  <desc id="rw4-desc">五个阶段卡片依次是 tools/execute 捕获、.pending 暂存、tools/post-execute 提交到锚点目录、下一条用户消息时重扫、回退时还原。下方左卡给出快照目录的真实结构，右卡解释为什么不挂在 pre-execute 上。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="rw4-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-REWIND / CHECKPOINT LIFECYCLE</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="18" fill="#2d3142">备份发生在写之前，归组发生在写之后</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">这两个时间点必须分开：内容只有写之前才拿得到，而「这次改动属于哪条用户消息」只有写完之后才确定。</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="40" y="104" width="160" height="180" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="52" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">01  tools/execute</text>
+    <text x="52" y="140" font-size="10" fill="#2d3142">捕获</text>
+    <text x="52" y="160" font-size="8" fill="#4f5d75">只认 write / edit</text>
+    <text x="52" y="176" font-size="8" fill="#4f5d75">路径必须解析到宿主</text>
+    <text x="52" y="192" font-size="8" fill="#4f5d75">真实磁盘读一份原件</text>
+    <text x="52" y="208" font-size="8" fill="#4f5d75">非文件、超上限 → 跳过</text>
+    <text x="52" y="230" font-size="8" fill="#bf4520">ENOENT 也要记：</text>
+    <text x="52" y="244" font-size="8" fill="#bf4520">这条是「创建」，回退时删</text>
+
+    <rect x="224" y="104" width="160" height="180" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="236" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">.pending/</text>
+    <text x="236" y="140" font-size="10" fill="#2d3142">暂存</text>
+    <text x="236" y="160" font-size="8" fill="#4f5d75">key = agent:callId</text>
+    <text x="236" y="176" font-size="8" fill="#4f5d75">copyFile 复制字节</text>
+    <text x="236" y="192" font-size="8" fill="#4f5d75">不解码，不猜编码</text>
+    <text x="236" y="208" font-size="8" fill="#4f5d75">结果 isError → 删</text>
+    <text x="236" y="230" font-size="8" fill="#8a93a6">功能被关掉 → 删</text>
+    <text x="236" y="244" font-size="8" fill="#8a93a6">崩溃残留由过期清理收</text>
+
+    <rect x="408" y="104" width="160" height="180" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="420" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">tools/post-execute</text>
+    <text x="420" y="140" font-size="10" fill="#2d3142">提交</text>
+    <text x="420" y="160" font-size="8" fill="#4f5d75">anchor = 最后一条用户消息</text>
+    <text x="420" y="176" font-size="8" fill="#4f5d75">&lt;anchor&gt;/&lt;callId&gt;.json</text>
+    <text x="420" y="192" font-size="8" fill="#4f5d75">+ .before 原始字节</text>
+    <text x="420" y="208" font-size="8" fill="#4f5d75">同内容 → 存 ref 链接</text>
+    <text x="420" y="230" font-size="8" fill="#bf4520">一轮多次写入：</text>
+    <text x="420" y="244" font-size="8" fill="#bf4520">同一个目录，time 排先后</text>
+
+    <rect x="592" y="104" width="160" height="180" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="604" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">user/message</text>
+    <text x="604" y="140" font-size="10" fill="#2d3142">重扫</text>
+    <text x="604" y="160" font-size="8" fill="#4f5d75">一条用户消息 = 一个边界</text>
+    <text x="604" y="176" font-size="8" fill="#4f5d75">已跟踪文件逐个体检</text>
+    <text x="604" y="192" font-size="8" fill="#4f5d75">字节相同 → 不记</text>
+    <text x="604" y="208" font-size="8" fill="#4f5d75">外部改过 → 补记一条</text>
+    <text x="604" y="230" font-size="8" fill="#8a93a6">补记的 dedup 关闭，</text>
+    <text x="604" y="244" font-size="8" fill="#8a93a6">否则会退化成一条 ref</text>
+
+    <rect x="776" y="104" width="160" height="180" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="788" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">rewind</text>
+    <text x="788" y="140" font-size="10" fill="#2d3142">还原</text>
+    <text x="788" y="160" font-size="8" fill="#4f5d75">只读 anchor ≥ N</text>
+    <text x="788" y="176" font-size="8" fill="#4f5d75">每路径取最早一条</text>
+    <text x="788" y="192" font-size="8" fill="#4f5d75">对照磁盘只动不一致的</text>
+    <text x="788" y="208" font-size="8" fill="#4f5d75">先写日志再动手</text>
+    <text x="788" y="230" font-size="8" fill="#8a93a6">下一张图展开</text>
+  </g>
+
+  <g stroke="#8a93a6" stroke-width="1" fill="none" marker-end="url(#rw4-a)">
+    <line x1="200" y1="194" x2="216" y2="194"/>
+    <line x1="384" y1="194" x2="400" y2="194"/>
+    <line x1="568" y1="194" x2="584" y2="194"/>
+    <line x1="752" y1="194" x2="768" y2="194"/>
+  </g>
+  <text x="40" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">捕获与提交之间可以隔几分钟：里面可能有一次 shell、一次模型请求、一次人工确认。这段时间只有 .pending 里的暂存件存在。</text>
+
+  <rect x="40" y="314" width="440" height="204" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">磁盘上长这样</text>
+  <text x="56" y="356" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">.dsh/rewind-snapshots/session-3f7c/</text>
+  <text x="56" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">  format.json            store 版本 2</text>
+  <text x="56" y="388" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">  41/                    ← 一个锚点组</text>
+  <text x="56" y="404" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">    call-9a.json + call-9a.before</text>
+  <text x="56" y="420" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">    call-9b.json + call-9b.before</text>
+  <text x="56" y="436" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">  52/</text>
+  <text x="56" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">    recheck-52-1f.json + .before</text>
+  <text x="56" y="468" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">  rescue/&lt;opId&gt;/        还原前的抢救副本</text>
+  <text x="56" y="484" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">  journal-&lt;opId&gt;.json    还原意图，原子写</text>
+  <text x="56" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a93a6">目录名必须是数字；非数字目录不会被当成锚点组。</text>
+
+  <rect x="500" y="314" width="420" height="204" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="516" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">为什么不挂在 pre-execute</text>
+  <text x="516" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#2d3142">1  别的插件的 ask 短路会跳过后续监听器</text>
+  <text x="526" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">被拒绝的调用根本不会 dispatch，备份白做。</text>
+  <text x="516" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#2d3142">2  post-execute 才拿得到 result.isError</text>
+  <text x="526" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">写失败不该留下一条「已改过」的记录。</text>
+  <text x="516" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#2d3142">3  around-dispatch 阶段拿到的 exec 已解析</text>
+  <text x="526" y="456" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">arguments 是最终值，不用重跑参数校验。</text>
+  <text x="516" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#bf4520">代价：捕获抛错不能中断调用</text>
+  <text x="526" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">每一步都包在 try/catch 里，失败只写 warn。</text>
+
+  <rect x="40" y="532" width="880" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="550" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">BEST EFFORT, EXPLICITLY</text>
+  <text x="56" y="568" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">检查点是尽力而为：捕获失败就少一条能还原的记录，但不会影响那次写入本身。代价是「回退不了」这件事只能从日志里看出来。</text>
+</svg>

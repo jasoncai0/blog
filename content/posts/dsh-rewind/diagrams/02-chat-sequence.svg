@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="rw2-title rw2-desc">
+  <title id="rw2-title">只回退对话的时序：一条命令、一次 append、一次投影</title>
+  <desc id="rw2-desc">五条生命线是用户、Web 客户端、宿主 executeRewind、agent 与会话日志、Chat 视图。用户点击后客户端发一条 rewind-plugin 命令，宿主先取消当前回合并等待 idle，清空未读插话，规划切点，追加一条带 surfaceOp 的空消息，返回新事件的 seq；客户端据此得到遮蔽区间，把节点标成 hidden，最后把原文回填输入框。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="rw2-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="rw2-ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-REWIND / CHAT SEQUENCE</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="18" fill="#2d3142">只有第 07 步在写，前面五步都在等一个干净的状态</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">回退改的是模型下一次请求看到的东西。所以先让当前回合停下，再把没被读过的插话摘掉，最后才追加标记。</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="40" y="104" width="120" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="100" y="124" font-size="9.5" fill="#2d3142" text-anchor="middle">用户</text>
+    <rect x="215" y="104" width="170" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="300" y="124" font-size="9.5" fill="#2d3142" text-anchor="middle">Web 客户端</text>
+    <rect x="415" y="104" width="170" height="30" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="500" y="124" font-size="9.5" fill="#2d3142" text-anchor="middle">宿主 executeRewind</text>
+    <rect x="615" y="104" width="170" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="700" y="124" font-size="9.5" fill="#2d3142" text-anchor="middle">agent / 会话日志</text>
+    <rect x="800" y="104" width="120" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="860" y="124" font-size="9.5" fill="#2d3142" text-anchor="middle">Chat 视图</text>
+  </g>
+
+  <g stroke="#c9ccd4" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="100" y1="134" x2="100" y2="536"/>
+    <line x1="300" y1="134" x2="300" y2="536"/>
+    <line x1="500" y1="134" x2="500" y2="536"/>
+    <line x1="700" y1="134" x2="700" y2="536"/>
+    <line x1="860" y1="134" x2="860" y2="536"/>
+  </g>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">
+    <text x="40" y="180">01</text>
+    <text x="40" y="210">02</text>
+    <text x="40" y="242">03</text>
+    <text x="40" y="282">04</text>
+    <text x="40" y="316">05</text>
+    <text x="40" y="348">06</text>
+    <text x="40" y="392">07</text>
+    <text x="40" y="432">08</text>
+    <text x="40" y="462">09</text>
+    <text x="40" y="498">10</text>
+    <text x="40" y="528">11</text>
+  </g>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#rw2-ar)">
+    <line x1="100" y1="176" x2="292" y2="176"/>
+    <line x1="300" y1="206" x2="492" y2="206"/>
+    <path d="M500,228 L546,228 L546,244 L507,244"/>
+    <line x1="500" y1="278" x2="692" y2="278"/>
+    <path d="M500,340 L546,340 L546,356 L507,356"/>
+    <line x1="500" y1="388" x2="692" y2="388"/>
+    <path d="M300,452 L346,452 L346,468 L307,468"/>
+    <line x1="300" y1="494" x2="852" y2="494"/>
+    <line x1="300" y1="524" x2="108" y2="524"/>
+  </g>
+  <g stroke="#8a93a6" stroke-width="1" fill="none" stroke-dasharray="3 3" marker-end="url(#rw2-ar2)">
+    <line x1="692" y1="312" x2="508" y2="312"/>
+    <line x1="692" y1="428" x2="508" y2="428"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9">
+    <text x="112" y="170" fill="#2d3142">点 seq 41 的 ↶，选「仅回退对话」</text>
+    <text x="312" y="200" fill="#2d3142">session.command('/rewind-plugin @41 chat')</text>
+
+    <text x="560" y="222" fill="#2d3142">inflight 占位；planRewind 得切点 41</text>
+
+    <text x="512" y="272" fill="#2d3142">cancel({ kind: 'user', keepInbox })</text>
+    <text x="512" y="306" fill="#4f5d75">whenIdle，超时 15s 就是 stopFailed</text>
+
+    <text x="560" y="334" fill="#2d3142">dropPendingSteering</text>
+
+    <text x="512" y="380" fill="#2d3142">append(user/message) + surfaceOp replace 41..63</text>
+    <text x="512" y="398" fill="#8a93a6" font-size="8">新事件 seq 64；标记内容是「(empty message)」</text>
+
+    <text x="512" y="422" fill="#4f5d75">outcome.sourceEventSeq = 64</text>
+
+    <text x="356" y="446" fill="#2d3142">rewindCutsOf → { target 41, marker 64 }</text>
+
+    <text x="312" y="488" fill="#2d3142">hidden: anchorSeq ∈ [41, 64]</text>
+    <text x="112" y="518" fill="#2d3142">回填 41 的文本与图片（草稿非空则不覆盖）</text>
+  </g>
+
+  <rect x="40" y="546" width="880" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="563" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">QUIESCE BEFORE WRITE</text>
+  <text x="56" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">turn 还在跑时追加标记，等于让模型用一份已被替换的上下文继续推理。第 07 步之后不再改状态，只剩投影。</text>
+</svg>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="rw6-title rw6-desc">
+  <title id="rw6-title">回退对话和文件的时序：先只读地算影响清单，确认后再写日志、动磁盘</title>
+  <desc id="rw6-desc">五条生命线是用户、客户端、宿主、快照存储与磁盘。客户端先用 preview 接口拿影响清单，用户确认后才发 both 命令；宿主停下当前回合、追加标记，然后交给存储写还原日志与抢救副本，逐文件执行，最后把结果回传并广播文件观察事件。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="rw6-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="rw6-ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-REWIND / BOTH-MODE SEQUENCE</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="18" fill="#2d3142">不可逆的动作，先算一遍再确认一遍</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">影响清单与真正还原共用同一个计划函数。清单是只读的，所以可以反复打开浮层；写日志发生在动手之前，所以崩溃后能接着收尾。</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="40" y="100" width="120" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="100" y="120" font-size="9.5" fill="#2d3142" text-anchor="middle">用户</text>
+    <rect x="215" y="100" width="170" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="300" y="120" font-size="9.5" fill="#2d3142" text-anchor="middle">客户端</text>
+    <rect x="415" y="100" width="170" height="30" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="500" y="120" font-size="9.5" fill="#2d3142" text-anchor="middle">宿主 executeRewind</text>
+    <rect x="615" y="100" width="170" height="30" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="700" y="120" font-size="9.5" fill="#2d3142" text-anchor="middle">快照存储</text>
+    <rect x="800" y="100" width="120" height="30" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="860" y="120" font-size="9.5" fill="#2d3142" text-anchor="middle">磁盘</text>
+  </g>
+
+  <g stroke="#c9ccd4" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="100" y1="130" x2="100" y2="462"/>
+    <line x1="300" y1="130" x2="300" y2="462"/>
+    <line x1="500" y1="130" x2="500" y2="462"/>
+    <line x1="700" y1="130" x2="700" y2="462"/>
+    <line x1="860" y1="130" x2="860" y2="462"/>
+  </g>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">
+    <text x="40" y="178">01</text>
+    <text x="40" y="204">02</text>
+    <text x="40" y="230">03</text>
+    <text x="40" y="256">04</text>
+    <text x="40" y="282">05</text>
+    <text x="40" y="308">06</text>
+    <text x="40" y="334">07</text>
+    <text x="40" y="360">08</text>
+    <text x="40" y="386">09</text>
+    <text x="40" y="412">10</text>
+    <text x="40" y="438">11</text>
+    <text x="40" y="464">12</text>
+  </g>
+
+  <g stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#rw6-ar)">
+    <line x1="100" y1="174" x2="292" y2="174"/>
+    <line x1="300" y1="200" x2="492" y2="200"/>
+    <line x1="500" y1="226" x2="692" y2="226"/>
+    <line x1="300" y1="330" x2="492" y2="330"/>
+    <line x1="500" y1="382" x2="692" y2="382"/>
+    <line x1="700" y1="434" x2="856" y2="434"/>
+  </g>
+  <path d="M500,348 L546,348 L546,364 L507,364" stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#rw6-ar)"/>
+  <path d="M700,400 L746,400 L746,416 L707,416" stroke="#bf4520" stroke-width="1.1" fill="none" marker-end="url(#rw6-ar)"/>
+  <g stroke="#8a93a6" stroke-width="1" fill="none" stroke-dasharray="3 3" marker-end="url(#rw6-ar2)">
+    <line x1="692" y1="252" x2="508" y2="252"/>
+    <line x1="492" y1="278" x2="308" y2="278"/>
+    <line x1="292" y1="304" x2="108" y2="304"/>
+    <line x1="692" y1="460" x2="508" y2="460"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9">
+    <text x="112" y="168" fill="#2d3142">点 seq 41 的 ↶，选「回退对话和文件」</text>
+    <text x="312" y="193" fill="#2d3142">POST /api/dsh-rewind/preview</text>
+    <text x="312" y="205" fill="#8a93a6" font-size="8">body: { sessionId, seq: 41 }</text>
+    <text x="512" y="220" fill="#2d3142">planRestore(41)：每个路径取最早一条</text>
+    <text x="512" y="266" fill="#4f5d75">影响清单 + 超上限的 uncovered</text>
+    <text x="316" y="272" fill="#4f5d75">{ files, uncovered, backupOff: false }</text>
+    <text x="112" y="298" fill="#4f5d75">确认：浮层里写着 3 个文件要改、1 个要删</text>
+    <text x="312" y="324" fill="#2d3142">/rewind-plugin @41 both</text>
+    <text x="560" y="342" fill="#2d3142">停跑 → 清未读插话 → append 标记</text>
+    <text x="512" y="376" fill="#2d3142">restoreAfter(41)</text>
+    <text x="712" y="394" fill="#2d3142">写 journal 与 rescue 副本，再逐文件 apply</text>
+    <text x="712" y="428" fill="#2d3142">restore / delete / skip，逐个提交</text>
+    <text x="512" y="454" fill="#4f5d75">{ restored, deleted, skipped, failed }</text>
+  </g>
+
+  <rect x="40" y="474" width="880" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="494" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TWO PHASES, ONE PLAN</text>
+  <text x="56" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">01–05 是只读的：只 stat、只读条目、只比较字节。就算浮层被打开十次，磁盘也不会变。</text>
+  <text x="56" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">09–11 是写的：先 journal 再 apply。宿主随后 emit fs/observed，视图据此刷新文件树。</text>
+  <text x="56" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">08 在 09 之前：对话侧先完成，文件侧失败也不会让标记消失——回退一半也有意义。</text>
+  <text x="56" y="568" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">清单与执行之间用户可以取消；取消只发生在这两段之间，因为命令一旦执行，标记就已经追加进日志。</text>
+</svg>

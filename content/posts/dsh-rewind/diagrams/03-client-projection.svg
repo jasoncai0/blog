@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="rw3-title rw3-desc">
+  <title id="rw3-title">客户端把一条命令节点翻译成一个遮蔽区间，只改节点的 visibility</title>
+  <desc id="rw3-desc">左边是折叠后的聊天节点，41 到 64 号被标为 hidden，65 号重发的消息仍然可见，命令节点本身也隐藏。右边是四条判定规则：区间判定、命令节点判定、轮次折叠、刷新重建。底部说明隐藏只改 visibility，节点仍留在 store 里，所以输入框还能读到原文。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="rw3-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-REWIND / CLIENT PROJECTION</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="18" fill="#2d3142">用户看到的是「删掉了」，客户端只改了一个字段</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">Chat 视图按 visibility 过滤节点，不删节点。所以同一条被隐藏的消息，一边从时间线上消失，一边还能被输入框读回来。</text>
+
+  <rect x="40" y="100" width="440" height="330" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">折叠后的节点</text>
+  <text x="464" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="end">nodes（含隐藏行）</text>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8">
+    <rect x="56" y="136" width="408" height="28" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="68" y="154" fill="#4f5d75">38  user</text>
+    <text x="444" y="154" fill="#8a93a6" text-anchor="end">visible</text>
+
+    <rect x="56" y="170" width="408" height="28" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+    <text x="68" y="188" fill="#2d3142">41  user「…」← 点击的这条</text>
+    <text x="444" y="188" fill="#bf4520" text-anchor="end">hidden</text>
+
+    <rect x="56" y="204" width="408" height="28" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+    <text x="68" y="222" fill="#2d3142">42  assistant · tool_call</text>
+    <text x="444" y="222" fill="#bf4520" text-anchor="end">hidden</text>
+
+    <rect x="56" y="238" width="408" height="28" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+    <text x="68" y="256" fill="#2d3142">43  tool/result</text>
+    <text x="444" y="256" fill="#bf4520" text-anchor="end">hidden</text>
+
+    <rect x="56" y="272" width="408" height="28" rx="4" fill="#f0f0f0" stroke="#d8d8d8"/>
+    <text x="68" y="290" fill="#4f5d75">62  command「/rewind-plugin @41 chat」</text>
+    <text x="444" y="290" fill="#bf4520" text-anchor="end">hidden</text>
+
+    <rect x="56" y="306" width="408" height="28" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+    <text x="68" y="324" fill="#2d3142">64  user「(empty message)」</text>
+    <text x="444" y="324" fill="#bf4520" text-anchor="end">hidden</text>
+
+    <rect x="56" y="340" width="408" height="28" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="68" y="358" fill="#4f5d75">65  user ← 重发的那句</text>
+    <text x="444" y="358" fill="#8a93a6" text-anchor="end">visible</text>
+  </g>
+
+  <text x="56" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">区间是闭区间：41 到 64 全部藏掉，64 是标记自己。</text>
+  <text x="56" y="406" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">65 之后的新消息照常出现，看起来就像从 41 重新开始。</text>
+
+  <rect x="500" y="100" width="420" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="516" y="121" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RULE 01</text>
+  <text x="516" y="139" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">区间判定：anchorSeq 落在切点与标记之间</text>
+  <text x="516" y="157" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">cut.target ≤ node.anchorSeq ≤ cut.marker</text>
+  <text x="516" y="173" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">不比较节点 key，也不比较消息文本；只看 seq。</text>
+
+  <rect x="500" y="196" width="420" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="516" y="217" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RULE 02</text>
+  <text x="516" y="235" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">命令节点：切点就是从它身上读出来的</text>
+  <text x="516" y="253" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">outcome.kind === 'success' &amp;&amp; sourceEventSeq ≠ undefined</text>
+  <text x="516" y="269" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">preview / candidates 探针命令不产生切点，只隐藏自己。</text>
+
+  <rect x="500" y="292" width="420" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="516" y="313" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RULE 03</text>
+  <text x="516" y="331" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">轮次折叠跟着藏</text>
+  <text x="516" y="349" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">turn-process 的子节点全被藏时，折叠头自己也藏。</text>
+
+  <rect x="500" y="374" width="420" height="72" rx="6" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="516" y="395" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RULE 04</text>
+  <text x="516" y="413" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">刷新之后重新算一遍，结果相同</text>
+  <text x="516" y="431" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">重放日志得到同一条命令节点与同一个 64，于是同一个 cut。</text>
+
+  <rect x="40" y="446" width="880" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="466" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">VISIBILITY, NOT DELETION</text>
+  <text x="56" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">hidden(node) 返回的是 { ...node, visibility: 'hidden' }。节点对象还在 store 里，所以输入框能读到 41 的文本与图片。</text>
+  <text x="56" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">代价：被藏掉的行仍占内存与索引位；换来的是一条不会因为刷新、切会话、重连而失效的投影。</text>
+
+  <rect x="40" y="522" width="880" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="541" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">这个 builder 不是官方扩展点：uiConversation 的 views 是一方注册表，插件用 ctx.effect 包住已注册的 chat builder，卸载时还原。</text>
+  <text x="56" y="557" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">形状不对就放弃安装；同一份逻辑注册两次是幂等的，HMR 重载不会叠出两层包装。</text>
+  <text x="56" y="573" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">installChatViewVisibility → RewindVisibilityBuilder: empty / replace / apply / groupInput / publish</text>
+</svg>

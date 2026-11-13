@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="rw5-title rw5-desc">
+  <title id="rw5-title">还原计划：每个路径取最早一条备份，与磁盘比较后得到 restore、delete 或不动</title>
+  <desc id="rw5-desc">左边是回退到 41 时读到的条目，同一路径有多条时取锚点最小的一条；中间是磁盘现状；右边是三个动作：写回旧内容、删除当轮新建的文件、内容一致则不动。底部是四类直接跳过的目标与失败记录方式。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="rw5-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-REWIND / RESTORE PLAN</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="18" fill="#2d3142">还原是一个纯函数：给定条目与磁盘，算出该做什么</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">这个计划被两个调用方共用：确认弹层拿它算影响清单，真正的还原拿它逐个执行。两边看到的文件数不会不一致。</text>
+
+  <rect x="40" y="100" width="280" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">条目（anchor ≥ 41）</text>
+  <text x="56" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">src/a.ts</text>
+  <text x="68" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">41 / call-9a → 内容 A</text>
+  <text x="68" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">44 / call-9c → 内容 B</text>
+  <text x="56" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">src/b.ts</text>
+  <text x="68" y="214" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">41 / call-9b → null（当时不存在）</text>
+  <text x="56" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">src/c.ts</text>
+  <text x="68" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">41 / recheck → 内容 C</text>
+  <text x="56" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">node_modules/.bin/x</text>
+  <text x="68" y="290" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">41 / call-9d → symlink</text>
+
+  <line x1="56" y1="306" x2="304" y2="306" stroke="#d8d8d8"/>
+  <text x="56" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#bf4520">同一路径只留锚点最小的一条</text>
+  <text x="56" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">锚点相同再比 time。这一条就是</text>
+  <text x="56" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">「那条消息之前」的内容。</text>
+  <text x="56" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a93a6">条目按 anchor 降序读，取最后处理的。</text>
+
+  <rect x="340" y="100" width="280" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">磁盘现状</text>
+  <text x="356" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">src/a.ts → 内容 B</text>
+  <text x="356" y="168" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">src/b.ts → 存在</text>
+  <text x="356" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">src/c.ts → 内容 C</text>
+  <text x="356" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">node_modules/.bin/x → symlink</text>
+
+  <text x="356" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">比较是字节级的流式比较</text>
+  <text x="356" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">不把整文件读进内存，也不按行对齐。</text>
+  <text x="356" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">相同就什么都不做，这是最常见的分支。</text>
+  <text x="356" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">stat 拿不到（ENOENT）按「不存在」算，</text>
+  <text x="356" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">不因为文件被删就报错。</text>
+  <text x="356" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">条目与磁盘对不上时，动作是「写回」或</text>
+  <text x="356" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">「删除」；对得上的路径不进计划。</text>
+
+  <rect x="640" y="100" width="280" height="300" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="656" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">动作</text>
+
+  <rect x="656" y="136" width="248" height="52" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="668" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">restore  src/a.ts ← A</text>
+  <text x="668" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">写回内容，并恢复权限位（mode）</text>
+
+  <rect x="656" y="196" width="248" height="52" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="668" y="216" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">delete   src/b.ts</text>
+  <text x="668" y="236" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">当轮新建的文件，回退时应当消失</text>
+
+  <rect x="656" y="256" width="248" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="668" y="276" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">no-op    src/c.ts</text>
+  <text x="668" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#4f5d75">内容一致，不改 mtime，不写盘</text>
+
+  <rect x="656" y="316" width="248" height="52" rx="4" fill="#f0f0f0" stroke="#d8d8d8"/>
+  <text x="668" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">skip     node_modules/.bin/x</text>
+  <text x="668" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a93a6">符号链接不跟、不写，列进 skipped</text>
+
+  <g stroke="#8a93a6" stroke-width="1" fill="none" marker-end="url(#rw5-a)">
+    <line x1="320" y1="250" x2="336" y2="250"/>
+    <line x1="620" y1="250" x2="636" y2="250"/>
+  </g>
+
+  <rect x="40" y="416" width="500" height="152" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="438" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">四类目标一律不动手</text>
+  <text x="56" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">① 符号链接：写回去会把内容送到链接指向的地方</text>
+  <text x="56" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">② 硬链接（nlink &gt; 1）：改一个名字会连带改掉同一 inode</text>
+  <text x="56" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">③ 目录 / FIFO / 设备：一个会递归，一个会阻塞</text>
+  <text x="56" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">④ 父目录被重新指向：捕获时记过位置，解析变了就拒绝</text>
+  <text x="56" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#bf4520">前三类进 skipped，第四类进 skipped，都不会中止整轮。</text>
+  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a93a6">pnpm 的 node_modules 里大量硬链接，这条规则不是洁癖，是防连带。</text>
+
+  <rect x="556" y="416" width="364" height="152" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="572" y="438" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">失败怎么记账</text>
+  <text x="572" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">单个文件失败 → 记 failed，继续下一个</text>
+  <text x="572" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">路径在执行时被重指 → 记 failed</text>
+  <text x="572" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">文件已经不在了（ENOENT）→ 记 done</text>
+  <text x="572" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">全部成功 → 日志标 completed</text>
+  <text x="572" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#bf4520">回执里三个计数分开报：restored / deleted / skipped</text>
+  <text x="572" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a93a6">用户能看出「回了 2 个、删了 1 个、跳了 3 个」。</text>
+
+  <rect x="40" y="580" width="880" height="1" fill="#d8d8d8"/>
+</svg>

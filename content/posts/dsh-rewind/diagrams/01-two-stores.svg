@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="rw1-title rw1-desc">
+  <title id="rw1-title">一次回退同时作用在两个存储上，共同坐标是那条用户消息的 seq</title>
+  <desc id="rw1-desc">左边是只追加的会话日志：41 到 63 号事件仍在原位，第 64 条是空消息标记，带 replace 41..63 的 surfaceOp。下方是模型看到的 surface：只剩 1 到 40 与 64 号标记。右边是文件检查点目录，按 anchorSeq 分组；回退到 41 时，锚点大于等于 41 的组被还原，更早的组原样保留。</desc>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <defs>
+    <marker id="rw1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">DSH-REWIND / ONE GESTURE, TWO STORES</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="18" fill="#2d3142">回退按钮只做了一件事：给出一个 seq</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#4f5d75">对话侧追加一条替换事件，文件侧按目录回放检查点。两个存储唯一的共同坐标，是那条用户消息的 seq。</text>
+
+  <rect x="40" y="100" width="440" height="215" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">会话日志：只追加</text>
+  <text x="464" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="end">session.events</text>
+
+  <rect x="56" y="136" width="408" height="34" rx="4" fill="#f0f0f0" stroke="#d8d8d8"/>
+  <text x="68" y="157" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">seq 1–40  ·  已提交的历史，原样保留</text>
+
+  <rect x="56" y="178" width="408" height="34" rx="4" fill="#fdf3ef" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="68" y="199" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">seq 41–63 · 23 条消息，被遮蔽但仍在这里</text>
+
+  <rect x="56" y="220" width="408" height="40" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="68" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">seq 64 · user/message「(empty message)」</text>
+  <text x="68" y="252" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">source: dsh-rewind  ·  surfaceOp: replace 41..63</text>
+
+  <text x="56" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">日志长度 63 → 64。没有任何一条旧事件被删除或改写。</text>
+  <text x="56" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">如果删掉 41–63，工具调用的成对关系会立刻断掉。</text>
+
+  <rect x="40" y="335" width="440" height="165" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">模型看到的 surface</text>
+  <text x="464" y="357" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6" text-anchor="end">session.surface.nodes</text>
+
+  <rect x="56" y="371" width="196" height="32" rx="4" fill="#f0f0f0" stroke="#d8d8d8"/>
+  <text x="68" y="391" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">seq 1–40</text>
+  <rect x="256" y="371" width="94" height="32" rx="4" fill="#f5f5f5" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="303" y="391" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520" text-anchor="middle">41–63 无节点</text>
+  <rect x="56" y="411" width="408" height="32" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="68" y="431" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">seq 64 · (empty message)</text>
+
+  <text x="56" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">下一次请求 = 1..40 + 64。用户重发的那句追加在 65。</text>
+  <text x="56" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">切点在 surface 上，不在日志上：41 是第一个被替换的 seq。</text>
+
+  <rect x="510" y="100" width="410" height="400" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="526" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#2d3142">文件检查点：按锚点分组</text>
+  <text x="526" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">.dsh/rewind-snapshots/session-…/</text>
+
+  <rect x="526" y="158" width="378" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="538" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">38/  write-0.json + .before</text>
+  <text x="538" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#8a93a6">锚点 38 &lt; 41：保留，不参与这次回退</text>
+
+  <rect x="526" y="216" width="378" height="70" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="538" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">41/  write-1.json + write-1.before</text>
+  <text x="538" y="250" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">41/  edit-2.json  + edit-2.before</text>
+  <text x="538" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#bf4520">同一轮里的两次写入共用锚点 41，顺序由 time 决定</text>
+
+  <rect x="526" y="292" width="378" height="52" rx="4" fill="#fdf3ef" stroke="#bf4520"/>
+  <text x="538" y="310" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">44/  write-3.json + write-3.before</text>
+  <text x="538" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8" fill="#bf4520">锚点 44 ≥ 41：这一轮建的文件要删掉</text>
+
+  <line x1="526" y1="360" x2="904" y2="360" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="526" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">还原范围：anchorSeq ≥ 41 的全部条目</text>
+  <text x="526" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">每个路径只取最早的一条作为目标内容；边界是包含的，</text>
+  <text x="526" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#4f5d75">41 那一轮自己造成的变化也在回退范围内。</text>
+  <text x="526" y="442" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">entries 目录名必须是数字；非数字目录直接忽略</text>
+  <text x="526" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">每 100 个锚点组触发一次剪枝，按 mtime 淘汰最旧的</text>
+  <text x="526" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#bf4520">两个存储互不依赖：文件坏了，对话照样能回退。</text>
+
+  <rect x="40" y="516" width="880" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="536" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">INVARIANT</text>
+  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="9" fill="#2d3142">回退是补偿，不是删除。对话侧写一条带 surfaceOp 的替代事件，文件侧写回备份；两者都不需要「回到过去」的能力。</text>
+  <text x="56" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="8.5" fill="#8a93a6">代价是两套账都要维护：日志会变长，备份会占盘。收益是任何一步都可以重放、可以审计、可以在崩溃后接着做。</text>
+</svg>
