@@ -152,7 +152,10 @@ echo "== 7/7 线上复验"
 if [ "$SKIP_LIVE" -eq 0 ]; then
   NEWEST=$(ls -1t public/posts/*.html | head -1 | xargs basename)
   for path in "/" "/tags/index.html" "/rss.xml" "/posts/$NEWEST"; do
-    code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$SITE_URL$path" || echo 000)
+    # curl 偶尔在写完状态码后收尾失败（代理断流），此时 $? 非零但响应已到；只取前三位。
+    code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$SITE_URL$path" || true)
+    code=${code:0:3}
+    [ -n "$code" ] || code=000
     if [ "$code" != "200" ]; then
       echo "FAIL: $path 返回 $code" >&2
       rollback_hint "$BACKUP_PATH"
