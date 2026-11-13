@@ -346,6 +346,7 @@ figcaption {
   h1 { font-size: 30px; }
   .toc-list { columns: 1; }
   body { font-size: 15px; }
+  table { display: block; overflow-x: auto; }
 }
 @media print {
   .diagram { overflow-x: visible; }

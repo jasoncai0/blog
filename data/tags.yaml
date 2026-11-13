@@ -55,6 +55,9 @@ memory:
 llm-training:
   name: 模型训练
   description: 预训练、后训练、微调与对齐的机制和取舍
+inference:
+  name: 推理
+  description: 推理链路、显存、批处理与延迟成本
 
 lineage:
   name: 血缘

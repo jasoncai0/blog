@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02t f02d">
+<title id="f02t">KV Cache 的每 token 字节数与 128K 上下文总量</title>
+<desc id="f02d">左侧用 Llama-3-8B 演算每 token 128 KiB，右侧比较 MHA、GQA、MLA 的每 token 开销，底部对比 128K 时权重与 cache 的显存占用。</desc>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="0.16em">KV CACHE / 02</text>
+  <text x="40" y="62" font-size="17" font-weight="600" fill="#2d3142">显存账本：每个 token 要留多少</text>
+  <text x="40" y="84" font-size="9.5" fill="#5a6580">BF16，单请求；KiB / MiB / GiB 按 1024 进制。batch 会把下面的数字成倍放大。</text>
+
+  <rect x="40" y="108" width="420" height="330" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="60" y="138" font-size="12" font-weight="600" fill="#2d3142">先算每 token 的字节数</text>
+  <text x="60" y="158" font-size="8.5" fill="#5a6580">以 Llama-3-8B 为例：32 层、8 个 KV 头、head_dim 128</text>
+
+  <rect x="60" y="174" width="380" height="100" rx="3" fill="#f7f8fa" stroke="#e3e6eb"/>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">
+    <text x="76" y="198">M = 2 · L · H_kv · d_head · bytes</text>
+    <text x="76" y="219">  = 2 · 32 · 8 · 128 · 2</text>
+    <text x="76" y="240">  = 131,072 B</text>
+    <text x="76" y="261" fill="#bf4520">  = 128 KiB / token</text>
+  </g>
+
+  <g font-size="9.5" fill="#5a6580">
+    <text x="60" y="304">8K 上下文</text>
+    <text x="60" y="330">32K 上下文</text>
+    <text x="60" y="356">128K 上下文</text>
+    <text x="60" y="384">BF16 权重</text>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142" text-anchor="end">
+    <text x="440" y="304">1 GiB</text>
+    <text x="440" y="330">4 GiB</text>
+    <text x="440" y="356">16 GiB</text>
+    <text x="440" y="384">16.1 GB</text>
+  </g>
+  <line x1="60" y1="316" x2="440" y2="316" stroke="#eceef2"/>
+  <line x1="60" y1="342" x2="440" y2="342" stroke="#eceef2"/>
+  <line x1="60" y1="368" x2="440" y2="368" stroke="#eceef2"/>
+  <text x="60" y="414" font-size="9" fill="#bf4520">128K 时 cache 约 17.2 GB，和权重几乎 1:1。</text>
+
+  <rect x="490" y="108" width="430" height="330" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="510" y="138" font-size="12" font-weight="600" fill="#2d3142">每 token cache：四个参照点</text>
+  <text x="510" y="158" font-size="8.5" fill="#5a6580">横轴为对数刻度，数值标注在模型名下方</text>
+
+  <g stroke="#eceef2">
+    <line x1="640" y1="180" x2="640" y2="350"/>
+    <line x1="710" y1="180" x2="710" y2="350"/>
+    <line x1="780" y1="180" x2="780" y2="350"/>
+    <line x1="850" y1="180" x2="850" y2="350"/>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" text-anchor="middle">
+    <text x="640" y="368">64K</text>
+    <text x="710" y="368">256K</text>
+    <text x="780" y="368">1M</text>
+    <text x="850" y="368">4M</text>
+  </g>
+
+  <g font-size="10" fill="#2d3142">
+    <text x="510" y="198">70B · MHA</text>
+    <text x="510" y="243">70B · GQA</text>
+    <text x="510" y="288">8B · GQA</text>
+    <text x="510" y="333">V2 · MLA</text>
+  </g>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">
+    <text x="510" y="212">2.5 MiB / token</text>
+    <text x="510" y="257">320 KiB / token</text>
+    <text x="510" y="302">128 KiB / token</text>
+    <text x="510" y="347">67.5 KiB / token</text>
+  </g>
+
+  <g>
+    <rect x="640" y="190" width="186" height="16" rx="2" fill="#8b93a7"/>
+    <rect x="640" y="235" width="81" height="16" rx="2" fill="#3d5a80"/>
+    <rect x="640" y="280" width="35" height="16" rx="2" fill="#5f7fa6"/>
+    <rect x="640" y="325" width="3" height="16" rx="1" fill="#bf4520"/>
+  </g>
+  <text x="510" y="388" font-size="8.5" fill="#5a6580">同样 70B，MHA 的 cache 是 GQA 的 8 倍。</text>
+  <text x="510" y="404" font-size="8.5" fill="#5a6580">MLA 不按头存，只随层数和 latent 维度增长。</text>
+
+  <rect x="40" y="456" width="880" height="110" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="60" y="480" font-size="10.5" font-weight="600" fill="#2d3142">128K 上下文，单请求 / 单卡（70B 为 TP=8）</text>
+
+  <text x="60" y="508" font-size="9" fill="#2d3142">8B</text>
+  <rect x="110" y="497" width="121" height="14" fill="#c9ced6"/>
+  <rect x="231" y="497" width="129" height="14" fill="#bf4520"/>
+  <text x="370" y="508" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">33.3 GB</text>
+
+  <text x="470" y="508" font-size="9" fill="#2d3142">70B</text>
+  <rect x="520" y="497" width="131" height="14" fill="#c9ced6"/>
+  <rect x="651" y="497" width="40" height="14" fill="#bf4520"/>
+  <text x="705" y="508" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">22.9 GB / 卡</text>
+
+  <rect x="60" y="535" width="9" height="9" fill="#c9ced6"/>
+  <text x="74" y="543" font-size="8.5" fill="#5a6580">权重</text>
+  <rect x="112" y="535" width="9" height="9" fill="#bf4520"/>
+  <text x="126" y="543" font-size="8.5" fill="#5a6580">KV cache</text>
+  <text x="200" y="543" font-size="8.5" fill="#5a6580">8B 的 cache 与权重几乎相等；70B 切开后每卡只放 5.4 GB，但 8 卡合计仍是 43 GB。</text>
+</g>
+</svg>

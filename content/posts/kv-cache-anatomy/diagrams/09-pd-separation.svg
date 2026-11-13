@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="700" viewBox="0 0 960 700" role="img" aria-labelledby="f09t f09d">
+<title id="f09t">一体化服务与 PD 分离的时序对比，以及 KV 传输代价</title>
+<desc id="f09d">左边一个 GPU 池混跑 prefill 和 decode，长 prefill 插队会把 decode 的 TPOT 拉出尖刺；右边 prefill 池和 decode 池分开，KV 通过 NVLink 或 RDMA 搬运。下方比较 2.5 GiB KV 在不同链路上的传输时间。</desc>
+<defs>
+  <marker id="f09a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#bf4520"/>
+  </marker>
+  <marker id="f09b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#3f6b52"/>
+  </marker>
+  <marker id="f09c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#8b93a7"/>
+  </marker>
+</defs>
+<rect width="960" height="700" fill="#f5f5f5"/>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="0.16em">KV CACHE / 09</text>
+  <text x="40" y="62" font-size="17" font-weight="600" fill="#2d3142">PD 分离：把 prefill 和 decode 拆成两个池</text>
+  <text x="40" y="84" font-size="9.5" fill="#5a6580">拆开之后，两类负载各自扩缩容；代价是 KV 要从一个池搬到另一个池。</text>
+
+  <!-- left: monolithic -->
+  <rect x="40" y="110" width="420" height="270" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="60" y="145" font-size="11" font-weight="600" fill="#2d3142">一体化：一个池子，两种负载</text>
+  <text x="60" y="163" font-size="8" fill="#5a6580">长 prefill 插队，decode 的 TPOT 被拉长。</text>
+
+  <g font-size="7.5" fill="#2d3142">
+    <text x="55" y="214">A decode</text>
+    <text x="55" y="254">B prefill</text>
+  </g>
+
+  <g font-size="7" fill="#8b93a7" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">
+    <text x="100" y="282">0</text><text x="155" y="282">1</text><text x="210" y="282">2</text><text x="265" y="282">3</text><text x="320" y="282">4</text><text x="375" y="282">5</text><text x="430" y="282">6</text>
+  </g>
+
+  <g fill="#3d5a80">
+    <rect x="127" y="200" width="18" height="14" rx="2"/>
+    <rect x="182" y="200" width="18" height="14" rx="2"/>
+    <rect x="237" y="200" width="18" height="14" rx="2"/>
+    <rect x="347" y="200" width="18" height="14" rx="2"/>
+    <rect x="402" y="200" width="18" height="14" rx="2"/>
+  </g>
+  <rect x="265" y="240" width="83" height="14" rx="2" fill="#bf4520"/>
+  <text x="300" y="235" font-size="7" fill="#bf4520">B prefill（长 prompt）</text>
+
+  <line x1="292" y1="190" x2="292" y2="270" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="298" y="184" font-size="7.5" fill="#bf4520">TPOT 尖刺</text>
+  <text x="298" y="194" font-size="7.5" fill="#bf4520">A 的下一 token 被推迟</text>
+
+  <rect x="100" y="300" width="330" height="36" rx="4" fill="#eceff2" stroke="#c9ced6"/>
+  <text x="265" y="323" font-size="8" fill="#5a6580" text-anchor="middle">一个 GPU 池：prefill 和 decode 抢同一批 SM</text>
+
+  <!-- right: PD -->
+  <rect x="500" y="110" width="420" height="270" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="520" y="145" font-size="11" font-weight="600" fill="#2d3142">PD 分离：两个池子，各自扩缩容</text>
+  <text x="520" y="163" font-size="8" fill="#5a6580">KV 搬一次，decode 不再被 prefill 卡住。</text>
+
+  <g font-size="7.5" fill="#2d3142">
+    <text x="515" y="214">A decode</text>
+    <text x="515" y="254">B prefill</text>
+  </g>
+
+  <g font-size="7" fill="#8b93a7" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">
+    <text x="560" y="282">0</text><text x="615" y="282">1</text><text x="670" y="282">2</text><text x="725" y="282">3</text><text x="780" y="282">4</text><text x="835" y="282">5</text><text x="890" y="282">6</text>
+  </g>
+
+  <g fill="#3d5a80">
+    <rect x="587" y="200" width="18" height="14" rx="2"/>
+    <rect x="642" y="200" width="18" height="14" rx="2"/>
+    <rect x="697" y="200" width="18" height="14" rx="2"/>
+    <rect x="752" y="200" width="18" height="14" rx="2"/>
+    <rect x="807" y="200" width="18" height="14" rx="2"/>
+    <rect x="862" y="200" width="18" height="14" rx="2"/>
+  </g>
+  <rect x="725" y="240" width="83" height="14" rx="2" fill="#bf4520"/>
+  <text x="730" y="235" font-size="7" fill="#bf4520">B prefill</text>
+  <g fill="#3f6b52">
+    <rect x="824" y="240" width="18" height="14" rx="2"/>
+    <rect x="862" y="240" width="18" height="14" rx="2"/>
+  </g>
+  <text x="824" y="235" font-size="7" fill="#3f6b52">B decode</text>
+
+  <rect x="560" y="300" width="130" height="36" rx="4" fill="#f7e6e1" stroke="#bf4520"/>
+  <text x="625" y="323" font-size="8" fill="#bf4520" text-anchor="middle">Prefill 池</text>
+  <rect x="730" y="300" width="160" height="36" rx="4" fill="#e8edf4" stroke="#3d5a80"/>
+  <text x="810" y="323" font-size="8" fill="#3d5a80" text-anchor="middle">Decode 池</text>
+  <line x1="690" y1="318" x2="722" y2="318" stroke="#8b93a7" stroke-width="1.2" marker-end="url(#f09c)"/>
+  <text x="706" y="310" font-size="7" fill="#8b93a7" text-anchor="middle">KV</text>
+  <text x="560" y="292" font-size="7" fill="#bf4520">长 prompt 只压这个池</text>
+  <text x="730" y="292" font-size="7" fill="#3d5a80">decode 不受影响</text>
+
+  <!-- transfer math -->
+  <rect x="40" y="400" width="880" height="220" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="60" y="428" font-size="11" font-weight="600" fill="#2d3142">KV 传输这笔账：2.5 GiB 从 prefill 池搬到 decode 池</text>
+
+  <text x="60" y="454" font-size="8.5" fill="#5a6580">70B · 8K 上下文 · BF16</text>
+  <text x="60" y="484" font-size="20" font-weight="600" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">2.5 GiB</text>
+  <text x="60" y="512" font-size="9" fill="#2d3142" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">t_transfer = 2.5 GiB / BW</text>
+  <text x="60" y="540" font-size="8" fill="#5a6580">只有 t_transfer 小于 prefill 省下的时间，</text>
+  <text x="60" y="556" font-size="8" fill="#5a6580">分离才划算；否则只是把计算换成了搬运。</text>
+
+  <text x="400" y="454" font-size="8.5" fill="#5a6580">传输时间（对数刻度）</text>
+  <g font-size="7.5" fill="#2d3142" text-anchor="end">
+    <text x="450" y="486">NVLink 900 GB/s</text>
+    <text x="450" y="516">PCIe 4.0 x16</text>
+    <text x="450" y="546">100 Gb RDMA</text>
+  </g>
+  <g>
+    <rect x="460" y="474" width="76" height="16" fill="#3f6b52"/>
+    <rect x="460" y="504" width="260" height="16" fill="#3d5a80"/>
+    <rect x="460" y="534" width="368" height="16" fill="#bf4520"/>
+  </g>
+  <g font-size="7.5" fill="#5a6580">
+    <text x="544" y="486">3 ms</text>
+    <text x="728" y="516">42 ms</text>
+    <text x="836" y="546">200 ms</text>
+  </g>
+
+  <line x1="460" y1="562" x2="880" y2="562" stroke="#c9ced6"/>
+  <g font-size="7" fill="#8b93a7" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">
+    <text x="460" y="576">1 ms</text>
+    <text x="620" y="576">10 ms</text>
+    <text x="780" y="576">100 ms</text>
+  </g>
+
+  <text x="60" y="604" font-size="8" fill="#5a6580">NVLink 是节点内；RDMA 跨节点。拓扑不同，传输时间差两个数量级。</text>
+  <text x="40" y="660" font-size="8.5" fill="#5a6580">PD 分离不是免费：它用一次 KV 搬运，换 prefill 和 decode 的解耦。</text>
+</g>
+</svg>

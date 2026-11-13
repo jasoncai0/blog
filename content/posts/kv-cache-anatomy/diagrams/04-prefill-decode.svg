@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f04t f04d">
+<title id="f04t">一条请求的 prefill 与 decode 时序</title>
+<desc id="f04d">客户端请求进入调度器，prefill 一次写入 S 个 K/V 槽位并产出首 token，随后 decode 每个 step 读取全量 cache、追加一个槽位并流式返回 token。</desc>
+<defs>
+  <marker id="f04a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5a6580"/></marker>
+  <marker id="f04b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3d5a80"/></marker>
+  <marker id="f04r" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+</defs>
+<rect width="960" height="640" fill="#f5f5f5"/>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="0.16em">KV CACHE / 04</text>
+  <text x="40" y="62" font-size="17" font-weight="600" fill="#2d3142">一条请求的时序：写一次，读每一步</text>
+  <text x="40" y="84" font-size="9.5" fill="#5a6580">prefill 一次写 S 个槽位并产出首 token；decode 每个 step 读全量 cache、追加一个槽位。</text>
+
+  <!-- participants -->
+  <g>
+    <rect x="25" y="105" width="150" height="48" rx="4" fill="#ffffff" stroke="#c9ced6"/>
+    <text x="100" y="126" font-size="9.5" text-anchor="middle" fill="#2d3142">Client</text>
+    <text x="100" y="141" font-size="7.5" text-anchor="middle" fill="#8b93a7">请求入口</text>
+
+    <rect x="205" y="105" width="150" height="48" rx="4" fill="#ffffff" stroke="#c9ced6"/>
+    <text x="280" y="126" font-size="9.5" text-anchor="middle" fill="#2d3142">Scheduler</text>
+    <text x="280" y="141" font-size="7.5" text-anchor="middle" fill="#8b93a7">排队 / 组 batch</text>
+
+    <rect x="385" y="105" width="150" height="48" rx="4" fill="#ffffff" stroke="#c9ced6"/>
+    <text x="460" y="126" font-size="9.5" text-anchor="middle" fill="#2d3142">Prefill</text>
+    <text x="460" y="141" font-size="7.5" text-anchor="middle" fill="#8b93a7">并行算 prompt</text>
+
+    <rect x="565" y="105" width="150" height="48" rx="4" fill="#ffffff" stroke="#c9ced6"/>
+    <text x="640" y="126" font-size="9.5" text-anchor="middle" fill="#2d3142">Decode</text>
+    <text x="640" y="141" font-size="7.5" text-anchor="middle" fill="#8b93a7">逐 token 生成</text>
+
+    <rect x="755" y="105" width="150" height="48" rx="4" fill="#ffffff" stroke="#c9ced6"/>
+    <text x="830" y="126" font-size="9.5" text-anchor="middle" fill="#2d3142">KV Cache</text>
+    <text x="830" y="141" font-size="7.5" text-anchor="middle" fill="#8b93a7">块表 + 显存</text>
+  </g>
+
+  <g stroke="#d8dce3" stroke-width="1" stroke-dasharray="3 4">
+    <line x1="100" y1="153" x2="100" y2="600"/>
+    <line x1="280" y1="153" x2="280" y2="600"/>
+    <line x1="460" y1="153" x2="460" y2="600"/>
+    <line x1="640" y1="153" x2="640" y2="600"/>
+    <line x1="830" y1="153" x2="830" y2="600"/>
+  </g>
+
+  <!-- loop frame -->
+  <rect x="245" y="345" width="670" height="160" rx="4" fill="none" stroke="#bf4520" stroke-width="1"/>
+  <rect x="785" y="345" width="130" height="18" fill="#bf4520"/>
+  <text x="793" y="358" font-size="8" fill="#ffffff">loop：每个 step 直到 EOS</text>
+
+  <!-- messages -->
+  <g stroke="#5a6580" stroke-width="1.2" fill="none" marker-end="url(#f04a)">
+    <line x1="100" y1="190" x2="278" y2="190"/>
+    <line x1="280" y1="254" x2="458" y2="254"/>
+    <line x1="280" y1="360" x2="638" y2="360"/>
+  </g>
+  <g stroke="#5a6580" stroke-width="1.1" fill="none" stroke-dasharray="4 3" marker-end="url(#f04a)">
+    <line x1="280" y1="222" x2="828" y2="222"/>
+    <line x1="460" y1="318" x2="282" y2="318"/>
+    <line x1="640" y1="424" x2="102" y2="424"/>
+    <line x1="640" y1="488" x2="102" y2="488"/>
+    <line x1="640" y1="562" x2="102" y2="562"/>
+  </g>
+  <g stroke="#3d5a80" stroke-width="1.3" fill="none" marker-end="url(#f04b)">
+    <line x1="460" y1="286" x2="828" y2="286"/>
+    <line x1="640" y1="392" x2="828" y2="392"/>
+    <line x1="640" y1="530" x2="828" y2="530"/>
+  </g>
+
+  <g font-size="8.5" fill="#5a6580">
+    <text x="108" y="183">POST /chat　S = 8K</text>
+    <text x="288" y="215">allocate blocks</text>
+    <text x="288" y="247">prefill(prompt)</text>
+    <text x="468" y="279">write K/V × S</text>
+    <text x="288" y="311">first token</text>
+    <text x="288" y="353">decode step</text>
+    <text x="648" y="385">read 1..t · append 1</text>
+    <text x="288" y="417">stream token i</text>
+    <text x="648" y="449">每一步重复 read → append → stream</text>
+    <text x="288" y="481">stream token i+1</text>
+    <text x="648" y="523">free blocks</text>
+    <text x="288" y="555">done</text>
+  </g>
+
+  <!-- TTFT bracket -->
+  <path d="M56 190 L46 190 L46 318 L56 318" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="40" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle" transform="rotate(-90 40 254)">TTFT</text>
+
+  <!-- TPOT bracket -->
+  <path d="M56 424 L46 424 L46 488 L56 488" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="40" y="456" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle" transform="rotate(-90 40 456)">TPOT</text>
+
+  <text x="40" y="628" font-size="8.5" fill="#5a6580">TTFT 由排队、prefill 和第一次 decode 决定；TPOT 由每个 decode step 的带宽与 batch 决定。两者优化的是不同资源。</text>
+</g>
+</svg>

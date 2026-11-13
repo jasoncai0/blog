@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="700" viewBox="0 0 960 700" role="img" aria-labelledby="f06t f06d">
+<title id="f06t">PagedAttention 的块表、物理块共享与写时复制</title>
+<desc id="f06d">请求 A 和 B 的 block table 把连续的逻辑块映射到离散的物理块；前两个块被两个请求共享，引用计数为 2。请求 B 的第三个块私有。下方说明共享块在写入时如何触发写时复制。</desc>
+<defs>
+  <marker id="f06a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#bf4520"/>
+  </marker>
+  <marker id="f06b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#3d5a80"/>
+  </marker>
+  <marker id="f06c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#8b93a7"/>
+  </marker>
+</defs>
+<rect width="960" height="700" fill="#f5f5f5"/>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="0.16em">KV CACHE / 06</text>
+  <text x="40" y="62" font-size="17" font-weight="600" fill="#2d3142">PagedAttention：逻辑块连续，物理块离散</text>
+  <text x="40" y="84" font-size="9.5" fill="#5a6580">block table 负责翻译，ref_count 负责共享，COW 负责在写入前分裂。</text>
+
+  <!-- request A -->
+  <text x="60" y="145" font-size="10" font-weight="600" fill="#2d3142">请求 A · 48 token</text>
+  <rect x="60" y="155" width="350" height="126" rx="3" fill="#ffffff" stroke="#c9ced6"/>
+  <rect x="60" y="155" width="350" height="28" fill="#eceff2"/>
+  <g font-size="8" fill="#5a6580">
+    <text x="72" y="174">逻辑块</text>
+    <text x="218" y="174">物理块</text>
+    <text x="320" y="174">状态</text>
+  </g>
+  <rect x="60" y="183" width="350" height="30" fill="#fdf4f1"/>
+  <rect x="60" y="213" width="350" height="30" fill="#fdf4f1"/>
+  <rect x="60" y="243" width="350" height="30" fill="#eef2f7"/>
+  <g stroke="#e3e6eb">
+    <line x1="60" y1="213" x2="410" y2="213"/>
+    <line x1="60" y1="243" x2="410" y2="243"/>
+    <line x1="60" y1="273" x2="410" y2="273"/>
+  </g>
+  <g font-size="8.5" fill="#2d3142">
+    <text x="72" y="202">L0 · 0–15</text>
+    <text x="218" y="202" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P3</text>
+    <text x="320" y="202" fill="#bf4520">共享</text>
+    <text x="72" y="232">L1 · 16–31</text>
+    <text x="218" y="232" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P7</text>
+    <text x="320" y="232" fill="#bf4520">共享</text>
+    <text x="72" y="262">L2 · 32–47</text>
+    <text x="218" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P1</text>
+    <text x="320" y="262" fill="#3d5a80">私有</text>
+  </g>
+
+  <!-- request B -->
+  <text x="60" y="315" font-size="10" font-weight="600" fill="#2d3142">请求 B · 48 token</text>
+  <rect x="60" y="325" width="350" height="126" rx="3" fill="#ffffff" stroke="#c9ced6"/>
+  <rect x="60" y="325" width="350" height="28" fill="#eceff2"/>
+  <g font-size="8" fill="#5a6580">
+    <text x="72" y="344">逻辑块</text>
+    <text x="218" y="344">物理块</text>
+    <text x="320" y="344">状态</text>
+  </g>
+  <rect x="60" y="353" width="350" height="30" fill="#fdf4f1"/>
+  <rect x="60" y="383" width="350" height="30" fill="#fdf4f1"/>
+  <rect x="60" y="413" width="350" height="30" fill="#eef5f0"/>
+  <g stroke="#e3e6eb">
+    <line x1="60" y1="383" x2="410" y2="383"/>
+    <line x1="60" y1="413" x2="410" y2="413"/>
+    <line x1="60" y1="443" x2="410" y2="443"/>
+  </g>
+  <g font-size="8.5" fill="#2d3142">
+    <text x="72" y="372">L0 · 0–15</text>
+    <text x="218" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P3 ↳ 同 A</text>
+    <text x="320" y="372" fill="#bf4520">共享</text>
+    <text x="72" y="402">L1 · 16–31</text>
+    <text x="218" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P7 ↳ 同 A</text>
+    <text x="320" y="402" fill="#bf4520">共享</text>
+    <text x="72" y="432">L2 · 32–47</text>
+    <text x="218" y="432" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P5</text>
+    <text x="320" y="432" fill="#3f6b52">私有</text>
+  </g>
+
+  <!-- shared prefix bracket -->
+  <line x1="42" y1="188" x2="42" y2="413" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="42" y1="188" x2="54" y2="188" stroke="#bf4520"/>
+  <line x1="42" y1="413" x2="54" y2="413" stroke="#bf4520"/>
+  <text x="28" y="300" font-size="8" fill="#bf4520" transform="rotate(-90 28 300)">前 32 token 共享</text>
+
+  <!-- physical pool -->
+  <text x="520" y="145" font-size="10" font-weight="600" fill="#2d3142">物理块池 · block_size = 16 token</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke-width="1.4">
+    <path d="M410,198 C450,198 480,206 512,206" stroke="#bf4520" marker-end="url(#f06a)"/>
+    <path d="M410,228 C450,228 470,250 520,250 L650,250 C660,250 662,230 662,206" stroke="#bf4520" marker-end="url(#f06a)"/>
+    <path d="M410,258 C450,258 480,296 512,296" stroke="#bf4520" marker-end="url(#f06a)"/>
+    <path d="M410,428 C470,428 490,458 540,458 L790,458 C805,458 810,440 810,410 L810,296 L808,296" stroke="#3d5a80" marker-end="url(#f06b)"/>
+  </g>
+
+  <!-- P3 shared -->
+  <g>
+    <rect x="520" y="170" width="130" height="72" rx="4" fill="#f7e6e1" stroke="#bf4520"/>
+    <text x="530" y="186" font-size="9" font-weight="600" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P3</text>
+    <text x="640" y="186" font-size="7.5" fill="#bf4520" text-anchor="end">ref=2</text>
+    <g fill="#ffffff" stroke="#d99a83">
+      <rect x="528" y="194" width="5.8" height="14"/><rect x="534.8" y="194" width="5.8" height="14"/><rect x="541.6" y="194" width="5.8" height="14"/><rect x="548.4" y="194" width="5.8" height="14"/>
+      <rect x="555.2" y="194" width="5.8" height="14"/><rect x="562" y="194" width="5.8" height="14"/><rect x="568.8" y="194" width="5.8" height="14"/><rect x="575.6" y="194" width="5.8" height="14"/>
+      <rect x="582.4" y="194" width="5.8" height="14"/><rect x="589.2" y="194" width="5.8" height="14"/><rect x="596" y="194" width="5.8" height="14"/><rect x="602.8" y="194" width="5.8" height="14"/>
+      <rect x="609.6" y="194" width="5.8" height="14"/><rect x="616.4" y="194" width="5.8" height="14"/><rect x="623.2" y="194" width="5.8" height="14"/><rect x="630" y="194" width="5.8" height="14"/>
+    </g>
+    <text x="530" y="226" font-size="7.5" fill="#5a6580">前缀 0–15</text>
+  </g>
+
+  <!-- P7 shared -->
+  <g>
+    <rect x="670" y="170" width="130" height="72" rx="4" fill="#f7e6e1" stroke="#bf4520"/>
+    <text x="680" y="186" font-size="9" font-weight="600" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P7</text>
+    <text x="790" y="186" font-size="7.5" fill="#bf4520" text-anchor="end">ref=2</text>
+    <g fill="#ffffff" stroke="#d99a83">
+      <rect x="678" y="194" width="5.8" height="14"/><rect x="684.8" y="194" width="5.8" height="14"/><rect x="691.6" y="194" width="5.8" height="14"/><rect x="698.4" y="194" width="5.8" height="14"/>
+      <rect x="705.2" y="194" width="5.8" height="14"/><rect x="712" y="194" width="5.8" height="14"/><rect x="718.8" y="194" width="5.8" height="14"/><rect x="725.6" y="194" width="5.8" height="14"/>
+      <rect x="732.4" y="194" width="5.8" height="14"/><rect x="739.2" y="194" width="5.8" height="14"/><rect x="746" y="194" width="5.8" height="14"/><rect x="752.8" y="194" width="5.8" height="14"/>
+      <rect x="759.6" y="194" width="5.8" height="14"/><rect x="766.4" y="194" width="5.8" height="14"/><rect x="773.2" y="194" width="5.8" height="14"/><rect x="780" y="194" width="5.8" height="14"/>
+    </g>
+    <text x="680" y="226" font-size="7.5" fill="#5a6580">前缀 16–31</text>
+  </g>
+
+  <!-- P1 private A -->
+  <g>
+    <rect x="520" y="260" width="130" height="72" rx="4" fill="#e8edf4" stroke="#3d5a80"/>
+    <text x="530" y="276" font-size="9" font-weight="600" fill="#3d5a80" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P1</text>
+    <text x="640" y="276" font-size="7.5" fill="#3d5a80" text-anchor="end">ref=1</text>
+    <g fill="#ffffff" stroke="#9fb0c8">
+      <rect x="528" y="284" width="5.8" height="14"/><rect x="534.8" y="284" width="5.8" height="14"/><rect x="541.6" y="284" width="5.8" height="14"/><rect x="548.4" y="284" width="5.8" height="14"/>
+      <rect x="555.2" y="284" width="5.8" height="14"/><rect x="562" y="284" width="5.8" height="14"/><rect x="568.8" y="284" width="5.8" height="14"/><rect x="575.6" y="284" width="5.8" height="14"/>
+      <rect x="582.4" y="284" width="5.8" height="14"/><rect x="589.2" y="284" width="5.8" height="14"/><rect x="596" y="284" width="5.8" height="14"/><rect x="602.8" y="284" width="5.8" height="14"/>
+      <rect x="609.6" y="284" width="5.8" height="14"/><rect x="616.4" y="284" width="5.8" height="14"/><rect x="623.2" y="284" width="5.8" height="14"/><rect x="630" y="284" width="5.8" height="14"/>
+    </g>
+    <text x="530" y="316" font-size="7.5" fill="#5a6580">A · 32–47</text>
+  </g>
+
+  <!-- P5 private B -->
+  <g>
+    <rect x="670" y="260" width="130" height="72" rx="4" fill="#e6efe9" stroke="#3f6b52"/>
+    <text x="680" y="276" font-size="9" font-weight="600" fill="#3f6b52" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P5</text>
+    <text x="790" y="276" font-size="7.5" fill="#3f6b52" text-anchor="end">ref=1</text>
+    <g fill="#ffffff" stroke="#9db8a8">
+      <rect x="678" y="284" width="5.8" height="14"/><rect x="684.8" y="284" width="5.8" height="14"/><rect x="691.6" y="284" width="5.8" height="14"/><rect x="698.4" y="284" width="5.8" height="14"/>
+      <rect x="705.2" y="284" width="5.8" height="14"/><rect x="712" y="284" width="5.8" height="14"/><rect x="718.8" y="284" width="5.8" height="14"/><rect x="725.6" y="284" width="5.8" height="14"/>
+      <rect x="732.4" y="284" width="5.8" height="14"/><rect x="739.2" y="284" width="5.8" height="14"/><rect x="746" y="284" width="5.8" height="14"/><rect x="752.8" y="284" width="5.8" height="14"/>
+      <rect x="759.6" y="284" width="5.8" height="14"/><rect x="766.4" y="284" width="5.8" height="14"/><rect x="773.2" y="284" width="5.8" height="14"/><rect x="780" y="284" width="5.8" height="14"/>
+    </g>
+    <text x="680" y="316" font-size="7.5" fill="#5a6580">B · 32–47</text>
+  </g>
+
+  <!-- free blocks -->
+  <g>
+    <rect x="820" y="170" width="130" height="72" rx="4" fill="#fafafa" stroke="#c9ced6" stroke-dasharray="4 3"/>
+    <text x="830" y="186" font-size="9" fill="#8b93a7" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P0</text>
+    <text x="885" y="212" font-size="8" fill="#8b93a7" text-anchor="middle">free</text>
+
+    <rect x="820" y="260" width="130" height="72" rx="4" fill="#fafafa" stroke="#c9ced6" stroke-dasharray="4 3"/>
+    <text x="830" y="276" font-size="9" fill="#8b93a7" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P2</text>
+    <text x="885" y="302" font-size="8" fill="#8b93a7" text-anchor="middle">free</text>
+
+    <rect x="520" y="350" width="130" height="72" rx="4" fill="#fafafa" stroke="#c9ced6" stroke-dasharray="4 3"/>
+    <text x="530" y="366" font-size="9" fill="#8b93a7" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P4</text>
+    <text x="585" y="392" font-size="8" fill="#8b93a7" text-anchor="middle">free</text>
+
+    <rect x="670" y="350" width="130" height="72" rx="4" fill="#fafafa" stroke="#c9ced6" stroke-dasharray="4 3"/>
+    <text x="680" y="366" font-size="9" fill="#8b93a7" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P6</text>
+    <text x="735" y="392" font-size="8" fill="#8b93a7" text-anchor="middle">free</text>
+
+    <rect x="820" y="350" width="130" height="72" rx="4" fill="#fafafa" stroke="#c9ced6" stroke-dasharray="4 3"/>
+    <text x="830" y="366" font-size="9" fill="#8b93a7" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P8</text>
+    <text x="885" y="392" font-size="8" fill="#8b93a7" text-anchor="middle">free</text>
+  </g>
+
+  <text x="520" y="446" font-size="8" fill="#5a6580">物理块不必连续；编号只是句柄，块表才是地址。</text>
+
+  <!-- COW card -->
+  <rect x="50" y="480" width="860" height="150" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="70" y="507" font-size="11" font-weight="600" fill="#2d3142">写时复制（COW）：共享块只在“要写”的那一刻分裂</text>
+  <text x="70" y="524" font-size="8" fill="#5a6580">已填满的共享块不会分裂；新 token 直接追加到新块。只有“共享且未填满”的块需要复制。</text>
+
+  <!-- step 1 -->
+  <rect x="70" y="538" width="130" height="46" rx="3" fill="#f7e6e1" stroke="#bf4520"/>
+  <text x="82" y="557" font-size="9" font-weight="600" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P3</text>
+  <text x="82" y="573" font-size="7.5" fill="#bf4520">ref=2 · 只读</text>
+  <text x="70" y="602" font-size="8" fill="#5a6580">1. 共享块只读，ref=2</text>
+
+  <line x1="200" y1="561" x2="288" y2="561" stroke="#8b93a7" stroke-width="1.2" marker-end="url(#f06c)"/>
+
+  <!-- step 2 -->
+  <rect x="300" y="538" width="130" height="46" rx="3" fill="#e6efe9" stroke="#3f6b52"/>
+  <text x="312" y="557" font-size="9" font-weight="600" fill="#3f6b52" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P9</text>
+  <text x="312" y="573" font-size="7.5" fill="#3f6b52">copy 16 token</text>
+  <text x="300" y="602" font-size="8" fill="#5a6580">2. 分配新块，拷贝旧内容</text>
+
+  <line x1="430" y1="561" x2="518" y2="561" stroke="#8b93a7" stroke-width="1.2" marker-end="url(#f06c)"/>
+
+  <!-- step 3 -->
+  <rect x="530" y="538" width="105" height="46" rx="3" fill="#f7e6e1" stroke="#bf4520"/>
+  <text x="540" y="557" font-size="9" font-weight="600" fill="#bf4520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P3</text>
+  <text x="540" y="573" font-size="7.5" fill="#bf4520">ref=1</text>
+  <rect x="655" y="538" width="105" height="46" rx="3" fill="#e6efe9" stroke="#3f6b52"/>
+  <text x="665" y="557" font-size="9" font-weight="600" fill="#3f6b52" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">P9</text>
+  <text x="665" y="573" font-size="7.5" fill="#3f6b52">ref=1</text>
+  <text x="530" y="602" font-size="8" fill="#5a6580">3. 旧块 ref--，B 的块表改指 P9</text>
+
+  <text x="50" y="666" font-size="8.5" fill="#5a6580">不变量：Sealed 块的内容哈希不变；ref_count 等于所有块表引用数；只有 ref=0 的块能回 Free 链表。</text>
+</g>
+</svg>

@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="f08t f08d">
+<title id="f08t">KV cache 结构压缩谱系：MHA、GQA、MQA、MLA 与滑动窗口</title>
+<desc id="f08d">上半部分用对数刻度比较 70B 模型在 MHA、GQA、MQA 下的每 token cache，并给出 DeepSeek-V2 MLA 的参照值；下半部分用五张卡片解释每种结构的共享方式、省下的容量和付出的代价。</desc>
+<defs>
+  <marker id="f08a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#3f6b52"/>
+  </marker>
+</defs>
+<rect width="960" height="620" fill="#f5f5f5"/>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="0.16em">KV CACHE / 08</text>
+  <text x="40" y="62" font-size="17" font-weight="600" fill="#2d3142">结构压缩：每 token 的 cache 能降到多低</text>
+  <text x="40" y="84" font-size="9.5" fill="#5a6580">同一套 attention，改的是 K/V 的头数、表示形式，或者保留的 token 范围。</text>
+
+  <!-- bar chart -->
+  <text x="40" y="116" font-size="10" font-weight="600" fill="#2d3142">每 token 的 cache（对数刻度）</text>
+
+  <g font-size="8" fill="#2d3142" text-anchor="end">
+    <text x="240" y="147">MHA · 64 头</text>
+    <text x="240" y="172">GQA · 8 组</text>
+    <text x="240" y="197">MLA · DeepSeek-V2</text>
+    <text x="240" y="222">MQA · 1 头</text>
+    <text x="240" y="247">SWA · 窗口 W</text>
+  </g>
+
+  <g>
+    <rect x="250" y="135" width="623" height="16" fill="#bf4520"/>
+    <rect x="250" y="160" width="330" height="16" fill="#3d5a80"/>
+    <rect x="250" y="185" width="110" height="16" fill="#3f6b52"/>
+    <rect x="250" y="210" width="36" height="16" fill="#8b93a7"/>
+    <rect x="250" y="235" width="150" height="16" fill="#f0f1f3" stroke="#8b93a7" stroke-dasharray="3 3"/>
+  </g>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">
+    <text x="881" y="147">2.5 MiB</text>
+    <text x="588" y="172">320 KiB</text>
+    <text x="368" y="197">67.5 KiB</text>
+    <text x="294" y="222">40 KiB</text>
+    <text x="408" y="247">O(W)</text>
+  </g>
+  <text x="468" y="247" font-size="7.5" fill="#8b93a7">不随总长增长</text>
+
+  <line x1="250" y1="258" x2="900" y2="258" stroke="#c9ced6"/>
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8b93a7" text-anchor="middle">
+    <text x="255" y="272">32 KiB</text>
+    <text x="450" y="272">128 KiB</text>
+    <text x="646" y="272">512 KiB</text>
+    <text x="842" y="272">2 MiB</text>
+  </g>
+  <text x="40" y="292" font-size="7.5" fill="#8b93a7">70B 口径；MLA 是另一个模型，只作量级参照。SWA 的 cache 上界由窗口 W 决定，与请求总长无关。</text>
+
+  <!-- cards -->
+  <text x="40" y="314" font-size="10" font-weight="600" fill="#2d3142">五种做法，各自在省什么</text>
+
+  <!-- MHA -->
+  <rect x="40" y="326" width="168" height="250" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="56" y="350" font-size="12" font-weight="600" fill="#2d3142">MHA</text>
+  <text x="56" y="366" font-size="7.5" fill="#5a6580">每个 Q 头一对 K/V</text>
+  <g>
+    <circle cx="65" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="65" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="95" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="95" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="125" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="125" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="155" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="155" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <g stroke="#5a6580">
+      <line x1="65" y1="397" x2="65" y2="424"/>
+      <line x1="95" y1="397" x2="95" y2="424"/>
+      <line x1="125" y1="397" x2="125" y2="424"/>
+      <line x1="155" y1="397" x2="155" y2="424"/>
+    </g>
+    <g fill="#f7e6e1" stroke="#bf4520">
+      <rect x="59" y="424" width="12" height="12"/><rect x="59" y="440" width="12" height="12"/>
+      <rect x="89" y="424" width="12" height="12"/><rect x="89" y="440" width="12" height="12"/>
+      <rect x="119" y="424" width="12" height="12"/><rect x="119" y="440" width="12" height="12"/>
+      <rect x="149" y="424" width="12" height="12"/><rect x="149" y="440" width="12" height="12"/>
+    </g>
+    <g font-size="6" fill="#bf4520" text-anchor="middle">
+      <text x="65" y="433">K</text><text x="65" y="449">V</text>
+      <text x="95" y="433">K</text><text x="95" y="449">V</text>
+      <text x="125" y="433">K</text><text x="125" y="449">V</text>
+      <text x="155" y="433">K</text><text x="155" y="449">V</text>
+    </g>
+  </g>
+  <text x="56" y="478" font-size="8" fill="#5a6580">省：不省，基准</text>
+  <text x="56" y="500" font-size="8" fill="#5a6580">代价：cache 最大</text>
+  <text x="56" y="522" font-size="8" fill="#5a6580">适用：小模型 / 短上下文</text>
+
+  <!-- GQA -->
+  <rect x="222" y="326" width="168" height="250" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="238" y="350" font-size="12" font-weight="600" fill="#2d3142">GQA</text>
+  <text x="238" y="366" font-size="7.5" fill="#5a6580">Q 头分组，组内共享</text>
+  <g>
+    <circle cx="247" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="247" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="277" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="277" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="307" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="307" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="337" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="337" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <g stroke="#5a6580">
+      <line x1="247" y1="397" x2="262" y2="424"/>
+      <line x1="277" y1="397" x2="262" y2="424"/>
+      <line x1="307" y1="397" x2="322" y2="424"/>
+      <line x1="337" y1="397" x2="322" y2="424"/>
+    </g>
+    <g fill="#f7e6e1" stroke="#bf4520">
+      <rect x="256" y="424" width="12" height="12"/><rect x="256" y="440" width="12" height="12"/>
+      <rect x="316" y="424" width="12" height="12"/><rect x="316" y="440" width="12" height="12"/>
+    </g>
+    <g font-size="6" fill="#bf4520" text-anchor="middle">
+      <text x="262" y="433">K</text><text x="262" y="449">V</text>
+      <text x="322" y="433">K</text><text x="322" y="449">V</text>
+    </g>
+    <text x="292" y="466" font-size="7" fill="#8b93a7" text-anchor="middle">2 组</text>
+  </g>
+  <text x="238" y="478" font-size="8" fill="#5a6580">省：1/8（70B）</text>
+  <text x="238" y="500" font-size="8" fill="#5a6580">代价：表达力略降</text>
+  <text x="238" y="522" font-size="8" fill="#5a6580">适用：新模型默认</text>
+
+  <!-- MQA -->
+  <rect x="404" y="326" width="168" height="250" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="420" y="350" font-size="12" font-weight="600" fill="#2d3142">MQA</text>
+  <text x="420" y="366" font-size="7.5" fill="#5a6580">所有 Q 头共享一对</text>
+  <g>
+    <circle cx="429" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="429" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="459" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="459" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="489" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="489" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="519" cy="390" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="519" y="393" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <g stroke="#5a6580">
+      <line x1="429" y1="397" x2="474" y2="424"/>
+      <line x1="459" y1="397" x2="474" y2="424"/>
+      <line x1="489" y1="397" x2="474" y2="424"/>
+      <line x1="519" y1="397" x2="474" y2="424"/>
+    </g>
+    <g fill="#f7e6e1" stroke="#bf4520">
+      <rect x="468" y="424" width="12" height="12"/><rect x="468" y="440" width="12" height="12"/>
+    </g>
+    <g font-size="6" fill="#bf4520" text-anchor="middle">
+      <text x="474" y="433">K</text><text x="474" y="449">V</text>
+    </g>
+    <text x="474" y="466" font-size="7" fill="#8b93a7" text-anchor="middle">1 对</text>
+  </g>
+  <text x="420" y="478" font-size="8" fill="#5a6580">省：1/64（70B）</text>
+  <text x="420" y="500" font-size="8" fill="#5a6580">代价：质量 / 训练稳定性</text>
+  <text x="420" y="522" font-size="8" fill="#5a6580">适用：极致省显存</text>
+
+  <!-- MLA -->
+  <rect x="586" y="326" width="168" height="250" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="602" y="350" font-size="12" font-weight="600" fill="#2d3142">MLA</text>
+  <text x="602" y="366" font-size="7.5" fill="#5a6580">压成 latent 再展开</text>
+  <g>
+    <circle cx="611" cy="382" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="611" y="385" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="641" cy="382" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="641" y="385" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="671" cy="382" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="671" y="385" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <circle cx="701" cy="382" r="7" fill="#e8edf4" stroke="#3d5a80"/><text x="701" y="385" font-size="6.5" fill="#3d5a80" text-anchor="middle">Q</text>
+    <text x="656" y="398" font-size="7" fill="#3f6b52" text-anchor="middle">K/V</text>
+    <line x1="656" y1="420" x2="656" y2="404" stroke="#3f6b52" marker-end="url(#f08a)"/>
+    <text x="666" y="414" font-size="7" fill="#3f6b52">上投影</text>
+    <rect x="602" y="420" width="108" height="34" rx="3" fill="#e6efe9" stroke="#3f6b52"/>
+    <text x="656" y="435" font-size="7.5" fill="#3f6b52" text-anchor="middle">c_KV 512</text>
+    <text x="656" y="448" font-size="7.5" fill="#3f6b52" text-anchor="middle">+ k_R 64</text>
+    <text x="656" y="470" font-size="7" fill="#8b93a7" text-anchor="middle">每层 576 维</text>
+  </g>
+  <text x="602" y="490" font-size="8" fill="#5a6580">省：与头数解耦</text>
+  <text x="602" y="512" font-size="8" fill="#5a6580">代价：上投影算力 / 实现复杂</text>
+  <text x="602" y="534" font-size="8" fill="#5a6580">适用：DeepSeek-V2 等</text>
+
+  <!-- SWA -->
+  <rect x="768" y="326" width="168" height="250" rx="4" fill="#ffffff" stroke="#d8dce3"/>
+  <text x="784" y="350" font-size="12" font-weight="600" fill="#2d3142">SWA</text>
+  <text x="784" y="366" font-size="7.5" fill="#5a6580">只留最近 W 个 token</text>
+  <g>
+    <g fill="#eceff2" stroke="#c9ced6">
+      <rect x="788" y="392" width="9" height="14"/><rect x="800" y="392" width="9" height="14"/><rect x="812" y="392" width="9" height="14"/>
+    </g>
+    <g fill="#f7e6e1" stroke="#bf4520">
+      <rect x="824" y="392" width="9" height="14"/><rect x="836" y="392" width="9" height="14"/><rect x="848" y="392" width="9" height="14"/>
+      <rect x="860" y="392" width="9" height="14"/><rect x="872" y="392" width="9" height="14"/><rect x="884" y="392" width="9" height="14"/>
+    </g>
+    <line x1="824" y1="414" x2="893" y2="414" stroke="#bf4520"/>
+    <line x1="824" y1="414" x2="824" y2="420" stroke="#bf4520"/>
+    <line x1="893" y1="414" x2="893" y2="420" stroke="#bf4520"/>
+    <text x="858" y="432" font-size="7" fill="#bf4520" text-anchor="middle">W</text>
+    <text x="804" y="432" font-size="6.5" fill="#8b93a7" text-anchor="middle">丢弃</text>
+  </g>
+  <text x="784" y="478" font-size="8" fill="#5a6580">省：有上界 O(W)</text>
+  <text x="784" y="500" font-size="8" fill="#5a6580">代价：窗口外信息丢失</text>
+  <text x="784" y="522" font-size="8" fill="#5a6580">适用：流式 / 局部任务</text>
+
+  <text x="40" y="600" font-size="8.5" fill="#5a6580">省容量和保质量是两条曲线：结构压缩改的是“每 token 存多少”，驱逐改的是“留哪些 token”。</text>
+</g>
+</svg>
