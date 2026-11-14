@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">三种介质与各自的崩溃截断点</title>
+  <desc id="f01-desc">左列是 JSONL 追加日志，崩溃只丢最后一个未同步的帧，恢复动作是截断撕裂尾；中列是 JSON 整文件替换，崩溃丢一次未发布的写入，恢复动作是回滚内存；右列是内存快照，崩溃后整段消失，恢复动作是从未存在。底部标注每条路径的 fsync 位置。</desc>
+  <defs>
+    <marker id="f01-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">STORAGE / THREE MEDIA</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">同一种会话状态，三种落法</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">左侧越靠上，越接近「模型看过就必须在盘上」；右侧越靠下，越依赖内存活着</text>
+
+  <!-- column 1: JSONL -->
+  <rect x="40" y="100" width="276" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="40" y="100" width="276" height="44" rx="6" fill="#2d3142"/>
+  <rect x="40" y="132" width="276" height="12" fill="#2d3142"/>
+  <text x="56" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#aeb6c8">A / APPEND LOG</text>
+  <text x="56" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#ffffff">JSONL 追加</text>
+  <text x="56" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">一批事件 = 一个 zstd 帧</text>
+  <text x="56" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">写新字节，不重写历史</text>
+  <text x="56" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">fsync：每批一次</text>
+  <text x="56" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">发布：link() 不覆盖</text>
+  <rect x="56" y="246" width="244" height="64" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">session.v4.jsonl.zstd</text>
+  <text x="68" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">帧 1 · 帧 2 · 帧 3 · 帧 4</text>
+  <text x="68" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">最后一帧只写了一半</text>
+  <text x="56" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">掉电丢：上次 fsync 之后</text>
+  <text x="56" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">已提交的前缀一条不丢</text>
+
+  <!-- column 2: JSON whole file -->
+  <rect x="342" y="100" width="276" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="342" y="100" width="276" height="44" rx="6" fill="#2d3142"/>
+  <rect x="342" y="132" width="276" height="12" fill="#2d3142"/>
+  <text x="358" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#aeb6c8">B / WHOLE FILE</text>
+  <text x="358" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#ffffff">JSON 整文件</text>
+  <text x="358" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">每次写重发整个 unit 文件</text>
+  <text x="358" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">内存权威，盘上是副本</text>
+  <text x="358" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">fsync：临时文件 + 目录</text>
+  <text x="358" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">发布：rename() 原子替换</text>
+  <rect x="358" y="246" width="244" height="64" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="370" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">storages/session_projcache</text>
+  <text x="370" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">.tmp 写满 → rename 覆盖</text>
+  <text x="370" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">失败后内存回滚，盘可能新旧并存</text>
+  <text x="358" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">掉电丢：本次未发布的写</text>
+  <text x="358" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">写放大与文件大小成正比</text>
+
+  <!-- column 3: memory -->
+  <rect x="644" y="100" width="276" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="644" y="100" width="276" height="44" rx="6" fill="#2d3142"/>
+  <rect x="644" y="132" width="276" height="12" fill="#2d3142"/>
+  <text x="660" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#aeb6c8">C / MEMORY</text>
+  <text x="660" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#ffffff">内存快照</text>
+  <text x="660" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">create 之后、首次 append 之前</text>
+  <text x="660" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">逻辑存在，物理不存在</text>
+  <text x="660" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">flush：发布一个 header 帧</text>
+  <text x="660" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#5a6580">不 flush：崩溃即从未存在</text>
+  <rect x="660" y="246" width="244" height="64" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="672" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">prepared session</text>
+  <text x="672" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">header + 空事件流</text>
+  <text x="672" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">进程死，整段消失</text>
+  <text x="660" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">掉电丢：全部</text>
+  <text x="660" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">代价：创建零成本</text>
+
+  <!-- recovery strip -->
+  <rect x="40" y="420" width="880" height="140" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="444" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#5a6580">RECOVERY ACTIONS</text>
+  <text x="56" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">崩溃之后，每个写者只做一件事</text>
+
+  <rect x="56" y="480" width="270" height="60" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520">截断撕裂尾</text>
+  <text x="68" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">先取出帧内完整记录，再 truncate</text>
+  <text x="68" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">由下一个拿到写租约的进程执行</text>
+
+  <rect x="342" y="480" width="270" height="60" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="354" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520">回滚内存</text>
+  <text x="354" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">发布失败即恢复旧快照</text>
+  <text x="354" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">盘上允许新旧任一版本</text>
+
+  <rect x="628" y="480" width="276" height="60" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="640" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520">从未存在</text>
+  <text x="640" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">不需要恢复，也没有可恢复的东西</text>
+  <text x="640" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">list 看不到，stat 也不该编一个</text>
+
+  <text x="40" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">DSH / persistence-and-storage / f01</text>
+</svg>

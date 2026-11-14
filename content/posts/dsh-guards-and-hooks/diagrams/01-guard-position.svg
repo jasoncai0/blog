@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-gp-title f01-gp-desc">
+  <title id="f01-gp-title">guard 在准入链上的位置与两层求值顺序</title>
+  <desc id="f01-gp-desc">pre-execute 与审批决定调用是否继续，guards 只在 allow 分支运行并返回拒绝理由或 undefined。求值顺序是全局层在前、agent 祖先链在后，遇到第一个理由立即返回，后面的层不再执行。</desc>
+
+  <defs>
+    <marker id="f01-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">09 / GUARD POSITION</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">准入链上的四个位置</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">pre-execute 与审批决定做不做，guards 决定准不准；它只在 allow 分支被调用，且只能说不</text>
+
+  <!-- flow -->
+  <rect x="40" y="110" width="150" height="60" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="115" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">TOOLS/PRE-EXECUTE</text>
+  <text x="115" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">allow / deny / ask</text>
+
+  <line x1="192" y1="140" x2="208" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arrow)"/>
+
+  <rect x="210" y="110" width="140" height="60" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="280" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#4f5d75">APPROVAL</text>
+  <text x="280" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">allowed-once 才放行</text>
+
+  <line x1="352" y1="140" x2="368" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arrow)"/>
+
+  <rect x="370" y="106" width="176" height="68" rx="5" fill="#ffffff" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="458" y="128" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">CHECKGUARDS</text>
+  <text x="458" y="148" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">string 拒绝 / undefined 不表态</text>
+  <text x="458" y="164" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">没有 allow 这一档</text>
+
+  <line x1="548" y1="140" x2="564" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arrow)"/>
+
+  <rect x="566" y="110" width="140" height="60" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="636" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#4f5d75">TOOLS/EXECUTE</text>
+  <text x="636" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">包裹与超时</text>
+
+  <line x1="708" y1="140" x2="724" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arrow)"/>
+
+  <rect x="726" y="110" width="120" height="60" rx="5" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="786" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#4f5d75">BODY</text>
+  <text x="786" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">唯一副作用处</text>
+
+  <text x="858" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">deny 时不进入</text>
+  <text x="858" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">后续三段仍跑</text>
+
+  <!-- order card -->
+  <rect x="40" y="200" width="560" height="310" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">CHECKGUARDS · 两层</text>
+  <text x="58" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">全局层先跑，agent 链由远到近</text>
+
+  <rect x="58" y="262" width="524" height="52" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="72" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">guards.global</text>
+  <text x="72" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">根 context 注册；所有 agent、所有工具；层内按注册顺序</text>
+  <text x="548" y="288" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">第 1 位</text>
+
+  <line x1="320" y1="316" x2="320" y2="330" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arrow)"/>
+
+  <rect x="58" y="332" width="524" height="52" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="72" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">chainLayers(agent)[0]</text>
+  <text x="72" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">最远祖先的作用域层；只覆盖该子树</text>
+
+  <line x1="320" y1="386" x2="320" y2="400" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arrow)"/>
+
+  <rect x="58" y="402" width="524" height="52" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="72" y="422" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">chainLayers(agent)[n]</text>
+  <text x="72" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">当前 agent 自己的层；最近作用域最后求值</text>
+  <text x="548" y="432" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">最后</text>
+
+  <text x="58" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">任一返回 string：立即 return，后面的层不再执行</text>
+  <text x="58" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">全部返回 undefined：放行，进入 tools/execute</text>
+
+  <!-- contrast card -->
+  <rect x="620" y="200" width="300" height="310" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="638" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">顺序为什么只影响理由</text>
+
+  <text x="638" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">waterfall 的返回值</text>
+  <text x="638" y="272" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">allow | deny | ask | cancel</text>
+
+  <text x="638" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">guard 的返回值</text>
+  <text x="638" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">reason(string) | undefined</text>
+
+  <line x1="638" y1="338" x2="902" y2="338" stroke="#e2e2e2"/>
+
+  <text x="638" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">组合律：deny 优先，且不可撤销</text>
+  <text x="638" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">顺序决定：哪条理由先被模型看到</text>
+  <text x="638" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">顺序不决定：是否拒绝</text>
+
+  <rect x="638" y="424" width="264" height="66" rx="4" fill="#fdf3ee" stroke="#bf4520" stroke-opacity="0.35"/>
+  <text x="650" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">后置 allow 不存在</text>
+  <text x="650" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">所以最近作用域无法翻案，</text>
+  <text x="650" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">全局 guard 的拒绝最先到达。</text>
+
+  <text x="40" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">拒绝结果仍走 project 与 post：content 是 Error: 理由，isError 为真，审计与 UI 走同一条路径。</text>
+  <text x="40" y="568" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">注册的 disposer 绑定在调用方 context 的 effect 上，插件卸载即摘除，不需要手写清理。</text>
+</svg>

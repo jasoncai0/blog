@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">谁能代表用户：三层授权边界与审计缺口</title>
+  <desc id="f04-desc">三个同心边界。最内层是同进程的 agent、subagent 与 fork，共享同一个 credentials 服务，能解析父 agent 的全部引用。中间层是跨进程的子 agent 与 MCP server，环境先裁剪，只有显式点名的凭据才会传入。最外层是 SSH、浏览器会话与远程沙箱，身份由部署方配置，模型参数不能选择。底部是审计缺口：没有任何记录回答谁在什么时候用了哪把钥匙。</desc>
+  <defs>
+    <marker id="f04-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">IDENTITY / AUTHORITY</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">越往外，能拿到的凭据越少</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">「代表用户」在这里的含义是：这个进程能解析到哪些引用。模型本身没有被授予身份</text>
+
+  <!-- outer ring -->
+  <rect x="60" y="140" width="840" height="330" rx="10" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="60" y="140" width="840" height="34" rx="10" fill="#2d3142"/>
+  <rect x="60" y="162" width="840" height="12" fill="#2d3142"/>
+  <text x="80" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#aeb6c8">BOUNDARY 3 / DEPLOYMENT-OWNED</text>
+
+  <!-- middle ring -->
+  <rect x="140" y="190" width="680" height="230" rx="8" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="158" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">BOUNDARY 2 / CROSS-PROCESS</text>
+
+  <!-- inner ring -->
+  <rect x="230" y="240" width="500" height="130" rx="6" fill="#f5f5f5" stroke="#2d3142"/>
+  <text x="248" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#2d3142">BOUNDARY 1 / SAME PROCESS</text>
+  <text x="248" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">共享同一个 ctx.credentials</text>
+
+  <rect x="248" y="298" width="96" height="28" rx="4" fill="#2d3142"/>
+  <text x="262" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#ffffff">agent</text>
+  <rect x="354" y="298" width="106" height="28" rx="4" fill="#2d3142"/>
+  <text x="368" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#ffffff">subagent</text>
+  <rect x="470" y="298" width="96" height="28" rx="4" fill="#2d3142"/>
+  <text x="484" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#ffffff">fork</text>
+
+  <text x="248" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">能解析父 agent 的全部引用，没有 per-agent 作用域</text>
+  <text x="248" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">要限制某个子 agent，只能加在工具层</text>
+
+  <!-- middle band content -->
+  <text x="158" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">claude-code · codex · dsh-sdk · acp · MCP stdio</text>
+  <text x="158" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">scrubbedParentEnv 打底；显式传入的 env 与凭据在裁剪之后合并，等于点名才给</text>
+
+  <!-- outer band content -->
+  <text x="80" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">SSH host 别名（含 user / key / known_hosts） · 浏览器会话（HMAC cookie + 记录里的 32 字节 secret） · 远程沙箱</text>
+  <text x="80" y="460" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">身份由部署方配置，模型参数不能选择主机或私钥；SSH 隧道每个流一条 TLS PSK，密钥只走管理 RPC</text>
+
+  <!-- audit gap -->
+  <rect x="60" y="486" width="840" height="88" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="80" y="508" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">AUDIT GAP</text>
+  <text x="80" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">没有凭据使用账本</text>
+  <text x="80" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">能查到的只有配置变化事件（reference-updated、record-updated、authorization/settled）与会话事件日志</text>
+  <text x="80" y="564" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">两者都不记录值与每次使用；要回答「谁用了哪把钥匙」，得自己在 provider 与工具的调用点补</text>
+</svg>

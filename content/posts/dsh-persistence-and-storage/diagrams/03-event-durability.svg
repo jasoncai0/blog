@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">从事件产生到模型看见之间的落盘屏障</title>
+  <desc id="f03-desc">事件先进入 200 毫秒有界窗口，窗口到期后编成一个 zstd 帧并 fsync 追加。模型请求派发、顶层工具执行、每一步开始之前各有一次强制 flush。掉电只影响最后一次屏障之后的事件，模型看过或工具已产生副作用的内容不会丢。</desc>
+  <defs>
+    <marker id="f03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SESSION / DURABILITY</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">事件什么时候算「写下了」</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">批处理决定延迟，检查点决定正确性；两条路径不能互相替代</text>
+
+  <!-- stage 1 -->
+  <rect x="40" y="108" width="160" height="120" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">01 / EMIT</text>
+  <text x="56" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">session/event</text>
+  <text x="56" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同步通知，不阻塞</text>
+  <text x="56" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">生产方</text>
+  <text x="56" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">structuredClone(event)</text>
+
+  <line x1="200" y1="168" x2="224" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <!-- stage 2 -->
+  <rect x="226" y="108" width="160" height="120" rx="5" fill="#ffffff" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="242" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">02 / BUFFER</text>
+  <text x="242" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">200ms 有界窗口</text>
+  <text x="242" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">首个事件开定时器</text>
+  <text x="242" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">后续加入不重置截止</text>
+  <text x="242" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">LIVE_WRITE_BATCH_MAX_DELAY_MS</text>
+
+  <line x1="386" y1="168" x2="410" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <!-- stage 3 -->
+  <rect x="412" y="108" width="176" height="120" rx="5" fill="#2d3142"/>
+  <text x="428" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#aeb6c8">03 / APPEND</text>
+  <text x="428" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#ffffff">一个 zstd 帧 + fsync</text>
+  <text x="428" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#aeb6c8">open(a) · stat · write · sync</text>
+  <text x="428" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#aeb6c8">失败 truncate 回 before</text>
+  <text x="428" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">已提交前缀永不重写</text>
+
+  <line x1="588" y1="168" x2="612" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <!-- stage 4 -->
+  <rect x="614" y="108" width="150" height="120" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="630" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">04 / BARRIER</text>
+  <text x="630" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">检查点 flush</text>
+  <text x="630" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">llm/stream 派发前</text>
+  <text x="630" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">顶层 tools/execute 前</text>
+  <text x="630" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">agent/pre-step 每步</text>
+
+  <line x1="764" y1="168" x2="788" y2="168" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <!-- stage 5 -->
+  <rect x="790" y="108" width="130" height="120" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="806" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">05 / CONSUME</text>
+  <text x="806" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">模型 / 工具</text>
+  <text x="806" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">看见的必然</text>
+  <text x="806" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">已经落盘</text>
+  <text x="806" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">side effect 前有屏障</text>
+
+  <!-- explicit flush curve -->
+  <path d="M226,236 C226,270 300,270 412,236" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#f03-arrow-accent)"/>
+  <text x="250" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">session/flush：取消等待，立即排空</text>
+
+  <!-- timeline -->
+  <text x="40" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#5a6580">POWER LOSS WINDOWS</text>
+  <line x1="40" y1="356" x2="920" y2="356" stroke="#d8d8d8" stroke-width="2"/>
+
+  <rect x="40" y="356" width="372" height="10" fill="#f0c9bb"/>
+  <text x="56" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520">未到 fsync：这批事件丢失</text>
+  <text x="56" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">模型还没看见它们，重放不会缺上下文</text>
+
+  <rect x="412" y="356" width="508" height="10" fill="#c9d2c4"/>
+  <text x="428" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f6b46">已 fsync：最多丢最后一个撕裂帧的尾部</text>
+  <text x="428" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">下一个写者截断撕裂字节，并把帧内完整记录重写一遍</text>
+
+  <!-- footer facts -->
+  <rect x="40" y="428" width="430" height="132" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="450" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">ORDERING FACTS</text>
+  <text x="56" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">模型请求在适配器派发之前 flush</text>
+  <text x="56" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">顶层工具在工具体执行之前 flush</text>
+  <text x="56" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">abort 发生在派发前，工具不执行</text>
+  <text x="56" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">投影缓存先 flush 会话再写自己</text>
+  <text x="56" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">缓存允许落后日志，绝不领先</text>
+  <text x="56" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">后台写失败：保留批次，暂停自动路径，等显式 flush</text>
+
+  <rect x="490" y="428" width="430" height="132" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="506" y="450" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">COST PER BATCH</text>
+  <text x="506" y="470" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">open + stat + write + fsync + close</text>
+  <text x="506" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">一次事件与一百条事件，价格相同</text>
+  <text x="506" y="502" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">实体化只在会话第一次 append 时发生</text>
+  <text x="506" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">目录 fsync 只属于发布，不属于追加</text>
+  <text x="506" y="534" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">因此高频流式事件不会每个都触发一次同步</text>
+  <text x="506" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">代价是最多 200ms 的可见延迟</text>
+
+  <text x="40" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">DSH / persistence-and-storage / f03</text>
+</svg>

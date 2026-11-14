@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="380" viewBox="0 0 960 380" role="img" aria-labelledby="f03-title f03-desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="380" viewBox="0 0 960 380" role="img" aria-labelledby="f03-title f03-desc"><defs><marker id="f03-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker></defs>
 <title id="f03-title">装载顺序</title>
 <desc id="f03-desc">profile 选组合，bundle 给默认值，patch 按 id 覆盖，Loader 最后实例化。</desc>
 <rect width="960" height="380" fill="#f5f5f5"/>

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">三种 shell 形态的状态与输出边界</title>
+  <desc id="f01-desc">按进程生命周期、工作目录、环境变量、超时动作、输出保留、退出码来源与并行能力七个维度，对比一次性 bash、持久 bash 与 PTY 终端。进程存活越久，保留的状态越多，工具层对输出的控制越弱。</desc>
+
+  <defs>
+    <marker id="f01-x" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">01 / THREE LIFECYCLES</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">同一条命令，三种生命周期</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">进程活多久，决定状态留多少，也决定输出由谁保管</text>
+
+  <!-- column headers -->
+  <rect x="240" y="104" width="200" height="46" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="256" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">bash</text>
+  <text x="256" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每条命令一个新 shell</text>
+
+  <rect x="460" y="104" width="200" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="476" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">bash-persistent</text>
+  <text x="476" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每 agent 一个 PTY</text>
+
+  <rect x="680" y="104" width="240" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="696" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">terminal_*</text>
+  <text x="696" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每次 open 一个会话</text>
+
+  <!-- rows -->
+  <text x="40" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">进程</text>
+  <text x="256" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">每条命令 spawn 一次</text>
+  <text x="476" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">一个会话跑到底</text>
+  <text x="696" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">open 到 close</text>
+
+  <line x1="40" y1="194" x2="920" y2="194" stroke="#d8d8d8" stroke-width="1"/>
+
+  <text x="40" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">工作目录</text>
+  <text x="256" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">workdir 参数</text>
+  <text x="476" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">跨调用保留</text>
+  <text x="696" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">跨调用保留</text>
+
+  <line x1="40" y1="236" x2="920" y2="236" stroke="#d8d8d8" stroke-width="1"/>
+
+  <text x="40" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">环境变量</text>
+  <text x="256" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每条重建 DSH_*</text>
+  <text x="476" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">export 生效</text>
+  <text x="696" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">export 生效</text>
+
+  <line x1="40" y1="278" x2="920" y2="278" stroke="#d8d8d8" stroke-width="1"/>
+
+  <text x="40" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">超时</text>
+  <text x="256" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">120 s，转后台 job</text>
+  <text x="476" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">300 s，重置会话</text>
+  <text x="696" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">工具层无，send 有窗口</text>
+
+  <line x1="40" y1="320" x2="920" y2="320" stroke="#d8d8d8" stroke-width="1"/>
+
+  <text x="40" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">输出保留</text>
+  <text x="256" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">64 KB 尾部 + spill</text>
+  <text x="476" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">scrollback 1000 行</text>
+  <text x="696" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一页 500 行</text>
+
+  <line x1="40" y1="362" x2="920" y2="362" stroke="#d8d8d8" stroke-width="1"/>
+
+  <text x="40" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">退出码</text>
+  <text x="256" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">exitCode + signal + timedOut</text>
+  <text x="476" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">$? 与标记行</text>
+  <text x="696" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">sessionStatus.exited</text>
+
+  <line x1="40" y1="404" x2="920" y2="404" stroke="#d8d8d8" stroke-width="1"/>
+
+  <text x="40" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">并行</text>
+  <text x="256" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">可并行</text>
+  <text x="476" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">同一 agent 串行</text>
+  <text x="696" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">每会话一个 send</text>
+
+  <!-- state arrow -->
+  <line x1="240" y1="470" x2="920" y2="470" stroke="#bf4520" stroke-width="1" marker-end="url(#f01-x)"/>
+  <text x="240" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">状态留存递增</text>
+
+  <rect x="40" y="496" width="880" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="518" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">READ THE COLUMNS</text>
+  <text x="56" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">左列把状态交给调用方，每步都要显式传 workdir；中列把状态留在会话里，代价是同 agent 的命令排队。</text>
+  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">右列连输出归属都交给终端，工具只能读到一页 scrollback；选形态时先问「命令之间要不要共享状态」。</text>
+</svg>

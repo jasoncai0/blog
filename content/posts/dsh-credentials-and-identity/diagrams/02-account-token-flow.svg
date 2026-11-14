@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-desc">
+  <title id="f02-title">账号 token 的生命周期：登录一次，401 后回到登录</title>
+  <desc id="f02-desc">上半部分是五步主路径：startSignIn 打开授权页，浏览器回调，写入 grant 记录，请求前按 origin 闸门解析 token，携带请求头发出。下半部分是 401 之后的失败链：删除记录、发 session-expired 与 signed-out、取消账号路由的运行中任务、发 model-sign-in-required。右侧注明代码里没有 refresh 分支。</desc>
+  <defs>
+    <marker id="f02-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">IDENTITY / ACCOUNT TOKEN</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">一次登录换来一条 grant，过期就重来</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">主路径五步，失败路径一条；代码里没有刷新调用，token 有效期由服务端判定</text>
+
+  <!-- stage 1 -->
+  <rect x="40" y="108" width="160" height="170" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">01</text>
+  <text x="56" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">登录开始</text>
+  <text x="56" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">startSignIn(</text>
+  <text x="56" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">  client,</text>
+  <text x="56" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">  callbackOrigin,</text>
+  <text x="56" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">  loginSource)</text>
+  <text x="56" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">同一 key 只允许</text>
+  <text x="56" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">一个尝试</text>
+
+  <path d="M200,193 L220,193" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+
+  <!-- stage 2 -->
+  <rect x="220" y="108" width="160" height="170" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="236" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">02</text>
+  <text x="236" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">浏览器授权</text>
+  <text x="236" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">用户在浏览器里</text>
+  <text x="236" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">批准或拒绝</text>
+  <text x="236" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">拒绝时 begin</text>
+  <text x="236" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">以未提交结束</text>
+  <text x="236" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">cancel(key)</text>
+  <text x="236" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">不依赖请求 signal</text>
+
+  <path d="M380,193 L400,193" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+
+  <!-- stage 3 -->
+  <rect x="400" y="108" width="160" height="170" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="416" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">03</text>
+  <text x="416" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">写 grant</text>
+  <text x="416" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">records[key] =</text>
+  <text x="416" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">  { token, issuer }</text>
+  <text x="416" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">下次启动校验</text>
+  <text x="416" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">issuer，不符即删</text>
+  <text x="416" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">没有 refresh token</text>
+  <text x="416" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">字段</text>
+
+  <path d="M560,193 L580,193" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+
+  <!-- stage 4 -->
+  <rect x="580" y="108" width="160" height="170" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="596" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">04</text>
+  <text x="596" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">请求前解析</text>
+  <text x="596" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">resolveToken(url)</text>
+  <text x="596" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只对 provider 允许</text>
+  <text x="596" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">的 inference origin</text>
+  <text x="596" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">返回</text>
+  <text x="596" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">带 userinfo 的 URL</text>
+  <text x="596" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">与 mock 前缀拒绝</text>
+
+  <path d="M740,193 L760,193" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+
+  <!-- stage 5 -->
+  <rect x="760" y="108" width="160" height="170" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="776" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">05</text>
+  <text x="776" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">发请求</text>
+  <text x="776" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">x-dsh-auth-token</text>
+  <text x="776" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">头携带 token</text>
+  <text x="776" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">401 之前一切</text>
+  <text x="776" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">正常</text>
+  <text x="776" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">模型看到的是</text>
+  <text x="776" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">请求结果，不是 token</text>
+
+  <!-- failure chain -->
+  <rect x="40" y="308" width="700" height="150" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="60" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">FAILURE / 401</text>
+  <text x="60" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">失败链：记录被删，事件向外传，任务被取消</text>
+
+  <rect x="60" y="366" width="196" height="72" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="74" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">服务端返回 401</text>
+  <text x="74" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">转成 ACCOUNT_TOKEN_INVALID</text>
+  <text x="74" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">调用 rejectToken</text>
+
+  <path d="M256,402 L276,402" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-arrow-accent)"/>
+
+  <rect x="276" y="366" width="196" height="72" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="290" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">只删仍匹配的当前值</text>
+  <text x="290" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">写入竞态不会删掉</text>
+  <text x="290" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">别处刚写的新 token</text>
+
+  <path d="M472,402 L492,402" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-arrow-accent)"/>
+
+  <rect x="492" y="366" width="228" height="72" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="506" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">事件与取消</text>
+  <text x="506" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">session-expired → signed-out</text>
+  <text x="506" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">取消账号路由的运行中任务</text>
+
+  <text x="60" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">agent/error 上的 ACCOUNT_SIGN_IN_REQUIRED 转成 model-sign-in-required，界面据此弹登录提示；模型对话里不写错误文本</text>
+
+  <!-- no refresh note -->
+  <rect x="760" y="308" width="160" height="150" rx="6" fill="#2d3142"/>
+  <text x="776" y="332" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#aeb6c8">NO REFRESH</text>
+  <text x="776" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#ffffff">没有刷新分支</text>
+  <text x="776" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#c9cfdd">代码里没有</text>
+  <text x="776" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#c9cfdd">refresh token</text>
+  <text x="776" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#c9cfdd">字段与刷新调用</text>
+  <text x="776" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#c9cfdd">续期只能重新登录</text>
+
+  <!-- bottom facts -->
+  <rect x="40" y="484" width="880" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">失败后模型看到什么</text>
+  <text x="60" y="526" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">请求在 resolveAuth 阶段就失败，没有 assistant 消息，也没有把 token 或未授权细节写进对话历史</text>
+  <text x="60" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">没有 token：ACCOUNT_SIGN_IN_REQUIRED。401：ACCOUNT_TOKEN_INVALID。两种都要求用户重新登录</text>
+  <text x="60" y="562" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">packages/llm/llm-deepseek-account/src/index.ts:39-52</text>
+</svg>

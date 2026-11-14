@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-t f03-d">
+  <title id="f03-t">抓取管线的四道闸</title>
+  <desc id="f03-d">URL 形态校验之后自己跟同源重定向，读取时先看 Content-Length 再流式限流，按 Content-Type 与 charset 解码出 html 或 text，工具层用 turndown 转换并做深度守卫，最后按输出预算截断。非 2xx 不进入错误分支，作为结果原样交给模型。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-03 / FETCH PIPELINE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">从 URL 到模型文本：四道闸，一条旁路</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">提供方决定字节怎么变字符与类型，工具决定字符怎么变 Markdown</text>
+
+  <!-- row A labels -->
+  <text x="40" y="116" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">PROVIDER SIDE</text>
+
+  <!-- stage 1 -->
+  <rect x="40" y="128" width="200" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">校验 URL 形态</text>
+  <text x="56" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">只允许 http 与 https</text>
+  <text x="56" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">拒绝 URL 内嵌凭据</text>
+  <text x="56" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">长度上限 2048</text>
+  <text x="56" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">policy.ts:41</text>
+
+  <line x1="240" y1="182" x2="268" y2="182" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- stage 2 -->
+  <rect x="276" y="128" width="216" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="292" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">自己跟重定向</text>
+  <text x="292" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">redirect: manual，最多 5 跳</text>
+  <text x="292" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每跳重做 URL 校验</text>
+  <text x="292" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">跨源即停，要求重新调用</text>
+  <text x="292" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">provider.ts:60</text>
+
+  <line x1="492" y1="182" x2="520" y2="182" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- stage 3 -->
+  <rect x="528" y="128" width="200" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="544" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">限字节读取</text>
+  <text x="544" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">先看 Content-Length</text>
+  <text x="544" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">再流式读，超限即停</text>
+  <text x="544" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">恰好填满不算截断</text>
+  <text x="544" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">provider.ts:173</text>
+
+  <line x1="728" y1="182" x2="756" y2="182" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- stage 4 -->
+  <rect x="764" y="128" width="156" height="108" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="780" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">解码与分型</text>
+  <text x="780" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">charset 缺省 utf-8</text>
+  <text x="780" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">html 或 text 二选一</text>
+  <text x="780" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">其余类型先取消再报错</text>
+  <text x="780" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">provider.ts:129</text>
+
+  <!-- wrap arrow -->
+  <path d="M 842 236 L 842 262 L 40 262 L 40 286" fill="none" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="420" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">跨层：WebFetchResult（url、statusCode、body、truncated）</text>
+
+  <!-- row B -->
+  <text x="40" y="310" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TOOL SIDE</text>
+
+  <rect x="40" y="322" width="200" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">按预算切源文本</text>
+  <text x="56" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">先 slice 再转换</text>
+  <text x="56" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">省掉超长文档的 DOM 解析</text>
+  <text x="56" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">fetch.ts:302</text>
+
+  <line x1="240" y1="374" x2="268" y2="374" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <rect x="276" y="322" width="216" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="292" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">turndown 转换</text>
+  <text x="292" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">丢脚本、样式、隐藏节点</text>
+  <text x="292" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">表格不展开 colspan</text>
+  <text x="292" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">深度超 512 层直接省略</text>
+  <text x="292" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">fetch.ts:120 / 156 / 31</text>
+
+  <line x1="492" y1="374" x2="520" y2="374" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <rect x="528" y="322" width="200" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="544" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">拼头部与脚注</text>
+  <text x="544" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">Fetched 加 HTTP 状态码</text>
+  <text x="544" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">外部内容不可信声明</text>
+  <text x="544" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">截断时补一行说明</text>
+  <text x="544" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">fetch.ts:265 / 328</text>
+
+  <line x1="728" y1="374" x2="756" y2="374" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <rect x="764" y="322" width="156" height="104" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="780" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">模型文本</text>
+  <text x="780" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">上限 200000 字符</text>
+  <text x="780" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同一份文本进卡片</text>
+  <text x="780" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">tool-web 配置</text>
+
+  <!-- bypass -->
+  <path d="M 560 236 L 560 292" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f03-acc)"/>
+  <rect x="880" y="430" width="40" height="0" fill="none"/>
+  <rect x="600" y="440" width="320" height="66" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="616" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">非 2xx 旁路</text>
+  <text x="616" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">404、403、500 都走结果通道</text>
+  <text x="616" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">正文照常转换，状态码写在头部</text>
+
+  <!-- caps -->
+  <line x1="40" y1="440" x2="560" y2="440" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="40" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">CAPS</text>
+  <text x="40" y="480" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">maxResponseBytes 5,000,000</text>
+  <text x="40" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">maxBodyChars 100,000</text>
+  <text x="40" y="512" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">fetchMaxOutputChars 200,000</text>
+  <text x="40" y="528" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">maxRedirects 5</text>
+  <text x="40" y="544" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">summaryMaxChars 800</text>
+  <text x="240" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">字节层：超限报错或流式截断</text>
+  <text x="240" y="496" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">字符层：切到上限并标记</text>
+  <text x="240" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">输出层：加脚注，不改状态码</text>
+  <text x="240" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">重定向层：跨源需要新调用</text>
+  <text x="240" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">搜索层：摘要与来源数量</text>
+</svg>

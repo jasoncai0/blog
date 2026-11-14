@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">read 的三层预算</title>
+  <desc id="f01-desc">read 先做一次 stat 决定整文件读取或流式读取，再按行数、单行宽度、总字节三层预算切窗口；任一层先到就停止保留但继续计数，所以 totalLines 仍然精确，三种 footer 分别指向续读位置。</desc>
+
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">01 / READ WINDOW</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">三层预算，一个仍然精确的总行数</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">行数、单行宽度、总字节各自独立，任一先到就停止保留；计数不停，footer 指向下一段</text>
+
+  <!-- request -->
+  <rect x="40" y="110" width="236" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">REQUEST</text>
+  <text x="56" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">模型给的三个值</text>
+  <text x="56" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">file_path 必填</text>
+  <text x="56" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">offset=1  limit=2000</text>
+  <text x="56" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">正整数校验，limit 不超过 readLimit</text>
+
+  <line x1="278" y1="163" x2="304" y2="163" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <!-- stat -->
+  <rect x="306" y="110" width="266" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="322" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">STAT ×1</text>
+  <text x="322" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">type · size · version</text>
+  <text x="322" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">size &lt; 10 MiB → readText</text>
+  <text x="322" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">size ≥ 10 MiB → streamText</text>
+  <text x="322" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">流式路径由 backend 做 UTF-8 解码</text>
+
+  <line x1="574" y1="163" x2="600" y2="163" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <!-- window -->
+  <rect x="602" y="110" width="318" height="106" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="618" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">BUILD WINDOW</text>
+  <text x="618" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">窗口切分与包络</text>
+  <text x="618" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">1: import ...</text>
+  <text x="618" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">2: export ...</text>
+  <text x="618" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">行号 1-based，相对整个文件</text>
+
+  <!-- budgets -->
+  <rect x="40" y="242" width="880" height="146" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">THREE BUDGETS</text>
+  <text x="56" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">任一层先到即停止保留，扫描继续，totalLines 照常递增</text>
+
+  <rect x="56" y="296" width="270" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="70" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">① 行数</text>
+  <text x="70" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">limit = 2000</text>
+  <text x="70" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">超过就停在这里，footer 给 offset</text>
+
+  <rect x="345" y="296" width="270" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="359" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">② 单行宽度</text>
+  <text x="359" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">READ_MAX_LINE_LENGTH = 2000</text>
+  <text x="359" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">该行加 line truncated 后缀</text>
+
+  <rect x="634" y="296" width="270" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="648" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">③ 总字节</text>
+  <text x="648" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">READ_MAX_BYTES = 50 × 1024</text>
+  <text x="648" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">置 truncatedByBytes 并停止保留</text>
+
+  <line x1="480" y1="218" x2="480" y2="240" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f01-r)"/>
+
+  <!-- model view -->
+  <rect x="40" y="410" width="576" height="152" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="432" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">MODEL TEXT</text>
+  <text x="56" y="456" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">&lt;path&gt;src/app.ts&lt;/path&gt;</text>
+  <text x="56" y="472" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">&lt;type&gt;file&lt;/type&gt;</text>
+  <text x="56" y="488" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">&lt;content&gt;</text>
+  <text x="56" y="504" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">1: import ...</text>
+  <text x="56" y="520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">...</text>
+  <text x="56" y="536" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">(Showing lines 1-2000 of 4213. Use offset=2001 to continue.)</text>
+  <text x="56" y="552" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">&lt;/content&gt;</text>
+
+  <!-- footers -->
+  <rect x="636" y="410" width="284" height="152" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="652" y="432" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">FOOTER ×3</text>
+  <text x="652" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">① 字节预算先到</text>
+  <text x="652" y="470" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">Output capped. Showing 1-2000.</text>
+  <text x="652" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">② 行数预算先到</text>
+  <text x="652" y="508" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">Showing 1-500 of 4213.</text>
+  <text x="652" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">③ 读到文件末尾</text>
+  <text x="652" y="546" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">End of file - total 4213 lines</text>
+
+  <text x="40" y="584" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">越界 offset 报 FS_NOT_FOUND 并带上总行数；read 不做 spill，续读靠 offset。</text>
+</svg>

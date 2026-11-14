@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-t f04-d">
+  <title id="f04-t">交付物的两半</title>
+  <desc id="f04-d">上半来自模型用 present 声明的文件，下半来自一轮内工作树与文件工具编辑的对比。两半都只写会话事件，由客户端在轮末渲染；present 不给文件拍快照，工作树对比看不到 git 之外的 shell 改动。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-04 / DELIVERABLES</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">声明与推导，各占一半</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">两半都只写会话事件；客户端在轮末读，Host 不保存渲染后的界面</text>
+
+  <!-- top half -->
+  <text x="40" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">DECLARED</text>
+
+  <rect x="40" y="132" width="180" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">present</text>
+  <text x="56" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">参数：文件列表与说明</text>
+  <text x="56" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">上限按部署配置，默认 8</text>
+  <text x="56" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每轮最多调一次更省上下文</text>
+
+  <line x1="220" y1="176" x2="252" y2="176" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="260" y="132" width="196" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="276" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">校验并解析绝对路径</text>
+  <text x="276" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">必须是普通文件</text>
+  <text x="276" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">相对路径按会话工作目录</text>
+  <text x="276" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">不读内容，不复制文件</text>
+
+  <line x1="456" y1="176" x2="488" y2="176" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="496" y="132" width="196" height="88" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="512" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">deliverables/presented</text>
+  <text x="512" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">带 turn 与 callId</text>
+  <text x="512" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">只在工具真正成功时写</text>
+  <text x="512" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">失败的调用没有声明</text>
+
+  <!-- bottom half -->
+  <text x="40" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">DERIVED</text>
+
+  <rect x="40" y="278" width="180" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">轮开始：基线</text>
+  <text x="56" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">临时 index 写一棵树</text>
+  <text x="56" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">对象目录独立，不碰仓库</text>
+  <text x="56" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不在仓库内就不拍快照</text>
+  <text x="56" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">workspace-changes</text>
+
+  <line x1="220" y1="336" x2="252" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="260" y="278" width="196" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="276" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">轮内：两条采集线</text>
+  <text x="276" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">git 看得到工作树的改动</text>
+  <text x="276" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">文件工具在写入前留副本</text>
+  <text x="276" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每轮每路径只留第一次</text>
+  <text x="276" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">fs/write-intent 等 waterfall</text>
+
+  <line x1="456" y1="336" x2="488" y2="336" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="496" y="278" width="196" height="120" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="512" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">workspace/changes</text>
+  <text x="512" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">轮末做差，记增删行数</text>
+  <text x="512" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">二进制与超大文件只留标记</text>
+  <text x="512" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">逐行对比超时就退成整文件</text>
+  <text x="512" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">Host 在 Session 存活期提供 diff</text>
+
+  <!-- render -->
+  <path d="M 692 176 L 720 176 L 720 240 L 40 240 L 40 240" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <path d="M 692 336 L 720 336" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+  <rect x="736" y="132" width="184" height="266" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="752" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">CLIENT</text>
+  <text x="752" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">轮末渲染</text>
+  <text x="752" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">ui-deliverables 读事件</text>
+  <text x="752" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">畸形数据直接忽略</text>
+  <text x="752" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同路径取最新一次声明</text>
+  <text x="752" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">输出类工具只认三类编辑</text>
+  <line x1="752" y1="254" x2="904" y2="254" stroke="#ececec"/>
+  <text x="752" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">打开与导出走 Host 路径接口</text>
+  <text x="752" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">浏览器不推断文件管理器类型</text>
+  <text x="752" y="314" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">presented.ts</text>
+  <text x="752" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">turn-deliverables.ts</text>
+  <text x="752" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">两半互不影响：</text>
+  <text x="752" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一半缺了，另一半照常显示</text>
+  <text x="752" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">模型看不到卡片本身</text>
+
+  <!-- gaps -->
+  <rect x="40" y="428" width="880" height="68" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 4"/>
+  <text x="56" y="450" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">GAPS</text>
+  <text x="56" y="468" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">present 不拍快照：文件之后被改、被删、被移走，声明仍然指向原路径，打开时可能失败。</text>
+  <text x="56" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">推导半看不到 git 覆盖不到的 shell 改动；present 与 workspace/changes 都没有内容副本，导出只含声明。</text>
+
+  <text x="40" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">两半的失败都静默：没有工作目录、不在仓库、客户端不认识事件，都不会变成工具错误，也不会打断这一轮。</text>
+  <text x="40" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">模型能确认的只有模型可见的那部分：present 返回的文件列表，或工具结果里的成功或失败。</text>
+</svg>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">前台命令转后台任务</title>
+  <desc id="f03-desc">模型发起 bash 后工具注册 job 并 spawn 进程；registry.wait 等满 120 秒，工具做一次消费读，再告诉模型命令已转为后台任务。之后 job_output 从同一游标继续读；进程退出时 settle 按未读字节与 16 KiB 的较大者裁剪输出环。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f03-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="640" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">03 / JOB PROMOTE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">超时之后，命令去哪了</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">默认到期不杀进程，转成 job；游标保证同一次输出不被重复消费</text>
+
+  <rect x="35" y="100" width="150" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="110" y="121" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">模型</text>
+  <text x="110" y="138" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">tool call</text>
+
+  <rect x="230" y="100" width="180" height="50" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="320" y="121" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#2d3142">tool-bash</text>
+  <text x="320" y="138" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">wait / promote</text>
+
+  <rect x="470" y="100" width="180" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="560" y="121" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#2d3142">ctx.jobs</text>
+  <text x="560" y="138" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">ring + cursor</text>
+
+  <rect x="725" y="100" width="170" height="50" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="810" y="121" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#2d3142">bash 进程</text>
+  <text x="810" y="138" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">collect 64 KB</text>
+
+  <line x1="110" y1="150" x2="110" y2="564" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="320" y1="150" x2="320" y2="564" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="560" y1="150" x2="560" y2="564" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="810" y1="150" x2="810" y2="564" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+
+  <line x1="112" y1="180" x2="316" y2="180" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="214" y="173" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">bash(npm test)</text>
+
+  <line x1="322" y1="214" x2="556" y2="214" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="439" y="207" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">register(job)：前台调用本身也是一个 job</text>
+
+  <line x1="322" y1="248" x2="806" y2="248" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="564" y="241" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">spawn → stdout/stderr = collect(64_000)</text>
+
+  <line x1="808" y1="282" x2="324" y2="282" stroke="#2f6f5e" stroke-width="1.1" marker-end="url(#f03-g)"/>
+  <text x="564" y="275" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">运行中，输出先进环</text>
+
+  <path d="M 320 306 h 30 v 16 h -30" fill="none" stroke="#bf4520" stroke-width="1.1" marker-end="url(#f03-r)"/>
+  <text x="360" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">registry.wait(id, 120_000)</text>
+
+  <line x1="558" y1="350" x2="324" y2="350" stroke="#bf4520" stroke-width="1.1" marker-end="url(#f03-r)"/>
+  <text x="441" y="343" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">未结算</text>
+
+  <path d="M 320 384 h 30 v 16 h -30" fill="none" stroke="#8a93a6" stroke-width="1.1" marker-end="url(#f03-a)"/>
+  <text x="360" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">消费读一次，游标推进到 read 的 nextOffset</text>
+
+  <line x1="318" y1="418" x2="114" y2="418" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-r)"/>
+  <text x="216" y="411" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">[still running after 120000ms; moved to background job 7c1f]</text>
+
+  <line x1="112" y1="452" x2="556" y2="452" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="334" y="445" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">job_output(7c1f)</text>
+
+  <line x1="558" y1="486" x2="114" y2="486" stroke="#2f6f5e" stroke-width="1.1" marker-end="url(#f03-g)"/>
+  <text x="336" y="479" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">delta 从同一游标继续，已经给过的字节不重复</text>
+
+  <line x1="808" y1="520" x2="564" y2="520" stroke="#8a93a6" stroke-width="1.1" marker-end="url(#f03-a)"/>
+  <text x="686" y="513" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">exit 0</text>
+
+  <path d="M 560 544 h 30 v 16 h -30" fill="none" stroke="#bf4520" stroke-width="1.1" marker-end="url(#f03-r)"/>
+  <text x="600" y="546" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">trim(max(16 KiB, total − cursor))</text>
+
+  <rect x="40" y="578" width="880" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="598" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">结算不立刻裁到 16 KiB：模型还有未读字节时按未读数保留，第一次终态读取后才收紧。</text>
+  <text x="56" y="616" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">job_output 的 lossy 为真时，缺口只能从 spill 文件恢复，重新 read 也读不回。</text>
+</svg>

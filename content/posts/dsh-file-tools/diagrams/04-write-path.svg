@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">write 与 edit 的写入路径</title>
+  <desc id="f04-desc">write 与 edit 的 execute 都依次经过参数解析、沙箱策略解析、intent waterfall 与带守卫的写入四步；右侧列出 create、update 与三种失败码；底部列出工具层刻意不做的事，包括 stat、重试、合并与编码猜测。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">04 / WRITE PATH</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次写入经过的四个决定点</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">参数、审批、intent、provider；每一步都能单独否决一次调用，失败码各不相同</text>
+
+  <!-- steps -->
+  <rect x="40" y="130" width="404" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">01</text>
+  <text x="76" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">parseArgs</text>
+  <text x="56" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">write 只查 file_path 非空，空 content 合法；edit 查 old_string 非空且与 new_string 不同</text>
+
+  <line x1="242" y1="196" x2="242" y2="212" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="40" y="214" width="404" height="62" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">02</text>
+  <text x="76" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">sandbox.resolvePolicy('write' | 'edit')</text>
+  <text x="56" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">只有受限 backend 才展开 sandbox_permissions；更换模式要走 ctx.approval</text>
+  <text x="56" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">省略 mode 但给了 justification 会直接报错，不做隐式升级</text>
+
+  <line x1="242" y1="280" x2="242" y2="296" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="40" y="298" width="404" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="318" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">03</text>
+  <text x="76" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">ctx.fs.resolve + fs/write-intent</text>
+  <text x="56" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">单槽 waterfall：第一个返回值就是 intent，调 next() 表示放弃约束</text>
+  <text x="56" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">默认组合里没有监听器，intent 为 undefined</text>
+
+  <line x1="242" y1="364" x2="242" y2="380" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="40" y="382" width="404" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">04</text>
+  <text x="76" y="402" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">writeText(content, intent)</text>
+  <text x="56" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">provider 校验 intent 后原子写入，返回 before / after 与 operation</text>
+  <text x="56" y="436" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">before 与 after 都是 LF 归一化后的原文，卡片 diff 由此而来</text>
+
+  <line x1="446" y1="413" x2="472" y2="413" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <!-- outcomes -->
+  <rect x="476" y="130" width="444" height="314" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="492" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">OUTCOME</text>
+
+  <text x="492" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2f6f5e">create</text>
+  <text x="492" y="196" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">新建文件，before 为 null，diff 面板留空</text>
+
+  <text x="492" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2f6f5e">update</text>
+  <text x="492" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">覆盖现有文件，diff 由 before/after 现算</text>
+
+  <line x1="492" y1="258" x2="904" y2="258" stroke="#d8d8d8" stroke-width="1"/>
+
+  <text x="492" y="280" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#bf4520">FS_NOT_OBSERVED</text>
+  <text x="492" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">createIfAbsent 撞上已存在的文件，先 read 或改用 edit</text>
+
+  <text x="492" y="322" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#bf4520">FS_STALE_VERSION</text>
+  <text x="492" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">守卫版本与磁盘不一致，重新 read 再改</text>
+
+  <text x="492" y="364" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#bf4520">FS_SANDBOX_DENIED</text>
+  <text x="492" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">backend 按模式拒绝，带 escalation 提示，重试同一条不会变</text>
+
+  <text x="492" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">三种失败都不改文件，也都不吞异常</text>
+  <text x="492" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">成功结果只回一句 Created / Updated file，不回显内容</text>
+
+  <!-- bottom -->
+  <rect x="40" y="464" width="880" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="486" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">DELIBERATELY ABSENT</text>
+
+  <text x="56" y="510" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">写入前不 stat</text>
+  <text x="176" y="510" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不制造版本依据，守卫只能来自观察</text>
+
+  <text x="56" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">不做重试</text>
+  <text x="176" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">竞态时重试会覆盖别人刚写入的内容</text>
+
+  <text x="56" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">不猜编码</text>
+  <text x="176" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">UTF-8 由 provider 解码，二进制直接拒绝</text>
+</svg>

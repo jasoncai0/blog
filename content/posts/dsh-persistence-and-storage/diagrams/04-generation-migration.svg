@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">代际链与四种版本策略</title>
+  <desc id="f04-desc">顶部是 v0 到 v4 的会话日志代际链，每个新代际以独占发布写入，旧文件路径、字节与 inode 都不变，出现更高代际时当前构建拒绝。中部四张卡片分别是会话格式、域版本、SQLite 布局、派生索引的迁移策略。底部是被删除的 SQLite 会话存储分支，旧库当前构建不打开。</desc>
+  <defs>
+    <marker id="f04-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">PERSISTENCE / VERSIONS</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">版本不匹配时，先问这份数据能不能丢</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">权威数据只增不改，域数据允许兼容区间，派生数据直接重建</text>
+
+  <!-- generation chain -->
+  <rect x="40" y="100" width="880" height="112" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">SESSION GENERATIONS</text>
+
+  <rect x="56" y="132" width="140" height="52" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="70" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">v0 session.jsonl</text>
+  <text x="70" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">已发布，只读</text>
+
+  <line x1="196" y1="158" x2="216" y2="158" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-arrow)"/>
+
+  <rect x="218" y="132" width="140" height="52" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="232" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">v1</text>
+  <text x="232" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">迁移写出新文件</text>
+
+  <line x1="358" y1="158" x2="378" y2="158" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-arrow)"/>
+
+  <rect x="380" y="132" width="140" height="52" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="394" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">v2</text>
+  <text x="394" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">每代只认一段</text>
+
+  <line x1="520" y1="158" x2="540" y2="158" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-arrow)"/>
+
+  <rect x="542" y="132" width="140" height="52" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="556" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">v3</text>
+  <text x="556" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">源路径与 inode 不变</text>
+
+  <line x1="682" y1="158" x2="702" y2="158" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-arrow)"/>
+
+  <rect x="704" y="132" width="140" height="52" rx="4" fill="#2d3142"/>
+  <text x="718" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#ffffff">v4 当前</text>
+  <text x="718" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#aeb6c8">SESSION_FORMAT_VERSION</text>
+
+  <rect x="856" y="132" width="48" height="52" rx="4" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="866" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">v5</text>
+  <text x="866" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">拒绝</text>
+
+  <text x="56" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">发布用 link() 不覆盖；迁移产出新代际，已提交的旧代际不移动、不覆盖、不删除。磁盘上出现更高代际时，当前构建拒绝读取，即使还有可读的旧代际。</text>
+
+  <!-- policy cards -->
+  <rect x="40" y="236" width="430" height="116" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="258" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">01 / SESSION FORMAT</text>
+  <text x="56" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">发布新代际，旧文件不动</text>
+  <text x="56" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">v0→v1→v2→v3→v4，每包只负责一段</text>
+  <text x="56" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">读最高已知代际；更高代际直接拒绝</text>
+  <text x="56" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">代价：磁盘同时存在多个代际</text>
+  <text x="56" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">收益：任何迁移都能用旧构建读旧文件</text>
+
+  <rect x="490" y="236" width="430" height="116" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="506" y="258" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">02 / DOMAIN VERSION</text>
+  <text x="506" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">兼容区间内接受，区间外拒绝</text>
+  <text x="506" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">DomainSpec.compatibleVersions 显式列出</text>
+  <text x="506" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">首次写入把数据与当前版本戳同事务提交</text>
+  <text x="506" y="330" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">坏记录按 invalidRecords 策略处理</text>
+  <text x="506" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">投影缓存 version 7，兼容 3 到 6</text>
+
+  <rect x="40" y="368" width="430" height="116" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">03 / SQLITE LAYOUT</text>
+  <text x="56" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">user_version 不符，整库拒绝</text>
+  <text x="56" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">0 视为新库，建表最后才盖戳</text>
+  <text x="56" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">非 0 且非当前版本：version-mismatch</text>
+  <text x="56" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">不做原地迁移，没有隐藏的升级路径</text>
+  <text x="56" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">手工改版本号会得到一个打不开的库</text>
+
+  <rect x="490" y="368" width="430" height="116" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="506" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">04 / DERIVED INDEX</text>
+  <text x="506" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">版本不符，DROP 后重建</text>
+  <text x="506" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">application_id 识别自有库，外来库拒绝</text>
+  <text x="506" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">resetDerivedSchema 清空派生表并归零</text>
+  <text x="506" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">FTS5 索引可随时丢弃，不承担权威职责</text>
+  <text x="506" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">代价：重建期间搜索不可用</text>
+
+  <!-- removed sqlite branch -->
+  <rect x="40" y="504" width="880" height="56" rx="5" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 4"/>
+  <text x="56" y="526" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">REMOVED / session-persistence-sqlite</text>
+  <text x="56" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">曾交付，后删除：两套物理格式让每项会话契约、封套变更、恢复规则与平台测试翻倍。当前构建不打开旧库；操作者需要先用旧构建导出逻辑会话。</text>
+
+  <text x="40" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6">DSH / persistence-and-storage / f04</text>
+</svg>

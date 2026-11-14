@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">一次 PTC 调用的三个角色</title>
+  <desc id="f01-d1-desc">主进程持有循环、会话与工具流水线，子进程只跑程序并持有绑定函数，控制通道把每次绑定调用送进主进程的工具流水线并把无损 JSON 值送回程序。</desc>
+
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3 / PTC</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次调用里有三个角色</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具永远在主进程执行；子进程只拿到绑定函数，每个绑定调用穿一次控制通道</text>
+
+  <!-- host lane -->
+  <rect x="40" y="110" width="280" height="250" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="136" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">agent 主进程</text>
+  <circle cx="66" cy="164" r="3" fill="#bf4520"/>
+  <text x="80" y="167" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">agent loop</text>
+  <circle cx="66" cy="194" r="3" fill="#bf4520"/>
+  <text x="80" y="197" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">session 事件日志</text>
+  <circle cx="66" cy="224" r="3" fill="#bf4520"/>
+  <text x="80" y="227" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">工具执行流水线</text>
+  <circle cx="66" cy="254" r="3" fill="#bf4520"/>
+  <text x="80" y="257" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">审批与沙箱策略</text>
+  <circle cx="66" cy="284" r="3" fill="#bf4520"/>
+  <text x="80" y="287" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">模型消息历史</text>
+  <text x="60" y="330" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">副作用只在这里发生</text>
+  <text x="60" y="344" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">子调用按提交顺序穿同一条流水线</text>
+
+  <!-- program lane -->
+  <rect x="640" y="110" width="280" height="250" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="660" y="136" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">程序子进程</text>
+  <circle cx="666" cy="164" r="3" fill="#2f6f5e"/>
+  <text x="680" y="167" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">tools.* 绑定函数</text>
+  <circle cx="666" cy="194" r="3" fill="#2f6f5e"/>
+  <text x="680" y="197" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">console 五个方法</text>
+  <circle cx="666" cy="224" r="3" fill="#2f6f5e"/>
+  <text x="680" y="227" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">process.env 为空</text>
+  <circle cx="666" cy="254" r="3" fill="#2f6f5e"/>
+  <text x="680" y="257" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">cwd 固定</text>
+  <circle cx="666" cy="284" r="3" fill="#2f6f5e"/>
+  <text x="680" y="287" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">await import()</text>
+  <text x="660" y="330" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">512MB 老生代上限</text>
+  <text x="660" y="344" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">stdin 丢弃，控制通道单开</text>
+
+  <!-- control channel -->
+  <rect x="430" y="110" width="100" height="250" rx="8" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="480" y="134" text-anchor="middle" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#bf4520">控制通道</text>
+  <text x="480" y="152" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">birpc</text>
+  <text x="480" y="166" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">换行分隔 JSON</text>
+  <text x="480" y="336" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">协议版本 2</text>
+
+  <!-- invoke arrow: program to host -->
+  <line x1="638" y1="212" x2="322" y2="212" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <text x="480" y="204" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">invoke(global, name, args)</text>
+
+  <!-- value arrow: host to program -->
+  <line x1="322" y1="300" x2="638" y2="300" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <text x="480" y="318" text-anchor="middle" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">无损 JSON 值或错误消息</text>
+
+  <!-- lifecycle strip -->
+  <text x="40" y="398" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">LIFECYCLE</text>
+
+  <rect x="40" y="410" width="270" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="432" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">启动</text>
+  <text x="58" y="452" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">argv 加沙箱 confine</text>
+  <text x="58" y="468" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">env 留键去值</text>
+  <text x="58" y="484" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">cwd 取 spec.cwd</text>
+
+  <line x1="312" y1="458" x2="338" y2="458" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="340" y="410" width="280" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="358" y="432" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">绑定往返</text>
+  <text x="358" y="452" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每次调用一次 IPC</text>
+  <text x="358" y="468" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">参数与返回值各判一次无损 JSON</text>
+  <text x="358" y="484" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">在飞上限 128</text>
+
+  <line x1="622" y1="458" x2="648" y2="458" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <rect x="650" y="410" width="270" height="96" rx="6" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="668" y="432" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2f6f5e">结束</text>
+  <text x="668" y="452" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">abort('run_code settled')</text>
+  <text x="668" y="468" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">drain 等日志写完</text>
+  <text x="668" y="484" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">只有 logs 与 value 回主进程</text>
+
+  <text x="40" y="548" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">denied 字段是失败文本匹配的结果，说明程序撞到过拒绝签名，不证明沙箱完整生效。</text>
+  <text x="40" y="566" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">worker.ts:282-296 · execution.ts resolve() · bootstrap.ts</text>
+</svg>

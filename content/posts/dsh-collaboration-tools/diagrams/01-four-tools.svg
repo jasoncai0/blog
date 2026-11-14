@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-t f01-d">
+  <title id="f01-t">四类协作工具的分工</title>
+  <desc id="f01-d">todo 写一条 todo/write 事件，present 写一条 deliverables/presented 事件，ask_user 阻塞等待人类回答，deliverables 从会话日志与工作树快照推导。四者都不改文件、不发网络请求，区别在于写什么、谁读、失败时模型看到什么。</desc>
+
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-04 / FOUR TOOLS</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">四类工具，四份不同的收据</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">都不改文件、不发请求；改变的是会话状态、等待状态与界面</text>
+
+  <!-- col 1 -->
+  <rect x="40" y="112" width="208" height="286" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">TODO_WRITE</text>
+  <text x="56" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">写一条事件</text>
+  <line x1="56" y1="172" x2="232" y2="172" stroke="#ececec"/>
+  <text x="56" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">参数是完整清单，整表替换</text>
+  <text x="56" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">会话日志里的 todo/write</text>
+  <text x="56" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">投影 key 为 todos</text>
+  <text x="56" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">下一次 turn/start 清空</text>
+  <line x1="56" y1="256" x2="232" y2="256" stroke="#ececec"/>
+  <text x="56" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">读者：面板、恢复后的会话、</text>
+  <text x="56" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">下一轮的模型自己</text>
+  <text x="56" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失败：参数不合法，直接报错</text>
+  <text x="56" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">重复 content 被拒，因为面板</text>
+  <text x="56" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">用 content 当 React key</text>
+  <text x="56" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">tool-todo/src/index.ts</text>
+
+  <!-- col 2 -->
+  <rect x="264" y="112" width="208" height="286" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="280" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">ASK_USER</text>
+  <text x="280" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">挂起等一个回答</text>
+  <line x1="280" y1="172" x2="456" y2="172" stroke="#ececec"/>
+  <text x="280" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">waterfall 交给 UI 提供方</text>
+  <text x="280" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">阻塞式或计时式两种模式</text>
+  <text x="280" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">答案按 question id 对齐</text>
+  <text x="280" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">空 selected 且无 custom 算跳过</text>
+  <line x1="280" y1="256" x2="456" y2="256" stroke="#ececec"/>
+  <text x="280" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">读者：模型自己，答案就是工具</text>
+  <text x="280" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">结果</text>
+  <text x="280" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失败：没有 UI 接手、调用方</text>
+  <text x="280" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">不是活着的 agent</text>
+  <text x="280" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">子 agent 提问被明确拒绝</text>
+  <text x="280" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">interaction/user-questions</text>
+
+  <!-- col 3 -->
+  <rect x="488" y="112" width="208" height="286" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="504" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">PRESENT</text>
+  <text x="504" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">声明，不搬运</text>
+  <line x1="504" y1="172" x2="680" y2="172" stroke="#ececec"/>
+  <text x="504" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">只校验文件存在且是普通文件</text>
+  <text x="504" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">路径对齐 Session 工作目录</text>
+  <text x="504" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">结果成功后才写事件</text>
+  <text x="504" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每轮最多 8 个文件</text>
+  <line x1="504" y1="256" x2="680" y2="256" stroke="#ececec"/>
+  <text x="504" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">读者：轮末的交付卡片、</text>
+  <text x="504" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">文件打开与导出入口</text>
+  <text x="504" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失败：没有打开中的轮、</text>
+  <text x="504" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">文件不存在或是目录</text>
+  <text x="504" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">失败不写声明，卡片不出现</text>
+  <text x="504" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">deliverables/tool-present</text>
+
+  <!-- col 4 -->
+  <rect x="712" y="112" width="208" height="286" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="728" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">DELIVERABLES</text>
+  <text x="728" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">推导，不额外登记</text>
+  <line x1="728" y1="172" x2="904" y2="172" stroke="#ececec"/>
+  <text x="728" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一半来自 present 的声明</text>
+  <text x="728" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一半来自轮内工作树对比</text>
+  <text x="728" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">git 覆盖不到的文件</text>
+  <text x="728" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">用编辑前后副本兜底</text>
+  <line x1="728" y1="256" x2="904" y2="256" stroke="#ececec"/>
+  <text x="728" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">读者：客户端；Host 只在</text>
+  <text x="728" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">Session 存活期提供摘要</text>
+  <text x="728" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">失败：没有工作目录、</text>
+  <text x="728" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">不在 git 仓库、只有 shell 改动</text>
+  <text x="728" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">失败只影响这一半</text>
+  <text x="728" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">deliverables/workspace-changes</text>
+
+  <!-- arrows between cols -->
+  <line x1="248" y1="254" x2="264" y2="254" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="472" y1="254" x2="488" y2="254" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+  <line x1="696" y1="254" x2="712" y2="254" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-a)"/>
+
+  <!-- common -->
+  <rect x="40" y="428" width="880" height="128" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">COMMON RULES</text>
+  <text x="56" y="476" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">一、对文件与网络都不产生副作用：todo 与 present 只追加会话事件，ask_user 只等答复。</text>
+  <text x="56" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">二、模型可见的内容一定进日志：工具结果进 transcript，展示状态从同一份事件推导，不另存一份。</text>
+  <text x="56" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">三、界面回执是可选的：卡片渲染失败、客户端不认事件时，工具结果本身仍然完整。</text>
+  <text x="56" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">四类工具都要求调用方是一个活着的 agent；没有归属会话的调用一律拒绝。</text>
+</svg>

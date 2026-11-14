@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">两套键空间：引用层叠解析，记录锁下轮换</title>
+  <desc id="f01-desc">左列是 CredentialRef 的四层解析：托管文件、继承进程环境、项目 .env、用户 .env，每次操作重新查一遍。右列是 CredentialKey 的记录：没有层叠，存在即全部事实，唯一写路径是文件锁下的读、决定、替换。底栏是两套键空间共用的规则：空值视为不存在。</desc>
+  <defs>
+    <marker id="f01-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">CREDENTIALS / TWO KEYSPACES</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">同一个服务里，两种键，两套写入规则</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">左边回答「这个环境变量名后面是什么」，右边回答「这个插件为这个 id 持有什么」</text>
+
+  <!-- left: ref -->
+  <rect x="40" y="100" width="420" height="400" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="40" y="100" width="420" height="44" rx="6" fill="#2d3142"/>
+  <rect x="40" y="132" width="420" height="12" fill="#2d3142"/>
+  <text x="56" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#aeb6c8">A / CREDENTIAL REF</text>
+  <text x="56" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#ffffff">引用：四层回退，每次重新解析</text>
+
+  <rect x="60" y="164" width="380" height="58" rx="4" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="76" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#bf4520">1 托管文件</text>
+  <text x="76" y="202" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">$DSH_HOME/.credentials.yaml</text>
+  <text x="76" y="215" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">source: file，唯一可写层，权限 0600</text>
+
+  <rect x="60" y="234" width="380" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">2 继承的进程环境</text>
+  <text x="76" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">source: env，只读，CI 注入的 key 落在这一层</text>
+
+  <rect x="60" y="298" width="380" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">3 项目 .env</text>
+  <text x="76" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">source: project-env，启动目录被产品信任</text>
+
+  <rect x="60" y="362" width="380" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="76" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">4 用户 .env</text>
+  <text x="76" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">source: user-env，最后回退，优先级最低</text>
+
+  <path d="M440,193 L462,193" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f01-arrow)"/>
+  <path d="M440,260 L462,260" stroke="#8a93a6" stroke-width="1.2"/>
+  <path d="M440,324 L462,324" stroke="#8a93a6" stroke-width="1.2"/>
+  <path d="M440,388 L462,388" stroke="#8a93a6" stroke-width="1.2"/>
+  <path d="M462,260 L462,388" stroke="#8a93a6" stroke-width="1.2"/>
+  <path d="M462,193 L462,260" stroke="#8a93a6" stroke-width="1.2"/>
+
+  <text x="60" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">resolve(ref) 命中第一层就停，返回 value 与 source</text>
+  <text x="60" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">describe(ref) 同序，但不返回值，可整块跨 Remote</text>
+  <rect x="60" y="472" width="380" height="20" rx="3" fill="#f5f5f5"/>
+  <text x="72" y="486" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">no cache across calls  /  hot reload after write</text>
+
+  <!-- right: records -->
+  <rect x="500" y="100" width="420" height="400" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="500" y="100" width="420" height="44" rx="6" fill="#2d3142"/>
+  <rect x="500" y="132" width="420" height="12" fill="#2d3142"/>
+  <text x="516" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#aeb6c8">B / CREDENTIAL KEY</text>
+  <text x="516" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#ffffff">记录：无层叠，锁下的读改写</text>
+
+  <rect x="520" y="164" width="380" height="46" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="536" y="183" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">记录存在即全部事实，没有「回退」</text>
+  <text x="536" y="199" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">listRecords 只给键、kind、可写，用于发现孤儿授权</text>
+
+  <rect x="520" y="224" width="380" height="36" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="536" y="247" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">modifyRecord(key, mutate) 是唯一写路径</text>
+
+  <path d="M660,260 L660,282" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f01-arrow-accent)"/>
+  <rect x="520" y="286" width="380" height="150" rx="4" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="536" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">READ-DECIDE-REPLACE</text>
+  <text x="536" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">1 进入 provider 操作队列</text>
+  <text x="536" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">2 withFileLock 拿跨进程写锁</text>
+  <text x="536" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">3 reconcileFromDisk 读回其他进程的改动</text>
+  <text x="536" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">4 mutate(current) 基于当前值决定新值</text>
+  <text x="536" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">5 校验、只改自己那把 key、原子写盘</text>
+  <text x="536" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">省掉第 3 步，两个进程轮换同一 token 就会丢写</text>
+
+  <text x="520" y="460" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">grant 的 payload 原样返回，解释权归写它的插件</text>
+  <text x="520" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">空记录与缺失记录在这里没有区别</text>
+
+  <!-- bottom rule -->
+  <rect x="40" y="524" width="880" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="543" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">共用规则：空存储值在任何地方都视为不存在</text>
+  <text x="60" y="559" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">set('') 被拒绝，提示改用 unset；否则 fallback 不会重新生效，消费方拿到空 key 却以为已配置</text>
+</svg>

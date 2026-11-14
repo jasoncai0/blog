@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f03-t f03-d">
+  <title id="f03-t">ask_user 的等待与迟到回答</title>
+  <desc id="f03-d">工具的提问经 waterfall 交给客户端界面，界面渲染卡片等待用户；答案按问题 id 对齐后回到调用点。计时模式下超时先返回 pending，问题仍可回答，用户之后的答复变成一条 user 消息送进会话，而不是补写工具结果。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="640" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-04 / ASK SEQUENCE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次提问，两条结算路径</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">前台等待给出答案，超时给出 pending；迟到回答走用户消息，不补写历史</text>
+
+  <!-- lanes -->
+  <rect x="40" y="108" width="160" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">工具调用</text>
+  <text x="56" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">ask_user_question</text>
+
+  <rect x="300" y="108" width="180" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="316" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">userQuestions 服务</text>
+  <text x="316" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">waterfall / 投影 / 校验</text>
+
+  <rect x="580" y="108" width="160" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="596" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">客户端界面</text>
+  <text x="596" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">卡片 / attachWait</text>
+
+  <rect x="800" y="108" width="120" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="816" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">用户</text>
+  <text x="816" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">选 / 填 / 跳过</text>
+
+  <!-- lifelines -->
+  <line x1="120" y1="160" x2="120" y2="560" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="390" y1="160" x2="390" y2="560" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="660" y1="160" x2="660" y2="560" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="860" y1="160" x2="860" y2="560" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- 1 ask -->
+  <text x="128" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">ask(callId, questions, signal)</text>
+  <line x1="120" y1="196" x2="382" y2="196" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- 2 waterfall -->
+  <text x="398" y="228" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">user-questions/request</text>
+  <line x1="390" y1="234" x2="652" y2="234" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- 3 card -->
+  <text x="668" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">渲染卡片，可能带计划评审或批准意图</text>
+  <line x1="660" y1="272" x2="852" y2="272" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- 4 answer -->
+  <text x="668" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">提交答案批次</text>
+  <line x1="860" y1="310" x2="668" y2="310" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <text x="398" y="342" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">answer(agent, callId, answers)</text>
+  <line x1="660" y1="348" x2="398" y2="348" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- 5 validation -->
+  <rect x="292" y="362" width="196" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="306" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">批次必须与问题一一对应</text>
+  <text x="306" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">多一个少一个都拒绝</text>
+
+  <!-- 6 resolve -->
+  <text x="128" y="442" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">工具结果：answers[]</text>
+  <line x1="390" y1="448" x2="128" y2="448" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+
+  <!-- pending branch -->
+  <rect x="40" y="478" width="430" height="98" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">超时分支（计时模式）</text>
+  <text x="56" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">窗口到点先返回 { pending: true, callId }，工具结果里写明这不是跳过答案。</text>
+  <text x="56" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">agent 继续做独立的工作，问题留在可回答集合里，界面上的卡片不消失。</text>
+  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">窗口内作答就返回整批答案；超时只结束工具等待，不取消这一轮。</text>
+
+  <!-- late branch -->
+  <rect x="486" y="478" width="434" height="98" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 4"/>
+  <text x="502" y="500" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">迟到分支</text>
+  <text x="502" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">answer 把答案排进 inbox 并 steer，转成一条带 answer_to_pending_question 的用户消息。</text>
+  <text x="502" y="538" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同一调用重复提交会被 REPLY_QUEUED 拒绝；已经结算的调用返回 false。</text>
+  <text x="502" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">子 agent 不能提问：调用方不是活着的根 agent 时直接拒绝。</text>
+</svg>

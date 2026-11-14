@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d1-title f04-d1-desc">
+  <title id="f04-d1-title">取消与预算的传播</title>
+  <desc id="f04-d1-desc">外层调用取消、超时、额度耗尽与沙箱模式变化都汇到同一次运行持有的 controller，再分三路落到在飞子调用、排队调用与下一次绑定尝试。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3 / PTC</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">取消与预算汇到同一个 controller</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">三跳传播，四类触发；只有程序自己抛的错能被 catch</text>
+
+  <!-- left chain -->
+  <rect x="40" y="112" width="300" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="134" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">外层 tool call signal</text>
+  <text x="58" y="152" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">reason 原样转发，不重写</text>
+
+  <line x1="190" y1="176" x2="190" y2="192" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="40" y="194" width="300" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="216" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">PtcCalls</text>
+  <text x="58" y="234" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">按 session 登记在飞运行</text>
+
+  <line x1="190" y1="258" x2="190" y2="274" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <rect x="40" y="276" width="300" height="62" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="58" y="298" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">runController</text>
+  <text x="58" y="316" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每次 run_code 持有一个</text>
+
+  <!-- triggers -->
+  <rect x="620" y="112" width="300" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="638" y="134" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">超时</text>
+  <text x="638" y="152" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">默认 120s，上限 600s，0 不解除</text>
+
+  <rect x="620" y="194" width="300" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="638" y="216" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">额度耗尽</text>
+  <text x="638" y="234" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">超时分钟数乘 1024，默认 2048 次</text>
+
+  <rect x="620" y="276" width="300" height="62" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="638" y="298" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">沙箱模式变化</text>
+  <text x="638" y="316" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">session/event 的 sandbox/mode</text>
+
+  <!-- bus -->
+  <line x1="618" y1="143" x2="562" y2="143" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="618" y1="225" x2="562" y2="225" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="618" y1="307" x2="562" y2="307" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="560" y1="143" x2="560" y2="307" stroke="#8a93a6" stroke-width="1.2"/>
+  <line x1="560" y1="307" x2="344" y2="307" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-r)"/>
+
+  <!-- fan out -->
+  <line x1="190" y1="338" x2="190" y2="384" stroke="#8a93a6" stroke-width="1.2"/>
+  <line x1="190" y1="384" x2="785" y2="384" stroke="#8a93a6" stroke-width="1.2"/>
+  <line x1="175" y1="384" x2="175" y2="412" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="480" y1="384" x2="480" y2="412" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+  <line x1="785" y1="384" x2="785" y2="412" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <!-- outcomes -->
+  <rect x="40" y="414" width="270" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="436" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">在飞子调用</text>
+  <text x="58" y="456" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">input.signal aborted</text>
+  <text x="58" y="472" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">reason 传进子调用</text>
+  <text x="58" y="488" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">工具的 body 收到取消</text>
+
+  <rect x="345" y="414" width="270" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="363" y="436" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">排队中的调用</text>
+  <text x="363" y="456" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">abandon</text>
+  <text x="363" y="472" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">程序侧的 Promise 被拒</text>
+  <text x="363" y="488" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">消息带 tool call abandoned</text>
+
+  <rect x="650" y="414" width="270" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="668" y="436" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">下一次绑定</text>
+  <text x="668" y="456" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">runOver</text>
+  <text x="668" y="472" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">门口直接抛，不排队</text>
+  <text x="668" y="488" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">消息带 run is over</text>
+
+  <text x="40" y="540" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">catch 住限额错误也不能续跑：触发中止的那次调用已经结束了整个运行。</text>
+  <text x="40" y="562" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">超时由子进程的定时器触发，走的是终止流程，不经过程序的异常路径。</text>
+  <text x="40" y="584" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">ptc.ts:379-383 · 504-530 · 698-706</text>
+</svg>

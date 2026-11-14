@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-ts-title f02-ts-desc">
+  <title id="f02-ts-title">一次带超时的工具调用时序</title>
+  <desc id="f02-ts-desc">timeout-policy 从工具定义读取 timeoutMs，派生 deadline 并在 dispatch 期间替换 exec.signal；下游中止并结算后，包装层把结果替换成 TOOL_TIMEOUT，最后在 finally 中还原调用方信号。工具忽略信号时，包装层仍停在 await 内，超时结果直到工具自己结束才出现。</desc>
+
+  <defs>
+    <marker id="f02-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">09 / TIMEOUT SEQUENCE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">deadline 如何变成 exec.signal</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">派生、交换、结算后替换、finally 还原：四步都只作用于这一次调用</text>
+
+  <!-- lifeline headers -->
+  <rect x="40" y="104" width="150" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="115" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">agent loop</text>
+
+  <rect x="250" y="104" width="170" height="40" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="335" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">timeout-policy</text>
+
+  <rect x="480" y="104" width="150" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="555" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool body</text>
+
+  <rect x="700" y="104" width="150" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="775" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">post-execute</text>
+
+  <!-- lifelines -->
+  <line x1="115" y1="144" x2="115" y2="392" stroke="#c9ced9" stroke-dasharray="3 4"/>
+  <line x1="335" y1="144" x2="335" y2="392" stroke="#c9ced9" stroke-dasharray="3 4"/>
+  <line x1="555" y1="144" x2="555" y2="392" stroke="#c9ced9" stroke-dasharray="3 4"/>
+  <line x1="775" y1="144" x2="775" y2="392" stroke="#c9ced9" stroke-dasharray="3 4"/>
+
+  <!-- 1 -->
+  <line x1="115" y1="178" x2="333" y2="178" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="224" y="172" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">tools/execute(exec, next)</text>
+
+  <!-- 2 -->
+  <line x1="335" y1="214" x2="553" y2="214" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="444" y="208" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">next()；exec.signal = d.signal</text>
+  <text x="444" y="232" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">deadline 在作用域内派生，注册码 TOOL_TIMEOUT</text>
+
+  <!-- 3 -->
+  <line x1="555" y1="262" x2="337" y2="262" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="446" y="256" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">中止后结算，返回结果</text>
+
+  <!-- 4 self -->
+  <rect x="248" y="284" width="174" height="40" rx="4" fill="#fdf3ee" stroke="#bf4520" stroke-opacity="0.4"/>
+  <text x="335" y="300" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">timeoutOf(d.signal, TOOL_TIMEOUT)</text>
+  <text x="335" y="316" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">限定分类码，嵌套外层超时不算</text>
+
+  <!-- 5 -->
+  <line x1="335" y1="352" x2="117" y2="352" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="226" y="346" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">toolTimeoutResult(ms)</text>
+
+  <!-- 6 -->
+  <line x1="335" y1="380" x2="773" y2="380" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#f02-arrow)"/>
+  <text x="554" y="374" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">finally：还原调用方 signal，之后的监听器看不到超时信号</text>
+
+  <!-- result strip -->
+  <rect x="40" y="400" width="560" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">模型收到：Error: tool call timed out after Nms</text>
+  <text x="54" y="438" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">isError: true · error.info: ToolTimeoutError / TOOL_TIMEOUT</text>
+
+  <rect x="620" y="400" width="300" height="52" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="634" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">没有 timeoutMs 的工具</text>
+  <text x="634" y="438" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">return next()，完全不包裹</text>
+
+  <!-- ignore branch -->
+  <rect x="40" y="468" width="880" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="490" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">工具忽略 signal 时</text>
+  <text x="58" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">包装层仍停在 await next() 里：不 race，不放弃下游。</text>
+  <text x="58" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">超时结果不会出现，直到工具自己结束才被替换上去。</text>
+  <text x="58" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">协作式上限：插件请求取消，终止由工具自己完成。</text>
+
+  <text x="620" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">预算来自 ToolDefinition.timeoutMs</text>
+  <text x="620" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">web：30 s｜lsp：60 s｜bash：无</text>
+</svg>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-t f02-d">
+  <title id="f02-t">就绪谓词如何变成准入</title>
+  <desc id="f02-d">每一步请求组装时，tool-web 把当步模型路由的 provider 传给 searchReady 或 fetchReady；问提供方 ready 得到布尔值，true 时该步声明并派发工具，false 时工具既不声明也不派发。谓词只读本地配置，选择失败时回答 true 让操作自己报错。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-03 / READY GATE</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">就绪谓词：从配置读到当步 schema</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">谓词同步、只读本地；它的答案决定这一步模型能不能看见工具</text>
+
+  <!-- step 1 -->
+  <rect x="40" y="112" width="200" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">请求组装</text>
+  <text x="56" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每一步算一次</text>
+  <text x="56" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">拼 schema 进前缀</text>
+  <text x="56" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">modelSelection.provider</text>
+
+  <line x1="240" y1="155" x2="288" y2="155" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 2 -->
+  <rect x="296" y="112" width="216" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="312" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">searchReady / fetchReady</text>
+  <text x="312" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">只询问会被选中的提供方</text>
+  <text x="312" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">没实现 ready 视为就绪</text>
+  <text x="312" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">index.ts:198 / 231 / 267</text>
+
+  <line x1="512" y1="155" x2="560" y2="155" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 3 -->
+  <rect x="568" y="112" width="160" height="86" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="584" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">when 谓词</text>
+  <text x="584" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">工具注册表逐项求值</text>
+  <text x="584" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">结果决定声明与派发</text>
+  <text x="584" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">search.ts:414</text>
+
+  <!-- branches -->
+  <line x1="728" y1="140" x2="792" y2="140" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-acc)"/>
+  <text x="742" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">TRUE</text>
+  <rect x="800" y="108" width="120" height="62" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="812" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">进 schema</text>
+  <text x="812" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">可被派发</text>
+  <text x="812" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">执行时再选一次</text>
+
+  <line x1="648" y1="198" x2="648" y2="242" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <text x="656" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">FALSE</text>
+  <rect x="520" y="250" width="256" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-dasharray="4 3"/>
+  <text x="536" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">这一步的 schema 里没有它</text>
+  <text x="536" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">既不声明也不派发，没有错误，没有日志</text>
+
+  <!-- why local -->
+  <text x="40" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">WHY LOCAL</text>
+  <rect x="40" y="276" width="440" height="34" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="52" y="297" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">组装路径没有 I/O：探测延迟会直接变成首 token 延迟</text>
+  <rect x="40" y="316" width="440" height="34" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="52" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同一步多次求值：schema 投影与执行器复核必须拿到同一答案</text>
+  <rect x="40" y="356" width="440" height="34" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="52" y="377" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">schema 是提示词前缀：中途变化会让 KV cache 作废</text>
+
+  <!-- fail open -->
+  <text x="520" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">FAIL OPEN</text>
+  <rect x="520" y="358" width="400" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="536" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">选择抛错时回答 true</text>
+  <text x="536" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">缺配置、配错 id、多个可用：留给操作报结构化错误</text>
+  <text x="536" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">隐藏工具会让模型连诊断信息都看不到</text>
+  <text x="536" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">ready 不是选择输入</text>
+
+  <!-- three switches -->
+  <line x1="40" y1="468" x2="920" y2="468" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="40" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">THREE SWITCHES</text>
+  <rect x="40" y="504" width="272" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">插件挂载</text>
+  <text x="56" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">决定工具存不存在</text>
+  <text x="56" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">消失时没有提示</text>
+
+  <rect x="328" y="504" width="272" height="58" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="344" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">when 谓词</text>
+  <text x="344" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">决定这一步可不可见</text>
+  <text x="344" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">按模型路由变化</text>
+
+  <rect x="616" y="504" width="304" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="632" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">提供方 available</text>
+  <text x="632" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">决定这次调用成不成功</text>
+  <text x="632" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">失败是一条 Error 文本</text>
+</svg>

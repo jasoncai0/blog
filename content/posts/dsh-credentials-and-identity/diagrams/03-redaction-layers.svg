@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">三层脱敏与一个没有覆盖的位置</title>
+  <desc id="f03-desc">第一层在进程创建：父环境去掉名字像密钥的变量与全部 DSH_ 变量，显式传入的环境在裁剪之后合并。第二层在 MCP 连接：只有配置里用 credential 占位符点名的引用会被解析，值留在内存里，诊断信息统一替换。第三层在遥测导出：记录过 waterfall，监听器改写副本，抛错则整条扣下。底部是缺口：工具自己打印的内容没有中心过滤。</desc>
+  <defs>
+    <marker id="f03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">CREDENTIALS / REDACTION</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" font-weight="600" fill="#2d3142">脱敏按边界分层，没有中心拦截器</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">进程创建、MCP 绑定、遥测导出各自负责一段；工具输出这一段空着，图底单独标出</text>
+
+  <!-- layer 1 -->
+  <rect x="40" y="100" width="880" height="118" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="40" y="100" width="6" height="118" rx="3" fill="#bf4520"/>
+  <text x="62" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">LAYER 1 / PROCESS SPAWN</text>
+  <text x="62" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">父环境裁剪</text>
+  <text x="62" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">packages/subprocess/subprocess/src/index.ts:44-84</text>
+  <text x="62" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">所有走 subprocess seam 的进程：子 agent CLI、</text>
+  <text x="62" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">MCP stdio、hook 命令</text>
+
+  <rect x="330" y="118" width="120" height="82" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="344" y="138" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">父进程环境</text>
+  <text x="344" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">PATH, HOME</text>
+  <text x="344" y="169" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">*_KEY *_TOKEN</text>
+  <text x="344" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">DSH_*</text>
+
+  <path d="M450,159 L492,159" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="492" y="118" width="130" height="82" rx="4" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="506" y="138" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">scrubbedParentEnv()</text>
+  <text x="506" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">名字匹配即删</text>
+  <text x="506" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">大小写不敏感</text>
+  <text x="506" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">代理与 locale 保留</text>
+
+  <path d="M622,159 L664,159" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="664" y="118" width="120" height="82" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="678" y="138" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">子进程环境</text>
+  <text x="678" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">裁剪结果打底</text>
+  <text x="678" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">显式 env 之后</text>
+  <text x="678" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">合并，等于点名</text>
+
+  <text x="804" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">默认不给，</text>
+  <text x="804" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">配置里写了</text>
+  <text x="804" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">才转发</text>
+
+  <!-- layer 2 -->
+  <rect x="40" y="232" width="880" height="118" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="40" y="232" width="6" height="118" rx="3" fill="#bf4520"/>
+  <text x="62" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">LAYER 2 / MCP BINDING</text>
+  <text x="62" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">模板绑定只给点名引用</text>
+  <text x="62" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">packages/mcp/mcp-client/src/credentials.ts</text>
+  <text x="62" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">command / args / env / cwd</text>
+  <text x="62" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">或 url / headers 里的占位符</text>
+
+  <rect x="330" y="250" width="150" height="82" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="344" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">${credential:GITHUB_TOKEN}</text>
+  <text x="344" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">连接时展开</text>
+  <text x="344" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">缺服务则停在</text>
+  <text x="344" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">waiting-credentials</text>
+
+  <path d="M480,291 L522,291" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="522" y="250" width="150" height="82" rx="4" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="536" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">实例生命周期 Set</text>
+  <text x="536" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">原值 + 编码形式</text>
+  <text x="536" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只留在内存</text>
+  <text x="536" y="318" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">redact() → [redacted]</text>
+
+  <path d="M672,291 L714,291" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="714" y="250" width="180" height="82" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="728" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">MCP server 进程</text>
+  <text x="728" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只拿到点名的值</text>
+  <text x="728" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">拿不到父环境</text>
+  <text x="728" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">其他 secret</text>
+
+  <!-- layer 3 -->
+  <rect x="40" y="364" width="880" height="100" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="40" y="364" width="6" height="100" rx="3" fill="#bf4520"/>
+  <text x="62" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">LAYER 3 / TELEMETRY EXPORT</text>
+  <text x="62" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">导出副本过 waterfall</text>
+  <text x="62" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">session-telemetry/record</text>
+  <text x="62" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">seam 自身不带规则</text>
+
+  <rect x="330" y="378" width="140" height="68" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="344" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">会话记录</text>
+  <text x="344" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">canonical log</text>
+  <text x="344" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">永不改写</text>
+
+  <path d="M470,412 L512,412" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="512" y="378" width="160" height="68" rx="4" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="526" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">监听器改写 next()</text>
+  <text x="526" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">不调 next() 即替换下游</text>
+  <text x="526" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">抛错则整条扣下</text>
+
+  <path d="M672,412 L714,412" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="714" y="378" width="180" height="68" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="728" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">OTel 导出</text>
+  <text x="728" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">独立队列，上限 4 MB</text>
+  <text x="728" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#5a6580">不进模型请求</text>
+
+  <!-- gap -->
+  <rect x="40" y="480" width="880" height="88" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.5"/>
+  <text x="62" y="502" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#bf4520">GAP / TOOL OUTPUT</text>
+  <text x="62" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">工具打印什么，模型就看到什么</text>
+  <text x="62" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">env、cat、第三方 MCP 的返回值都直接进入会话；这里没有中心正则替换，误伤与漏检都不划算</text>
+  <text x="62" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">能做的三件事已经做了：spawn 不给、MCP 只给点名的、导出不带</text>
+</svg>

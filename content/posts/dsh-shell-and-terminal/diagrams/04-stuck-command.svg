@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">命令卡住时的七步排查</title>
+  <desc id="f04-desc">按顺序检查 job 是否已转后台、输出环是否 lossy、沙箱 runner 是否失败、timedOut 与 exitCode 的组合、PTY 的 waitReason、命令是否在等 tty，最后才终止进程。每步给出命中的结论。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">04 / STUCK COMMAND</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">先看进程，再看数据，最后动手</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">七步按代价排序：前面几步只读，最后一步不可逆</text>
+
+  <rect x="40" y="106" width="880" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">1</text>
+  <text x="88" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">job_list</text>
+  <text x="200" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">有 id 说明超时后已经转后台，进程还活着</text>
+  <text x="640" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">去 job_output，别再重跑</text>
+  <text x="56" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">默认 promote 把前台命令留成 job，杀进程要显式设 onExpiry</text>
+
+  <rect x="40" y="166" width="880" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">2</text>
+  <text x="88" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">job_output.lossy</text>
+  <text x="200" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">为真表示请求的偏移已被环淘汰</text>
+  <text x="640" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">缺口只能从 spillPath 恢复</text>
+  <text x="56" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">偏移是全流字节坐标，淘汰后不移动，所以能从 lossy 反推缺口</text>
+
+  <rect x="40" y="226" width="880" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">3</text>
+  <text x="88" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">sandbox.runnerFailed</text>
+  <text x="228" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">为真表示沙箱后端自己挂了</text>
+  <text x="640" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">命令根本没跑，改命令无效</text>
+  <text x="56" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">前台会直接抛 SANDBOX_UNAVAILABLE，后台只能走这个事实通道</text>
+
+  <rect x="40" y="286" width="880" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">4</text>
+  <text x="88" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">timedOut × exitCode</text>
+  <text x="228" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">两个字段不互斥，要组合判读</text>
+  <text x="640" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">true 且 0：命令自己处理了信号</text>
+  <text x="56" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">把它当成功会漏掉一次真实的超时</text>
+
+  <rect x="40" y="346" width="880" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">5</text>
+  <text x="88" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">waitReason</text>
+  <text x="200" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">PTY 场景专有，四个取值</text>
+  <text x="640" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">stdin_read：程序在等输入</text>
+  <text x="56" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">timeout 只说明等待窗口到期，会话可能还活着</text>
+
+  <rect x="40" y="406" width="880" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">6</text>
+  <text x="88" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">命令在等 tty 吗</text>
+  <text x="228" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">管道里没有终端，交互程序会一直挂着</text>
+  <text x="640" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">ssh / sudo / git commit 没带 -m</text>
+  <text x="56" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">解法是补上非交互参数，或换 terminal_open</text>
+
+  <rect x="40" y="466" width="880" height="52" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="56" y="488" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">7</text>
+  <text x="88" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#2d3142">都没命中才终止</text>
+  <text x="228" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">先请求退出，等 graceMs 再强杀</text>
+  <text x="640" y="488" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">输出停在半截，前面的时间白花</text>
+  <text x="56" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">kill 幂等，进程已结束返回 false；会话要整段关掉用 terminal_close</text>
+
+  <text x="40" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">前六步都是读操作，代价为零；第七步不可逆，所以排在最后。</text>
+  <text x="40" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">顺序颠倒的常见后果：把「还在跑」当「卡死」，杀掉之后拿到半截输出，再跑一遍浪费时间。</text>
+</svg>

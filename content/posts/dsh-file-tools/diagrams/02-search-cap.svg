@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-desc">
+  <title id="f02-title">glob 与 grep 的两条上限通道</title>
+  <desc id="f02-desc">glob 以 --no-ignore --hidden 列出全部路径，超过 100 条时抽样并把完整列表写入 spill；grep 以 --json 输出匹配，尊重 .gitignore 且跳过隐藏目录，超过 250 条时保留前缀并把完整结果写入 spill。底部对比两者在忽略规则、隐藏文件与上限上的差异。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">02 / SEARCH CAP</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">两个搜索工具，两套 ignore 语义</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同一份仓库，glob 看见被忽略的文件，grep 只看已跟踪的源码；溢出都走 spill，footer 给定位</text>
+
+  <!-- glob lane -->
+  <text x="40" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">GLOB / 发现文件</text>
+
+  <rect x="40" y="122" width="200" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">调用</text>
+  <text x="54" y="160" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">glob(pattern, path?)</text>
+  <text x="54" y="180" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">path 省略则用会话 workspace</text>
+  <text x="54" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">100</text>
+  <text x="76" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">GLOB_MAX_RESULTS</text>
+
+  <line x1="242" y1="174" x2="266" y2="174" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="268" y="122" width="212" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="282" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">argv</text>
+  <text x="282" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">--files</text>
+  <text x="282" y="178" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">--no-ignore --hidden</text>
+  <text x="282" y="194" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">--sort=modified</text>
+  <text x="282" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">另排除 .git 等 6 个 VCS 目录</text>
+
+  <line x1="482" y1="174" x2="506" y2="174" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="508" y="122" width="192" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="522" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">完整列表</text>
+  <text x="522" y="162" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">N 条，按 mtime 排序</text>
+  <text x="522" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">N ≤ 100 → 原样返回</text>
+  <text x="522" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">排序本身就是答案：谁最新</text>
+
+  <line x1="702" y1="174" x2="726" y2="174" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="728" y="122" width="192" height="104" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="742" y="142" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">超限</text>
+  <text x="742" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">按顶层目录抽样 100 条</text>
+  <text x="742" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">完整列表 → spillStore</text>
+  <text x="742" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">saveText → SpillRef</text>
+  <text x="742" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">存不下则给收窄建议</text>
+
+  <text x="40" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">(Showing 100 of 3184 paths, sampled across 12 of the 34 top-level entries. Full sorted result stored at: &lt;locator&gt;.)</text>
+
+  <!-- grep lane -->
+  <text x="40" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">GREP / 搜索源码</text>
+
+  <rect x="40" y="298" width="200" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="54" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">调用</text>
+  <text x="54" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">grep(pattern, path?, include?)</text>
+  <text x="54" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">ripgrep 语法，不经过 shell</text>
+  <text x="54" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">250</text>
+  <text x="78" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">GREP_MAX_MATCHES</text>
+
+  <line x1="242" y1="350" x2="266" y2="350" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="268" y="298" width="212" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="282" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">argv</text>
+  <text x="282" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">--json</text>
+  <text x="282" y="354" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">--no-config（强制前置）</text>
+  <text x="282" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">--regexp=... [--glob=...]</text>
+  <text x="282" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">默认尊重 .gitignore，跳过隐藏</text>
+
+  <line x1="482" y1="350" x2="506" y2="350" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="508" y="298" width="192" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="522" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">匹配列表</text>
+  <text x="522" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">按文件分组 + 行号</text>
+  <text x="522" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">每行预览 2000 字节</text>
+  <text x="522" y="376" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">(line truncated)</text>
+
+  <line x1="702" y1="350" x2="726" y2="350" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="728" y="298" width="192" height="104" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="742" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">超限</text>
+  <text x="742" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">保留前 250 条</text>
+  <text x="742" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">完整结果 → spillStore</text>
+  <text x="742" y="374" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#bf4520">Found 250 of 1832 matches</text>
+  <text x="742" y="390" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">原始输出超 20 MB 则整次失败</text>
+
+  <text x="40" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">(Full grep result stored at: &lt;locator&gt;. Read it with read, or search it with grep.)</text>
+
+  <!-- comparison -->
+  <rect x="40" y="444" width="880" height="132" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="466" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">SAME BINARY, DIFFERENT VIEW</text>
+
+  <text x="56" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">维度</text>
+  <text x="300" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">glob</text>
+  <text x="620" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">grep</text>
+
+  <text x="56" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">忽略规则</text>
+  <text x="300" y="514" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">--no-ignore</text>
+  <text x="620" y="514" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">尊重 .gitignore</text>
+
+  <text x="56" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">隐藏文件</text>
+  <text x="300" y="536" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">--hidden</text>
+  <text x="620" y="536" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">跳过</text>
+
+  <text x="56" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">内联上限</text>
+  <text x="300" y="558" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">100 条路径</text>
+  <text x="620" y="558" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">250 条匹配</text>
+</svg>

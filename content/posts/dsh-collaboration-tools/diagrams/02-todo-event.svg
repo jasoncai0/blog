@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-t f02-d">
+  <title id="f02-t">todo 的事件路径</title>
+  <desc id="f02-d">模型调用 todo_write 后，工具校验并整表追加 todo/write 事件；投影把最新一张表折出来给界面与后续轮次，下一次 turn/start 把它清空。工具输出里带计数，模型的回执与技术回执是两份不同的东西。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-04 / TODO EVENT</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一张清单，两次写入，三条读者</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具参数与事件载荷都是完整清单，所以回放只需要最后一次</text>
+
+  <!-- step 1 -->
+  <rect x="40" y="124" width="180" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">01</text>
+  <text x="56" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">模型给完整清单</text>
+  <text x="56" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">描述词要求每个具体步骤</text>
+  <text x="56" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">各占一条，先建表再动手</text>
+
+  <line x1="220" y1="172" x2="252" y2="172" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 2 -->
+  <rect x="260" y="124" width="196" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="276" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">02</text>
+  <text x="276" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">校验三件事</text>
+  <text x="276" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">content 非空白、不重复</text>
+  <text x="276" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">在做的任务数不超过上限</text>
+
+  <line x1="456" y1="172" x2="488" y2="172" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 3 -->
+  <rect x="496" y="124" width="196" height="96" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="512" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">03</text>
+  <text x="512" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">追加 todo/write</text>
+  <text x="512" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">写到调用方 agent 的会话</text>
+  <text x="512" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">参数进同一份日志</text>
+
+  <line x1="692" y1="172" x2="724" y2="172" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <!-- step 4 -->
+  <rect x="732" y="124" width="188" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="748" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">04</text>
+  <text x="748" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">回执给模型</text>
+  <text x="748" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">计数行，不重复整张表</text>
+  <text x="748" y="202" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">Updated todo list: ...</text>
+
+  <!-- down arrows -->
+  <path d="M 594 220 L 594 252 L 160 252 L 160 286" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f02-acc)"/>
+  <text x="240" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">同一条事件，两个方向</text>
+
+  <!-- readers -->
+  <text x="40" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">READERS</text>
+
+  <rect x="40" y="320" width="280" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">投影：todos</text>
+  <text x="56" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">todo/write 整表替换</text>
+  <text x="56" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">turn/start 归零</text>
+  <text x="56" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">其他事件原样透传</text>
+  <text x="56" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">key: 'todos' / stateVersion 2</text>
+  <text x="56" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">不进 Session summary 载荷</text>
+
+  <rect x="340" y="320" width="280" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="356" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">界面：折叠面板</text>
+  <text x="356" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">默认折叠，空列表不渲染</text>
+  <text x="356" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">done 与 ongoing 用色点标记</text>
+  <text x="356" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">key 用 content，重复会撞键</text>
+  <text x="356" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">TodoPanel.tsx</text>
+  <text x="356" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">所以重复 content 在工具层被拒</text>
+
+  <rect x="640" y="320" width="280" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="656" y="342" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">恢复与 fork</text>
+  <text x="656" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">回放日志即可得到同一张表</text>
+  <text x="656" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">不需要快照，也不丢状态</text>
+  <text x="656" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">fork 后的会话各自往后写</text>
+  <text x="656" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">sessionProjections</text>
+  <text x="656" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">投影是纯函数，不碰 UI 状态</text>
+
+  <!-- plan mode contrast -->
+  <rect x="40" y="464" width="880" height="92" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 4"/>
+  <text x="56" y="488" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">VS PLAN MODE</text>
+  <text x="56" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">todo 是模型给自己看的进度表，随时可整表重写，不改变任何准入规则。</text>
+  <text x="56" y="526" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">plan mode 是一个逐 agent 记录的协作状态，激活期间每个模型请求都带部署的指引，退出要经过用户评审。</text>
+  <text x="56" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">两者都只写日志，都不进 transcript；区别在于一个影响模型看到的提示词前缀，一个只影响模型的自我叙述。</text>
+</svg>

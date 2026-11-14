@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-desc">
+  <title id="f02-title">一次 bash 调用经过的四个包</title>
+  <desc id="f02-desc">tool-bash 只拼五个字段，bash-local 用 resolve 补齐并夹住 120 秒到 600 秒的上限，subprocess-local 以显式 stdio spawn，收集器每流保留 64 KB 尾部并把溢出写进 64 MB 的 spill。沙箱策略在 spawn 之前进入执行器，结果沿 ShellRunResult 回到工具层。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">02 / SPAWN CHAIN</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">四层，各管一个决定</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">参数在工具层拼，上限在执行器夹，进程归 subprocess，字节归收集器</text>
+
+  <!-- input -->
+  <rect x="40" y="104" width="880" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="131" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">bash { command, workdir?, timeoutMs?, run_in_background? }</text>
+  <text x="700" y="131" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">description 也是必填</text>
+
+  <!-- boxes -->
+  <rect x="40" y="164" width="200" height="148" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">TOOL</text>
+  <text x="56" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">tool-bash</text>
+  <text x="56" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">只有五个字段，没有 stdin / env</text>
+  <text x="56" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">超时默认转后台，可关</text>
+  <text x="56" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">渲染状态标记</text>
+  <text x="56" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">[exit code: N] 必须最后</text>
+
+  <line x1="242" y1="238" x2="261" y2="238" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="265" y="164" width="200" height="148" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="281" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">EXECUTOR</text>
+  <text x="281" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">bash-local</text>
+  <text x="281" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">resolve() 补齐请求并封顶</text>
+  <text x="281" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">缺省 120 s，上限 600 s</text>
+  <text x="281" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">重建 DSH_* 快照</text>
+  <text x="281" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">clampTimeout(...)</text>
+
+  <line x1="467" y1="238" x2="486" y2="238" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="490" y="164" width="200" height="148" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="506" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">RUNTIME</text>
+  <text x="506" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">subprocess-local</text>
+  <text x="506" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">argv 直接进 spawn，不经 shell</text>
+  <text x="506" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">stdio 三项全显式</text>
+  <text x="506" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">终止升级等待 graceMs</text>
+  <text x="506" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">3_000 ms</text>
+
+  <line x1="692" y1="238" x2="711" y2="238" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
+
+  <rect x="715" y="164" width="205" height="148" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="731" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing="0.1em" fill="#bf4520">OUTPUT</text>
+  <text x="731" y="204" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" font-weight="600" fill="#2d3142">SubprocessCollect</text>
+  <text x="731" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">每流保留尾部 64_000 字节</text>
+  <text x="731" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">溢出写 spill 文件</text>
+  <text x="731" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">单文件上限 64 MB</text>
+  <text x="731" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">truncated: true</text>
+
+  <!-- sandbox -->
+  <rect x="265" y="326" width="440" height="52" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="281" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">ctx.sandboxPolicy.resolve()</text>
+  <text x="281" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">沙箱在 spawn 之前进入执行器：包装、限制或拒绝，结果回传 ShellSandboxInfo</text>
+  <line x1="480" y1="326" x2="480" y2="316" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-r)"/>
+
+  <!-- output -->
+  <rect x="40" y="392" width="880" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="413" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">RESULT</text>
+  <text x="56" y="432" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">ShellRunResult { exitCode, signal, timedOut, aborted, timeoutMs, stdout, stderr, sandbox? }</text>
+  <text x="760" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">timedOut 与 aborted 互斥</text>
+
+  <!-- bottom note -->
+  <rect x="40" y="466" width="880" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="488" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">ONE LIMIT PER LAYER</text>
+  <text x="56" y="510" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">时间上限在执行器：工具传多少都会被夹进 120 s 到 600 s，绕过 schema 也改不了。</text>
+  <text x="56" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">字节上限在收集器：64_000 是内存窗口，不是拒收阈值；更大的部分进 spill，模型拿到路径。</text>
+  <text x="56" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">进程上限在 runtime：组合拆除会杀掉并 join 所有受管进程，executor reload 不杀。</text>
+</svg>

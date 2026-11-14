@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-rc-title f03-rc-desc">
+  <title id="f03-rc-title">重复调用的计数链与提醒注入点</title>
+  <desc id="f03-rc-desc">同一工具名加规范化参数构成一个 key，连续出现时在 post-execute 里累加计数，命中 3、5、8 三个阈值后生成一条 notice 形式的 user 消息并折进 additionalContexts。用户插话会在 agent/pre-step 清空计数，不在 include 名单里的工具直接穿透。</desc>
+
+  <defs>
+    <marker id="f03-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">09 / REPEAT CHAIN</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">同一条调用重复到第几次会被提醒</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">key 相同的调用连续出现就加一；命中阈值写入一条 notice，链断在用户插话或换 key 时</text>
+
+  <!-- chain nodes -->
+  <line x1="40" y1="140" x2="920" y2="140" stroke="#e2e2e2"/>
+
+  <rect x="46" y="118" width="76" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="84" y="136" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">call 1</text>
+  <text x="84" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">count 1</text>
+
+  <line x1="124" y1="140" x2="140" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="142" y="118" width="76" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="180" y="136" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">call 2</text>
+  <text x="180" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">count 2</text>
+
+  <line x1="220" y1="140" x2="236" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="238" y="114" width="76" height="52" rx="4" fill="#fdf3ee" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="276" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">call 3</text>
+  <text x="276" y="148" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">第 1 条提醒</text>
+  <text x="276" y="160" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.5" fill="#8a93a6">温和版</text>
+
+  <line x1="316" y1="140" x2="332" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="334" y="118" width="76" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="372" y="136" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">call 4</text>
+  <text x="372" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">count 4</text>
+
+  <line x1="412" y1="140" x2="428" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="430" y="114" width="76" height="52" rx="4" fill="#fdf3ee" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="468" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">call 5</text>
+  <text x="468" y="148" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">第 2 条提醒</text>
+  <text x="468" y="160" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.5" fill="#8a93a6">详细版，带参数预览</text>
+
+  <line x1="508" y1="140" x2="524" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="526" y="118" width="76" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="564" y="136" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">call 6</text>
+  <text x="564" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">count 6</text>
+
+  <line x1="604" y1="140" x2="620" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="622" y="118" width="76" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="660" y="136" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">call 7</text>
+  <text x="660" y="152" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">count 7</text>
+
+  <line x1="700" y1="140" x2="716" y2="140" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="718" y="114" width="76" height="52" rx="4" fill="#fdf3ee" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="756" y="132" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">call 8</text>
+  <text x="756" y="148" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">第 3 条提醒</text>
+  <text x="756" y="160" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="6.5" fill="#8a93a6">之后每次命中</text>
+
+  <text x="820" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">默认阈值</text>
+  <text x="820" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">[3, 5, 8]</text>
+
+  <!-- key bar -->
+  <rect x="40" y="188" width="880" height="44" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="208" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">一个 key 由工具名与规范化参数拼成，参数按 key 排序后再序列化，属性顺序变化不断链。</text>
+  <text x="56" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">JSON.stringify([exec.name, canonical(args)]) → WeakMap&lt;Agent, { key, count }&gt;</text>
+
+  <!-- three cards -->
+  <rect x="40" y="252" width="266" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">计数发生在哪</text>
+  <text x="56" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">tools/post-execute 收到结果后</text>
+  <text x="56" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">被拒绝的调用同样计数</text>
+  <text x="56" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">模型硬撞一个 deny 正是要打断的循环</text>
+  <text x="56" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">include 名单为空时看所有工具</text>
+  <text x="56" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">exclude 命中则整条链不计数</text>
+  <text x="56" y="400" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">不在名单内的工具：既不加一，也不清零</text>
+  <text x="56" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">透明穿透，留给别的机制去管</text>
+
+  <rect x="322" y="252" width="372" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="338" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">提醒怎么进上下文</text>
+  <text x="338" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">先调 next() 放行，再把内容折进 additionalContexts</text>
+  <text x="338" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">生成一条 user 消息，source.form 是 notice</text>
+  <text x="338" y="332" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">{ kind: 'repeat-tool-reminder', summary: 'bash × 3' }</text>
+  <text x="338" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">工具结果之后、下一轮请求之前出现</text>
+  <text x="338" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">参数预览截到 500 字符，超出追加计数</text>
+  <text x="338" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">它不拒绝调用，只增加一条可读的提示</text>
+  <text x="338" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">所以模型仍可能继续重复，只是有了反证</text>
+
+  <rect x="710" y="252" width="210" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="726" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">链什么时候断</text>
+  <text x="726" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">参数变了：新 key</text>
+  <text x="726" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">换了工具：新 key</text>
+  <text x="726" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">用户插话：清零</text>
+  <text x="726" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">agent/pre-step 扫到 user 来源即删</text>
+  <text x="726" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">多 agent 各算各的，</text>
+  <text x="726" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">互不污染。</text>
+
+  <!-- cost strip -->
+  <rect x="40" y="468" width="880" height="86" rx="6" fill="#fdf3ee" stroke="#bf4520" stroke-opacity="0.35"/>
+  <text x="56" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">误报的代价：提醒是一条常驻消息</text>
+  <text x="56" y="510" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">三个文件里各跑一次 grep、参数不同，属于正常探索。如果 key 只看工具名，这些都会被算成重复。</text>
+  <text x="56" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">提醒一旦写入，后续每次请求都带着它，直到压缩把它折掉；500 字符的预览上限是唯一的刹车。</text>
+  <text x="56" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">阈值配成 2 会让正常的两步操作也触发提醒；配成 10 以上则几乎不会在会话内触发。</text>
+</svg>

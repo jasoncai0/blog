@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="356" viewBox="0 0 960 356" role="img" aria-labelledby="f01-title f01-desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="356" viewBox="0 0 960 356" role="img" aria-labelledby="f01-title f01-desc"><defs><marker id="f01-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker></defs>
 <title id="f01-title">四个导出，三条注册</title>
 <desc id="f01-desc">配置在加载期校验，注册在 apply 里发生，卸载时按 disposer 逆序回收。</desc>
 <rect width="960" height="356" fill="#f5f5f5"/>

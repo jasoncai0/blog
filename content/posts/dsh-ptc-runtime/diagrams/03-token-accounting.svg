@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-d1-title f03-d1-desc">
+  <title id="f03-d1-title">哪些数据进模型历史</title>
+  <desc id="f03-d1-desc">一次 run_code 内部的多次子调用各自写两条 log-only 事件，deriveMessages 忽略它们；下一轮 prompt 只包含外层调用的程序文本与最终结果。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3 / PTC</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">哪些数据进模型历史</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">一次 run_code 里的十二次子调用，只有外层的入参与出参留下来</text>
+
+  <!-- inside the program -->
+  <rect x="40" y="108" width="880" height="112" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="132" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#8a93a6">INSIDE ONE run_code</text>
+
+  <rect x="60" y="144" width="104" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="112" y="161" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">read_file</text>
+  <rect x="180" y="144" width="104" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="232" y="161" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">grep</text>
+  <rect x="300" y="144" width="104" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="352" y="161" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">read_file</text>
+  <rect x="420" y="144" width="104" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="472" y="161" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">bash</text>
+  <rect x="540" y="144" width="104" height="26" rx="4" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="592" y="161" text-anchor="middle" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">write_file</text>
+  <text x="664" y="161" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">+ 7 次</text>
+  <text x="720" y="161" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">共 12 次子调用</text>
+
+  <text x="60" y="200" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每次的入参、完整 content 与错误信息都写进日志，一句也不进对话。</text>
+
+  <!-- message events -->
+  <rect x="40" y="244" width="420" height="176" rx="8" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="60" y="268" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2f6f5e">消息事件</text>
+  <text x="140" y="268" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">deriveMessages 读这些</text>
+  <text x="60" y="298" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">tool/call</text>
+  <text x="60" y="314" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">程序文本与 description</text>
+  <text x="60" y="344" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">tool/result</text>
+  <text x="60" y="360" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">logs 与返回值</text>
+  <text x="60" y="396" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">整次运行只有这两条，与普通工具调用同形。</text>
+
+  <!-- log-only events -->
+  <rect x="500" y="244" width="420" height="176" rx="8" fill="#ffffff" stroke="#bf4520"/>
+  <text x="520" y="268" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#bf4520">旁路日志</text>
+  <text x="600" y="268" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">deriveMessages 忽略</text>
+  <text x="520" y="298" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">tool/ptc-dispatch-start</text>
+  <text x="520" y="314" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">名字、参数、subCallId</text>
+  <text x="520" y="344" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">tool/ptc-dispatch</text>
+  <text x="520" y="360" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">isError、完整 content、meta</text>
+  <text x="520" y="396" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每次子调用一对，只供查询与重放。</text>
+
+  <!-- projection to prompt -->
+  <line x1="250" y1="422" x2="250" y2="494" stroke="#2f6f5e" stroke-width="1.4" marker-end="url(#f03-a)"/>
+  <text x="264" y="452" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e">原样投影</text>
+  <text x="264" y="468" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">顺序与相邻关系都不变</text>
+
+  <line x1="710" y1="422" x2="710" y2="494" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="5 3"/>
+  <line x1="692" y1="458" x2="728" y2="458" stroke="#bf4520" stroke-width="2.4"/>
+  <text x="740" y="462" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">在这里被丢掉</text>
+
+  <!-- prompt -->
+  <rect x="40" y="496" width="880" height="64" rx="8" fill="#ffffff" stroke="#2d3142"/>
+  <text x="60" y="520" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">下一轮请求的 prompt</text>
+  <text x="60" y="540" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">一段程序文本，一份 logs 与 result，加上没变的 system 与工具 schema</text>
+
+  <text x="40" y="584" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">省下的量随子调用次数增长；生成的 SDK 文本是固定成本，工具集小的时候未必划算。</text>
+  <text x="760" y="584" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">ptc.ts:545-575</text>
+</svg>

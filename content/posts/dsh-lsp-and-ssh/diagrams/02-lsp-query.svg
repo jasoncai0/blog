@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-lq-title f02-lq-desc">
+  <title id="f02-lq-title">一次 lsp 查询的四段</title>
+  <desc id="f02-lq-desc">工具把查询交给实例，实例通过文件系统读源码并做包含性检查，临时 didOpen 全文后发出请求，收到位置或悬停内容，最后在 finally 里 didClose。预算分布在文档大小、位置数、结果字符数与工具超时四处。</desc>
+
+  <defs>
+    <marker id="f02-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">10 / LSP QUERY</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一次查询的文档生命周期</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">读文件、临时打开、发请求、关闭；每一步都有上限，越界当场报错</text>
+
+  <rect x="40" y="104" width="130" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="105" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">tool-lsp</text>
+
+  <rect x="250" y="104" width="140" height="40" rx="4" fill="#ffffff" stroke="#bf4520"/>
+  <text x="320" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">LspInstance</text>
+
+  <rect x="480" y="104" width="130" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="545" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">ctx.fs</text>
+
+  <rect x="705" y="104" width="130" height="40" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="770" y="128" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">语言服务器</text>
+
+  <line x1="105" y1="144" x2="105" y2="452" stroke="#c9ced9" stroke-dasharray="3 4"/>
+  <line x1="320" y1="144" x2="320" y2="452" stroke="#c9ced9" stroke-dasharray="3 4"/>
+  <line x1="545" y1="144" x2="545" y2="452" stroke="#c9ced9" stroke-dasharray="3 4"/>
+  <line x1="770" y1="144" x2="770" y2="452" stroke="#c9ced9" stroke-dasharray="3 4"/>
+
+  <line x1="105" y1="178" x2="318" y2="178" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="212" y="172" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">query(op, file, pos, root)</text>
+
+  <line x1="320" y1="210" x2="543" y2="210" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="432" y="204" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">readText + 包含性检查</text>
+
+  <line x1="545" y1="242" x2="322" y2="242" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#f02-arrow)"/>
+  <text x="434" y="236" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">全文，或超过 4 MB 报错</text>
+
+  <line x1="320" y1="274" x2="768" y2="274" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="544" y="268" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">didOpen(version 1, 全文)</text>
+
+  <line x1="320" y1="306" x2="768" y2="306" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="544" y="300" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">definition | references | hover</text>
+
+  <line x1="770" y1="338" x2="322" y2="338" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="546" y="332" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">locations 或 hover（server 侧解析）</text>
+
+  <line x1="320" y1="370" x2="768" y2="370" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-arrow)"/>
+  <text x="544" y="364" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">didClose（finally，只有打开过才发）</text>
+
+  <line x1="320" y1="402" x2="107" y2="402" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#f02-arrow)"/>
+  <text x="214" y="396" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">result + resolvedWorkspaceUri</text>
+
+  <rect x="180" y="418" width="280" height="34" rx="4" fill="#fdf3ee" stroke="#bf4520" stroke-opacity="0.4"/>
+  <text x="320" y="439" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">render：100 个位置 / 16000 字符</text>
+
+  <!-- budgets -->
+  <rect x="40" y="470" width="420" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">四处预算</text>
+  <text x="56" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">文档 4 MB（报错）</text>
+  <text x="230" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">位置 100（截断说明）</text>
+  <text x="56" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">字符 16000（截断说明）</text>
+  <text x="230" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">超时 60 s（TOOL_TIMEOUT）</text>
+  <text x="56" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">省略说明算在预算内，不会被再次截断。</text>
+
+  <rect x="480" y="470" width="440" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="496" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">取消与通知</text>
+  <text x="496" y="512" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">取消：$/cancelRequest，等 2 s 宽限，不结算就拆实例。</text>
+  <text x="496" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">通知：server 推来的诊断与日志一律忽略。</text>
+  <text x="496" y="554" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">反向请求只答配置与生命周期类，applyEdit 被拒。</text>
+</svg>

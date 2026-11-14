@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-t f04-d">
+  <title id="f04-t">浏览器接管与会话资源</title>
+  <desc id="f04-d">六个 stagehand 工具按当前活着的 Agent 实例从 SessionResources 取浏览器资源；launch 模式每次启动新 Chromium 与临时 profile，attach 模式独占一个已有浏览器；跨轮复用，fork 或重载得到全新状态，失败只返回错误文本，没有自动回退到 web_fetch。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-03 / BROWSER SESSION</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">浏览器资源按 Agent 实例分配</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">实验包，显式挂载；页面状态不进日志，恢复后必须先读页面</text>
+
+  <!-- tools -->
+  <text x="40" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TOOLS</text>
+  <rect x="40" y="132" width="224" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">stagehand_act</text>
+  <text x="56" y="172" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">stagehand_extract</text>
+  <text x="56" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">stagehand_navigate</text>
+  <text x="56" y="208" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">stagehand_observe</text>
+  <text x="56" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">stagehand_screenshot</text>
+  <text x="56" y="244" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">stagehand_tabs</text>
+  <line x1="56" y1="258" x2="248" y2="258" stroke="#ececec" stroke-width="1"/>
+  <text x="56" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">act、observe、extract</text>
+  <text x="56" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">走单独配置的 Stagehand 模型</text>
+  <text x="56" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">index.ts / mountTools</text>
+
+  <line x1="264" y1="232" x2="300" y2="232" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <!-- resources -->
+  <text x="308" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">RESOURCES</text>
+  <rect x="308" y="132" width="248" height="200" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="324" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">SessionResources&lt;BrowserResource&gt;</text>
+  <text x="324" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">key 是活着的 Agent 实例</text>
+  <text x="324" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">惰性获取，操作串行化</text>
+  <text x="324" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">exclusive 只对 attach 打开</text>
+  <line x1="324" y1="218" x2="540" y2="218" stroke="#ececec" stroke-width="1"/>
+  <text x="324" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">run 用 AbortSignal.any 合并调用与</text>
+  <text x="324" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">资源自身的取消</text>
+  <text x="324" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">dispose 先关连接再等操作排空</text>
+  <text x="324" y="298" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">获取被 signal 打断时，资源仍归该 Agent</text>
+  <text x="324" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">browser-use-runtime</text>
+
+  <line x1="556" y1="232" x2="592" y2="232" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f04-a)"/>
+
+  <!-- modes -->
+  <text x="600" y="120" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">TWO MODES</text>
+  <rect x="600" y="132" width="152" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="616" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">launch</text>
+  <text x="616" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">自己起 Chromium</text>
+  <text x="616" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每次新临时 profile</text>
+  <text x="616" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">默认 headless</text>
+  <text x="616" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">没有上次的登录态</text>
+  <text x="616" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">连接失败先关浏览器</text>
+  <text x="616" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">再抛错</text>
+  <text x="616" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">launch.ts:24</text>
+
+  <rect x="768" y="132" width="152" height="200" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="784" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">attach</text>
+  <text x="784" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">接已有浏览器</text>
+  <text x="784" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">必须给 cdpEndpoint</text>
+  <text x="784" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">一个实例只留一个 Session</text>
+  <text x="784" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">用户可同时改动页面</text>
+  <text x="784" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">清理只断开连接</text>
+  <text x="784" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">外部浏览器继续运行</text>
+  <text x="784" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">index.ts 配置校验</text>
+
+  <!-- lifecycle -->
+  <line x1="40" y1="366" x2="920" y2="366" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="40" y="390" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.12em" fill="#bf4520">LIFECYCLE</text>
+
+  <rect x="40" y="402" width="208" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">跨轮复用</text>
+  <text x="56" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同一 Agent 的下一轮</text>
+  <text x="56" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">拿到同一个浏览器</text>
+
+  <rect x="264" y="402" width="208" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="280" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">fork 与重载</text>
+  <text x="280" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">新 Session 拿新浏览器</text>
+  <text x="280" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">页面状态不恢复</text>
+
+  <rect x="488" y="402" width="208" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="504" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">释放与清理</text>
+  <text x="504" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">Session 释放时关资源</text>
+  <text x="504" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">清理失败阻止复用</text>
+
+  <rect x="712" y="402" width="208" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="728" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">取消</text>
+  <text x="728" y="442" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">等 Stagehand 工作排空</text>
+  <text x="728" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">已交付的输入不回收</text>
+
+  <!-- no fallback -->
+  <rect x="40" y="500" width="880" height="64" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 4"/>
+  <text x="56" y="522" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">NO FALLBACK</text>
+  <text x="56" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">工具失败就是一条 Error 文本；改用 web_fetch 还是回报用户，由模型自己决定。attach 被占用时本次激活跳过浏览器，后续轮次不重试。</text>
+  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">动作成功不代表结果达成：系统提示词要求用新的页面状态验证，而不是相信 act 的返回。</text>
+</svg>

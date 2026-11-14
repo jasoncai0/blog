@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">edit 的版本守卫时序</title>
+  <desc id="f03-desc">模型调用 edit 后，tool-fs 发 fs/edit-intent 到单槽 waterfall；观察策略从按会话记录的版本里取出 v1 作为守卫；provider 在锁内比对当前版本 v2，不一致时抛 FS_STALE_VERSION，模型重新 read 后再编辑。未装策略时 waterfall 返回 undefined，写入不带守卫。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f03-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="640" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">03 / STALE VERSION</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">陈旧读取由谁发现</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具层只发一个 intent 事件；守卫来自可选策略包；比对发生在 provider 的锁内</text>
+
+  <!-- actors -->
+  <rect x="35" y="96" width="150" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="110" y="118" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">模型</text>
+  <text x="110" y="136" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">tool call</text>
+
+  <rect x="215" y="96" width="170" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="300" y="118" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#2d3142">tool-fs / edit</text>
+  <text x="300" y="136" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">parse · execute</text>
+
+  <rect x="400" y="96" width="180" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="490" y="118" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#2d3142">fs/edit-intent</text>
+  <text x="490" y="136" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">单槽 decision waterfall</text>
+
+  <rect x="590" y="96" width="200" height="52" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="690" y="118" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#2d3142">fs-observation-policy</text>
+  <text x="690" y="136" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">默认组合 disabled: true</text>
+
+  <rect x="790" y="96" width="160" height="52" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="870" y="118" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" font-weight="600" fill="#2d3142">dsh-fs-local</text>
+  <text x="870" y="136" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">provider · 持锁</text>
+
+  <!-- lifelines -->
+  <line x1="110" y1="148" x2="110" y2="520" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="300" y1="148" x2="300" y2="520" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="490" y1="148" x2="490" y2="520" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="690" y1="148" x2="690" y2="520" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="870" y1="148" x2="870" y2="520" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="3 4"/>
+
+  <!-- 1 -->
+  <line x1="112" y1="180" x2="296" y2="180" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="204" y="173" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">edit(file, old_string, new_string)</text>
+
+  <!-- 2 -->
+  <line x1="302" y1="212" x2="486" y2="212" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="394" y="205" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">waterfall(target, exec)</text>
+
+  <!-- 3 -->
+  <line x1="492" y1="244" x2="686" y2="244" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="589" y="237" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">监听器查这个会话的记录</text>
+
+  <!-- 4 self -->
+  <path d="M 690 268 h 32 v 16 h -32" fill="none" stroke="#8a93a6" stroke-width="1.1" marker-end="url(#f03-a)"/>
+  <text x="730" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">WeakMap &lt;session, Map&lt;targetKey, v1&gt;&gt;</text>
+
+  <!-- 5 -->
+  <line x1="688" y1="316" x2="494" y2="316" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-r)"/>
+  <text x="589" y="309" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">{ version: v1 }</text>
+
+  <!-- 6 -->
+  <line x1="488" y1="348" x2="304" y2="348" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-r)"/>
+  <text x="394" y="341" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">intent 成为 writeText / editText 的守卫</text>
+
+  <!-- 7 -->
+  <line x1="302" y1="380" x2="866" y2="380" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f03-a)"/>
+  <text x="584" y="373" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">editText(guard = v1)</text>
+
+  <!-- 8 self -->
+  <path d="M 870 404 h 34 v 16 h -34" fill="none" stroke="#2d3142" stroke-width="1.1" marker-end="url(#f03-a)"/>
+  <text x="800" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">锁内比对当前版本 v2</text>
+
+  <!-- 9 -->
+  <line x1="866" y1="452" x2="304" y2="452" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f03-r)"/>
+  <text x="584" y="445" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">FS_STALE_VERSION（v2 ≠ v1）</text>
+
+  <!-- 10 -->
+  <line x1="298" y1="484" x2="114" y2="484" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-r)"/>
+  <text x="204" y="477" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">file changed since it was read</text>
+
+  <!-- 11 -->
+  <line x1="112" y1="516" x2="296" y2="516" stroke="#2f6f5e" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f03-g)"/>
+  <text x="204" y="509" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2f6f5e">重新 read，拿新内容与新版本</text>
+
+  <!-- note -->
+  <rect x="40" y="540" width="880" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="562" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">TWO COMPOSITIONS</text>
+  <text x="56" y="582" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">未装策略：waterfall 默认返回 undefined，editText 无守卫，按当前内容做字面匹配，旧内容照写。</text>
+  <text x="56" y="600" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">装了策略：读时记录的 version 成为 CAS 依据，provider 在锁内比一次，不一致即失败，恢复动作是重读。</text>
+</svg>
