@@ -53,7 +53,7 @@ slug: "dsh-season-three"
 
 | 篇 | 主题 | 回答的问题 |
 | --- | --- | --- |
-| 6 | `dsh-telemetry` | span 结构、三层遥测的分界、token 记账与隐私 |
+| 6 | `dsh-telemetry` | 调用链坐标、三层遥测的分界、token 记账与隐私 |
 | 7 | `dsh-persistence-and-storage` | JSONL 与 SQLite 的取舍、写放大、迁移与损坏恢复 |
 | 8 | `dsh-credentials-and-identity` | 四类凭据的解析顺序、刷新、脱敏、越权路径 |
 | 9 | `dsh-guards-and-hooks` | guard 只能说不、hook 能观察改写、误报与漏报 |

@@ -1,8 +1,8 @@
 ---
 title: "遥测：trace、token 与产品事件"
 date: "2026-11-14T18:30:00+08:00"
-summary: "三类遥测各记什么：OTel span 记调用链、session telemetry 记会话事实、product telemetry 记产品动作；token 计数如何贯穿三者。"
-description: "从 span 结构到 cache_read/cache_write 的记账，拆遥测的采样、隐私红线与用它定位一次慢请求的方法。"
+summary: "三类遥测各记什么：OTel 通道记调用链、session telemetry 记会话事实、product telemetry 记产品动作；token 计数如何贯穿三者。"
+description: "从一次请求的层级坐标到 cache_read/cache_write 的记账，拆遥测的采样、隐私红线与用它定位一次慢请求的方法。"
 tags: ["harness", "architecture", "billing"]
 slug: "dsh-telemetry"
 ---
@@ -357,7 +357,7 @@ private redact(record: SessionTelemetryRecord): SessionTelemetryRecord {
 
 第四步，看工具对。按 `callId` 配对 `tool/call` 与 `tool/result`，找耗时最长的那对。只有 call 没有 result，就是还在跑或者被放弃了。
 
-{{< fig "diagrams/04-slow-request.svg" "四步排查的分叉：先分桶，再依次排掉重试、单步与工具对" >}}
+{{< fig "diagrams/04-slow-request.svg" "四步排查的分叉：先分桶，再依次排掉重试、单步与工具配对" >}}
 
 这四步全部只读本地日志。约束在这里：遥测不能改变行为。四条证据：
 
