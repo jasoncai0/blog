@@ -1,13 +1,13 @@
 ---
 title: "KV Cache 解剖：从重复计算到分页调度的显存账本"
 date: "2026-11-13T16:30:00+08:00"
-summary: "从 attention 公式一路讲到 PagedAttention 的块表、状态机和 cache domain 路由：KV Cache 存什么、吃多少显存、为什么 decode 被带宽卡住，以及压缩/量化/驱逐/PD 分离各自在省什么、代价是什么。"
-description: "一篇把 KV Cache 的数学、显存账本、分页调度、前缀命中与集群路由串起来的深度笔记。"
+summary: "从 attention 公式和 KV 张量形状一路讲到 PagedAttention 的块表、状态机和 cache domain 路由：KV Cache 存什么、吃多少显存、为什么 decode 被带宽卡住，以及压缩/量化/驱逐/PD 分离各自在省什么、代价是什么。"
+description: "一篇把 KV Cache 的数学、张量形状、显存账本、分页调度、前缀命中与集群路由串起来的深度笔记。"
 tags: ["inference", "architecture"]
 slug: "kv-cache-anatomy"
 ---
 
-这篇文档把 KV Cache 从一条 attention 公式讲到一整条推理流水线：先证明它为什么成立、存的到底是什么，再算清它吃多少显存、为什么 decode 会被显存带宽卡住；然后进入工程侧——PagedAttention 的块表、连续批处理、前缀缓存、上下文压缩对命中的影响、块的生命周期状态机、cache domain 与路由，最后是 GQA/MLA、量化、驱逐、PD 分离这些手段各自在省什么、代价是什么。
+这篇文档把 KV Cache 从一条 attention 公式讲到一整条推理流水线：先证明它为什么成立、存的到底是什么、形状怎么从一条向量长到整份 cache，再算清它吃多少显存、为什么 decode 会被显存带宽卡住；然后进入工程侧——PagedAttention 的块表、连续批处理、前缀缓存、上下文压缩对命中的影响、块的生命周期状态机、cache domain 与路由，最后是 GQA/MLA、量化、驱逐、PD 分离这些手段各自在省什么、代价是什么。
 
 如果你已经知道“KV Cache 就是缓存 Key 和 Value”，这篇补的是中间那层：为什么只缓存 K/V 不缓存 Q，为什么 70B 模型 8K 上下文的 cache 能到 2.5 GiB，为什么长上下文 decode 会越来越慢，为什么压缩一段历史会让后面的前缀缓存全部失效，为什么 vLLM 要把 cache 切成 16 个 token 一块，以及为什么“前缀缓存命中”和“语义缓存”完全不是一回事。
 
@@ -51,7 +51,9 @@ bytes    = elements × sizeof(dtype)
 把 Llama-3-8B 代进去：L=32，H_kv=8，d_head=128，BF16 每元素 2 字节：
 
 ```text
-2 × 32 × 8 × 128 × 2 = 131,072 B = 128 KiB / token
+2 × 32 × 8 × 128 × 2
+= 131,072 B
+= 128 KiB / token
 ```
 
 8K 上下文 = 1 GiB，32K = 4 GiB，128K = 16 GiB。**这还只是一个请求**；batch 8 就是 128 GiB。模型权重本身才 16 GB。
@@ -379,7 +381,64 @@ cache 预算        = 576 - 130 ≈ 446 GiB
 | preemption 频繁 | 显存利用率是否 >95% | 留 10–20% 余量、限流 |
 | decode 远低于理论上界 | kernel、布局、批大小 | 用 paged kernel、检查连续访问 |
 
-## 九、几个容易混的点
+## 九、把形状拆到最小：从一条向量到整份 cache
+
+前面给了公式，也把公式落到了卡上。这一节把公式拆到最小单位，看看“每层前缀”到底由多少个向量组成。
+
+一个 token、一个 KV 头、一层，K 是一条长 `d_head` 的向量，V 也是。把同一个 token 的多个头排成矩阵：
+
+```text
+K[layer, token] : [H_kv, d_head]
+V[layer, token] : [H_kv, d_head]
+```
+
+再把 S 个 token 叠上去：
+
+```text
+K[layer] : [H_kv, S, d_head]
+```
+
+最后加 batch 和层：
+
+```text
+K cache : [L, B, H_kv, S, d_head]
+V cache : [L, B, H_kv, S, d_head]
+```
+
+所以“每一层的前缀”不是一条向量，而是 `H_kv × S` 条 K 向量，加上同样多的 V 向量。层与层之间也不能共享：每层的 `W_K/W_V` 不同，K/V 不在同一个表示空间里。
+
+这里把两个词分清：
+
+- **rank（阶）**：轴的个数。一条向量 rank 1；一层、一个请求（B=1）的 K cache rank 3；带 batch 的整份 cache rank 5。
+- **dimension（维）**：常指某个轴的长度。128 维向量是 rank 1、轴长 128；不是 rank 128。
+
+{{< fig "diagrams/11-shape-hierarchy.svg" "从一条 K 向量到整份 cache：一条向量只有 d_head 个数；同一层同一 token 有 H_kv 条，S 个 token 叠成矩阵，L 层和 B 个请求再乘上去。字节数就是这些轴长度的乘积，再乘 2（K/V）和 dtype 大小。" >}}
+
+写成字节：
+
+```text
+bytes = 2 × L × B × H_kv
+      × S × d_head × dtype_bytes
+```
+
+2 是 K 和 V 各一份；BF16 的 `dtype_bytes = 2`。以 Llama-3-8B 为例，L=32、H_kv=8、d_head=128：
+
+```text
+2 × 32 × 8 × 128 × 2
+= 131,072 B
+= 128 KiB / token
+8K 上下文：128 KiB × 8192 = 1 GiB
+```
+
+这个式子也解释了为什么 hidden state 不能代替 KV cache。每层确实有一个 `[B, S, d_model]` 的 hidden state，但它是这一层的输出；attention 要的是这一层投影出来的 K/V。hidden state 既不是 K，也不是 V，层与层之间还不能混用。
+
+注意 `d_model` 和 `d_head` 不是一个东西：前者是 hidden state 的宽度，后者是单个 KV 头的宽度。GQA 里 `H_kv × d_head` 通常远小于 `d_model`；MLA 干脆不按头存。
+
+MLA 是另一个形状：它不存完整的 K/V，而是每层每 token 存一段 latent（DeepSeek-V2 是 512 维）加一段 RoPE key（64 维），共 576 个元素。DeepSeek-V2 有 60 层，576 × 2 B × 60 = 67.5 KiB/token；形状变了，乘法没变。
+
+最后记一个检查顺序：先问“哪一层”，再问“哪个 KV 头”，再问“哪个 token”，最后才乘 dtype。顺序反了，就会把 `d_model` 和 `d_head`、把“一层”和“整份”混在一起。
+
+## 十、几个容易混的点
 
 1. **KV cache 不改变模型输出**。它只是把已经算过的 K/V 留下来；除非量化、驱逐、或者位置处理错了。
 2. **FlashAttention 不省 KV cache**。它省的是 attention 中间矩阵 S×S 的 HBM 读写，把 attention 做成流式；KV 该存还得存。
@@ -392,7 +451,7 @@ cache 预算        = 576 - 130 ≈ 446 GiB
 9. **压缩上下文和压缩 KV cache 是两件事**。前者改 token 前缀，会让改动点之后的完整块全部 miss；后者改精度或数量，命中逻辑通常不变，但复用值可能已经有损。
 10. **会话粘滞不是绑卡**。要的是 cache 亲和：请求落到能读到这段 cache 的 domain；同一张卡上的两个 engine 也可能各自为政。
 
-## 十、收束
+## 十一、收束
 
 KV Cache 的本质是一笔交易：用 O(N) 的显存和 O(N) 的读取，换掉 O(N²) 的重算。它把推理的瓶颈从算力搬到显存容量和带宽，于是后面所有的工程问题都围绕五个词展开：
 
