@@ -54,6 +54,29 @@ Agent 在会话里说：「我已经用你的 GitHub 账号建了 PR。」用户
 
 seam 级还有一条规则：空存储值在任何地方都视为不存在。`resolve` 跳过它，`describe` 报未配置，`set('')` 直接拒绝并提示改用 `unset`。否则一个空字符串会伪装成「已配置」，消费方拿着空 key 发请求，错误信息会指向网络而不是配置。
 
+引用与记录的方法集合，可以直接从抽象类读出来：
+
+```ts
+abstract class CredentialProvider {
+  abstract resolve(ref: CredentialRef): Promise<ResolvedCredential | undefined>
+  abstract describe(ref: CredentialRef): Promise<CredentialInfo>
+  abstract set(ref: CredentialRef, value: string): Promise<void>
+  abstract unset(ref: CredentialRef): Promise<void>
+  abstract readRecord(key: CredentialKey): Promise<CredentialRecord | undefined>
+  abstract describeRecord(key: CredentialKey): Promise<CredentialRecordInfo>
+  abstract modifyRecord(
+    key: CredentialKey,
+    mutate: (current: CredentialRecord | undefined) => Promise<CredentialRecord | undefined>,
+  ): Promise<CredentialRecord | undefined>
+  abstract deleteRecord(key: CredentialKey): Promise<void>
+  abstract listRecords(): Promise<readonly CredentialRecordEntry[]>
+}
+```
+
+`resolve` 与 `describe` 是一对：前者返回值，后者只回答「有没有、从哪来、能不能写」。`set` 与 `unset` 只作用于引用。记录一侧的方法都带 `CredentialKey`，与引用不共享任何存储位置。
+
+`readRecord` 不做解释，`modifyRecord` 的 `mutate` 拿到 `current: CredentialRecord | undefined`，返回 `undefined` 表示不动。这个签名把「没有记录」与「有记录但不改」区分开，插件不需要额外约定。
+
 ## 2. 解析顺序：文件、进程环境、两层 .env
 
 本地 provider 的优先级写在文件头（`credentials-local/src/index.ts:1-20`）：
@@ -79,7 +102,7 @@ override resolve(ref: CredentialRef): Promise<ResolvedCredential | undefined> {
 }
 ```
 
-顺序的理由不是「文件更可信」，而是「用户显式保存的值必须在所有 provider 上一致生效」。CI 注入的环境变量只在该文件没有对应值时生效，所以本地调试用 CI key、产品里用保存的 key，两者不会互相打架。项目 `.env` 排在进程环境之后、用户 home 之前：产品信任启动目录，但用户在产品里保存过的值优先于 checkout 里碰巧带的 key。
+顺序的理由是「用户显式保存的值必须在所有 provider 上一致生效」，与「文件更可信」无关。CI 注入的环境变量只在该文件没有对应值时生效，所以本地调试用 CI key、产品里用保存的 key，两者不会互相打架。项目 `.env` 排在进程环境之后、用户 home 之前：产品信任启动目录，但用户在产品里保存过的值优先于 checkout 里碰巧带的 key。
 
 这个顺序里没有 keychain。想要 keychain 就得再写一个 provider，实现同一组方法，然后由组合选择；仓库自带的实现只有文件加三层环境。文件的安全边界是权限：读取之前先 `assertOwnerOnly`，发现 group 或 other 有任何权限位就拒绝启动并提示 `chmod 600`。它防的是「同机其他用户读走 secret」，不防同用户的恶意进程。
 
@@ -88,6 +111,31 @@ override resolve(ref: CredentialRef): Promise<ResolvedCredential | undefined> {
 watch 配置默认开启，debounce 默认 100ms（`awaitWriteFinish.stabilityThreshold`），watcher `ready` 之后再补一次 reconcile，堵住「初次读取与 watcher 生效之间写入」的窗口。`credentials/reference-updated` 只在 set、unset 或观察到外部编辑时发；进程环境的变化不可观测，所以永远不会为它发事件。
 
 自己搭 Agent 时，先把「谁能写这个文件」定下来。DSH 的写法是：文件是唯一可写源，所有写入经过同一把锁与同一条队列，读路径永远不缓存。很多实现把 key 缓存在内存里，改配置要重启；一旦支持热更新，就必须同时处理并发写与自写抑制，否则会出现「界面显示已保存、实际被旧快照覆盖」。
+
+四层各自的写行为：
+
+| 层 | `source` | 可写 | 说明 |
+|---|---|---|---|
+| `$DSH_HOME/.credentials.yaml` | `file` | 是 | `set`/`unset` 只改这里 |
+| 继承的进程环境 | `env` | 否 | CI 注入的变量落在这里 |
+| `<invocation cwd>/.env` | `project-env` | 否 | 启动目录被信任 |
+| `$DSH_HOME/.env` | `user-env` | 否 | 最后回退 |
+
+两个回退函数的实现（`index.ts:556-572`）：
+
+```ts
+private inherited(ref: CredentialRef): string | undefined {
+  const entry = launchEnvironmentOf(this.ctx).getFrom(ref, ['process'])
+  return entry !== undefined && entry.value.length > 0 ? entry.value : undefined
+}
+
+private dotenvFallback(ref: CredentialRef): LaunchEnvironmentEntry | undefined {
+  const entry = launchEnvironmentOf(this.ctx).getFrom(ref, ['project-env', 'user-env'])
+  return entry !== undefined && entry.value.length > 0 ? entry : undefined
+}
+```
+
+两个函数都过滤空值，所以「环境变量存在但为空」与「不存在」在 seam 上表现一致。这省掉了调用方对空字符串的判断，也让 `describe` 的 `configured` 有唯一含义。
 
 ## 3. OAuth：没有 refresh token 的一次性 grant
 
@@ -108,6 +156,29 @@ DeepSeek 账号的凭据是一条 grant 记录：token 加 issuer，存在 `reco
 
 并发登录用「一次一个尝试」处理。`authorization.begin(key)` 在已有尝试时返回 `ALREADY_IN_FLIGHT`，第二次调用被拒绝而不是排队；`cancel(key)` 独立于请求的 AbortSignal，取消的是 key 上的尝试。账号详情刷新另有一个 lifetime 令牌：请求发出时记下当前 lifetime，回来时如果 lifetime 已经换了，结果直接丢弃，避免旧响应把新状态盖掉。失败时允许回退到「同一 grant 上一次成功的读取」，注释写得很直白（`deepseek-account-platform/src/index.ts:199`）：只有同一 grant 的最后一次就绪读取可以顶替失败的刷新。
 
+`resolveToken` 的拒绝条件可以列成一张表（拒绝时返回 `undefined`，调用方按未登录处理）：
+
+| 条件 | 结果 |
+|---|---|
+| 没有存储的 grant | 未登录 |
+| URL origin 不在 provider 允许的 inference origin 里 | 拒绝 |
+| URL 里带 username 或 password | 拒绝 |
+| token 以 `dsh_mock_` 开头 | 拒绝 |
+| 生产 origin 配了 localhost issuer | 拒绝 |
+| 以上都通过 | 返回 token |
+
+这张表放在 token 与请求之间，而不是放在工具里。工具即使拿到了任意 URL，也只能把请求发到白名单 origin，token 才会被附加。
+
+401 之后的链路按顺序是：
+
+1. `onRequestError` 识别 401，转成 `ACCOUNT_TOKEN_INVALID`。
+2. 调 `rejectToken`，只删除与当前存储仍匹配的那个 token。
+3. `expireCredential` 删记录，发 `session-expired`，再发 `signed-out`。
+4. `signed-out` 的监听器取消最近一次请求走账号路由的运行中 agent，保留收件箱。
+5. `agent/error` 上的 `ACCOUNT_SIGN_IN_REQUIRED` 转成 `model-sign-in-required`，界面弹登录。
+
+第 2 步的「仍匹配」很重要：另一个进程可能刚好完成了新登录，盲目删除会把刚写入的 token 删掉。
+
 ## 4. 并发写：锁下的 read-decide-replace
 
 `modifyRecord` 的契约是「`mutate` 看到的是写入独占那一刻的记录」。本地实现（`credentials-local/src/index.ts:672-720`）按这个顺序做：
@@ -126,9 +197,35 @@ DeepSeek 账号的凭据是一条 grant 记录：token 加 issuer，存在 `reco
 
 记录枚举 `listRecords` 只返回值以外的信息：键、kind、是否可写。配置界面靠它列出「这个用户授权了什么」，也靠它发现卸载插件留下的孤儿记录。引用的枚举不存在，因为引用有哪些由设置 schema 决定。
 
+实现里的调用链（`credentials-local/src/index.ts:672-720`）：
+
+```ts
+return this.enqueue(async () => {
+  await mkdir(dirname(this.spec.filename), { recursive: true, mode: 0o700 })
+  return withFileLock(this.spec.filename, async () => {
+    await this.reconcileFromDisk()
+    const current = this.records.get(key)
+    const next = await mutate(current)
+    if (next === undefined) return current
+    if (next.kind === 'grant') assertJsonValue(`record "${key}" payload`, next.payload, new Set())
+    else assertStorableApiKey(key, next)
+    const nextText = renderRecord(this.text, key, next)
+    await writeFileAtomic(this.spec.filename, nextText, { mode: 0o600, dirMode: 0o700 })
+    this.text = nextText
+    this.records.set(key, next)
+    this.notifyRecordUpdated(key)
+    return next
+  }, { waitMs: DOCUMENT_LOCK_WAIT_MS })
+})
+```
+
+`enqueue` 是进程内的队列，`withFileLock` 是跨进程的锁，`reconcileFromDisk` 在锁内重读。三层叠加之后，两个进程、两个并发的 `modifyRecord` 会串行执行，第二次的 `mutate` 看到第一次的结果。
+
+失败语义按阶段分：`mutate` 抛错，磁盘不动；校验失败，磁盘不动；`writeFileAtomic` 失败，磁盘可能已被原子替换，但内存快照只在成功后更新。读方要么看到旧内容，要么看到新内容。
+
 ## 5. 脱敏：三层默认值，没有中心拦截器
 
-{{< fig "diagrams/03-redaction-layers.svg" "三层脱敏与一个缺口。子进程环境在 spawn 时裁剪，MCP 模板绑定只注入显式声明的引用并在诊断里替换，遥测记录过 waterfall 后只导出副本。工具自己打印的内容没有中心过滤，这是设计上的缺口，不是遗漏。" >}}
+{{< fig "diagrams/03-redaction-layers.svg" "三层脱敏与一个缺口。子进程环境在 spawn 时裁剪，MCP 模板绑定只注入显式声明的引用并在诊断里替换，遥测记录过 waterfall 后只导出副本。工具自己打印的内容没有中心过滤，这是已知缺口。" >}}
 
 第一层在进程边界（`packages/subprocess/subprocess/src/index.ts:44-84`）。`scrubbedParentEnv()` 删除两类变量：名字匹配 `SENSITIVE_ENV_PATTERN = /KEY|PASSWORD|SECRET|TOKEN/i` 的，以及所有大小写不敏感的 `DSH_*`。PATH、HOME、locale、代理保留，显式传入的 env 在裁剪之后合并。所有走 subprocess seam 的子进程都拿到这份环境：子 agent 的 CLI、MCP stdio server、hook 命令。
 
@@ -142,9 +239,35 @@ DeepSeek 账号的凭据是一条 grant 记录：token 加 issuer，存在 `reco
 
 设置界面另有一处 `redactSecrets`：`describe({redactSecrets: true})` 返回的视图不含 secret 字段，schema 决定哪些字段算 secret。它保护的是配置读取，不保护工具输出。
 
-缺口要说清楚：如果模型让 shell 执行 `env`，或者读一个包含 token 的文件，输出会原样进入会话。DSH 没有在工具结果进入模型之前做中心过滤。这不是忘了做，而是中心过滤需要知道每个工具的语义，误伤与漏检都不可避免；能做的都在边界上做了：spawn 时不给、MCP 只给点名的、导出时不带。
+缺口要说清楚：如果模型让 shell 执行 `env`，或者读一个包含 token 的文件，输出会原样进入会话。DSH 没有在工具结果进入模型之前做中心过滤。中心过滤需要知道每个工具的语义，误伤与漏检都不可避免；能做的都在边界上做了：spawn 时不给、MCP 只给点名的、导出时不带。
 
 自己搭 Agent 时，把脱敏放在「值跨边界」的三个位置：进程创建、网络连接、日志导出。不要放在工具实现里，也不要指望模型不看。工具输出这一层如果要补，只能是按工具类型白名单加结构化结果，通用正则替换一定会漏。
+
+三层的职责对照：
+
+| 层 | 位置 | 机制 | 覆盖 | 不覆盖 |
+|---|---|---|---|---|
+| 进程创建 | subprocess seam | 名字过滤与 `DSH_*` 全删 | 所有子 agent CLI、MCP stdio、hook | 同进程工具读到的环境 |
+| MCP 连接 | mcp-client | `${credential:REF}` 展开与 redact | 配置点名的值 | 未点名的环境变量 |
+| 遥测导出 | `session-telemetry/record` | waterfall 改写导出副本 | 所有导出记录 | 会话日志与模型请求 |
+| 工具输出 | 无 | 无 | 无 | `env`、`cat`、第三方工具返回值 |
+
+进程创建这一层的过滤规则（`packages/subprocess/subprocess/src/index.ts:44-84`）：
+
+```ts
+const SENSITIVE_ENV_PATTERN = /KEY|PASSWORD|SECRET|TOKEN/i
+export function scrubbedParentEnv(env: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
+  const result: NodeJS.ProcessEnv = {}
+  for (const [name, value] of Object.entries(env)) {
+    if (SENSITIVE_ENV_PATTERN.test(name)) continue
+    if (name.toUpperCase().startsWith('DSH_')) continue
+    result[name] = value
+  }
+  return result
+}
+```
+
+显式传入的 env 在调用点合并，所以「点名才给」不需要额外的白名单机制，合并顺序本身就是策略。
 
 ## 6. 身份：匿名 id、会话归属、多用户
 
@@ -165,6 +288,27 @@ DSH 里没有一个贯穿全局的 `userId`。不同的 id 回答不同的问题
 多用户只在 experimental 的 liveshare 里出现。协议定义 `IdentityTriple {providerId, tenantId, subjectId}`，`identityKeyOf` 把三段百分号编码后用 `:` 连接，tenant 缺省时用 `default` 占位，`normalizeIdentity` 要求 provider 与 subject 都存在，`requireIdentityTenant` 在需要租户隔离的路径上强制要求。`IdentityProvider` 是一个通用的浏览器 OAuth 契约（给 authorizationUrl、换 code），仓库里的 Mock provider 在文档里明说它不是认证边界。
 
 浏览器会话是另一条身份线（`packages/client/connection/src/browser-auth.ts`）。32 字节随机 secret 存成 credentials 记录 `client-connection/browser-session`，cookie 是 `v2.<payload>.<HMAC-SHA256>`，带 `HttpOnly`、`SameSite=Strict`、`Max-Age` 与 `Expires`；启动 token 只在进程内 WeakMap 里，不落盘。校验用 `timingSafeEqual`，payload 里的 authority 与请求 authority 必须一致。这条链回答的是「这个浏览器窗口有没有资格连这个 host」，与会话归属是两件事。
+
+与会话归属有关的 header 字段：
+
+| 字段 | 写入者 | 含义 |
+|---|---|---|
+| `parentSession` | 子 agent 创建者 | 父会话 id |
+| `origin: 'subagent'` | 子 agent 创建者 | 区分人类会话与委派会话 |
+| `delegationDepth` | 子 agent 创建者 | 委派深度，用于限制继续派生 |
+| `isSeeded` | 创建者 | 是否从种子会话开始 |
+
+这些字段在 `packages/core/session/src/index.ts:120-153` 做类型校验，之后进 header 不进事件日志。读取方据此画会话树、限制深度，凭据服务不看这些字段。
+
+浏览器会话的校验顺序（`packages/client/connection/src/browser-auth.ts`）：
+
+1. 从 cookie 里取 `dsh-auth-` 前缀的值，按 `.` 拆成版本、payload、签名。
+2. 用记录的 32 字节 secret 做 HMAC-SHA256，`timingSafeEqual` 比较。
+3. 解析 payload，检查 `expiresAt` 与 `authority`。
+4. v2 额外校验 `id: PeerId`。
+5. 启动 token 只从 query 读取，兑换后在进程内 WeakMap 里比对。
+
+任何一步失败都按未认证处理，不回退到「信任本地连接」。
 
 ## 7. 越权路径清单
 
@@ -187,6 +331,13 @@ DSH 里没有一个贯穿全局的 `userId`。不同的 id 回答不同的问题
 
 第四条已经在上文拆过。补一个细节：模板值同时保留原值与 URL 编码值，所以 `redact()` 能覆盖两种出现形式；诊断里不会出现半个编码后的 token。
 
+逐条补两点：
+
+- 同进程共享这一条没有开关。想在进程内隔离，只能把子 agent 放到子进程里跑，用第二层的裁剪规则。
+- 子进程这一条的「显式传入」写在启动配置里，不是模型在运行时能改的参数。模型可以让工具去读文件，但不能把 `DEEPSEEK_API_KEY` 加进自己的启动环境。
+- SSH 与远程沙箱的 host 别名来自部署配置。模型能选择「用哪个已配置的 host」，不能选择 user、key、known_hosts。
+- 浏览器这一条与会话身份无关：cookie 认证的是「这个窗口能连这个 host」，不是「这个会话属于谁」。
+
 ## 8. 审计：谁用了哪把钥匙
 
 全仓检索 `audit` 只命中 experimental 的 liveshare，没有凭据使用审计。能查到的记录有三类：
@@ -201,16 +352,37 @@ DSH 里没有一个贯穿全局的 `userId`。不同的 id 回答不同的问题
 
 如果要在自己的 Agent 上补审计，最小可用的一组字段是：时间、会话 id、凭据键名（不是值）、操作类型、目标 origin、结果。写在工具或 provider 的调用点，不写在模型可见的输出里。把值写进审计日志，等于把 secret 复制到一个更少人看着的地方。
 
+审计记录可以长这样（示例，字段是本篇归纳的最小集）：
+
+```json
+{
+  "at": "2026-11-14T11:02:31Z",
+  "session": "ses_01j9...",
+  "key": "client-connection/browser-session",
+  "operation": "resolve",
+  "origin": "https://api.deepseek.com",
+  "outcome": "ok"
+}
+```
+
+记录里没有值，只有键名与目标。落点在调用点：`resolveToken` 返回前、MCP 展开后、子进程 spawn 时。写进会话日志也可以，但要确认导出路径不会把它带到协作方。
+
 ## 9. 设计取舍
 
 - **没有 keychain**：文件加 `0600` 可移植、可检查、可备份，跨平台行为一致。代价是对同用户的恶意进程没有防护，而这本来也是 keychain 在同用户下的弱项。
 - **托管文件优先于环境变量**：用户在产品里保存的值必须处处生效。代价是 CI 注入的 key 可能被本地保存的值遮住，排查时要先看 `source`。
 - **没有 refresh token**：状态机简单，失败路径只有「重新登录」。代价是长时间运行的任务会在 token 失效时中断。
-- **一次一个授权尝试**：拒绝而不是排队，避免两个浏览器窗口同时完成授权后互相覆盖。代价是用户要手动取消旧尝试。
+- 一次一个授权尝试：拒绝而不是排队，避免两个浏览器窗口同时完成授权后互相覆盖。代价是用户要手动取消旧尝试。
 - **`modifyRecord` 是唯一写路径**：把 read-decide-replace 收进实现，跨进程轮换安全。代价是插件不能盲写记录，必须提供一个纯函数。
 - **脱敏放在边界而非中心**：spawn、MCP 绑定、遥测导出各自负责，组合性好。代价是工具输出这一层没有保护。
-- **匿名 id 按 home 作用域**：同机多用户不会互相串，删文件即换身份。代价是无法跨设备去重。
-- **fork 不隔离凭据**：实现简单，行为可预期。代价是无法在一个进程内做细粒度授权。
+- 匿名 id 按 home 作用域：同机多用户不会互相串，删文件即换身份。代价是无法跨设备去重。
+- fork 不隔离凭据：实现简单，行为可预期。代价是无法在一个进程内做细粒度授权。
+
+- 把 `describe` 的 `configured` 当成「值可用」。它只说明配置存在，值是否有效要发一次请求才知道。
+- 以为有 credentials 服务时环境变量仍然生效。服务存在时它权威，未配置就是未配置，不会退回 launch env。
+- 记录只增不删。插件卸载后留下的 grant 不会自动清理，`listRecords` 是发现它们的入口。
+- 在 `modifyRecord` 的 `mutate` 里做网络请求。锁被持有期间做远程调用，会把整个文件锁住。
+- 以为浏览器 cookie 能跨 host 复用。payload 里的 authority 必须与请求一致。
 
 ## 10. 踩坑点
 
@@ -225,6 +397,14 @@ DSH 里没有一个贯穿全局的 `userId`。不同的 id 回答不同的问题
 - 以为遥测 listener 抛错只是少一条日志。它是 fail-closed，整条记录被扣下，排查时要看 logger。
 - 以为 signOut 会清掉所有凭据。它移除账号 grant，保留 API key；provider 侧的撤销在后台进行。
 - 以为 fork 出来的子 agent 有独立身份。它共享同一个 credentials 服务，能解析父 agent 的全部引用。
+
+- `packages/subprocess/subprocess/src/index.ts:44-84`：`SENSITIVE_ENV_PATTERN` 与 `scrubbedParentEnv` 的完整实现。
+- `packages/mcp/mcp-client/src/transport.ts`：stdio 传输合并裁剪后的父环境与显式 env。
+- `packages/credentials/credentials-local/src/index.ts:556-572`：`inherited` 与 `dotenvFallback` 的空值过滤。
+- `packages/credentials/credentials-local/src/index.ts:672-720`：`modifyRecord` 的队列、锁与重读。
+- `packages/core/session/src/index.ts:120-153`：`SessionHeader` 的归属字段校验。
+- `docs/subsystems/credentials.zh.md:1-120`：两套键空间与解析规则的规范描述。
+- `docs/subsystems/session-telemetry.zh.md`：遥测 waterfall 与导出上限。
 
 ## 11. 源码索引
 
@@ -244,6 +424,8 @@ DSH 里没有一个贯穿全局的 `userId`。不同的 id 回答不同的问题
 - `packages/client/connection/src/browser-auth.ts`：浏览器会话 secret 记录、HMAC cookie、启动 token。
 - `docs/subsystems/credentials.zh.md`：seam 契约、授权 flow、Remote 视图的规范描述。
 - `docs/subsystems/session-telemetry.zh.md:142-144`：`session-telemetry/record` waterfall 的 fail-closed 语义。
+
+还有一条经验：把「默认不给」做成结构，而不是做成检查。`scrubbedParentEnv` 的默认行为是删除，显式配置才能加回来；MCP 的默认行为是拒绝未展开的占位符，而不是带着字面量启动。结构决定了忘记配置时的结果，检查只能决定报错还是静默通过。
 
 ## 最后
 

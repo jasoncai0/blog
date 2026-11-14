@@ -24,7 +24,7 @@ SSH 那套更彻底。`read` 打开的文件在另一台机器上，`bash` 启�
 | 模型看到什么 | 一个工具，四种操作 | 零个新工具，旧工具换了落点 |
 | 跨的是什么 | 语言服务器进程 | 整台远端主机 |
 | 生命周期单位 | workspace target | 一个 `SshConnection` |
-| 起停时机 | 首次查询懒启动，插件卸载时统一拆 | 配置加载时连接，`dispose` 时拆 |
+| 起停时机 | 首次查询懒启动，插件卸载时统一拆 | 插件加载时连接并等 hello，`dispose` 时拆 |
 | 失败策略 | 传输失败重试一次，查询只读 | 不重连、不重放，结果标记未知 |
 | 上下文成本 | 有上限：100 个位置、16000 字符 | 无新增上下文，路径语义变了 |
 
@@ -257,7 +257,7 @@ ssh -T -M -S <tmp>/master \
 
 helper 起来后先握手。hello 里带 helper 摘要、启动方式、bootstrap 摘要，客户端逐项比对：摘要不符报 `SSH helper digest differs from the configured artifact`，启动方式不符报 `SSH helper runtime differs from the configured launch kind`。校验通过才开始收 RPC。
 
-活性靠心跳。间隔 `floor(leaseMs / 3)`，单次超时 `leaseMs / 2`，同一时刻只有一个心跳在飞。心跳失败直接 `fail()`，把整条连接标记为不可用。半开的 TCP 不会报错，心跳是唯一能发现它的东西。
+活性靠心跳。间隔 `floor(leaseMs / 3)`，单次超时 `leaseMs / 2`，同一时刻只有一个心跳在飞。心跳失败直接 `fail()`，把整条连接标记为不可用。半开的 TCP 不会报错，心跳把它变成一次可观测的超时。
 
 管理 RPC 走 SSH 的 exec 流，请求有 `maxFrameBytes`（64 MiB）与 `maxPending`（128）两道闸。数据流不走 RPC：`connectStream` 用 `ssh -O forward -L` 在本地开一个 Unix socket，转发到远端的同名 socket，再套一层 TLS-PSK。
 

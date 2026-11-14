@@ -15,7 +15,7 @@
 
   <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3-03 / READY GATE</text>
   <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">就绪谓词：从配置读到当步 schema</text>
-  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">谓词同步、只读本地；它的答案决定这一步模型能不能看见工具</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">谓词只读本地、拼请求前结算；它的答案决定这一步模型能不能看见工具</text>
 
   <!-- step 1 -->
   <rect x="40" y="112" width="200" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
@@ -48,7 +48,7 @@
   <rect x="800" y="108" width="120" height="62" rx="6" fill="#ffffff" stroke="#bf4520"/>
   <text x="812" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">进 schema</text>
   <text x="812" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">可被派发</text>
-  <text x="812" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">执行时再选一次</text>
+  <text x="812" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">执行查同一集合</text>
 
   <line x1="648" y1="198" x2="648" y2="242" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f02-a)"/>
   <text x="656" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">FALSE</text>
@@ -61,7 +61,7 @@
   <rect x="40" y="276" width="440" height="34" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="52" y="297" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">组装路径没有 I/O：探测延迟会直接变成首 token 延迟</text>
   <rect x="40" y="316" width="440" height="34" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
-  <text x="52" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同一步多次求值：schema 投影与执行器复核必须拿到同一答案</text>
+  <text x="52" y="337" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每步求值一次：schema 投影与执行派发共用同一个答案</text>
   <rect x="40" y="356" width="440" height="34" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="52" y="377" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">schema 是提示词前缀：中途变化会让 KV cache 作废</text>
 

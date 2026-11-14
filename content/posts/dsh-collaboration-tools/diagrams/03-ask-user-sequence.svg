@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="f03-t f03-d">
   <title id="f03-t">ask_user 的等待与迟到回答</title>
-  <desc id="f03-d">工具的提问经 waterfall 交给客户端界面，界面渲染卡片等待用户；答案按问题 id 对齐后回到调用点。计时模式下超时先返回 pending，问题仍可回答，用户之后的答复变成一条 user 消息送进会话，而不是补写工具结果。</desc>
+  <desc id="f03-d">工具的提问经 waterfall 交给客户端界面，界面渲染卡片等待用户；答案按问题 id 对齐后回到调用点。计时模式下超时先返回 pending，问题仍可回答，用户之后的答复变成一条 user 消息送进会话，不补写工具结果。</desc>
 
   <defs>
     <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">

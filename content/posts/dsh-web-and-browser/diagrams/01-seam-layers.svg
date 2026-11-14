@@ -66,7 +66,7 @@
   <text x="56" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">远端搜索接口</text>
   <text x="56" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">账号级 5 QPS 滑窗</text>
   <text x="56" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">返回标题、URL、摘要</text>
-  <text x="56" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">base 默认</text>
+  <text x="56" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">base 默认挂载</text>
 
   <rect x="264" y="360" width="208" height="132" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="280" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">deepseek-official</text>
@@ -80,7 +80,7 @@
   <text x="504" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">进程内 undici，匿名</text>
   <text x="504" y="418" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">不执行 JS，不带登录态</text>
   <text x="504" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">自己跟同源重定向</text>
-  <text x="504" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">base 默认</text>
+  <text x="504" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">base 默认挂载</text>
 
   <rect x="712" y="360" width="208" height="132" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
   <text x="728" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">deepseek-fetch-api</text>

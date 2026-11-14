@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-desc">
+  <title id="f02-title">一条会话记录到 OTLP log record 的映射</title>
+  <desc id="f02-desc">coordinator 产出的记录有六段：sourceEvent、channel、time、severity、attributes、body。发布时时间、严重级、身份属性各自对位，事件全文被序列化进 content 字符串，provider 与 usage 因此在属性里不可见。</desc>
+
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f02-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3 / TELEMETRY</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">身份在属性里，全文在 content 里</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">六段记录发布成一条 OTLP log：三段逐字段对位，一段被序列化，两段留在本进程</text>
+
+  <!-- record card -->
+  <rect x="40" y="110" width="350" height="360" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="60" y="136" font-family="'SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">SessionTelemetryRecord</text>
+
+  <text x="60" y="176" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">sourceEvent</text>
+  <text x="60" y="192" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">sessionId + 信封，只用于授权</text>
+
+  <text x="60" y="232" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">channel</text>
+  <text x="60" y="248" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">ledger 或 ops，只用于分流</text>
+
+  <text x="60" y="290" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">time</text>
+  <text x="60" y="306" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">事件自带的毫秒时间</text>
+
+  <text x="60" y="335" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">severity</text>
+  <text x="60" y="351" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">info / warn / error</text>
+
+  <text x="60" y="380" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">attributes</text>
+  <text x="60" y="396" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">session.id / event.type / event.seq</text>
+
+  <text x="60" y="425" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">body</text>
+  <text x="60" y="441" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">事件 data 的深拷贝</text>
+
+  <!-- otlp card -->
+  <rect x="560" y="110" width="360" height="360" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="580" y="136" font-family="'SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">OTLP log record</text>
+
+  <text x="580" y="176" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">eventName = body = 'session-log'</text>
+  <text x="580" y="192" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">两个固定字段，不来自记录</text>
+  <line x1="580" y1="206" x2="900" y2="206" stroke="#d8d8d8"/>
+
+  <text x="580" y="290" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">timestamp</text>
+  <text x="580" y="306" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">observedTimestamp 同值</text>
+
+  <text x="580" y="335" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">severityNumber</text>
+  <text x="580" y="351" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">由 severity 映射成枚举</text>
+
+  <text x="580" y="380" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">attributes</text>
+  <text x="580" y="396" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">{ ...identityOf, sessionId, content }</text>
+
+  <text x="580" y="425" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">content</text>
+  <text x="580" y="441" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">JSON.stringify(event)</text>
+
+  <path d="M 390 287 L 556 287" fill="none" stroke="#8a93a6" marker-end="url(#f02-a)"/>
+  <path d="M 390 332 L 556 332" fill="none" stroke="#8a93a6" marker-end="url(#f02-a)"/>
+  <path d="M 390 377 L 556 377" fill="none" stroke="#8a93a6" marker-end="url(#f02-a)"/>
+  <path d="M 390 422 L 556 422" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f02-r)"/>
+
+  <text x="410" y="281" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">原样</text>
+  <text x="410" y="326" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">映射</text>
+  <text x="410" y="371" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">并入</text>
+  <text x="410" y="416" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">序列化</text>
+
+  <text x="60" y="490" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">sourceEvent 与 channel 不出网：一个用于授权判断，一个用于分流。</text>
+  <text x="60" y="506" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">severity 只由两种事件升级：工具报错与 turn 以 error 结束。</text>
+
+  <!-- content expansion -->
+  <rect x="560" y="486" width="360" height="86" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="578" y="506" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">content 解开之后</text>
+  <text x="578" y="524" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">{ "type": "assistant/message", "seq": 412,</text>
+  <text x="578" y="540" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">  "data": { "usage": { "inputTokens": 812,</text>
+  <text x="578" y="556" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">    "cacheReadTokens": 6144, "outputTokens": 903 },</text>
+  <text x="578" y="570" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">    "message": { "source": { "provider": "…" } } } }</text>
+</svg>

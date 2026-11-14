@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">一轮事件折叠成 TurnTokenUsage</title>
+  <desc id="f03-desc">左侧是一轮内的九条事件，包含一次重试与两个 attempt。折叠规则要求每个 attempt 的计数都是安全整数且总数不矛盾，缓存桶只有在所有 attempt 都上报时才保留。右侧结果显示 cacheReadTokens 因一次缺失而整项消失。</desc>
+
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3 / TELEMETRY</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一轮事件折叠成一份账单</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">折叠不猜：缺一条边界、缺一个桶，整轮就不出数</text>
+
+  <!-- event stream -->
+  <rect x="40" y="110" width="260" height="420" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="136" font-family="'SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">turn 7 的事件</text>
+
+  <circle cx="62" cy="166" r="2.5" fill="#8a93a6"/>
+  <text x="76" y="169" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">turn/start</text>
+
+  <circle cx="62" cy="206" r="2.5" fill="#8a93a6"/>
+  <text x="76" y="209" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">step/start</text>
+
+  <circle cx="62" cy="246" r="2.5" fill="#2f6f5e"/>
+  <text x="76" y="249" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">assistant/attempt #1</text>
+  <text x="76" y="263" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#2f6f5e">usage 四桶齐全</text>
+
+  <circle cx="62" cy="292" r="2.5" fill="#bf4520"/>
+  <text x="76" y="295" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">llm/retry</text>
+  <text x="76" y="309" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">delayMs 1200 · failure</text>
+
+  <circle cx="62" cy="338" r="2.5" fill="#8a93a6"/>
+  <text x="76" y="341" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">llm/retry-started</text>
+
+  <circle cx="62" cy="378" r="2.5" fill="#bf4520"/>
+  <text x="76" y="381" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">assistant/attempt #2</text>
+  <text x="76" y="395" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">无 cacheReadTokens</text>
+
+  <circle cx="62" cy="424" r="2.5" fill="#8a93a6"/>
+  <text x="76" y="427" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">assistant/message</text>
+  <text x="76" y="441" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">关闭 attempt #2</text>
+
+  <circle cx="62" cy="470" r="2.5" fill="#8a93a6"/>
+  <text x="76" y="473" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">step/end</text>
+
+  <circle cx="62" cy="506" r="2.5" fill="#8a93a6"/>
+  <text x="76" y="509" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">turn/end</text>
+
+  <!-- rules -->
+  <rect x="330" y="110" width="280" height="420" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="348" y="136" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">折叠规则</text>
+
+  <text x="348" y="168" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">① 开合</text>
+  <text x="348" y="186" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">step/start 开 attempt</text>
+  <text x="348" y="200" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">attempt 与 message 关它</text>
+  <text x="348" y="214" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">retry 记账后由 started 重开</text>
+
+  <text x="348" y="250" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">② 校验</text>
+  <text x="348" y="268" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">计数须为安全非负整数</text>
+  <text x="348" y="282" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">total 减 output 不得小于 input</text>
+  <text x="348" y="296" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">两桶都在时还须严格相等</text>
+
+  <text x="348" y="332" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">③ 聚合</text>
+  <text x="348" y="350" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">cache 桶 every(isCount) 才留</text>
+  <text x="348" y="364" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">缺 total 时两桶都要有</text>
+  <text x="348" y="378" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">routes 要每个计费 attempt</text>
+  <text x="348" y="392" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">都有 provider 与 model</text>
+
+  <text x="348" y="430" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#2d3142">任何一步失败，整轮返回 undefined。</text>
+  <text x="348" y="446" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不补零，不按样本猜 attempt 数。</text>
+
+  <line x1="348" y1="466" x2="592" y2="466" stroke="#d8d8d8"/>
+  <text x="348" y="486" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">计费输入 = input + cacheRead + cacheWrite</text>
+  <text x="348" y="502" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">output 另计，total 由 provider 报或两桶反推</text>
+
+  <path d="M 300 320 L 326 320" fill="none" stroke="#8a93a6" marker-end="url(#f03-a)"/>
+  <path d="M 610 320 L 636 320" fill="none" stroke="#8a93a6" marker-end="url(#f03-a)"/>
+
+  <!-- result -->
+  <rect x="640" y="110" width="280" height="250" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="658" y="136" font-family="'SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">TurnTokenUsage</text>
+
+  <text x="658" y="168" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">uncachedInputTokens 820</text>
+  <text x="658" y="190" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">outputTokens 903</text>
+  <text x="658" y="212" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">totalTokens 8120</text>
+  <text x="658" y="234" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">cacheWriteTokens 512</text>
+  <text x="658" y="256" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">routes 1 条</text>
+
+  <text x="658" y="288" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520" text-decoration="line-through">cacheReadTokens 6144</text>
+  <text x="658" y="306" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">attempt #2 没报，整项不出现</text>
+  <text x="658" y="326" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">计费仍按三项相加，只是缓存一栏空着</text>
+
+  <!-- followup -->
+  <rect x="640" y="386" width="280" height="144" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="658" y="410" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">谁读这份结果</text>
+  <text x="658" y="432" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">对话尾部：每轮 token 数</text>
+  <text x="658" y="450" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">会话统计：decode 速度</text>
+  <text x="658" y="474" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">两处都从事件重算，不共享缓存。</text>
+  <text x="658" y="496" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">投影可重放，换进程结果一致。</text>
+  <text x="658" y="518" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">packages/llm/token-meter/src/turn-usage.ts</text>
+
+  <text x="40" y="560" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">折叠只看 durable 事件，不看内存里的累加器；重放同一段日志得到同一份账单。</text>
+  <text x="40" y="576" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">deriveTurnTokenUsage · normalizeUsage · aggregateAttempts</text>
+</svg>

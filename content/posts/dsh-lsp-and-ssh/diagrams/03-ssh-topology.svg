@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-st-title f03-st-desc">
+  <title id="f03-st-title">SSH 的四件套与远端拓扑</title>
+  <desc id="f03-st-desc">本地三个消费者经 ctx.ssh 复用一条 ssh 连接。管理 RPC 走 exec 流到远端 helper，进程的标准输入输出走转发的 Unix socket 并套 TLS-PSK。文件、进程与沙箱判定都落在远端主机上，模型侧没有新增工具。</desc>
+
+  <defs>
+    <marker id="f03-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">10 / SSH TOPOLOGY</text>
+  <text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一条连接，两种流</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">RPC 走 exec 通道，字节流走转发的 Unix socket；两者共用一条 SSH 连接与一份带宽</text>
+
+  <rect x="40" y="110" width="220" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">本机 · HARNESS 进程</text>
+
+  <rect x="56" y="146" width="188" height="28" rx="3" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">fs-ssh → ctx.fs</text>
+
+  <rect x="56" y="182" width="188" height="28" rx="3" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="200" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">subprocess-ssh → ctx.subprocess</text>
+
+  <rect x="56" y="218" width="188" height="28" rx="3" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">sandbox-ssh → ctx.sandbox</text>
+
+  <rect x="56" y="254" width="188" height="28" rx="3" fill="#f5f5f5" stroke="#d8d8d8"/>
+  <text x="68" y="272" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">ssh → ctx.ssh</text>
+
+  <text x="56" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">四个包各替换一个位置，</text>
+  <text x="56" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">模型侧不新增任何工具。</text>
+  <text x="56" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">helper-runtime 不是 seam，</text>
+  <text x="56" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">是无 Node 时的可执行分发。</text>
+
+  <line x1="246" y1="200" x2="292" y2="200" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+  <text x="269" y="194" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">RPC</text>
+
+  <rect x="290" y="150" width="180" height="160" rx="5" fill="#ffffff" stroke="#bf4520" stroke-width="1.3"/>
+  <text x="304" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">ssh 客户端进程</text>
+  <text x="304" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2d3142">-M -S /tmp/master</text>
+  <text x="304" y="208" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">BatchMode=yes</text>
+  <text x="304" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">StrictHostKeyChecking=yes</text>
+  <text x="304" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">ForwardAgent=no</text>
+  <text x="304" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">master 随进程退出，不驻留</text>
+  <text x="304" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">心跳 leaseMs / 3</text>
+
+  <line x1="490" y1="190" x2="538" y2="190" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+  <text x="494" y="183" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#bf4520">exec 流</text>
+
+  <line x1="490" y1="266" x2="538" y2="266" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+  <text x="494" y="259" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.5" fill="#4f5d75">-L 转发</text>
+
+  <rect x="520" y="110" width="400" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="536" y="132" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#bf4520">远端主机</text>
+
+  <rect x="540" y="146" width="180" height="90" rx="4" fill="#fdf3ee" stroke="#bf4520" stroke-opacity="0.4"/>
+  <text x="554" y="166" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">ssh-helper</text>
+  <text x="554" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">校验摘要与启动方式</text>
+  <text x="554" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">管理 process / fs 域</text>
+  <text x="554" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">持有受管进程清单</text>
+
+  <rect x="540" y="252" width="180" height="90" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="554" y="272" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2d3142">Unix socket + TLS-PSK</text>
+  <text x="554" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">路径必须在 root 之下</text>
+  <text x="554" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#4f5d75">拒绝 : 回车 换行 NUL</text>
+  <text x="554" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">每条流独立 channel window</text>
+
+  <line x1="722" y1="190" x2="748" y2="190" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+  <line x1="722" y1="296" x2="748" y2="296" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#f03-arrow)"/>
+
+  <rect x="750" y="146" width="152" height="90" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="764" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">workspace 文件</text>
+  <text x="764" y="184" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">读、写、改、删</text>
+  <text x="764" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">每次一个 RPC</text>
+  <text x="764" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#bf4520">写操作带沙箱策略</text>
+
+  <rect x="750" y="252" width="152" height="90" rx="4" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="764" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">进程与沙箱</text>
+  <text x="764" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">prepare → start</text>
+  <text x="764" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">confine 在远端判定</text>
+  <text x="764" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">输出按上限回传</text>
+
+  <!-- bottom strip -->
+  <rect x="40" y="430" width="880" height="60" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2d3142">同一套模型工具，三种落点：</text>
+  <text x="230" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">read/write/edit</text>
+  <text x="360" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">走 ctx.fs</text>
+  <text x="440" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">bash/terminal</text>
+  <text x="560" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">走 ctx.subprocess</text>
+  <text x="670" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">sandbox</text>
+  <text x="730" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">走 ctx.sandbox</text>
+  <text x="56" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">模型看到的名字与参数不变，变的是这些路径解析到哪台机器、哪种文件系统。</text>
+
+  <text x="40" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">部署前提：两端都是 Linux 或 macOS，本机 ssh 支持连接复用与 Unix socket 转发，</text>
+  <text x="40" y="542" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">远端已放好 helper 与 workspace，摘要与配置一致。</text>
+  <text x="40" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">TLS-PSK 的密钥经 RPC 下发，不作为字节流前缀发送。</text>
+</svg>

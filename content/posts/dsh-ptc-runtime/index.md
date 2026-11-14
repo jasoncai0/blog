@@ -276,9 +276,11 @@ agent.session.append('tool/ptc-dispatch', {
 
 README 对 token 的说法很克制：PTC 用生成的 SDK 文本加一个传输 schema 换掉了所有终端工具的 schema，不承诺普遍减少。工具少的时候，SDK 文本可能比 schema 更长。
 
-KV cache 也跟着这个形状走。`maxSubCallsPerMinute` 改了不影响 prompt 与 schema token；SDK 文本、传输 schema、可见工具集不变，前缀就稳定。
+KV cache 也跟着这个形状走。`maxSubCallsPerMinute` 改了不影响 prompt 与 schema token；SDK 文本、传输 schema、可见工具集不变，前缀就稳定。前缀怎么算、缓存读写怎么记账，[模型层](/posts/dsh-model-layer.html) 里有对位的字段。
 
 > 自己搭 Agent 时：先量 SDK 文本和工具 schema 哪个更贵，再决定开不开 PTC。工具集小的时候，省下的中间结果不够付 SDK 的固定成本。
+
+> 自己搭 Agent 时：把额度当总预算算，别做滑动窗口。计数放在排队与校验之前，失败调用也扣，否则模型的死循环只会在窗口边界上被放过。
 
 {{< fig "diagrams/03-token-accounting.svg" "哪些数据进模型历史：外层 run_code 的结果是一等公民，子调用的入参与结果只写日志，因此不占下一轮请求的 token" >}}
 

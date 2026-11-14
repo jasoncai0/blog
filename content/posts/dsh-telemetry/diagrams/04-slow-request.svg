@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">定位一次慢请求的四步</title>
+  <desc id="f04-desc">第一步用会话统计把时间分成模型、工具、首 token、解码四桶，第二步把重试退避求和，第三步看单个 step 的模型时间与首 token，第四步按 callId 配对工具调用与结果。工具时间占大头时可以直接跳到第四步。</desc>
+
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">S3 / TELEMETRY</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">先分桶，再逐个排掉</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">四步全部读本地会话日志；每一步都能把范围缩小到具体一段</text>
+
+  <!-- step 1 -->
+  <rect x="40" y="150" width="190" height="180" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="178" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">① 分桶</text>
+  <text x="58" y="200" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">时间花在哪</text>
+  <text x="58" y="224" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">llmMs</text>
+  <text x="58" y="240" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">toolMs</text>
+  <text x="58" y="256" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">ttftMs</text>
+  <text x="58" y="272" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">decodeMs</text>
+  <text x="58" y="300" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">sessionStats 投影</text>
+  <text x="58" y="316" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">按 step/end 计数</text>
+
+  <!-- step 2 -->
+  <rect x="270" y="150" width="190" height="180" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="288" y="178" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">② 排重试</text>
+  <text x="288" y="200" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">是不是在等退避</text>
+  <text x="288" y="224" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">llm/retry</text>
+  <text x="288" y="240" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">delayMs 求和</text>
+  <text x="288" y="256" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">failure 分类</text>
+  <text x="288" y="300" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">三次退避共 6 秒</text>
+  <text x="288" y="316" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">就不是模型慢</text>
+
+  <!-- step 3 -->
+  <rect x="500" y="150" width="190" height="180" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="518" y="178" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">③ 看单步</text>
+  <text x="518" y="200" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">模型慢还是首 token 慢</text>
+  <text x="518" y="224" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">step/start</text>
+  <text x="518" y="240" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">→ assistant/message</text>
+  <text x="518" y="256" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">首 token chunk</text>
+  <text x="518" y="300" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">首 token 跨重试存活</text>
+  <text x="518" y="316" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">取消的 step 不计时</text>
+
+  <!-- step 4 -->
+  <rect x="730" y="150" width="190" height="180" rx="8" fill="#ffffff" stroke="#bf4520"/>
+  <text x="748" y="178" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">④ 配工具对</text>
+  <text x="748" y="200" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#2d3142">哪个调用最久</text>
+  <text x="748" y="224" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">tool/call</text>
+  <text x="748" y="240" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">→ tool/result</text>
+  <text x="748" y="256" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">按 callId 配对</text>
+  <text x="748" y="300" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">只有 call 没有 result</text>
+  <text x="748" y="316" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#8a93a6">就是还在跑或已放弃</text>
+
+  <path d="M 230 240 L 266 240" fill="none" stroke="#8a93a6" marker-end="url(#f04-a)"/>
+  <path d="M 460 240 L 496 240" fill="none" stroke="#8a93a6" marker-end="url(#f04-a)"/>
+  <path d="M 690 240 L 726 240" fill="none" stroke="#8a93a6" marker-end="url(#f04-a)"/>
+
+  <path d="M 135 330 L 135 372 L 825 372 L 825 336" fill="none" stroke="#bf4520" stroke-dasharray="5 3" marker-end="url(#f04-r)"/>
+  <text x="380" y="366" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">toolMs 占大头：跳过中间两步，直接按 callId 找那一对</text>
+
+  <!-- notes -->
+  <rect x="40" y="404" width="430" height="120" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="58" y="428" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">三个读数的含义</text>
+  <text x="58" y="450" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">llmMs 只累加组装出 message 的 step</text>
+  <text x="58" y="468" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">ttftMs 按有首 token 的 step 求均值</text>
+  <text x="58" y="486" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">decodeMs 只算报了 output tokens 的 step</text>
+  <text x="58" y="508" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">三者口径不同，不能相互换算。</text>
+
+  <rect x="500" y="404" width="420" height="120" rx="8" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="518" y="428" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" font-weight="600" fill="#2d3142">读日志的边界</text>
+  <text x="518" y="450" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">遥测只写不读：排查不改任何运行状态</text>
+  <text x="518" y="468" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">上报失败不影响这一轮的时长与结果</text>
+  <text x="518" y="486" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">没有采样，本地日志就是全量</text>
+  <text x="518" y="508" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">所以四步法在离线回放里同样成立。</text>
+
+  <text x="40" y="560" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">四步的输入都是同一条时间线：会话事件按时间排列，字段里带 turn、step、callId。</text>
+  <text x="40" y="576" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">session-stats · llm-retry · token-meter</text>
+</svg>

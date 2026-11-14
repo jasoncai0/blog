@@ -7,7 +7,7 @@ tags: ["harness", "planning", "collaborative-editing"]
 slug: "dsh-collaboration-tools"
 ---
 
-> 源码版本：DeepSeek Harness `0.2.2-rc.1`，commit `fcc0ad46`（工作区 `harness-research/deepseek-harness/`）。正文行号以该 commit 为准；包内 `lib/` 是构建产物，引用一律指向 `src/`。
+> 依据：DeepSeek Harness `0.2.2-rc.1`，commit `fcc0ad46`（工作区 `harness-research/deepseek-harness/`）。正文行号以该 commit 为准；包内 `lib/` 是构建产物，引用一律指向 `src/`。证据等级：源码与 `docs/subsystems/` 逐条对照，运行行为取自包内测试；未跑端到端实验。
 > 第 3 季第 4 篇。上一篇 [03 网络工具](/posts/dsh-web-and-browser.html)，本季导览 [dsh-season-three](/posts/dsh-season-three.html)。
 
 一个工具不读文件、不写文件、不发请求，也可能改变整个会话：它写一条事件、挂起一次调用，或者把某个文件的路径登记成交付物。这篇拆的就是这类工具，四个包，四种回执。

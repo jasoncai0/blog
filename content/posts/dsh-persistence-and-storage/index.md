@@ -55,6 +55,17 @@ $DSH_HOME/
 
 SQLite 在这个默认组合里根本不出现。它注册在 `ctx.storage` 下，供 domain KV 按需选择（`packages/storage/storage-sqlite/src/index.ts`），与会话日志无关。会话日志的 abstract Service 仍然允许仓库外实现别的 provider，但仓库自己只维护 JSONL 一条持久化路径。
 
+三种介质的差别，落到运维上是一张表：
+
+| 介质 | 写入单位 | 掉电丢什么 | 恢复动作 |
+|---|---|---|---|
+| JSONL | 一批事件一个 Zstandard 帧 | 上次 fsync 之后的字节 | 截断撕裂尾，重写能解码的记录 |
+| JSON 整文件 | 一个 unit 的完整文件 | 未发布的临时文件 | 丢弃临时文件，读旧文件 |
+| SQLite | 一行或一个事务 | 未提交的事务 | 回滚日志或 WAL 重放 |
+| 内存快照 | 无 | 整段状态 | 从未存在 |
+
+表里的 SQLite 指 domain 存储，会话日志没有 SQLite 后端。选型的实际问题是：这份数据丢了以后，谁能重建。
+
 ## 2. ctx.storage 的四层
 
 `storage` 这一组有四个包，职责不能混：
@@ -94,6 +105,22 @@ domain 层才是使用方。一个 `DomainSpec` 声明名字、版本、`compati
 
 打开一个域时，任何一步失败都会让整次调用失败，而不是降级：域已打开、backend 不存在、backend 不支持 kv facet、版本不匹配、介质损坏、坏记录无法按策略处理。产品组合把 backend 固定成 `json`（`cordis.patch.yml:187-190`），`root` 指向 `dshHomePath('storages')`。想换 SQLite 只改这两行，域代码不动，这就是分层的收益。
 
+后端契约的成员如下（`packages/storage/storage/src/backend.ts`，节选）：
+
+```ts
+interface KvUnit {
+  loadAll(): Promise<{ tables: Record<string, Record<string, unknown>>; global: unknown }>
+  putRecord(table: string, key: string, value: unknown): Promise<void>
+  deleteRecord(table: string, key: string): Promise<void>
+  deleteRecords(table: string, keys: readonly string[]): Promise<void>
+  backupRecord?(table: string, key: string): Promise<string>
+  setGlobal(value: unknown): Promise<void>
+  close(): Promise<void>
+}
+```
+
+`loadAll` 把整个 unit 读进内存，之后领域层的读都走内存。四个写原语和可选的 `backupRecord` 不改内存，只把变更写到介质；成功返回后，领域层才更新自己的快照。`close` 释放 unit 名，后端据此允许重新打开。契约里没有「批量写」以外的顺序保证：同一 unit 的两个写并发时，介质上的先后由调用方决定，后端不做串行化。
+
 ## 3. 会话日志：一次 link 发布，逐批 fsync
 
 会话是延迟实体化的。`create(header)` 返回一个写句柄，磁盘上什么都没有。第一次 `append` 才发布文件，发布序列在 POSIX 上长这样（`packages/session/session-persistence-jsonl/src/index.ts:1264-1339`）：
@@ -126,6 +153,54 @@ close()
 
 `flush()` 在没有任何事件时也会发布一个只有 header 的帧。这让「创建了会话但还没有消息」这种情况有确定语义：不 flush，崩溃后它从未存在；flush 过，它存在且为空。
 
+发布与追加是两条路径，代码里的顺序值得逐行看。
+
+实体化（`session-persistence-jsonl/src/index.ts:1264-1339`，POSIX 分支）：
+
+```ts
+const tmp = await this.writeSyncedTempFile(finalPath, content)  // wx 0600 + sync
+try {
+  await link(tmp, finalPath)            // EEXIST 即失败，不覆盖
+} finally {
+  if (!linked) await rm(tmp, { force: true })
+}
+await this.syncDirPosix(dir)            // 目录项落盘
+await rm(tmp, { force: true })          // 尽力清理，失败不拒绝发布
+```
+
+追加（`index.ts:1409-1451`）：
+
+```ts
+const handle = await open(path, 'a')
+const { size: before } = await handle.stat()
+try {
+  await handle.writeFile(content)        // 整批一个 zstd 帧
+  await handle.sync()
+} catch (error) {
+  await closeAppendHandle()
+  await this.rollbackAppend(path, before)  // truncate(before) + sync
+  throw error
+}
+```
+
+回滚本身（`index.ts:1453-1462`）：
+
+```ts
+private async rollbackAppend(path: string, size: number): Promise<void> {
+  const handle = await open(path, 'r+')
+  try {
+    await handle.truncate(size)
+    await handle.sync()
+  } finally {
+    await handle.close()
+  }
+}
+```
+
+用 `link` 而不是 `rename` 是刻意的：`rename` 在目标已存在时会静默替换，`link` 返回 `EEXIST`。会话日志是证据，覆盖一次比失败一次更糟。代价是发布路径多一次目录 `fsync`，以及一个必须清理的临时文件。
+
+追加失败时先回滚再抛错。回滚把文件截回本批之前的长度并 `fsync`，所以调用方看到的失败与盘上的状态一致：这一批要么完整存在，要么完全不存在。
+
 ## 4. 写放大：一条事件写几次盘
 
 先给结论：正常路径下，一批事件一次 `fsync`，一个会话一生只做一次实体化发布。表里是具体次数（POSIX，压缩开启）：
@@ -145,7 +220,7 @@ close()
 const LIVE_WRITE_BATCH_MAX_DELAY_MS = 200
 ```
 
-第一个待写事件开启一个固定 200ms 的定时器，后续事件加入但不重置截止时间。到期后整批 `splice` 出来，走 `persistContiguous`（`storage.ts:318-346`）：只读句柄拒绝、确认租约、校验连续性、先截撕裂尾、重写恢复记录、`persistBatch`、推进 cursor。这意味着高频流式事件不会每个都触发一次 `fsync`，最多每 200ms 一次。
+第一个待写事件开启一个固定 200ms 的定时器，后续事件加入但不重置截止时间。到期后整批 `splice` 出来，走 `persistContiguous`（`storage.ts:318-346`）：只读句柄拒绝、确认租约、校验连续性、先截撕裂尾、重写恢复记录、`persistBatch`、推进 cursor。结果是高频流式事件不会每个都触发一次 `fsync`，最多每 200ms 一次。
 
 批处理只解释延迟，不解释正确性。正确性来自检查点策略（`packages/session/session-checkpoint-policy/src/index.ts:36-82`）：
 
@@ -162,6 +237,28 @@ const LIVE_WRITE_BATCH_MAX_DELAY_MS = 200
 自己搭 Agent 时，先量清楚你要的是哪种写放大。会话日志这种只追加结构，写放大接近 1，代价是读取要扫；JSON `single` 结构读得快，代价是每次写都重写整个文件，一个 2MB 的 unit 每秒写十次就是 20MB/s 的写放大。很多项目在会话量上来之后才换存储，换的其实是这一项。
 
 SQLite 的写放大介于两者之间：只有被改的行页进入 WAL，提交时按 `synchronous` 设置同步。代码只设置了 `journal_mode` 与 `foreign_keys`（`storage-sqlite/src/schema.ts:80-88`），没有改 `synchronous`，也没有设 `busy_timeout`。前者意味着提交默认走完整同步，后者意味着并发写冲突会直接报错而不是排队。
+
+一次事件从产生到落盘，会经过这些 fsync：
+
+| 时点 | 触发者 | 写什么 | fsync 次数 |
+|---|---|---|---|
+| 创建会话 | `create` | header 与首帧 | 1（文件）+ 1（目录） |
+| 事件入队 | `session/event` | 无 | 0 |
+| 窗口到期 | 写句柄 | 一整批事件 | 1 |
+| 模型请求前 | checkpoint policy | 排空待写批次 | 1（若已有待写） |
+| 工具执行前 | checkpoint policy | 同上 | 1（若已有待写） |
+| close | teardown | 排空 | 1（若已有待写） |
+
+把一条事件单独拎出来，路径是这样：
+
+1. 事件产生，`session/event` 同步通知到后端，事件被 `structuredClone` 后放进待写队列。
+2. 队列空时启动一个 200ms 定时器；队列非空时只追加，不重置定时器。
+3. 定时器到期，`drainBuffered` 取走整批，`persistContiguous` 校验连续性与租约。
+4. 一批事件序列化成一个 Zstandard 帧，追加到文件尾，`fsync` 一次。
+5. 写成功，推进 cursor 与 materialized 标记；写失败，整批拼回队首并暂停自动路径。
+6. 模型请求或工具执行前的 flush 会跳过等待，立即做第 3 到第 5 步。
+
+高频流式事件因此被摊平：一个 200ms 窗口里来 50 条事件，盘上多一个帧、一次 `fsync`。
 
 ## 5. 并发：进程内排队，跨进程租约
 
@@ -183,6 +280,23 @@ DSH 的并发控制分三层，每层解决的问题不同：
 读者从不碰锁。`open(id, 'read')` 不加锁，只返回验证过的连续前缀，所以一个只读的旁观进程不会阻塞写入者，也不会看到撕裂尾部。browser worker 里原生 flock 被打桩成立即成功，因为那里只有一个进程，进程内 claim 已经足够。
 
 存储 unit 自己不做并发串行化，这一点在契约里写明：写入顺序属于调用方。domain 用写链补上，所以业务代码看到的是「同一个域不会有两个写同时进行」。SQLite 后端另加了一个同进程 double-open 守卫：同名 unit 已打开时直接抛 `kv unit '<name>' is already open (double-open is a caller bug)`，把误用变成显式错误。
+
+租约的获取顺序（`session-persistence-jsonl/src/lease.ts`）：
+
+```ts
+for (let attempt = 0; attempt < 3; attempt += 1) {
+  const handle = await open(path, 'w')
+  await tryLockExclusive(handle.fd)            // 争用抛 EAGAIN
+  const held = await handle.stat({ bigint: true })
+  const current = await stat(path, { bigint: true })
+  if (current.ino === held.ino && current.dev === held.dev) return lease
+  await handle.close()                         // 锁住的已不是路径上的文件，重来
+}
+```
+
+POSIX 用 `flock(2)` 的非阻塞模式，Windows 用命名内核信号量。锁不设过期时间：持有者进程崩溃时内核释放，进程卡死时不释放。后者会让其他写者拿到 `SessionAlreadyOwnedError`，这是有意的取舍，征用一个卡住的写者会让日志撕裂。
+
+读方从不碰锁。只读打开只做帧扫描与前缀验证，所以一个正在写的会话可以同时被 session-query 读取，读到的永远是某个已提交前缀。
 
 ## 6. 迁移：三种版本策略，三种代价
 
@@ -208,6 +322,15 @@ DSH 里有三套独立的版本号，各自对应一种迁移策略：
 代价最重的一次迁移发生在仓库内部。`@deepseek-ai/dsh-session-persistence-sqlite` 曾经交付过，后来被删除（`.agents/notes/implemented/simplification/2026-08-30-jsonl-only-session-persistence.zh.md`）。理由写在决策记录里：同一个逻辑服务维护两种物理格式，会让每项会话契约、事件封套变更、恢复规则、平台测试矩阵都翻倍，而交付 profile 并不选它。删除的后果也写得很清楚：当前 build 不打开、也不迁移旧 provider 写出的数据库，操作者必须先用旧 build 导出逻辑会话再升级。
 
 这次删除解释了本篇标题里的「迁移的代价」：迁移的成本不只在写迁移代码，还在永久维护第二套崩溃语义。删掉一个后端，等于删掉一整条测试矩阵。
+
+代际链每一项都是一次独立迁移，源文件保持不动：
+
+- `session-format-v0-to-v1`：补上事件封套。
+- `session-format-v1-to-v2`：引入 `turn` 与 `step` 的边界事件。
+- `session-format-v2-to-v3`：加入工具结果的错误结构。
+- `session-format-v3-to-v4`：当前版本，补齐可忽略事件的标记。
+
+每个迁移包只读源 generation，写出新 generation。失败时源文件仍是完整的，用户可以用旧 build 打开。迁移不做原地改写，因为原地改写会让「升级失败」变成「数据损坏」。
 
 ## 7. 损坏恢复：截尾、补洞、隔离
 
@@ -237,6 +360,17 @@ DSH 里有三套独立的版本号，各自对应一种迁移策略：
 
 自己搭 Agent 时，把「损坏」拆成至少三类再设计恢复：尾部没写完、完整记录坏了、版本读不懂。第一类可以自动修，第二类必须拒绝并保留现场，第三类要能明确告诉用户该用哪个版本。三类混成一个 `catch`，最后一定会在某次升级后静默丢数据。
 
+一次真实的恢复过程按这个顺序发生：
+
+1. `open(id, 'read')` 读到文件尾，发现最后一个 Zstandard 帧不完整。
+2. 帧扫描器返回 `tornStart`，解码器尽力解出该帧里完整的记录。
+3. 读方只返回验证过的连续前缀，撕裂部分不进 Session。
+4. `resume` 拿到写句柄，先 `truncate(tornStart)` 并 `fsync`，再重写能解码的记录。
+5. 计算 `interruptedTurnClosers`，补齐缺失的工具错误、未闭合的 `step/end`、合成的 `turn/end`。
+6. 这些补齐事件作为普通批次追加，和正常事件走同一条写路径。
+
+第 4 步的顺序不能反：先截断再重写。反过来会在撕裂帧后面追加新帧，形成一个永远解不开的洞。
+
 ## 8. 选型表
 
 | 部署 | 会话日志 | domain KV | 说明 |
@@ -252,6 +386,14 @@ DSH 里有三套独立的版本号，各自对应一种迁移策略：
 - 会话量大不等于该换 SQLite 存会话。DSH 自己在有 SQLite 可用的情况下仍只保留 JSONL 会话存储，因为第二套格式的维护成本落在每一次格式变更上。
 - 需要行级查询的是派生数据，不是事实。把 FTS 索引当权威存储，会在索引重建的那一天发现事实没了。
 
+三种部署的默认答案：
+
+- 单机 CLI：JSON domain 加 JSONL 会话日志。没有并发写者，`single` 布局的整文件重写可以接受。
+- 桌面：同一套，但把 `writeEveryEvents` 调小，减少崩溃时重放的事件数；备份靠复制 `$DSH_HOME`。
+- 服务端：一个会话一个写者，多副本靠上层复制。当前仓库没有多写者协调，也没有共享文件系统上的锁语义，跨机共享同一个会话目录不在支持范围。
+
+如果要换 SQLite，先确认换的是哪一层。会话日志换 SQLite 需要重写整个持久化 provider，仓库里已经删掉过一版；domain 存储换 SQLite 是配置改动，`backend: sqlite` 加一个数据库路径即可。
+
 ## 9. 设计取舍
 
 - **延迟实体化**：`create` 不写盘，换来创建零成本与「从未 append 的会话不存在」的干净语义。代价是 `stat`/`list` 需要能处理「逻辑存在、物理不存在」，`flush` 成为显式的存在性承诺。
@@ -259,8 +401,8 @@ DSH 里有三套独立的版本号，各自对应一种迁移策略：
 - **`link` 而不是 `rename`**：多花一次目录 `fsync`，换到不覆盖的发布语义。会话是证据，静默覆盖比失败更糟。
 - **锁不过期**：卡住的写者会让后来者报错，用户需要手动处理。换来的是任何时刻最多一个写者，日志不会因为「以为对方死了」而撕裂。
 - **拒绝高代际**：宁可打不开，也不退回旧文件给出缺事件的会话。诊断信息必须点名绝对路径，否则用户不知道该删哪个文件。
-- **三种版本策略并存**：权威数据只增不改，域数据允许兼容区间，派生数据直接重建。用一套策略处理三种数据，不是过度保守就是丢数据。
-- **删除 SQLite 会话后端**：减少一条持久化路径与整套平台测试，代价是失去 WAL 的强事务选项，且旧库需要旧 build 导出。
+- 三种版本策略并存：权威数据只增不改，域数据允许兼容区间，派生数据直接重建。用一套策略处理三种数据，不是过度保守就是丢数据。
+- 删除 SQLite 会话后端：减少一条持久化路径与整套平台测试，代价是失去 WAL 的强事务选项，且旧库需要旧 build 导出。
 
 ## 10. 踩坑点
 
@@ -275,10 +417,14 @@ DSH 里有三套独立的版本号，各自对应一种迁移策略：
 - 在 JSON `single` 布局上开多进程写同一个 unit。后端契约把顺序交给调用方，last-write-wins 的前提是每进程一个写者。
 - 手工改 SQLite 的 `user_version`。改成 0 会让空库被当成新库盖戳，改成别的值会让整个库打不开。
 
+- 把 `single` 布局用在事件量大的域上。每次写重发整个文件，写放大与 unit 大小成正比。
+- 在 `deleteRecords` 之后立刻读同一批键。批量删除是原子的，但并发的读可能看到删除前或删除后的快照，取决于它进队列的时机。
+- 用 `stat().revision` 判断「内容有没有变」以外的语义。它只保证相等时未变，不保证不等时一定变了。
+
 ## 11. 源码索引
 
 - `packages/storage/storage/src/backend.ts`：`StorageBackend`、`KvFacet`、`KvUnit` 契约与错误分类。
-- `packages/storage/storage/src/service.ts`：backend 名表、挂载、`storageBackendServiceKey`。
+- `packages/storage/storage/src/registry.ts`：backend 名表、挂载与注销、`storageBackendServiceKey`。
 - `packages/storage/storage-domain/src/`：`DomainSpec`、写链、`unknown-state` 隔离、`domain/changed`。
 - `packages/storage/storage-json/src/atomic.ts:1-57`：临时文件、`fsync`、`rename`、目录同步。
 - `packages/storage/storage-json/src/single-unit.ts`：整文件重发布与内存回滚。
@@ -297,6 +443,13 @@ DSH 里有三套独立的版本号，各自对应一种迁移策略：
 - `packages/session-query/session-query-sqlite/src/schema.ts`：派生索引的 `application_id`、版本重置与 FTS5 表。
 - `docs/subsystems/storage.zh.md`、`docs/subsystems/persistence.zh.md`：契约与崩溃语义的规范描述。
 - `.agents/notes/implemented/simplification/2026-08-30-jsonl-only-session-persistence.zh.md`：删除 SQLite 会话存储的决策与后果。
+
+- `packages/storage/storage-json/src/per-record-unit.ts:230-300`：批量删除的 rename 出集与失败恢复。
+- `packages/session/session-persistence-jsonl/src/lease.ts:1-135`：flock、Windows 信号量、inode 校验。
+- `packages/session/session-checkpoint-policy/src/index.ts:36-82`：三个检查点。
+- `packages/session/session-projection-cache/src/spec.ts:102-108`：缓存域版本与备份策略。
+- `packages/session-query/session-query-sqlite/src/schema.ts`：FTS5 派生索引与重建条件。
+- `.agents/notes/implemented/simplification/2026-08-30-jsonl-only-session-persistence.zh.md`：删除 SQLite 会话后端的决策。
 
 ## 最后
 

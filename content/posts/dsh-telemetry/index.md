@@ -56,6 +56,8 @@ createSessionLogReporter(options: SessionLogOptions): SessionLogReporter
 
 token 记账要单独说：它不属于任何一层遥测。`token-meter` 是一个 `session-projection` 单元，输入整段会话事件，输出 `TurnTokenUsage`。它不发送任何东西。
 
+{{< fig "diagrams/01-three-layers.svg" "三层边界与两条独立通道：会话记录经脱敏 waterfall 进会话日志 exporter，产品事件走自己的队列" >}}
+
 ## 2. otel 只是工厂，不是采集器
 
 为什么把工厂单独做成一个服务？看两个 reporter 的构造差异就明白：event reporter 用 `BatchLogRecordProcessor` 发遥测自身的事件，session reporter 用自定义的 `SessionLogProcessor` 做字节限流与单请求串行。两者的队列策略完全不同，硬塞进一个服务会互相拖累。
@@ -84,8 +86,6 @@ if (size > this.config.maxRequestBytes) {
 ```
 
 看 `rejected` 这个词。超限的记录整条丢掉，不做截断。截断会产出一条字段缺失但看起来正常的记录，下游分不清「模型没报 token」和「我们切掉了 token」。宁可少一条，不留假数据。
-
-{{< fig "diagrams/01-three-layers.svg" "三层边界与两条独立通道：会话记录经脱敏 waterfall 进会话日志 exporter，产品事件走自己的队列" >}}
 
 ## 3. 一条会话记录怎么长出来
 
@@ -158,6 +158,8 @@ logger.emit({
 
 这是 upsert 型设计：一条记录一行，字段随事件类型变化。会话事件的 data 有几十种形状，摊平成属性会得到一张几百列、九成是 null 的表。
 
+事件本身为什么用追加日志、怎么重放，在 [会话事件溯源](/posts/dsh-session-event-sourcing.html) 里讲过；这里只取它的读取侧。
+
 ## 4. 一次请求的嵌套：事件序替代 span
 
 问题问的是 span 结构。老实说：这个仓库没有 span。能对应 span 父子关系的是会话事件里的坐标。
@@ -170,6 +172,8 @@ logger.emit({
 | step | `step/start` / `step/end` | `turn`、`step` | agent loop |
 | attempt | `assistant/attempt` / `llm/retry` / `llm/retry-started` | `retryId`、`delayMs`、`failure` | 模型层与重试插件 |
 | tool | `tool/call` / `tool/result` | `callId`、`name`、`message` | 工具流水线 |
+
+要的四个字段散在三处：provider 与 model 在 `request/context`（路由变化时才记一条）和每条 `assistant/message` 的 `source` 上；token 用量在 `assistant/message.usage`；缓存两桶是 usage 的一部分。把它们拼成「哪个模型、多少 token、命中多少缓存」，靠 `(turn, step)` 对齐。
 
 `step/end` 才是计步权威，`assistant/message` 不是。原因写在 `packages/session/session-stats/src/projection.ts` 的模块注释里：loop 在 `finally` 里为每个进入的 step 追加恰好一条 `step/end`，取消的、失败的、撞 max-tokens 的 step 都会落一条；而组装好的 message 在取消时根本不存在。
 
@@ -193,7 +197,7 @@ attempt 这一层是线性的，不是树。一次 step 内可能先 `assistant/
 }
 ```
 
-看 `delayMs` 与 `failure` 并存：等待时长和失败原因在同一条记录里。事后算「这次请求有多少时间花在退避上」不需要读配置，把 `delayMs` 求和即可。`policyKey` 区分是哪条重试策略放行的，`maxRetries` 只在 `normal` 模式出现，`always` 模式没有上限。
+看 `delayMs` 与 `failure` 并存：等待时长和失败原因在同一条记录里。事后算「这次请求有多少时间花在退避上」不需要读配置，把 `delayMs` 求和即可。`policyKey` 区分是哪条重试策略放行的，`maxRetries` 只在 `normal` 模式出现，`always` 模式没有上限。重试策略怎么决定重试、失败怎么归因，在 [错误、重试与恢复](/posts/dsh-error-retry-recovery.html) 里拆过。
 
 {{< fig "diagrams/02-record-shape.svg" "一条 record 的六段如何映射成 OTLP log record：身份属性在外，事件全文在 content 里" >}}
 
@@ -212,7 +216,7 @@ attempt 这一层是线性的，不是树。一次 step 内可能先 `assistant/
  */
 ```
 
-看 `DISJOINT` 这个词。`inputTokens` 不含缓存命中部分。很多 provider 的 `prompt_tokens` 是包含缓存的，适配器要减出来。计费口径因此是三项相加：
+看 `DISJOINT` 这个词。`inputTokens` 不含缓存命中部分。很多 provider 的 `prompt_tokens` 是包含缓存的，适配器要减出来。减法落在哪一层、怎么减，[模型层](/posts/dsh-model-layer.html) 里有逐字段的对照。计费口径因此是三项相加：
 
 ```ts
 // packages/llm/token-meter/src/index.ts:56-62
@@ -258,7 +262,7 @@ if (derivedTotal === undefined) return undefined
 
 谁读这个结果？两处。`packages/client/ui-chat/src/client/conversation-nodes/turn-tail.ts:91` 渲染每轮 token；`session-stats` 用 output tokens 算 decode 速度。两者都从事件重算，不共享缓存。
 
-{{< fig "diagrams/03-token-folding.svg" "一轮事件折叠成 TurnTokenUsage：三个 attempt、一次重试，缺桶时整轮不可用" >}}
+{{< fig "diagrams/03-token-folding.svg" "一轮事件折叠成 TurnTokenUsage：两个 attempt、一次重试，缺一个桶整项消失" >}}
 
 ## 6. 产品事件：另一条链路
 
@@ -364,7 +368,49 @@ private redact(record: SessionTelemetryRecord): SessionTelemetryRecord {
 
 > 自己搭 Agent 时：把「观测」做成事件日志的纯函数，收益是线上和离线跑同一套代码，回放能复现。代价是你在热路径上多了一次深拷贝，`structuredClone` 不是免费的。
 
-## 9. 设计取舍
+## 9. 关停顺序
+
+遥测最容易在关停时违反「不能改变行为」。三层各有截止时间：
+
+| 组件 | 截止 | 超时后 | 失败后果 |
+|------|------|--------|----------|
+| coordinator | 等 `backend.shutdown()`，无自带上限 | 取决于后端 | 只 warn |
+| 会话 OTel 后端 | 3000ms（`shutdownTimeoutMillis`） | `stopPending()` 清队列 | reject，被 coordinator 吞掉 |
+| 产品事件 | 21000ms | warn 丢事件 | 只 warn |
+
+coordinator 的销毁钩子先补终点标记，再交接后端：
+
+```ts
+// packages/session/session-telemetry/src/coordinator.ts:126-135
+for (const session of this.adopted) {
+  this.contain(() => {
+    this.deliver(session, { record: this.redact(shutdownRecord(session)) })
+  })
+}
+try {
+  await this.backend.shutdown()
+} catch (error) {
+  this.ctx.logger.warn(`telemetry: backend shutdown failed: ${String(error)}`)
+}
+```
+
+看这个 `catch`：注释原话是「best-effort reporting must not fail application teardown」。上报是尽力而为，应用退出不许被它拖住。
+
+后端自己的截止时间更细，超时前先清队列再报错：
+
+```ts
+// packages/session/session-telemetry-otel/src/index.ts:263-270
+timer = setTimeout(() => {
+  this.provider?.stopPending()
+  reject(new Error(`session-telemetry-otel: provider shutdown exceeded ${this.shutdownTimeoutMillis}ms`))
+}, this.shutdownTimeoutMillis)
+```
+
+看 `stopPending()` 在 `reject` 之前：先把队列清空，避免定时器回调返回后还有请求在路上。丢数据在这里是明确选择，日志里留一句 warn 就算交代。
+
+还有一个反向约束容易被忽略：轮次结束时给后端的 flush 提示必须同步返回。coordinator 的注释写的是 `returning void (not the SDK's flush promise) is the turn-latency contract`。遥测慢不能拖住下一轮，所以这里要的是提示，不是等待。
+
+## 10. 设计取舍
 
 1. 选了 OTLP log 而非 trace span。代价是父子关系要靠字段重建，没有现成的瀑布图。收益是记录格式跟随会话事件，加一种事件不用改遥测代码。
 2. 选了身份字段进属性、事件全文进 `content`。代价是 collector 侧按模型聚合要先解析 JSON。收益是不会出现几百列稀疏属性表。
@@ -374,7 +420,7 @@ private redact(record: SessionTelemetryRecord): SessionTelemetryRecord {
 6. 选了产品事件单独一条队列。代价是两套关停逻辑、两个超时。收益是 30 秒批量与 1 秒批量各按自己的节奏跑。
 7. 选了不做采样。代价是量大时只能靠队列上限顶住。收益是「这条会话被采样掉了」这种解释不会出现在排障里。
 
-## 10. 踩坑点
+## 11. 踩坑点
 
 1. 现象：接了 collector，一条记录都没有。原因：默认 `FEEDBACK_ONLY`，没有反馈事件就不采集。对策：先确认模式，再确认是否真的提交过反馈。
 
@@ -396,7 +442,7 @@ private redact(record: SessionTelemetryRecord): SessionTelemetryRecord {
 
 10. 现象：日志里出现 `Session log record withheld: redaction removed sourceEvent`。原因：脱敏规则把整个 `sourceEvent` 删了。对策：规则里只改 `body` 与 `attributes`，保留 `sourceEvent`。
 
-## 11. 源码索引
+## 12. 源码索引
 
 | 位置 | 证明什么 |
 |------|----------|
@@ -427,4 +473,4 @@ private redact(record: SessionTelemetryRecord): SessionTelemetryRecord {
 
 > 自己搭 Agent 时：先定事件日志的 schema，再定遥测。反过来做，你会发现每个埋点都在补事件里已经有的字段。
 
-上一篇：[PTC：把程序当工具执行](/posts/dsh-ptc-runtime.html)｜下一篇：[持久化与存储](/posts/dsh-persistence-and-storage.html)
+上一篇：[PTC：把程序当工具执行](/posts/dsh-ptc-runtime.html)｜下一篇：[存储：SQLite、JSON 与迁移的代价](/posts/dsh-persistence-and-storage.html)

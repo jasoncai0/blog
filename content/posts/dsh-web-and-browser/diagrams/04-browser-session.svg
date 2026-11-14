@@ -99,5 +99,5 @@
   <rect x="40" y="500" width="880" height="64" rx="6" fill="#ffffff" stroke="#bf4520" stroke-dasharray="5 4"/>
   <text x="56" y="522" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">NO FALLBACK</text>
   <text x="56" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">工具失败就是一条 Error 文本；改用 web_fetch 还是回报用户，由模型自己决定。attach 被占用时本次激活跳过浏览器，后续轮次不重试。</text>
-  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">动作成功不代表结果达成：系统提示词要求用新的页面状态验证，而不是相信 act 的返回。</text>
+  <text x="56" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">动作成功不代表结果达成：系统提示词要求用新的页面状态验证，不依赖 act 的返回。</text>
 </svg>

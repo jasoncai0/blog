@@ -27,7 +27,7 @@ slug: "dsh-guards-and-hooks"
 | permission preset | 配置层，两个 knob | 只写 knob，不做强制 | 通过 knob 生效 | 无 |
 | hook | 6 个扩展点，外部进程 | deny / ask / block / context / steer | 只能加严 | 拒绝理由，或什么都没有 |
 
-三句话概括：
+三点概括：
 
 1. guard 的价值在单调。它没有 `allow` 这个返回值，所以「谁先说不」是唯一需要排序的事，后面的监听器翻不了案。
 2. 超时策略的价值在归属。预算写在工具定义上，包装层只负责把 deadline 接到 `exec.signal`，到期后替换结果，不硬杀进程。

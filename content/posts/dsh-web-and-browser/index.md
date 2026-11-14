@@ -7,7 +7,7 @@ tags: ["harness", "architecture", "agent"]
 slug: "dsh-web-and-browser"
 ---
 
-> 源码版本：DeepSeek Harness `0.2.2-rc.1`，commit `fcc0ad46`（工作区 `harness-research/deepseek-harness/`）。正文行号以该 commit 为准；包内 `lib/` 是构建产物，引用一律指向 `src/`。
+> 依据：DeepSeek Harness `0.2.2-rc.1`，commit `fcc0ad46`（工作区 `harness-research/deepseek-harness/`）。正文行号以该 commit 为准；包内 `lib/` 是构建产物，引用一律指向 `src/`。证据等级：源码与 `docs/subsystems/` 逐条对照，运行行为取自包内测试；未跑端到端实验。
 > 第 3 季第 3 篇。上一篇 [02 文件工具族](/posts/dsh-file-tools.html)，本季导览 [dsh-season-three](/posts/dsh-season-three.html)。
 
 同一份部署里，`web_fetch` 可能在某些模型路由上根本不出现。请求一个 404 页面，工具返回的是正常内容，不是错误。抓 `http://127.0.0.1/` 也能成功，测试里专门有一条断言守着这个行为。
@@ -122,13 +122,13 @@ ctx.tools.register(defineTool({ ... }), {
 
 `web_fetch` 的注册在 `fetch.ts:516`，形状一样。`when` 在工具注册表里是准入谓词：某一步它的结果为 false，这个工具在该步既不声明也不派发。模型看到的工具表就是真实可用的集合，调用一个不存在的工具也无从发生。工具注册表本身怎么合并四层，第一季的 [09 工具注册表](/posts/dsh-tool-registry-scope.html)已经拆过，这里只看这个谓词为什么必须停在本地。
 
-{{< fig "diagrams/02-ready-gate.svg" "就绪谓词在每一步的请求组装与派发两处求值，三个开关分别决定工具是否存在、这一步是否可见、这次调用能否成功" >}}
+{{< fig "diagrams/02-ready-gate.svg" "就绪谓词在每一步开头求值一次，schema 投影与派发共用这个结果；三个开关分别决定工具是否存在、这一步是否可见、这次调用能否成功" >}}
 
 三个理由。
 
-其一，`when` 跑在请求组装路径上。每一步都要算一次，而请求组装是同步收敛的：工具 schema 要拼进提示词前缀，拼完就要发请求。如果 `when` 里放一次网络探测，模型请求的延迟就由探测决定，探测抖动直接变成首 token 抖动。
+其一，`when` 跑在请求组装之前。每一步开头先 `await tools.resolve(...)`，拿到这一步可用的工具集合，随后才拼提示词、发请求（`packages/core/agent-loop/src/agent.ts:292`）。如果 `when` 里放一次网络探测，模型请求的延迟就由探测决定，探测抖动直接变成首 token 抖动。
 
-其二，结果必须可重复。同一步里 schema 投影、执行器复核会多次求值；一次网络探测两次结果不同，模型看到的工具表和执行器认的工具表就可能对不上。`ready` 只读配置，求值再多次也是同一个答案。
+其二，结果必须可重复。谓词在每一步开头求值一次，同一步里 schema 投影与执行派发共用这一个结果；换一步、换一个 agent 会各自再求值。如果它带网络探测，两次求值可能给出不同答案，模型看到的工具表和执行器认的工具表就可能对不上。`ready` 只读配置，求值再多次也是同一个答案。
 
 其三，schema 是提示词前缀的一部分。今天能搜、明天不能搜，前缀就变了，KV cache 跟着作废。DSH 接受「路由变化导致缓存失效」，不接受「网络抖动导致缓存失效」。
 
@@ -154,7 +154,7 @@ private async selectedProviderReady(
 
 注意它先做选择，再问被选中的那一个。未配置 id、恰好一个可用、多个可用这三种局面，`select()` 都会给出同一个答案，谓词和操作看到的是同一个提供方。如果谓词自己再实现一套选择逻辑，两边就会在「多个可用」这种边界上分叉，模型看到的工具和实际执行的工具不是同一个。
 
-求值点有两处。工具注册表在把 schema 投影进请求时求值一次，决定这一步的可见集合；执行器在派发时再求值一次，确认这次调用仍然合法。两处都必须同步返回，也都必须给同一个答案，所以谓词不能有 I/O，也不能有缓存失效窗口之外的状态。
+求值点是每步一次。`ToolsService.resolve()` 在步的开头遍历可见注册，逐个 `await registration.when(context)`，只为这一步产出一个冻结的可用集合；提示词里的 schema 与 `tools/execute` 的派发都从这个集合里取（`executable()` 拿到步集合后直接查表，不再重跑谓词）。谓词可以是异步函数，但它必须在拼请求之前结算完，所以只允许读本地状态：任何网络往返都会把这段等待摊到每一步上。
 
 `selectedProviderReady`（`:267`）里还有一条容易忽略的规则：选择过程抛错时返回 true。理由是选择失败的原因（没配、配错、多个可用）要由操作本身报结构化 `WebError`，如果在这里返回 false，工具直接从模型眼前消失，模型连错误都看不到。同一段逻辑把没实现 `ready()` 的提供方视为就绪，因为「没有额外凭据要求」就是就绪。
 
@@ -227,7 +227,7 @@ type WebFetchBody =
 | --- | --- | --- | --- |
 | 字节 | `maxResponseBytes` | 5,000,000 | `Content-Length` 超限直接报错；流式读取超限则截断 |
 | 字符 | `maxBodyChars` | 100,000 | 切到上限，标记脏截断 |
-| 转换输入 | 输出预算 | 200,000 | 先切源文本再进 turndown，省掉无谓的 DOM 解析 |
+| 转换输入 | `fetchMaxOutputChars`（复用同一个数） | 200,000 | 先切源文本再进 turndown，省掉无谓的 DOM 解析 |
 | 模型输出 | `fetchMaxOutputChars` | 200,000 | 追加截断脚注 |
 
 {{< fig "diagrams/03-fetch-pipeline.svg" "抓取链路的四道闸：URL 形态、同源重定向、字节与字符上限、输出预算；非 2xx 从旁边走结果通道，不进入错误分支" >}}
