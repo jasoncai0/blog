@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="f03t f03d">
+<title id="f03t">符号链接与路径匹配</title>
+<desc id="f03d">同一文件有 /tmp 与 /private/tmp 两个名字；profile 写 /tmp 时规则不命中，写 /private/tmp 才命中。</desc>
+<rect width="960" height="520" fill="#f5f5f5"/>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b93a7"/></marker>
+<marker id="arred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+<marker id="arblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+<marker id="argreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3f6b52"/></marker>
+</defs>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" font-weight="500" text-anchor="start" letter-spacing="0.16em">SANDBOX-EXEC / 03</text><text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" fill="#2d3142" font-weight="600" text-anchor="start">路径：你写的字符串，内核不这么看</text><text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580" font-weight="400" text-anchor="start">/tmp、/etc、/var 都是符号链接；规则字符串原样匹配，内核判的是真实路径。</text>
+<rect x="40" y="108" width="404" height="340" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="58" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142" font-weight="600" text-anchor="start">同一棵树，两个名字</text>
+<rect x="58" y="156" width="58" height="28" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="87" y="174" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142" font-weight="600" text-anchor="middle">/</text>
+<rect x="176" y="150" width="236" height="40" rx="3" fill="#f2f6f9" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="190" y="167" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="600" text-anchor="start">/tmp</text>
+<text x="190" y="181" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#3d5a80" font-weight="400" text-anchor="start">符号链接 → /private/tmp</text>
+<rect x="176" y="236" width="150" height="28" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="190" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">/private/tmp</text>
+<rect x="176" y="296" width="150" height="28" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="190" y="314" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">sbx/blocked</text>
+<rect x="176" y="356" width="150" height="28" rx="3" fill="#faf0ed" stroke="#e8cfc6" stroke-width="1"/>
+<text x="190" y="374" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520" font-weight="600" text-anchor="start">b.txt</text>
+<line x1="116" y1="170" x2="172" y2="170" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="87" y1="184" x2="87" y2="250" stroke="#8b93a7" stroke-width="1.2"/>
+<line x1="87" y1="250" x2="172" y2="250" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="251" y1="264" x2="251" y2="292" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="251" y1="324" x2="251" y2="352" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<text x="58" y="404" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142" font-weight="400" text-anchor="start">进程打开  /tmp/sbx/blocked/b.txt</text>
+<text x="58" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="400" text-anchor="start">内核解析成  /private/tmp/sbx/blocked/b.txt</text>
+<rect x="468" y="108" width="452" height="340" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="486" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142" font-weight="600" text-anchor="start">两条规则，两种结果</text>
+<rect x="486" y="152" width="416" height="84" rx="3" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="500" y="174" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.2" fill="#2d3142" font-weight="400" text-anchor="start">(deny file-write*</text>
+<text x="500" y="190" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.2" fill="#2d3142" font-weight="400" text-anchor="start">  (subpath &quot;/tmp/sbx/blocked&quot;))</text>
+<text x="500" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#3f6b52" font-weight="600" text-anchor="start">不命中 → 写入成功</text>
+<rect x="486" y="252" width="416" height="84" rx="3" fill="#ffffff" stroke="#c9d8cf" stroke-width="1"/>
+<text x="500" y="274" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.2" fill="#2d3142" font-weight="400" text-anchor="start">(deny file-write*</text>
+<text x="500" y="290" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.2" fill="#2d3142" font-weight="400" text-anchor="start">  (subpath &quot;/private/tmp/sbx/blocked&quot;))</text>
+<text x="500" y="316" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520" font-weight="600" text-anchor="start">命中 → Operation not permitted</text>
+<text x="486" y="366" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580" font-weight="400" text-anchor="start">内核日志里的路径是解析后的：</text>
+<text x="486" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.2" fill="#2d3142" font-weight="400" text-anchor="start">/private/tmp/sbx/blocked/b.txt</text>
+<text x="486" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580" font-weight="400" text-anchor="start">写规则前先 realpath；literal 只覆盖单个路径，</text>
+<text x="486" y="432" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580" font-weight="400" text-anchor="start">subpath 覆盖整棵子树。</text>
+<text x="40" y="486" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">目录节点本身要单独放行：只给 (subpath &quot;/System&quot;) 时，dyld 读 / 仍会被拒。</text>
+</g>
+</svg>

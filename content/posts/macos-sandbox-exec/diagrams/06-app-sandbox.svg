@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f06t f06d">
+<title id="f06t">sandbox-exec 与 App Sandbox 的入口对比</title>
+<desc id="f06d">左边 sandbox-exec 直接编译并应用任意 profile；右边 App Sandbox 由 entitlement 触发 secinitd，用户选择文件时经 Powerbox 签发 extension。</desc>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b93a7"/></marker>
+<marker id="arred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+<marker id="arblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+<marker id="argreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3f6b52"/></marker>
+</defs>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" font-weight="500" text-anchor="start" letter-spacing="0.16em">SANDBOX-EXEC / 06</text><text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" fill="#2d3142" font-weight="600" text-anchor="start">两条入口：裸 profile 与 App Sandbox</text><text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580" font-weight="400" text-anchor="start">判决都在内核；区别是谁提供规则、谁给路径例外、有没有容器。</text>
+<rect x="40" y="108" width="432" height="388" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="58" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" fill="#2d3142" font-weight="600" text-anchor="start">sandbox-exec</text>
+<text x="58" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">无签名 · 无容器 · 无 extension</text>
+<rect x="70" y="176" width="300" height="46" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="220" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600" text-anchor="middle">SBPL 文本</text>
+<line x1="220" y1="222" x2="220" y2="248" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="70" y="250" width="300" height="46" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="220" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="400" text-anchor="middle">libsandbox 编译成规则表</text>
+<line x1="220" y1="296" x2="220" y2="322" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="70" y="324" width="300" height="46" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="220" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="400" text-anchor="middle">sandbox_apply 到当前进程</text>
+<line x1="220" y1="370" x2="220" y2="396" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="70" y="398" width="300" height="46" rx="3" fill="#f2f6f9" stroke="#3d5a80" stroke-width="1.1"/>
+<text x="220" y="426" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#3d5a80" font-weight="600" text-anchor="middle">目标进程继承 label</text>
+<text x="70" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">profile 任意；没有 entitlement 校验。</text>
+<rect x="488" y="108" width="432" height="388" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="506" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600" text-anchor="start">App Sandbox</text>
+<text x="506" y="154" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">签名 + entitlement</text>
+<rect x="518" y="176" width="372" height="42" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="534" y="202" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#2d3142" font-weight="400" text-anchor="start">com.apple.security.app-sandbox</text>
+<line x1="704" y1="218" x2="704" y2="240" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="518" y="242" width="372" height="42" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="534" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.2" fill="#2d3142" font-weight="400" text-anchor="start">secinitd 装载 application.sb</text>
+<line x1="704" y1="284" x2="704" y2="306" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="518" y="308" width="372" height="42" rx="3" fill="#f7f8fa" stroke="#d8dce3" stroke-width="1"/>
+<text x="534" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.6" fill="#2d3142" font-weight="400" text-anchor="start">容器 ~/Library/Containers/&lt;id&gt;</text>
+<line x1="518" y1="368" x2="890" y2="368" stroke="#d8dce3" stroke-width="1"/>
+<text x="518" y="384" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7" font-weight="600" text-anchor="start" letter-spacing="0.1em">例外：用户授权</text>
+<rect x="518" y="394" width="372" height="48" rx="3" fill="#f2f6f9" stroke="#3d5a80" stroke-width="1.1"/>
+<text x="534" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.6" fill="#3d5a80" font-weight="600" text-anchor="start">用户选文件 → Powerbox 签发 token</text>
+<text x="534" y="431" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">进程 consume → 该路径放行</text>
+<text x="506" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">默认只能碰容器；例外靠用户授权。</text>
+<rect x="40" y="516" width="880" height="56" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="58" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">相同：每次资源获取都由 MACF 查表，最后一次命中生效。</text>
+<text x="58" y="560" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580" font-weight="400" text-anchor="start">不同：规则从哪来（文本 vs 签名 + 系统 profile），路径例外从哪来（手写 vs 用户授权）。</text>
+</g>
+</svg>

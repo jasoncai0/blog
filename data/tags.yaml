@@ -62,3 +62,7 @@ inference:
 lineage:
   name: 血缘
   description: 资产依赖、影响分析与运行溯源
+
+sandbox:
+  name: 沙箱
+  description: 进程沙箱、权限隔离与内核强制

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04t f04d">
+<title id="f04t">一次 write 的内核判决路径</title>
+<desc id="f04d">write 进入 VFS，MACF 钩子回调沙箱策略，规则表给出 allow 或 deny；deny 变成 EPERM 并写日志。</desc>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b93a7"/></marker>
+<marker id="arred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+<marker id="arblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+<marker id="argreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3f6b52"/></marker>
+</defs>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" font-weight="500" text-anchor="start" letter-spacing="0.16em">SANDBOX-EXEC / 04</text><text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" fill="#2d3142" font-weight="600" text-anchor="start">一次 write 的判决路径</text><text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580" font-weight="400" text-anchor="start">用户态只负责编译；write 是否落地由内核里的 MACF 钩子和规则表决定。</text>
+<rect x="300" y="108" width="360" height="54" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="480" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#2d3142" font-weight="600" text-anchor="middle">write(fd, buf, n)</text>
+<text x="480" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="middle">进程已经持有 fd</text>
+<line x1="480" y1="162" x2="480" y2="190" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="300" y="192" width="360" height="54" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="480" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="middle">VFS · vnode 层</text>
+<text x="480" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="middle">在真正写入前做访问检查</text>
+<line x1="480" y1="246" x2="480" y2="272" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="300" y="274" width="360" height="60" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="480" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="middle">MACF 钩子</text>
+<text x="480" y="314" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.2" fill="#3d5a80" font-weight="400" text-anchor="middle">mac_vnode_check_write</text>
+<line x1="480" y1="334" x2="480" y2="360" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="300" y="362" width="360" height="66" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="480" y="384" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="middle">沙箱策略：取 cred label</text>
+<text x="480" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="middle">顺序遍历规则表，记最后命中</text>
+<line x1="480" y1="428" x2="480" y2="444" stroke="#8b93a7" stroke-width="1.4"/>
+<line x1="360" y1="444" x2="600" y2="444" stroke="#8b93a7" stroke-width="1.4"/>
+<line x1="360" y1="444" x2="360" y2="456" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="600" y1="444" x2="600" y2="456" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="270" y="458" width="180" height="42" rx="3" fill="#f0f5f2" stroke="#c9d8cf" stroke-width="1"/>
+<text x="360" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#3f6b52" font-weight="600" text-anchor="middle">allow → 写入继续</text>
+<rect x="510" y="458" width="180" height="42" rx="3" fill="#faf0ed" stroke="#e8cfc6" stroke-width="1"/>
+<text x="600" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520" font-weight="600" text-anchor="middle">deny → EPERM</text>
+<line x1="600" y1="500" x2="600" y2="524" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="300" y="526" width="360" height="52" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="480" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600" text-anchor="middle">统一日志 + sandboxd</text>
+<text x="480" y="566" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.8" fill="#5a6580" font-weight="400" text-anchor="middle">Sandbox: 进程(pid) deny(1) file-write-data &lt;path&gt;</text>
+<text x="700" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">fd 在 open 时已经检查过，</text>
+<text x="700" y="231" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">write 只看目标 vnode。</text>
+<text x="700" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">MACF 是 XNU 的通用访问</text>
+<text x="700" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">控制框架，沙箱是一组策略。</text>
+<text x="700" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">顺序遍历，最后命中者生效；</text>
+<text x="700" y="407" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">没有命中则用 default。</text>
+<text x="700" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">重复记录合并成</text>
+<text x="700" y="567" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">N duplicate report。</text>
+</g>
+</svg>

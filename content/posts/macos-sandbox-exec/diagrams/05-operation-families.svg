@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="610" viewBox="0 0 960 610" role="img" aria-labelledby="f05t f05d">
+<title id="f05t">sandbox-exec 的资源面</title>
+<desc id="f05d">八类操作族：文件读写、文件控制、进程、信号、Mach、网络、系统信息，各自被拒后的典型症状。</desc>
+<rect width="960" height="610" fill="#f5f5f5"/>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b93a7"/></marker>
+<marker id="arred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+<marker id="arblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+<marker id="argreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3f6b52"/></marker>
+</defs>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" font-weight="500" text-anchor="start" letter-spacing="0.16em">SANDBOX-EXEC / 05</text><text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" fill="#2d3142" font-weight="600" text-anchor="start">资源面：文件之外还有五类</text><text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580" font-weight="400" text-anchor="start">SBPL 的操作按族划分；拒绝后的症状常常离真正的原因很远。</text>
+<rect x="40" y="108" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="40" y="108" width="3" height="96" fill="#d8dce3"/>
+<text x="58" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">文件读</text>
+<text x="58" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">file-read*</text>
+<text x="58" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">data / metadata / xattr</text>
+<text x="58" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：open、stat 返回 EPERM，dyld 加载失败</text>
+<rect x="490" y="108" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="490" y="108" width="3" height="96" fill="#d8dce3"/>
+<text x="508" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">文件写</text>
+<text x="508" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">file-write*</text>
+<text x="508" y="174" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">data / create / unlink / rename</text>
+<text x="508" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：创建、写入、删除失败</text>
+<rect x="40" y="218" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="40" y="218" width="3" height="96" fill="#d8dce3"/>
+<text x="58" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">文件控制</text>
+<text x="58" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">file-ioctl</text>
+<text x="58" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">终端、设备、fcntl 路径</text>
+<text x="58" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：TTY 程序异常，ioctl 返回 EPERM</text>
+<rect x="490" y="218" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="490" y="218" width="3" height="96" fill="#d8dce3"/>
+<text x="508" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">进程</text>
+<text x="508" y="264" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">process-exec / fork</text>
+<text x="508" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">execve 与 fork</text>
+<text x="508" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：execvp EPERM；fork 返回 EPERM</text>
+<rect x="40" y="328" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="40" y="328" width="3" height="96" fill="#d8dce3"/>
+<text x="58" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">信号</text>
+<text x="58" y="374" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">signal</text>
+<text x="58" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">kill、pthread_kill</text>
+<text x="58" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：发送信号被拒</text>
+<rect x="490" y="328" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="490" y="328" width="3" height="96" fill="#d8dce3"/>
+<text x="508" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">Mach</text>
+<text x="508" y="374" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">mach-lookup</text>
+<text x="508" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">按名查系统服务与端口</text>
+<text x="508" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：XPC 崩溃或调用挂起</text>
+<rect x="40" y="438" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="40" y="438" width="3" height="96" fill="#d8dce3"/>
+<text x="58" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">网络</text>
+<text x="58" y="484" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">network-*</text>
+<text x="58" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">outbound / inbound / bind</text>
+<text x="58" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：connect 被拒，DNS 失败</text>
+<rect x="490" y="438" width="430" height="96" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="490" y="438" width="3" height="96" fill="#d8dce3"/>
+<text x="508" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600" text-anchor="start">系统</text>
+<text x="508" y="484" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" fill="#3d5a80" font-weight="400" text-anchor="start">sysctl-* / iokit-open / ipc-posix-*</text>
+<text x="508" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#5a6580" font-weight="400" text-anchor="start">系统信息、设备、共享内存</text>
+<text x="508" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#bf4520" font-weight="400" text-anchor="start">症状：取信息失败，设备打不开</text>
+<text x="40" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">最小集合因程序而异：echo = 读 + exec；sh 管道还要 fork；node 还要运行时自己的路径和 Mach 服务。</text>
+<text x="40" y="586" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580" font-weight="400" text-anchor="start">生产环境别拿最小用例反推：缺一条规则，报错可能出现在完全无关的模块里。</text>
+</g>
+</svg>

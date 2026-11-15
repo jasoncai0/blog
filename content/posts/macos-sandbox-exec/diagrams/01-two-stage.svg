@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01t f01d">
+<title id="f01t">sandbox-exec 的两段式结构</title>
+<desc id="f01d">上部：SBPL 文本经 libsandbox 编译成规则表，再由 sandbox_apply 挂到进程 cred。下部：运行期每次资源获取由 MACF 钩子查表判决。</desc>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b93a7"/></marker>
+<marker id="arred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+<marker id="arblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+<marker id="argreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3f6b52"/></marker>
+</defs>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" font-weight="500" text-anchor="start" letter-spacing="0.16em">SANDBOX-EXEC / 01</text><text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" fill="#2d3142" font-weight="600" text-anchor="start">两段式：用户态编译，内核里判决</text><text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580" font-weight="400" text-anchor="start">sandbox-exec 先把 SBPL 编成规则表，apply 到自己的 cred 上，再 exec 目标程序。</text>
+<text x="40" y="116" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="600" text-anchor="start" letter-spacing="0.12em">① 启动时 · 用户态</text>
+<rect x="40" y="132" width="184" height="152" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="58" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600" text-anchor="start">SBPL 文本</text>
+<text x="58" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">(version 1)</text>
+<text x="58" y="203" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">(deny default)</text>
+<text x="58" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">(allow file-read*)</text>
+<text x="58" y="245" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">(allow process-exec)</text>
+<text x="58" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8b93a7" font-weight="400" text-anchor="start">人写，可读</text>
+<rect x="258" y="132" width="190" height="152" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="276" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600" text-anchor="start">libsandbox 编译</text>
+<text x="276" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">reader → AST</text>
+<text x="276" y="203" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">校验操作与 filter</text>
+<text x="276" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">序列化成规则表</text>
+<text x="276" y="245" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">报错带行列号</text>
+<text x="276" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520" font-weight="400" text-anchor="start">运行期不再解析</text>
+<rect x="482" y="132" width="184" height="152" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="500" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600" text-anchor="start">规则表（二进制）</text>
+<text x="500" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">操作 ID</text>
+<text x="500" y="203" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">filter：literal / subpath</text>
+<text x="500" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">动作：allow / deny</text>
+<text x="500" y="245" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">顺序即优先级</text>
+<text x="500" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#3f6b52" font-weight="400" text-anchor="start">内核只查表</text>
+<rect x="700" y="132" width="220" height="152" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="718" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142" font-weight="600" text-anchor="start">sandbox_apply</text>
+<text x="718" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">写入当前进程 cred</text>
+<text x="718" y="203" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">exec 后 label 不变</text>
+<text x="718" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">fork 出的子进程继承</text>
+<text x="718" y="245" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.8" fill="#5a6580" font-weight="400" text-anchor="start">不能再叠第二层</text>
+<line x1="224" y1="208" x2="254" y2="208" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="448" y1="208" x2="478" y2="208" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="666" y1="208" x2="696" y2="208" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<text x="40" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="600" text-anchor="start" letter-spacing="0.12em">② 运行期 · 内核</text>
+<rect x="40" y="352" width="880" height="132" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<rect x="64" y="384" width="170" height="60" rx="4" fill="#f7f8fa" stroke="#e3e6eb" stroke-width="1"/>
+<text x="149" y="410" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="middle">open / connect</text>
+<text x="149" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142" font-weight="400" text-anchor="middle">mach_msg lookup</text>
+<line x1="238" y1="414" x2="276" y2="414" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="280" y="384" width="150" height="60" rx="4" fill="#f7f8fa" stroke="#e3e6eb" stroke-width="1"/>
+<text x="355" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600" text-anchor="middle">MACF 钩子</text>
+<text x="355" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="middle">vnode / socket / ipc</text>
+<line x1="434" y1="414" x2="472" y2="414" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="476" y="384" width="190" height="60" rx="4" fill="#f7f8fa" stroke="#e3e6eb" stroke-width="1"/>
+<text x="571" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="400" text-anchor="middle">取 label，遍历规则表</text>
+<text x="571" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="middle">最后命中者生效</text>
+<line x1="666" y1="414" x2="686" y2="414" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="686" y1="388" x2="686" y2="440" stroke="#8b93a7" stroke-width="1.4"/>
+<line x1="686" y1="388" x2="706" y2="388" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<line x1="686" y1="440" x2="706" y2="440" stroke="#8b93a7" stroke-width="1.4" marker-end="url(#ar)"/>
+<rect x="710" y="368" width="190" height="40" rx="4" fill="#f0f5f2" stroke="#c9d8cf" stroke-width="1"/>
+<text x="805" y="393" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#3f6b52" font-weight="600" text-anchor="middle">allow → 继续</text>
+<rect x="710" y="420" width="190" height="40" rx="4" fill="#faf0ed" stroke="#e8cfc6" stroke-width="1"/>
+<text x="805" y="445" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520" font-weight="600" text-anchor="middle">deny → EPERM</text>
+<text x="40" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580" font-weight="400" text-anchor="start">编译失败 = 进程起不来；改 profile 必须重启被测进程。运行期没有文本解释这一步。</text>
+<text x="40" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580" font-weight="400" text-anchor="start">同一份规则表还决定 fork 出的子进程能做什么，所以只能一次写全。</text>
+</g>
+</svg>

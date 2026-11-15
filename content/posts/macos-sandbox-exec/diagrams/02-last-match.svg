@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="f02t f02d">
+<title id="f02t">规则匹配顺序示意</title>
+<desc id="f02d">一个 file-read-data 请求依次经过六条规则；最后命中的 R5 deny 决定结果为 EPERM。</desc>
+<rect width="960" height="540" fill="#f5f5f5"/>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b93a7"/></marker>
+<marker id="arred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+<marker id="arblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+<marker id="argreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3f6b52"/></marker>
+</defs>
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<text x="40" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" font-weight="500" text-anchor="start" letter-spacing="0.16em">SANDBOX-EXEC / 02</text><text x="40" y="62" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" fill="#2d3142" font-weight="600" text-anchor="start">规则匹配：最后写的那条赢</text><text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580" font-weight="400" text-anchor="start">按书写顺序遍历，记住最后一条命中的规则；一条都没命中才落到 default。</text>
+<rect x="40" y="108" width="344" height="316" rx="4" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="58" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142" font-weight="600" text-anchor="start">profile（按书写顺序）</text>
+<text x="58" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" font-weight="600" text-anchor="start">R1</text>
+<text x="84" y="164" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">(allow file-read*)</text>
+<text x="58" y="194" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" font-weight="600" text-anchor="start">R2</text>
+<text x="84" y="194" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">(allow process-exec)</text>
+<text x="58" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" font-weight="600" text-anchor="start">R3</text>
+<text x="84" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">(deny file-read-data</text>
+<text x="84" y="236" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">  (literal &quot;/private/etc/hosts&quot;))</text>
+<text x="58" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" font-weight="600" text-anchor="start">R4</text>
+<text x="84" y="270" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">(allow file-read-data</text>
+<text x="84" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">  (literal &quot;/private/etc/hosts&quot;))</text>
+<text x="58" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" font-weight="600" text-anchor="start">R5</text>
+<text x="84" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">(deny file-read-data</text>
+<text x="84" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">  (literal &quot;/private/etc/hosts&quot;))</text>
+<text x="58" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" font-weight="600" text-anchor="start">R6</text>
+<text x="84" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">(allow file-read-data</text>
+<text x="84" y="374" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.0" fill="#2d3142" font-weight="400" text-anchor="start">  (literal &quot;/private/etc/passwd&quot;))</text>
+<rect x="408" y="108" width="512" height="50" rx="4" fill="#f7f8fa" stroke="#e3e6eb" stroke-width="1"/>
+<text x="424" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8b93a7" font-weight="600" text-anchor="start" letter-spacing="0.1em">请求</text>
+<text x="424" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.2" fill="#2d3142" font-weight="400" text-anchor="start">file-read-data  /private/etc/hosts</text>
+<rect x="408" y="176" width="512" height="34" rx="3" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="424" y="197" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7" font-weight="600" text-anchor="start">R1</text>
+<text x="456" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#3f6b52" font-weight="400" text-anchor="start">命中</text>
+<text x="512" y="197" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580" font-weight="400" text-anchor="start">allow</text>
+<text x="600" y="197" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">当前结果：</text>
+<text x="668" y="197" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#3f6b52" font-weight="600" text-anchor="start">allow</text>
+<rect x="408" y="216" width="512" height="34" rx="3" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="424" y="237" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7" font-weight="600" text-anchor="start">R2</text>
+<text x="456" y="237" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8b93a7" font-weight="400" text-anchor="start">无关</text>
+<text x="512" y="237" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580" font-weight="400" text-anchor="start">—</text>
+<text x="600" y="237" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">当前结果：</text>
+<text x="668" y="237" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#3f6b52" font-weight="600" text-anchor="start">allow</text>
+<rect x="408" y="256" width="512" height="34" rx="3" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="424" y="277" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7" font-weight="600" text-anchor="start">R3</text>
+<text x="456" y="277" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#3f6b52" font-weight="400" text-anchor="start">命中</text>
+<text x="512" y="277" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="400" text-anchor="start">deny</text>
+<text x="600" y="277" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">当前结果：</text>
+<text x="668" y="277" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="600" text-anchor="start">deny</text>
+<rect x="408" y="296" width="512" height="34" rx="3" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="424" y="317" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7" font-weight="600" text-anchor="start">R4</text>
+<text x="456" y="317" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#3f6b52" font-weight="400" text-anchor="start">命中</text>
+<text x="512" y="317" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580" font-weight="400" text-anchor="start">allow</text>
+<text x="600" y="317" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">当前结果：</text>
+<text x="668" y="317" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#3f6b52" font-weight="600" text-anchor="start">allow</text>
+<rect x="408" y="336" width="512" height="34" rx="3" fill="#faf0ed" stroke="#e0b9ab" stroke-width="1"/>
+<text x="424" y="357" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7" font-weight="600" text-anchor="start">R5</text>
+<text x="456" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#3f6b52" font-weight="400" text-anchor="start">命中</text>
+<text x="512" y="357" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="400" text-anchor="start">deny</text>
+<text x="600" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">当前结果：</text>
+<text x="668" y="357" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="600" text-anchor="start">deny</text>
+<text x="830" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520" font-weight="600" text-anchor="start">最后一次命中</text>
+<rect x="408" y="376" width="512" height="34" rx="3" fill="#ffffff" stroke="#d8dce3" stroke-width="1"/>
+<text x="424" y="397" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8b93a7" font-weight="600" text-anchor="start">R6</text>
+<text x="456" y="397" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#8b93a7" font-weight="400" text-anchor="start">无关</text>
+<text x="512" y="397" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580" font-weight="400" text-anchor="start">—</text>
+<text x="600" y="397" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580" font-weight="400" text-anchor="start">当前结果：</text>
+<text x="668" y="397" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" font-weight="600" text-anchor="start">deny</text>
+<text x="40" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="400" text-anchor="start">R3 的 deny 被 R4 覆盖，R4 又被 R5 覆盖；最终动作以 R5 为准。</text>
+<text x="40" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580" font-weight="400" text-anchor="start">default 只在没有任何规则命中时生效，它不是「优先级最低的规则」。</text>
+</g>
+</svg>
