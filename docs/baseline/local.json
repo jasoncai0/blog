@@ -575,6 +575,15 @@
   "pre": 9,
   "table": 2
  },
+ "macos-sandbox-exec": {
+  "figure": 6,
+  "h1": 1,
+  "h2": 12,
+  "h3": 0,
+  "hr": 0,
+  "pre": 15,
+  "table": 1
+ },
  "medical-agent-interview": {
   "figure": 6,
   "h1": 1,
