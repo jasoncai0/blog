@@ -131,13 +131,38 @@ private static final Set<String> SKIP_DIRS = Set.of(
 
 最后的实现是 `CommandSandbox`：
 
-- `AGENT_SANDBOX=auto|off|required`，默认 `auto`。
-- `AGENT_SANDBOX_NETWORK=false`，默认禁网。
+- `AGENT_SANDBOX=off|auto|required`，现在默认 `off`，本地执行优先。
+- `AGENT_SANDBOX_NETWORK=false`，显式启用写监狱时默认禁网。
 - 写白名单只包含工作区、临时目录和 `/dev/null`。
 - `JAVA_TOOL_OPTIONS` 把 JVM 临时目录也拉回工作区。
 - 路径先 `toRealPath()` 再写进 profile，避免 `/var` 与 `/private/var` 的符号链接差异。
 
 这里要诚实：它只是**写/网络策略**，不是 VM，不是容器。读取仍然宽放，恶意代码仍可能读到宿主文件；真要隔离，需要 VM 或独立用户/容器。
+
+### 4.1 默认开启沙箱，本地服务反而起不来
+
+沙箱方案刚落地时默认值是 `AGENT_SANDBOX=auto`。Spring Boot 会话继续追问“启动应用”时，模型已经写出了项目、测试也通过，但应用进程一 bind 就失败：
+
+```text
+AGENT_SANDBOX_ACTIVE=1
+AGENT_SANDBOX_NETWORK=0
+java.net.SocketException: Operation not permitted
+curl http://127.0.0.1:8080/health -> HTTP 000
+```
+
+这不是端口冲突，也不是 Spring Boot 配置错误。`sandbox-exec` 的网络开关在进程创建时就固定了，模型在 shell 里 `export` 不能改；写监狱同时让 Maven 的共享缓存和 JVM 临时目录出问题。对一个“本地 coding agent”来说，默认把本地服务关进无网络监狱，和它的主要用途冲突。
+
+因此默认值改成了 `off`：命令直接在宿主用户下运行，Maven、Spring Boot、localhost 端口都按本机行为工作。需要写/网络隔离时，显式设置：
+
+```bash
+AGENT_SANDBOX=auto       # 有 sandbox-exec 时套写监狱
+AGENT_SANDBOX=required   # 没有沙箱就拒绝启动
+AGENT_SANDBOX=off        # 默认，本地执行
+```
+
+改完后用同一个 Spring Boot 会话重跑：`AGENT_SANDBOX_ACTIVE=0`，应用监听 `8080`，`GET /health` 返回 200，`/`、`/hello`、`/hello?name=Spring` 也都恢复。
+
+教训不是“沙箱没用”，而是默认值要匹配产品的主路径。安全能力应该在需要时开启，并用 `required` 在缺失时明确失败，而不是把本地开发默认变成不可用。
 
 ## 5. 坑四：多语言验证的三个细节
 
