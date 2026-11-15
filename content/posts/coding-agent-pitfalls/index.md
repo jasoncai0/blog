@@ -2,7 +2,7 @@
 title: "从能跑到跑对：搭一个本地 Coding Agent 踩过的坑"
 date: "2026-11-15T16:40:00+08:00"
 summary: "一个本地 Coding Agent 从 demo 做到可交付，真正耗时的不是 agent loop，而是验证边界、执行环境和失败归因。十轮上限、.toolchain 污染、Maven 沙箱、语言检测，这些坑比循环本身更难。"
-description: "复盘 Jade 项目的十阶段循环、工具/技能发现、四语言验证、macOS 沙箱与会话恢复；包含 MAX_STEPS 误判、SDK 下载污染、Maven/Spring Boot 沙箱失败、node --check 多文件只查第一个等具体错误与修法。"
+description: "复盘 Jade 项目的十阶段循环、工具/技能发现、四语言验证、macOS 沙箱、会话恢复与连续追问；包含 MAX_STEPS 误判、SDK 下载污染、Maven/Spring Boot 沙箱失败、node --check 多文件只查第一个等具体错误与修法。"
 tags: ["harness", "codegen", "architecture"]
 slug: "coding-agent-pitfalls"
 ---
@@ -22,7 +22,7 @@ slug: "coding-agent-pitfalls"
 3. **写沙箱不是容器。** Maven 的共享缓存、JVM 的临时目录、下载网络、本地端口，各自都是独立假设。
 4. **编译通过不等于运行通过，运行通过不等于测试通过。** 验证器只证明它实际执行过的那一步。
 5. **工具和技能的“发现”必须像代码一样被测。** ServiceLoader 的 provider 名字写错，生产不会报错，只会少一个工具。
-6. **会话恢复不是把 JSON 读回来。** 事件序号、终止事件、进行中状态和只读语义都要一起恢复。
+6. **会话恢复不是把 JSON 读回来。** 事件序号、终止事件、进行中状态和日志生命周期都要一起恢复；`run.finished` 只结束一轮，不结束会话。
 7. **Trace 很有用，也很敏感。** 请求体里有完整任务、上下文和工具输出，不该和 API key 一起被记录。
 
 ## 1. 长什么样
@@ -234,7 +234,27 @@ ToolRegistryTest.java:[41,17] 找不到符号
 
 第二，恢复 `RUNNING` 状态不能原样信。服务重启后旧 run 不可能还在跑，必须改成 `FAILED`，并写清楚“Run was interrupted by a server restart”。
 
-恢复出来的是只读历史：能看计划、轨迹、文件、最终答案，不能继续对话。要继续做，就新建一个独立工作区。这个取舍保住了隔离性，也避免了“恢复一个半截 transcript 继续跑”的状态污染。
+恢复出来的是只读历史，还是可以继续追问？最初是只读，后来改成了连续会话。这个取舍放在下一节讲。
+
+### 8.1 连续追问：`run.finished` 不是会话终点
+
+把“恢复出来能看”改成“恢复出来能继续追问”时，真正的问题不是界面加一个输入框，而是事件流的生命周期。
+
+旧实现里，`AgentLoop` 每一轮 `finally` 都关闭 `RunEventLog`，UI 收到 `run.finished` 就关闭 EventSource。于是：
+
+- 第二轮没有地方写事件，浏览器也收不到。
+- `run.finished` 被当成整个会话的终点，但它其实只代表“这一轮用户请求结束”。
+- 恢复出来的日志是关闭状态，直接追加会丢事件，重新打开又可能和 UI 的 `Last-Event-ID` 对不上。
+
+修法是把“轮”和“会话”分开：
+
+- `run.finished` 每轮都发，但日志不关；关闭只发生在服务停机。
+- 恢复的日志先保持关闭；收到 follow-up 时 `open()`，从旧序号继续追加。
+- UI 收到 `run.finished` 不再断开 SSE；收到 `turn.started` 才重置本轮 step/phase/plan，并在时间线插入用户消息。
+- 跨轮累积 usage，单轮重置验证状态；transcript 追加而不是覆盖。
+- 浏览器重连时带 `?after=<lastSeq>`，避免历史事件重复插入。
+
+验证用的是一段真实的 Java 会话：同一个 `run-c66e8593`，先让程序打印 `jade-v1`，追问改成 `jade-v2`，服务重启后再追问改成 `jade-v3`。三轮共用 `run-20261115-171012-47495a` 工作区，最终文件、transcript 和 73,139 tokens 的累计 usage 都对得上。后端集成测试也覆盖了“关闭服务 -> 恢复 -> 追问”的路径。
 
 ## 9. 坑八：Trace 很有用，但别把 key 写进去
 
@@ -259,6 +279,7 @@ ToolRegistryTest.java:[41,17] 找不到符号
 | 技能没生效 | frontmatter、排序、注入 | 只检查文件存在 |
 | `SUCCEEDED` 但行为不对 | 是否真的 run/test | 相信模型自述 |
 | 重启后 run 消失 | `run.finished`、恢复顺序 | 只恢复内存 Map |
+| 会话不能追问 | 日志/SSE 是否在每轮关闭 | 每轮另起一个 run |
 
 ## 11. 后续
 
