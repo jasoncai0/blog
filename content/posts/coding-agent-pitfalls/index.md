@@ -256,6 +256,22 @@ ToolRegistryTest.java:[41,17] 找不到符号
 
 验证用的是一段真实的 Java 会话：同一个 `run-c66e8593`，先让程序打印 `jade-v1`，追问改成 `jade-v2`，服务重启后再追问改成 `jade-v3`。三轮共用 `run-20261115-171012-47495a` 工作区，最终文件、transcript 和 73,139 tokens 的累计 usage 都对得上。后端集成测试也覆盖了“关闭服务 -> 恢复 -> 追问”的路径。
 
+### 8.2 审批卡不能藏在滚动区里
+
+权限流程第一次联调时，后端状态已经是 `WAITING_APPROVAL`，`GET /api/runs/<id>/permissions` 也返回了 pending 请求，但浏览器里看不到任何批准按钮。现场很容易误判成 SSE 丢了事件。
+
+实际原因是卡片被 `append` 到 Live Trace 时间线的末尾，而时间线本身有最大高度和独立滚动条。窗口没有滚到底时，卡片就在可视区下面；`scrollTimeline(true)` 也没有可靠地把它带出来。后来把卡片 `prepend` 到时间线顶部，仍会遇到下一个问题：当页面顶部被 run header 和 phase card 占满时，卡片标题能看见，操作按钮却落在 950px 视口之外。
+
+最终修法不是在滚动区里继续调 `scrollTop`，而是把审批卡移出时间线：
+
+- `showPermissionCard` 把卡片直接挂到 `document.body`，不再作为 timeline 的子节点。
+- CSS 用 `position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%)`，配 `max-height: calc(100vh - 48px); overflow: auto`。
+- 卡片带 `role="dialog"` 和 `aria-live="assertive"`；按钮提交时禁用，避免重复批准。
+- 刷新或恢复会话时仍用 `GET /permissions` 补拉 pending 请求，不能只依赖 SSE。
+
+验证场景是真实 DeepSeek 生成 `src/Fixed.java`：第一次写文件弹 `FILE_WRITE`，选 `Allow for session`；第二次运行弹 `EXECUTE`，选 `Allow once`。两次审批都有 `.agent/permissions.jsonl` 审计记录，最终 stdout 为 `fixed-card-ok`，run 状态 `SUCCEEDED`。
+
+
 ## 9. 坑八：Trace 很有用，但别把 key 写进去
 
 模型请求体 trace 是排障利器。UI 里每次 `llm.request` 默认折叠，点开才显示完整 JSON：`model`、`temperature`、`messages`、`tools`、`tool_choice`。
