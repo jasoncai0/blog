@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f01-title f01-desc">
+  <title id="f01-title">Jade 的运行结构</title>
+  <desc id="f01-desc">Web UI 或 CLI 通过 SSE 观察 AgentService；AgentLoop 每轮执行十个阶段，调用 DeepSeek 与工具/技能注册表，在工作区里写文件，最后由真实编译器或运行时做验证。</desc>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f01-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">JADE / RUNTIME</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">一个 turn 十个阶段，证据从工作区回到循环</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">模型只负责提案；写入、编译、运行、恢复都由运行时完成</text>
+
+  <rect x="40" y="106" width="190" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="128" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">Web UI / CLI</text>
+  <text x="56" y="145" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">提交任务 · SSE 轨迹</text>
+  <text x="56" y="162" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不接触 API key</text>
+
+  <rect x="280" y="106" width="210" height="74" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="296" y="128" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">AgentService</text>
+  <text x="296" y="145" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">run 注册表 · 恢复 · 取消</text>
+  <text x="296" y="162" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">每 run 独立工作区</text>
+
+  <rect x="540" y="106" width="380" height="74" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="556" y="128" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">DeepSeek /chat/completions</text>
+  <text x="556" y="145" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">tool calls · JSON mode · strict tools</text>
+  <text x="556" y="162" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">请求体可折叠地进入 trace</text>
+
+  <rect x="40" y="220" width="560" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="242" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">AgentLoop · 10 / 10 turns</text>
+  <text x="56" y="259" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">INTAKE → CONTEXT → SKILLS → PLAN → MODEL → TOOLS → OBSERVE → VERIFY → COMPACT → CHECKPOINT</text>
+
+  <g font-family="'SF Mono',ui-monospace,monospace" font-size="7.5">
+    <rect x="56" y="276" width="98" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="64" y="296" fill="#4f5d75">01 intake</text>
+    <rect x="164" y="276" width="98" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="172" y="296" fill="#4f5d75">02 context</text>
+    <rect x="272" y="276" width="98" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="280" y="296" fill="#4f5d75">03 skills</text>
+    <rect x="380" y="276" width="98" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="388" y="296" fill="#4f5d75">04 plan</text>
+    <rect x="488" y="276" width="96" height="32" rx="3" fill="#fff6f1" stroke="#e4b19c"/><text x="496" y="296" fill="#bf4520">05 model</text>
+    <rect x="56" y="316" width="98" height="32" rx="3" fill="#fff6f1" stroke="#e4b19c"/><text x="64" y="336" fill="#bf4520">06 tools</text>
+    <rect x="164" y="316" width="98" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="172" y="336" fill="#4f5d75">07 observe</text>
+    <rect x="272" y="316" width="98" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="280" y="336" fill="#4f5d75">08 verify</text>
+    <rect x="380" y="316" width="98" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="388" y="336" fill="#4f5d75">09 compact</text>
+    <rect x="488" y="316" width="96" height="32" rx="3" fill="#f9faf7" stroke="#c9d2c3"/><text x="496" y="336" fill="#4f5d75">10 checkpoint</text>
+  </g>
+
+  <text x="56" y="374" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">停止条件只有两种：模型不再调工具且验证通过 → SUCCEEDED；turn 用尽 → MAX_STEPS。</text>
+  <text x="56" y="392" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">MAX_STEPS 是终止原因，不是工件失败证明；两者必须分开判断。</text>
+
+  <rect x="628" y="220" width="292" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="644" y="242" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">能力注册表</text>
+  <text x="644" y="262" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">12 tools · 6 skills</text>
+  <text x="644" y="280" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">ServiceLoader&lt;ToolProvider&gt;</text>
+  <text x="644" y="298" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">SKILL.md 目录 + load_skill</text>
+  <line x1="644" y1="312" x2="900" y2="312" stroke="#e5e7eb"/>
+  <text x="644" y="332" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">list_files · read_file · write_file</text>
+  <text x="644" y="349" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">edit_file · search_text · run_command</text>
+  <text x="644" y="366" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">compile_code · run_code · update_plan</text>
+  <text x="644" y="383" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">compile_java · run_java · load_skill</text>
+
+  <rect x="40" y="452" width="420" height="112" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="474" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">Workspace · per-run dir</text>
+  <text x="56" y="493" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">src/ · .agent/transcript.json · .agent/events.jsonl</text>
+  <text x="56" y="510" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">路径 jail；不跟随 symlink 越界</text>
+  <text x="56" y="540" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">write_file → 真实文件 → 真实进程</text>
+
+  <rect x="500" y="452" width="420" height="112" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="516" y="474" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">Verifier · 只认真实命令</text>
+  <text x="516" y="493" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">javac / Maven · py_compile · node --check · go build</text>
+  <text x="516" y="510" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">失败输出回灌为 user message，下一轮继续修</text>
+  <text x="516" y="540" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">编译通过 ≠ 运行通过；运行通过 ≠ 测试通过</text>
+
+  <path d="M 230 143 L 276 143" fill="none" stroke="#8a93a6" marker-end="url(#f01-a)"/>
+  <path d="M 490 143 L 536 143" fill="none" stroke="#8a93a6" marker-end="url(#f01-a)"/>
+  <path d="M 700 180 L 700 216" fill="none" stroke="#bf4520" stroke-dasharray="4 3" marker-end="url(#f01-r)"/>
+  <path d="M 600 300 L 624 300" fill="none" stroke="#8a93a6" marker-end="url(#f01-a)"/>
+  <path d="M 320 416 L 320 448" fill="none" stroke="#8a93a6" marker-end="url(#f01-a)"/>
+  <path d="M 710 416 L 710 448" fill="none" stroke="#bf4520" marker-end="url(#f01-r)"/>
+</svg>

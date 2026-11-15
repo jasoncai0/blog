@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="f03-title f03-desc">
+  <title id="f03-title">命令沙箱的四道边界</title>
+  <desc id="f03-desc">macOS sandbox-exec 只限制写入、网络和临时目录，读取仍宽；Maven 共享缓存、JDK 临时目录、下载网络和本地端口都可能越过策略假设。图中红叉是 Spring Boot 重试实际撞到的四处。</desc>
+  <defs>
+    <marker id="f03-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f03-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="620" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">JADE / SANDBOX</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">写隔离不是容器：四条边界要分别测</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">sandbox-exec 允许读、限制写、可关网；包管理器、JVM 与本地服务各有自己的资源假设</text>
+
+  <rect x="40" y="106" width="560" height="454" rx="8" fill="#ffffff" stroke="#4f7d3a" stroke-dasharray="7 4"/>
+  <text x="60" y="130" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f7d3a">sandbox-exec · write jail</text>
+  <text x="60" y="148" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">进程继承策略；不是 VM，也不是 Docker</text>
+
+  <rect x="70" y="174" width="500" height="66" rx="5" fill="#f9faf7" stroke="#d8d8d8"/>
+  <text x="86" y="196" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">Agent / Maven / javac / python3 / node / go</text>
+  <text x="86" y="215" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">process* 允许；子进程同样受策略约束</text>
+  <text x="86" y="231" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">command runner 设 TERM=dumb、GIT_PAGER=cat、CI=true</text>
+
+  <rect x="70" y="268" width="230" height="112" rx="5" fill="#ffffff" stroke="#4f7d3a"/>
+  <text x="86" y="290" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f7d3a">workspace/ · write 允许</text>
+  <text x="86" y="310" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">src/ · .agent/ · .agent-build/</text>
+  <text x="86" y="327" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">临时目录：.agent-build/tmp</text>
+  <text x="86" y="344" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">realpath 后写进 profile</text>
+  <text x="86" y="364" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">TMPDIR / GOCACHE / GOTMPDIR</text>
+
+  <rect x="330" y="268" width="240" height="112" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="346" y="290" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">read* · 宽放</text>
+  <text x="346" y="310" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">System / JDK / Python / Node / Go</text>
+  <text x="346" y="327" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">strict allowlist 会让 JVM abort</text>
+  <text x="346" y="344" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">所以本文不把它当成读隔离</text>
+  <text x="346" y="364" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">别声称“容器级安全”</text>
+
+  <rect x="70" y="410" width="500" height="46" rx="4" fill="#fff8f5" stroke="#f0d3c6"/>
+  <text x="86" y="429" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">命令退出码 0 不代表写成功：后面的命令可能掩盖前面的失败；测试要直接检查文件是否存在。</text>
+  <text x="86" y="446" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#8a93a6">AGENT_SANDBOX=auto | off | required · AGENT_SANDBOX_NETWORK=false</text>
+
+  <text x="640" y="132" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">OUTSIDE THE JAIL</text>
+
+  <rect x="640" y="154" width="280" height="72" rx="5" fill="#ffffff" stroke="#bf4520"/>
+  <text x="656" y="176" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">~/.m2/repository</text>
+  <text x="656" y="194" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">Maven 共享缓存：读可以，写拒绝</text>
+  <text x="656" y="211" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">Operation not permitted</text>
+
+  <rect x="640" y="246" width="280" height="72" rx="5" fill="#ffffff" stroke="#bf4520"/>
+  <text x="656" y="268" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">Maven Central / 镜像</text>
+  <text x="656" y="286" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">缺插件或传递依赖时需要下载</text>
+  <text x="656" y="303" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">curl → 000 / network denied</text>
+
+  <rect x="640" y="338" width="280" height="72" rx="5" fill="#ffffff" stroke="#bf4520"/>
+  <text x="656" y="360" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">java.io.tmpdir</text>
+  <text x="656" y="378" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">Tomcat / Jansi / Maven 都要写临时文件</text>
+  <text x="656" y="395" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">/var/folders/... denied</text>
+
+  <rect x="640" y="430" width="280" height="72" rx="5" fill="#ffffff" stroke="#bf4520"/>
+  <text x="656" y="452" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">127.0.0.1:8080</text>
+  <text x="656" y="470" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">Spring Boot 要 bind；Jade 控制台也占 8080</text>
+  <text x="656" y="487" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">端口冲突 / bind denied</text>
+
+  <path d="M 590 200 L 636 190" fill="none" stroke="#bf4520" stroke-dasharray="4 3" marker-end="url(#f03-r)"/>
+  <path d="M 590 320 L 636 282" fill="none" stroke="#bf4520" stroke-dasharray="4 3" marker-end="url(#f03-r)"/>
+  <path d="M 590 330 L 636 374" fill="none" stroke="#bf4520" stroke-dasharray="4 3" marker-end="url(#f03-r)"/>
+  <path d="M 590 430 L 636 466" fill="none" stroke="#bf4520" stroke-dasharray="4 3" marker-end="url(#f03-r)"/>
+
+  <rect x="70" y="474" width="500" height="58" rx="4" fill="#f9faf7" stroke="#d8d8d8"/>
+  <text x="86" y="494" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">失败模式</text>
+  <text x="86" y="512" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">AUTO 不可用则回退；REQUIRED 直接拒绝执行；OFF 不套沙箱</text>
+  <text x="86" y="526" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">不要静默降级：运行的命令和实际策略要写进 trace</text>
+
+  <rect x="40" y="578" width="880" height="26" rx="4" fill="#2d3142"/>
+  <text x="480" y="595" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#ffffff" text-anchor="middle">沙箱策略必须覆盖：写、读、临时目录、缓存、网络、端口；每项都要有失败用例</text>
+</svg>
