@@ -75,7 +75,7 @@
   "figure": 3,
   "h1": 1,
   "h2": 13,
-  "h3": 7,
+  "h3": 8,
   "hr": 0,
   "pre": 13,
   "table": 2
@@ -744,6 +744,15 @@
   "h3": 10,
   "hr": 0,
   "pre": 6,
+  "table": 3
+ },
+ "rsi-self-improvement": {
+  "figure": 6,
+  "h1": 1,
+  "h2": 12,
+  "h3": 8,
+  "hr": 0,
+  "pre": 0,
   "table": 3
  },
  "vector-engine-milvus-es-pg": {

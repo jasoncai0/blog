@@ -311,6 +311,30 @@ ToolRegistryTest.java:[41,17] 找不到符号
 
 验证：`run-2952644c` 首屏 `150 of 12,786 events loaded`，加载一页后变 `300 of 12,786`，状态保持 `FAILED`；MySQL 里 150 条 tail 约 64 ms，单条 130 KB 的完整 LLM body 约 54 ms。
 
+### 8.4 压缩不是裁剪：token 预算、钉住记忆、模型摘要
+
+早期 Compact 只看字符数，做法是删最旧的 assistant/tool 组，再截断长内容。它有一个不显眼的 bug：`compacted` 只在“确实删了消息”时为真；如果已经只剩三组、只能靠截断降预算，截断结果会被丢弃，上下文仍然是超的，也没有 `compaction` 事件。
+
+更麻烦的是语义。直接删掉旧组会丢掉：
+
+- 用户中途追加的约束；
+- 已经确认过的设计决定；
+- 失败过的命令和原因；
+- 下一步该做什么。
+
+系统提示还写着“原始 transcript 在 `.agent/transcript.json`”，但持久化发生在压缩之后，该文件实际是压缩后的对话，不是原文。
+
+新管线按四层处理：
+
+1. **token 预算**：同时看估算 token 和字符预算，任一超限触发；token 估算把 ASCII 粗算为 4 字符/token，非 ASCII 按 1 字符/token。
+2. **pinned memory**：system、第一条用户任务、包含最新用户消息的组不参与删除。
+3. **工具输出微压缩**：旧的超大 tool result 只保留头 3,000、尾 1,000 字符，并标注省略量；assistant tool call 和 tool result 仍然成组。
+4. **模型摘要**：被删的旧组交给一个无工具、`response_format=text`、1,200 token 上限的模型调用，生成“目标/决定/文件/命令/失败/剩余工作”摘要，作为新的 system memory 插回；摘要失败则退化为确定性说明，再截断剩余长内容。
+
+压缩事件现在报告 removed、microCompacted、truncated、before/after chars、before/after tokens、summarized 和 summaryTokens。摘要调用计入 run 的 usage，但不发工具、不改工作区。
+
+这件事的教训是：压缩的目标不是“把数组变短”，而是“在不超预算的前提下，保住继续工作所需的记忆”。只做裁剪，模型会重复劳动；只做摘要，不控制工具输出，又把预算烧在无意义的日志上。
+
 ## 9. 坑八：Trace 很有用，但别把 key 写进去
 
 模型请求体 trace 是排障利器。UI 里每次 `llm.request` 默认折叠，点开才显示完整 JSON：`model`、`temperature`、`messages`、`tools`、`tool_choice`。
