@@ -1,13 +1,13 @@
 ---
 title: "从能跑到跑对：搭一个本地 Coding Agent 踩过的坑"
 date: "2026-11-15T16:40:00+08:00"
-summary: "一个本地 Coding Agent 从 demo 做到可交付，真正耗时的不是 agent loop，而是验证边界、执行环境和失败归因。十轮上限、.toolchain 污染、Maven 沙箱、语言检测，这些坑比循环本身更难。"
-description: "复盘 Jade 项目的十阶段循环、工具/技能发现、四语言验证、macOS 沙箱、会话恢复与连续追问；包含 MAX_STEPS 误判、SDK 下载污染、Maven/Spring Boot 沙箱失败、node --check 多文件只查第一个等具体错误与修法。"
+summary: "一个本地 Coding Agent 从 demo 做到可交付，真正耗时的不是 agent loop，而是验证边界、执行环境、权限审批和失败归因。轮次/预算、.toolchain 污染、Maven 沙箱、语言检测，这些判断比循环本身更难。"
+description: "复盘 Jade 项目的十阶段循环、工具/技能发现、四语言验证、macOS 沙箱、权限审批、会话恢复与连续追问；包含轮次/预算取舍、SDK 下载污染、Maven/Spring Boot 沙箱失败、审批卡不可见等具体错误与修法。"
 tags: ["harness", "codegen", "architecture"]
 slug: "coding-agent-pitfalls"
 ---
 
-> 项目：`jasoncai0/java-coding-agent`（私有仓库），Jade 1.0.0，commit `01697db`。
+> 项目：`jasoncai0/java-coding-agent`（私有仓库），Jade 1.0.0，commit `73f1a62`。
 > 环境：macOS 15.6，JDK 23，Maven 3.9.9，Python 3.13，Node 23，Go 1.27。
 > 这不是 API 教程，是一份故障复盘。项目内 `docs/BLOG_MEMORY.md` 会继续追加新坑，本文也会同步更新。
 
@@ -326,7 +326,18 @@ ToolRegistryTest.java:[41,17] 找不到符号
 | 重启后 run 消失 | `run.finished`、恢复顺序 | 只恢复内存 Map |
 | 会话不能追问 | 日志/SSE 是否在每轮关闭 | 每轮另起一个 run |
 
-## 11. 后续
+## 11. 最后的复盘：六个设计判断
+
+把整个项目压缩，最后留下来的是六个判断，而不是六段代码。
+
+1. **模型负责提案，运行时负责不变量。** 模型决定写什么、跑什么；验证门、权限门、路径限制、事件记录必须由运行时强制执行。否则“模型说完成了”就会变成系统结论。
+2. **默认值就是产品行为。** 沙箱默认关、轮次默认不限、预算默认不限、权限默认 balanced。默认开一个会挡住本地服务的写监狱，或者默认用一个会截断长任务的总预算，都是在替用户做错误决定。
+3. **权限不是沙箱。** 审批卡解决“用户是否授权”，不解决“代码是否安全”。用户批准后的 `python -c` 仍能访问主机；真正的隔离要靠容器/VM/OS 策略，文档必须把这句话写清楚。
+4. **`run.finished` 不是会话终点。** 它只表示这一轮模型结束了。连续追问复用同一个 workspace、transcript 和事件日志，SSE 也不该在一轮结束时断开。
+5. **轮次和 token 预算是代理指标。** 轮次不衡量进展，token 不衡量价值。正常完成、连续相同工具调用、用户取消、显式成本上限，才是更可靠的停止信号。
+6. **状态、日志、工件分开看。** 终态可能是 `MAX_STEPS` 但工件可用，也可能是 `SUCCEEDED` 但运行没跑过。先看 verification，再看 events，最后进工作区跑构建/测试。
+
+## 12. 后续
 
 这篇不是一次性总结。项目里新增了 `docs/BLOG_MEMORY.md` 和项目级 `AGENTS.md`：以后在这个项目里遇到新的坑，先把“症状 → 根因 → 修法 → 对应章节”记进项目记忆，再更新这篇文章并重新发布。记忆只留在项目里，不写全局配置。
 
