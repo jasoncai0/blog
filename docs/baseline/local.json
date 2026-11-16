@@ -29,11 +29,11 @@
  "agent-tool-registration": {
   "figure": 0,
   "h1": 1,
-  "h2": 8,
+  "h2": 9,
   "h3": 0,
   "hr": 1,
-  "pre": 2,
-  "table": 3
+  "pre": 6,
+  "table": 4
  },
  "agent-vs-computer": {
   "figure": 7,

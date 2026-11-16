@@ -1,15 +1,15 @@
 ---
 title: "注册一个 Agent 工具：名字、描述、Schema，和不报错的坑"
 date: "2026-11-16T14:21:00+08:00"
-summary: "工具注册看起来只是填 name、description、parameters 三个字段。真正决定它能不能被用对的是四件事：名字能否被机器原样拼回、描述有没有说清使用时机、schema 关不关得住参数、返回值会不会撑爆上下文。按硬约束、软约束、静默出错三层整理，附上线检查清单。"
-description: "Agent tool 注册的完整约束：OpenAI / Anthropic / Gemini / MCP 的 name 规则与 strict 模式差异，description 的写法，JSON Schema 的可用子集，可选参数在 strict 下变必填、工具过多导致选错、返回值过大撑爆上下文、非幂等副作用重试等 15 个坑的成因与修法。"
+summary: "工具注册看起来只是填 name、description、parameters 三个字段。真正决定它能不能被用对的是四件事：名字能否被机器原样拼回、描述有没有说清使用时机、schema 关不关得住参数、返回值会不会撑爆上下文。全文用一个退款工具把四次翻车演一遍，再拆硬约束、软约束与静默出错的坑。"
+description: "Agent tool 注册的完整约束：以 order.refund 到 refund_create 的改写为例，讲 name 规则、strict 模式、描述写法、参数设计与返回值契约；附 OpenAI / Anthropic / Gemini / MCP 差异、15 个静默出错的坑和上线检查清单。"
 tags: ["codegen", "harness", "context-engineering"]
 slug: "agent-tool-registration"
 ---
 
 > 结论先行：注册一个工具提交的是三个字段（名字、描述、参数 schema），约束的是五件事：名字可寻址、描述可判断、参数可填对、返回值可消化、副作用可回滚。前三件在注册时就能校验，后两件只能靠设计。
 
-前面的文章拆过 DSH 的[工具执行流水线](/posts/dsh-tool-pipeline.html)和[执行边界](/posts/dsh-tool-boundaries.html)，那两篇讲的是「一次调用怎么跑完」「越界怎么拦」。这篇往回退一步，只讲注册桌前的那张表：写什么、别写什么、为什么。
+前面的文章拆过 DSH 的[工具执行流水线](/posts/dsh-tool-pipeline.html)和[执行边界](/posts/dsh-tool-boundaries.html)，那两篇讲的是「一次调用怎么跑完」「越界怎么拦」。这篇往回退一步，只讲注册桌前的那张表：写什么、别写什么、为什么。第二节用一个退款工具把四类问题一次演完，后面几节拆开讲原因。
 
 ## 1. 注册时到底提交了什么
 
@@ -27,7 +27,83 @@ slug: "agent-tool-registration"
 
 还有一个容易被忽略的位置问题：工具定义拼在请求前部，属于前缀缓存的一部分。每轮按需增删工具，前缀就变了，缓存从头失效。工具集合越稳定，单轮成本越低。这条直接决定了后面「工具该不该按需加载」的取舍。
 
-## 2. 硬约束：不满足就直接报错
+## 2. 一个退款工具的四次翻车
+
+下面这个工具是拼出来的：四类故障都真实存在，只是通常不会在同一天发生。电商客服 agent 要能退款，第一版长这样。
+
+```json
+{
+  "name": "order.refund",
+  "description": "退款",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "orderId": {"type": "string"},
+      "amount": {"type": "string"},
+      "reason": {"type": "string"},
+      "notify": {"type": "boolean"}
+    }
+  }
+}
+```
+
+**第一次，注册就被拒。** `order.refund` 里的点号 OpenAI 不认，请求直接 400。Gemini 允许点号，所以本地拿 Gemini 联调时一切正常，换到线上 OpenAI 才发现工具根本没进模型视野。名字这东西必须按四家最窄的规则写，能跑通一家不代表能跑通四家。
+
+**第二次，金额传成了字符串。** `amount` 声明成 string，模型传 `"128元"`。解析代码抛异常，框架把异常包成 tool result 回给模型，模型看到一段 Python 堆栈，改成 `"128.00"` 重试，这次过了；换个问法又传 `"¥128"`。有单位的量要把单位写进字段名，类型用数字：`amount_cents: integer`。
+
+**第三次，可选参数变成了必填。** 打开 strict 后 `notify` 必须给值。用户说「退款就行，不用通知我」，模型填 `false`，看起来对；用户压根没提通知时，模型也只能填 `false`，代码里那个默认 `true` 永远不生效，退款成功了用户收不到短信，没人报错。strict 下表达「用户没提」只有 nullable 一条路：`["boolean", "null"]`，执行层把 `null` 解释成默认值。
+
+**第四次，重试退了三笔。** 写操作没有幂等键。第一次调用网关 30 秒超时，模型重试；第二次又超时，再重试；第三次成功。三笔退款，每笔 128 元，第二天对账才发现。修法不在提示词里，在注册信息里：加 `idempotency_key` 由服务端去重，返回值带 `refund_id`，模型重试前有东西可查。
+
+第二版：
+
+```json
+{
+  "name": "refund_create",
+  "description": "为指定订单发起退款。用户明确要求退款、退货或补偿时使用。不要用于查询退款进度，那个用 refund_get。单次只退一笔，金额不能超过订单可退余额；余额先用 order_get 查。返回 refund_id、金额和预计到账时间。",
+  "strict": true,
+  "parameters": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "order_id": {"type": "string", "description": "形如 ORD-2026-000123"},
+      "amount_cents": {"type": "integer", "description": "退款金额，单位分，最小 1，上限为可退余额"},
+      "reason_code": {"type": "string", "enum": ["damaged", "wrong_item", "late_delivery", "no_longer_needed"]},
+      "note": {"type": ["string", "null"], "description": "补充说明，200 字以内；没有就传 null"},
+      "idempotency_key": {"type": "string", "description": "同一笔退款重试时必须复用同一个 UUID"}
+    },
+    "required": ["order_id", "amount_cents", "reason_code", "note", "idempotency_key"]
+  }
+}
+```
+
+逐条对上是这样的：
+
+| 第一版 | 第二版 | 治的是 |
+|---|---|---|
+| `order.refund` | `refund_create` | 名字只留小写和下划线 |
+| `description: "退款"` | 时机、排除项、前置查询、返回内容 | 描述信息量不足 |
+| `amount: string` | `amount_cents: integer` | 单位与类型 |
+| `reason: string` | `reason_code` 枚举 + `note` 自由文本 | 分类靠枚举，细节靠文本 |
+| 没有 `required` | 全部必填，可选项用 nullable | strict 下没有可选参数 |
+| 没有幂等 | `idempotency_key` | 超时重试重复写 |
+
+返回值也要定两个形状，成功一个、失败一个：
+
+```json
+{"ok": true, "refund_id": "RF-8821", "amount_cents": 12800, "status": "processing", "eta_hours": 24}
+```
+
+```json
+{"ok": false, "code": "REFUND_WINDOW_EXPIRED", "retryable": false,
+ "hint": "该订单已超过 7 天退款窗口，改用 support_ticket_create 走人工"}
+```
+
+失败那一条比成功那条更重要。模型看到 `retryable: false` 不会重试，看到 `hint` 里的工具名会换路。如果这里抛异常，模型拿到的是堆栈，只能选「再试一次」或者「告诉用户失败了」，两种都不对。
+
+后面四节分别对应这里的四次翻车：名字进了 §3，描述进了 §4，参数进了 §5，返回值进了 §6。§7 把同类问题凑成一张表。
+
+## 3. 硬约束：不满足就直接报错
 
 各家的名字规则不一样，而且会改。写死在代码里的长度上限，是升级依赖时最容易炸的地方。
 
@@ -51,7 +127,7 @@ strict 模式是第二层硬约束。OpenAI 和 Anthropic 都提供了语法约�
 
 跨厂商复用 schema 也要小心。`$ref`、`oneOf`、`anyOf`、`format` 各家支持程度不同，同一份 schema 在 A 家能过、在 B 家 400。稳妥做法是只用最小子集（object / array / string / number / boolean / enum / nullable），注册时在启动阶段跑一遍本地校验，别等第一次真实调用才发现。
 
-## 3. 描述：写「什么时候用」，不是写「这个函数做什么」
+## 4. 描述：说清什么时候该用
 
 最常见的注册错误是把函数注释抄进 `description`：
 
@@ -82,7 +158,7 @@ strict 模式是第二层硬约束。OpenAI 和 Anthropic 都提供了语法约�
 - **描述也是注入面。** 如果描述是运行时从外部配置或网页抓来的，等于把不可信文本放进了系统提示。工具描述应当是代码里的常量。
 - **描述就是 token。** 20 个工具、每个 100 token 描述，每轮固定 2000 token 开销，而且每次都在缓存前缀里。工具多的系统，描述质量直接等于成本。
 
-## 4. 参数：让模型难以填错
+## 5. 参数：让模型难以填错
 
 schema 的作用不是「描述数据结构」，是「把模型逼到唯一正确的填法」。下面这些取舍都朝这个方向：
 
@@ -96,7 +172,7 @@ schema 的作用不是「描述数据结构」，是「把模型逼到唯一正�
 - **分页必须有上限。** `limit` 给最大值，`cursor` 当不透明字符串处理。没有上限的分页参数，模型会填 `1000`。
 - **该必填的必须必填。** 业务上不可省的参数（租户 id、仓库名）漏进可选，模型就会省。省掉之后工具报错，它再补一轮，成本翻倍。
 
-## 5. 返回值：模型的下一次输入
+## 6. 返回值：模型的下一次输入
 
 注册时容易只想着「传什么」，忘了「回什么」。返回值是模型下一轮的输入，它的形状决定了模型能不能自纠。
 
@@ -106,7 +182,7 @@ schema 的作用不是「描述数据结构」，是「把模型逼到唯一正�
 - **截断要可解释。** 头尾保留、中间省略并注明省略了多少条，比直接砍掉后半段好。模型至少知道自己看到的不全。
 - **写操作返回 id。** 创建成功返回主键，模型下次要改、要查、要确认，都有锚点。没有 id 的写操作，重试时只能靠描述猜，很容易创建出两条。
 
-## 6. 静默出错的坑
+## 7. 静默出错的坑
 
 下面这些不会在注册时报错，只会在某次真实调用里给出错误结果。
 
@@ -136,7 +212,7 @@ schema 的作用不是「描述数据结构」，是「把模型逼到唯一正�
 
 **改名是破坏性变更。** 工具名会出现在历史消息、日志、评测集、缓存 key 里。改一次名，这些地方的引用全部失效，而且不会报错，只会表现为「模型突然不会用这个工具了」。
 
-## 7. 上线前的检查清单
+## 8. 上线前的检查清单
 
 注册一个新工具，按这个顺序过一遍，十分钟能省掉后面几天：
 
@@ -156,7 +232,7 @@ schema 的作用不是「描述数据结构」，是「把模型逼到唯一正�
 14. 工具集合在一轮对话内保持稳定，不做逐轮增删。
 15. 注册阶段不发起网络请求。
 
-## 8. 怎么测
+## 9. 怎么测
 
 注册信息写对没有，靠读代码看不出来，得跑三类测试：
 
