@@ -125,6 +125,33 @@
   "pre": 6,
   "table": 12
  },
+ "design-agent-self-tuning": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 7,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 1
+ },
+ "dsh-agent-messaging": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 15,
+  "h3": 0,
+  "hr": 0,
+  "pre": 11,
+  "table": 6
+ },
+ "dsh-agent-presets": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 2,
+  "hr": 0,
+  "pre": 12,
+  "table": 9
+ },
  "dsh-agent-team": {
   "figure": 4,
   "h1": 1,
@@ -179,6 +206,15 @@
   "pre": 11,
   "table": 6
  },
+ "dsh-concurrency-and-ordering": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 16,
+  "h3": 0,
+  "hr": 0,
+  "pre": 20,
+  "table": 4
+ },
  "dsh-context-injection": {
   "figure": 4,
   "h1": 1,
@@ -215,6 +251,15 @@
   "pre": 4,
   "table": 5
  },
+ "dsh-error-atlas": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 0,
+  "hr": 0,
+  "pre": 11,
+  "table": 3
+ },
  "dsh-error-retry-recovery": {
   "figure": 5,
   "h1": 1,
@@ -232,6 +277,15 @@
   "hr": 0,
   "pre": 9,
   "table": 4
+ },
+ "dsh-experimental-surface": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 0,
+  "hr": 0,
+  "pre": 6,
+  "table": 14
  },
  "dsh-file-tools": {
   "figure": 4,
@@ -341,6 +395,15 @@
   "pre": 16,
   "table": 3
  },
+ "dsh-reading-dsh": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 12,
+  "h3": 0,
+  "hr": 0,
+  "pre": 2,
+  "table": 6
+ },
  "dsh-recall": {
   "figure": 4,
   "h1": 1,
@@ -377,6 +440,24 @@
   "pre": 13,
   "table": 9
  },
+ "dsh-sdk-and-gateway": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 15,
+  "h3": 0,
+  "hr": 0,
+  "pre": 8,
+  "table": 10
+ },
+ "dsh-season-four": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 8,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 6
+ },
  "dsh-season-three": {
   "figure": 2,
   "h1": 1,
@@ -403,6 +484,15 @@
   "hr": 1,
   "pre": 2,
   "table": 7
+ },
+ "dsh-session-compat": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 0,
+  "hr": 0,
+  "pre": 19,
+  "table": 4
  },
  "dsh-session-event-sourcing": {
   "figure": 4,
@@ -476,6 +566,15 @@
   "pre": 16,
   "table": 8
  },
+ "dsh-testing-strategy": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 13,
+  "h3": 0,
+  "hr": 0,
+  "pre": 17,
+  "table": 3
+ },
  "dsh-tool-boundaries": {
   "figure": 4,
   "h1": 1,
@@ -529,6 +628,15 @@
   "hr": 0,
   "pre": 7,
   "table": 2
+ },
+ "dsh-ui-streaming": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 14,
+  "h3": 0,
+  "hr": 0,
+  "pre": 20,
+  "table": 5
  },
  "dsh-web-and-browser": {
   "figure": 4,

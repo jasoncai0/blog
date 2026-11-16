@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f08-04-title f08-04-desc" font-family="PingFang SC, Hiragino Sans GB, Helvetica Neue, Arial, sans-serif">
+<title id="f08-04-title">preset 的持久化位置</title>
+<desc id="f08-04-desc">三张卡片是 profile patch、会话 header 和会话日志事件；下方依次是保存当前 id 的投影与只在内存中存在、重启后重建的 Generation。</desc>
+<defs>
+<marker id="f08-04-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+<marker id="f08-04-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+</defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<circle cx="40" cy="40" r="4" fill="#bf4520"/>
+<text x="52" y="46" font-size="21" fill="#2d3142" text-anchor="start" font-weight="600">持久化的四个位置</text>
+<text x="52" y="72" font-size="13" fill="#5a6580" text-anchor="start" font-weight="400">定义、创建事实、切换记录各存一处，投影只保留当前 id</text>
+<rect x="30" y="100" width="280" height="210" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="48" y="128" font-size="12" fill="#bf4520" text-anchor="start" font-weight="600">1</text>
+<text x="66" y="128" font-size="13.5" fill="#2d3142" text-anchor="start" font-weight="600">profile patch</text>
+<text x="48" y="150" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">定义正本</text>
+<circle cx="52" cy="184" r="2.5" fill="#5a6580"/>
+<text x="64" y="188" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">preset-standard 行</text>
+<circle cx="52" cy="216" r="2.5" fill="#5a6580"/>
+<text x="64" y="220" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">config.plugins 全量</text>
+<circle cx="52" cy="248" r="2.5" fill="#5a6580"/>
+<text x="64" y="252" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">编辑器保存到这里</text>
+<circle cx="52" cy="280" r="2.5" fill="#5a6580"/>
+<text x="64" y="284" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">PresetTree 不写</text>
+<rect x="340" y="100" width="280" height="210" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="358" y="128" font-size="12" fill="#bf4520" text-anchor="start" font-weight="600">2</text>
+<text x="376" y="128" font-size="13.5" fill="#2d3142" text-anchor="start" font-weight="600">会话 header</text>
+<text x="358" y="150" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">创建事实</text>
+<circle cx="362" cy="184" r="2.5" fill="#5a6580"/>
+<text x="374" y="188" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">agentPreset 字段</text>
+<circle cx="362" cy="216" r="2.5" fill="#5a6580"/>
+<text x="374" y="220" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">创建时写一次</text>
+<circle cx="362" cy="248" r="2.5" fill="#5a6580"/>
+<text x="374" y="252" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">之后不再改</text>
+<circle cx="362" cy="280" r="2.5" fill="#5a6580"/>
+<text x="374" y="284" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">恢复时仅作回退</text>
+<rect x="650" y="100" width="280" height="210" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="668" y="128" font-size="12" fill="#bf4520" text-anchor="start" font-weight="600">3</text>
+<text x="686" y="128" font-size="13.5" fill="#2d3142" text-anchor="start" font-weight="600">会话日志</text>
+<text x="668" y="150" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">切换记录</text>
+<circle cx="672" cy="184" r="2.5" fill="#5a6580"/>
+<text x="684" y="188" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">agent-preset/selected</text>
+<circle cx="672" cy="216" r="2.5" fill="#5a6580"/>
+<text x="684" y="220" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">log-only，只有 id</text>
+<circle cx="672" cy="248" r="2.5" fill="#5a6580"/>
+<text x="684" y="252" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">空白会话切换时追加</text>
+<circle cx="672" cy="280" r="2.5" fill="#5a6580"/>
+<text x="684" y="284" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">v2→v3 改 code 为 ptc</text>
+<rect x="30" y="350" width="900" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="50" y="378" font-size="13" fill="#2d3142" text-anchor="start" font-weight="600">投影：agentPreset（当前值，stateVersion 1）</text>
+<text x="50" y="404" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">init 读 header</text>
+<text x="250" y="404" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">apply 读 agent-preset/selected 事件</text>
+<text x="560" y="404" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">wire.view 原样交给客户端</text>
+<text x="50" y="426" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">定义不参与 id 解析；投影只回答“现在跑的是哪个 id”。</text>
+<line x1="480" y1="310" x2="480" y2="346" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f08-04-arrow-acc)"/>
+<text x="492" y="334" font-size="11" fill="#bf4520" text-anchor="start" font-weight="400">init</text>
+<line x1="790" y1="310" x2="790" y2="346" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f08-04-arrow-acc)"/>
+<text x="802" y="334" font-size="11" fill="#bf4520" text-anchor="start" font-weight="400">apply</text>
+<rect x="30" y="480" width="900" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="50" y="506" font-size="13" fill="#2d3142" text-anchor="start" font-weight="600">运行时：Generation（不落盘，重启按当前定义重建）</text>
+<text x="50" y="532" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">retired 且 users = 0 才 dispose</text>
+<text x="360" y="532" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">inspectCompositions() 查看保留修订与泄漏服务</text>
+<text x="50" y="554" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">定义改动只影响之后解析的会话，已绑定的继续用旧修订。</text>
+<line x1="480" y1="442" x2="480" y2="476" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f08-04-arrow)"/>
+<text x="492" y="465" font-size="11" fill="#5a6580" text-anchor="start" font-weight="400">挂载时按 id 读当前定义</text>
+</svg>

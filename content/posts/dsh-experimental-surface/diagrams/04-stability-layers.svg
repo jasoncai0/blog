@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f06-04-title f06-04-desc">
+<title id="f06-04-title">实验面的四层稳定度</title>
+<desc id="f06-04-desc">四层结构：产品服务契约、注册 seam、provider 实现、GUI 与组合。越往下越像可替换件，插件状态应当留在 Host 侧。</desc>
+<defs>
+<marker id="f06-04-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+</defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="42" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" letter-spacing="2" fill="#bf4520">FIG 04 / STABILITY LAYERS</text>
+<text x="48" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="26" font-weight="600" fill="#2d3142">哪些东西可以依赖</text>
+<text x="48" y="106" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="13" fill="#5a6580">越往下越像可替换件，插件的状态应当留在 Host 侧</text>
+
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+<rect x="64" y="136" width="832" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="100" cy="180" r="15" fill="#2d3142"/>
+<text x="100" y="185" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">1</text>
+<text x="130" y="172" font-size="17" font-weight="600" fill="#2d3142">产品服务契约</text>
+<text x="130" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10.5" fill="#5a6580">ctx.workspaceRegistry · ctx.settings · ctx.computerUse</text>
+<text x="872" y="172" text-anchor="end" font-size="11" fill="#bf4520">有人维护，接口不冻结</text>
+<text x="872" y="198" text-anchor="end" font-size="11" fill="#5a6580">插件从这里取服务</text>
+
+<rect x="112" y="240" width="736" height="88" rx="6" fill="#ffffff" stroke="#bf4520"/>
+<circle cx="148" cy="284" r="15" fill="#2d3142"/>
+<text x="148" y="289" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">2</text>
+<text x="178" y="276" font-size="17" font-weight="600" fill="#2d3142">注册 seam</text>
+<text x="178" y="302" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10.5" fill="#5a6580">computerUse.register · browserUse.register · actionCards.register(kind)</text>
+<text x="824" y="276" text-anchor="end" font-size="11" fill="#bf4520">形状小，跟起来便宜</text>
+<text x="824" y="302" text-anchor="end" font-size="11" fill="#5a6580">本系列建议的依赖面</text>
+
+<rect x="168" y="344" width="624" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="204" cy="388" r="15" fill="#2d3142"/>
+<text x="204" y="393" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">3</text>
+<text x="234" y="378" font-size="17" font-weight="600" fill="#2d3142">provider 实现</text>
+<text x="234" y="404" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10.5" fill="#5a6580">cua · browser-use-playwright-mcp · stagehand-native</text>
+<text x="768" y="378" text-anchor="end" font-size="11" fill="#bf4520">可整包撤换</text>
+<text x="768" y="404" text-anchor="end" font-size="11" fill="#5a6580">换 provider 不改插件</text>
+
+<rect x="228" y="448" width="504" height="88" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="264" cy="492" r="15" fill="#2d3142"/>
+<text x="264" y="497" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">4</text>
+<text x="294" y="482" font-size="17" font-weight="600" fill="#2d3142">GUI 与组合</text>
+<text x="294" y="508" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10.5" fill="#5a6580">client-ui-* · *-bundle</text>
+<text x="708" y="482" text-anchor="end" font-size="11" fill="#bf4520">只影响观感与启用方式</text>
+<text x="708" y="508" text-anchor="end" font-size="11" fill="#5a6580">换掉不丢数据</text>
+</g>
+
+<line x1="48" y1="566" x2="912" y2="566" stroke="#d8d8d8"/>
+<text x="48" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">SOURCE packages/experimental/README.md §status · packages/experimental/AGENTS.md</text>
+</svg>

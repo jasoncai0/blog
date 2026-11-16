@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-04-desc">
+<title id="f03-04-title">可见性矩阵</title>
+<desc id="f03-04-desc">七类错误痕迹在模型上下文、会话日志、UI 与诊断三个消费面上的可见性。</desc>
+<defs><marker id="f03-04-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6580"/></marker></defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="50" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="19" font-weight="600" fill="#2d3142" text-anchor="start">可见性矩阵</text>
+<text x="48" y="74" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="400" fill="#5a6580" text-anchor="start">同一份日志，三个消费面各取所需</text>
+<text x="60" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#5a6580" text-anchor="start">产物</text>
+<text x="452" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#5a6580" text-anchor="start">模型上下文</text>
+<text x="600" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#5a6580" text-anchor="start">会话日志</text>
+<text x="748" y="116" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#5a6580" text-anchor="start">UI 与诊断</text>
+<line x1="48" y1="126" x2="912" y2="126" stroke="#d8d8d8"/>
+<rect x="48" y="124" width="864" height="34" rx="4" fill="#ffffff" stroke="none"/>
+<text x="60" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">tool/result 的 content 与 isError</text>
+<text x="506" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="654" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="60" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">tool/result.error 的 name 与 code</text>
+<text x="506" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#5a6580" text-anchor="middle">否</text>
+<text x="654" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<rect x="48" y="192" width="864" height="34" rx="4" fill="#ffffff" stroke="none"/>
+<text x="60" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">tool/result.error.reason</text>
+<text x="506" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#5a6580" text-anchor="middle">否</text>
+<text x="654" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="60" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">assistant/attempt</text>
+<text x="506" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#5a6580" text-anchor="middle">否</text>
+<text x="654" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="246" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#5a6580" text-anchor="middle">否</text>
+<rect x="48" y="260" width="864" height="34" rx="4" fill="#ffffff" stroke="none"/>
+<text x="60" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">llm/retry 与 llm/retry-started</text>
+<text x="506" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#5a6580" text-anchor="middle">否</text>
+<text x="654" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="280" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="60" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">turn/end 的 reason</text>
+<text x="506" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#5a6580" text-anchor="middle">否</text>
+<text x="654" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="314" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<rect x="48" y="328" width="864" height="34" rx="4" fill="#ffffff" stroke="none"/>
+<text x="60" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">标了 interrupted 的 assistant/message</text>
+<text x="506" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="654" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="60" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.9" font-weight="400" fill="#2d3142" text-anchor="start">合成 closer 的 tool/result</text>
+<text x="506" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="654" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<text x="812" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142" text-anchor="middle">是</text>
+<rect x="44" y="424" width="872" height="52" rx="6" fill="#f9f9f9" stroke="#e4e4e4" stroke-width="1"/>
+<text x="60" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="400" fill="#2d3142" text-anchor="start">模型只拿到 surface 派生出的 message。error、reason、attempt 与 retry 都在 message 之外。</text>
+<text x="60" y="464" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="400" fill="#5a6580" text-anchor="start">UI 与诊断读同一份日志，区别是取哪些字段、怎么展示 cause 链。</text>
+<text x="44" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">三类内容模型能直接看到：</text>
+<text x="48" y="532" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="400" fill="#2d3142" text-anchor="start">· 失败工具的 Error: 文本</text>
+<text x="48" y="552" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="400" fill="#2d3142" text-anchor="start">· 中断时留下的一半 assistant 内容</text>
+<text x="48" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="400" fill="#2d3142" text-anchor="start">· resume 或 fork 补写的工具结果</text>
+</svg>

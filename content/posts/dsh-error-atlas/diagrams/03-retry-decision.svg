@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f03-title f03-03-desc">
+<title id="f03-03-title">重试决策的顺序</title>
+<desc id="f03-03-desc">agent/request-error 上重试策略的五个判断，以及每个否分支的去向。</desc>
+<defs><marker id="f03-03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6580"/></marker></defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="50" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="19" font-weight="600" fill="#2d3142" text-anchor="start">重试决策的顺序</text>
+<text x="48" y="74" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="400" fill="#5a6580" text-anchor="start">五个判断，任何一步说不就交回下游</text>
+<rect x="80" y="104" width="350" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="96" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.4" font-weight="400" fill="#2d3142" text-anchor="start">配置里有 retryPolicy？</text>
+<rect x="80" y="176" width="350" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="96" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.4" font-weight="400" fill="#2d3142" text-anchor="start">mode 是 always？</text>
+<rect x="80" y="248" width="350" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="96" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.4" font-weight="400" fill="#2d3142" text-anchor="start">code 在 retryableCodes 里？</text>
+<rect x="80" y="320" width="350" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="96" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.4" font-weight="400" fill="#2d3142" text-anchor="start">previousRetry 还没到 maxRetries？</text>
+<rect x="80" y="392" width="350" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="96" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.4" font-weight="400" fill="#2d3142" text-anchor="start">providerRetryAfterMs 有效？</text>
+<line x1="255" y1="150" x2="255" y2="174" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<text x="262" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="400" fill="#bf4520" text-anchor="start">是</text>
+<line x1="255" y1="222" x2="255" y2="246" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<text x="262" y="238" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="400" fill="#bf4520" text-anchor="start">是</text>
+<line x1="255" y1="294" x2="255" y2="318" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<text x="262" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="400" fill="#bf4520" text-anchor="start">是</text>
+<line x1="255" y1="366" x2="255" y2="390" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<text x="262" y="382" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="400" fill="#bf4520" text-anchor="start">是</text>
+<line x1="255" y1="438" x2="255" y2="462" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<text x="262" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="400" fill="#bf4520" text-anchor="start">是</text>
+<line x1="430" y1="127" x2="468" y2="127" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<rect x="470" y="106" width="210" height="42" rx="6" fill="#f9f9f9" stroke="#e4e4e4" stroke-width="1"/>
+<text x="482" y="131" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="400" fill="#5a6580" text-anchor="start">next()：交回下游</text>
+<line x1="430" y1="199" x2="468" y2="199" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<rect x="470" y="178" width="210" height="42" rx="6" fill="#f9f9f9" stroke="#e4e4e4" stroke-width="1"/>
+<text x="482" y="203" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="400" fill="#5a6580" text-anchor="start">先跑下游，再决定是否覆盖</text>
+<line x1="430" y1="271" x2="468" y2="271" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<rect x="470" y="250" width="210" height="42" rx="6" fill="#f9f9f9" stroke="#e4e4e4" stroke-width="1"/>
+<text x="482" y="275" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="400" fill="#5a6580" text-anchor="start">next()：交回下游</text>
+<line x1="430" y1="343" x2="468" y2="343" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<rect x="470" y="322" width="210" height="42" rx="6" fill="#f9f9f9" stroke="#e4e4e4" stroke-width="1"/>
+<text x="482" y="347" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="400" fill="#5a6580" text-anchor="start">next()：交回下游</text>
+<line x1="430" y1="415" x2="468" y2="415" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f03-03-arrow)"/>
+<rect x="470" y="394" width="210" height="42" rx="6" fill="#f9f9f9" stroke="#e4e4e4" stroke-width="1"/>
+<text x="482" y="419" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="400" fill="#5a6580" text-anchor="start">用本地 backoff</text>
+<rect x="700" y="104" width="212" height="300" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="716" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12.4" font-weight="600" fill="#2d3142" text-anchor="start">默认不重试</text>
+<text x="716" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.2" font-weight="400" fill="#5a6580" text-anchor="start">要修，不是等</text>
+<text x="716" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.2" font-weight="400" fill="#bf4520" text-anchor="start">INVALID_CREDENTIAL</text>
+<text x="716" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.0" font-weight="400" fill="#5a6580" text-anchor="start">同一份凭据每次都失败</text>
+<text x="716" y="232" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.2" font-weight="400" fill="#bf4520" text-anchor="start">CONTEXT_WINDOW_EXCEEDED</text>
+<text x="716" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.0" font-weight="400" fill="#5a6580" text-anchor="start">要压缩或换模型</text>
+<text x="716" y="288" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.2" font-weight="400" fill="#bf4520" text-anchor="start">QUOTA</text>
+<text x="716" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.0" font-weight="400" fill="#5a6580" text-anchor="start">要等额度恢复</text>
+<text x="716" y="344" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.2" font-weight="400" fill="#bf4520" text-anchor="start">ACCOUNT_QUOTA</text>
+<text x="716" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.0" font-weight="400" fill="#5a6580" text-anchor="start">要换账号或充值</text>
+<rect x="80" y="464" width="600" height="46" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="96" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#2d3142" text-anchor="start">delay = providerRetryAfterMs 或 backoff；超 maxDelayMs 且 normal 模式则放弃</text>
+<rect x="80" y="520" width="600" height="42" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="96" y="546" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#2d3142" text-anchor="start">写 llm/retry 与 llm/retry-started，复用 RetryId，然后重跑这一步</text>
+<text x="48" y="580" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.4" font-weight="400" fill="#5a6580" text-anchor="start">默认值：maxRetries 5、初始 500ms、上限 10s、jitter 0.1。</text>
+</svg>

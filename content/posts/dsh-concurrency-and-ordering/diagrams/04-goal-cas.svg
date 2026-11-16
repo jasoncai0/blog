@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f05-d4-title f05-d4-desc">
+  <title id="f05-d4-title">goal revision 的比较并交换</title>
+  <desc id="f05-d4-desc">两个调用都读到 revision 7 并各自提交 revision 8；先落地的那个通过 fold 校验，后到的那个因为当前已经是 8 而抛 GOAL_STALE_REVISION。</desc>
+  <defs>
+    <marker id="f05-d4-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#5a6580"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">REVISION CAS</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">引用里带着读到的版本号</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">写入不覆盖，只声明「我在 revision 7 的基础上加一」。落在同一个版本上，后到的那个必然失败。</text>
+
+  <!-- interleaving chips -->
+  <rect x="48" y="148" width="168" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">A 读 rev 7</text>
+  <text x="64" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">拿到 { id, revision }</text>
+
+  <line x1="216" y1="177" x2="226" y2="177" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f05-d4-a)"/>
+
+  <rect x="228" y="148" width="168" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="244" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">B 读 rev 7</text>
+  <text x="244" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">两份引用一模一样</text>
+
+  <line x1="396" y1="177" x2="406" y2="177" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f05-d4-a)"/>
+
+  <rect x="408" y="148" width="168" height="58" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="424" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">A 写 rev 8</text>
+  <text x="424" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">先落地，fold 通过</text>
+
+  <line x1="576" y1="177" x2="586" y2="177" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f05-d4-a)"/>
+
+  <rect x="588" y="148" width="168" height="58" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <text x="604" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">B 写 rev 8</text>
+  <text x="604" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">当前已是 8，拒绝</text>
+
+  <line x1="756" y1="177" x2="766" y2="177" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f05-d4-a)"/>
+
+  <rect x="768" y="148" width="168" height="58" rx="6" fill="#fdf6f3" stroke="#bf4520"/>
+  <text x="784" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">GOAL_STALE_REVISION</text>
+  <text x="784" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">错误给到调用方，状态不变</text>
+
+  <!-- fold guard -->
+  <rect x="48" y="238" width="420" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">FOLD GUARD</text>
+  <text x="64" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">fold 只接受严格加一的修订，写在 fold 里而不是调用点：</text>
+  <text x="64" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">if (next.id !== current.id ||</text>
+  <text x="76" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">next.revision !== current.revision + 1)</text>
+  <text x="76" y="344" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">throw new Error(`goal ${operation} must</text>
+  <text x="88" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">advance the current goal by one revision`)</text>
+  <text x="64" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">校验放在 fold，回放录好的日志时同样会跑一遍，</text>
+  <text x="64" y="402" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">坏掉的历史事件在重建时就会炸出来。</text>
+
+  <!-- caller side -->
+  <rect x="492" y="238" width="420" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="508" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">CALLER SIDE</text>
+  <text x="508" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">调用点先比一次引用，再交给 fold：</text>
+  <text x="508" y="312" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">stale goal ref "g1" revision 7;</text>
+  <text x="508" y="328" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">current is "g1" revision 8</text>
+  <text x="508" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">两条路径都要有：expectCurrent 给出能读懂的消息，</text>
+  <text x="508" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">fold 守住落盘数据不变坏。少一层，竞态就变成</text>
+  <text x="508" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">静默覆盖。</text>
+
+  <!-- footer -->
+  <rect x="48" y="456" width="864" height="96" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="482" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">WHY IT WORKS</text>
+  <text x="64" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">Session 已经把它串行化了，这一层不是并发原语，是不变量检查：谁把旧引用递进来，谁就拿到错。</text>
+  <text x="64" y="528" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同一套引用还出现在 goal round 的队列里：进 pre-step 前再比一次 revision，过期就重新排队。</text>
+</svg>

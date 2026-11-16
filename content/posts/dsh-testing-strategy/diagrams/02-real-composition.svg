@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d2-title f04-d2-desc">
+  <title id="f04-d2-title">真组合测试的三段式</title>
+  <desc id="f04-d2-desc">左段是只给测试用的 cordis.yml，中段是 Loader 在临时目录的子进程里装配插件，右段是 driver 打印一行 JSON；两个独立出口分别是 stdout 与工作区快照。</desc>
+  <defs>
+    <marker id="f04-d2-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">REAL COMPOSITION</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">真组合测试的三段式：yml、子进程、一行 JSON</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">手搓 ctx.plugin(...) 能跑通单元逻辑，但装不出 Loader 的那条装配路径。</text>
+
+  <!-- stage 1 -->
+  <rect x="48" y="136" width="250" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">① test-only cordis.yml</text>
+  <text x="64" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">tests/fixtures/cordis.yml</text>
+  <text x="64" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">- name: '@deepseek-ai/dsh-session'</text>
+  <text x="64" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">- name: '…/session-projection'</text>
+  <text x="64" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">- name: './legacy-plugin.ts'</text>
+  <text x="64" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">三行，没有一处 from 'src'</text>
+
+  <!-- stage 2 -->
+  <rect x="330" y="136" width="300" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="346" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">② Loader 在子进程里 boot</text>
+  <text x="346" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">runLoaderSmoke(options)</text>
+  <text x="346" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">mkdtemp → cwd，DSH_HOME=cwd/.dsh</text>
+  <text x="346" y="224" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">stdin 关闭，30s 超时后 SIGKILL</text>
+  <text x="346" y="242" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">src 走 tsconfig paths，lib 走 exports</text>
+  <text x="346" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同一个 driver，两种启动方式</text>
+
+  <line x1="300" y1="211" x2="326" y2="211" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-d2-a)"/>
+
+  <!-- stage 3 -->
+  <rect x="660" y="136" width="252" height="150" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="676" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">③ driver 打印一行</text>
+  <text x="676" y="180" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">tests/fixtures/driver.ts</text>
+  <text x="676" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">boot('projection-compatibility')</text>
+  <text x="676" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">ctx.sessions.create()</text>
+  <text x="676" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">console.log(JSON.stringify(…))</text>
+  <text x="676" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">只输出，不判断</text>
+
+  <line x1="630" y1="211" x2="656" y2="211" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-d2-a)"/>
+  <line x1="786" y1="286" x2="786" y2="316" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f04-d2-a)"/>
+
+  <!-- two exits -->
+  <rect x="48" y="320" width="864" height="196" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <line x1="480" y1="344" x2="480" y2="492" stroke="#e4e4e4" stroke-width="1"/>
+
+  <text x="64" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">出口 A / STDOUT</text>
+  <text x="64" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">整行相等，不做子串匹配</text>
+  <text x="64" y="396" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">expect(stdout.trim()).toBe(</text>
+  <text x="76" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">JSON.stringify({ first: 1, second: 2,</text>
+  <text x="76" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">values: {…}, released: null,</text>
+  <text x="76" y="444" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">warnings: [ … ] }))</text>
+  <text x="64" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">数组里的顺序也是契约，多一条就红</text>
+
+  <text x="496" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">出口 B / WORKSPACE</text>
+  <text x="496" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">inspect(cwd) 在进程退出后跑</text>
+  <text x="496" y="396" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">await options.inspect?.(cwd)</text>
+  <text x="496" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">// 落盘的 JSONL 可以直接 cat</text>
+  <text x="496" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">// 压缩关闭：compression: 'none'</text>
+  <text x="496" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">临时目录在 finally 里删掉，失败时先打印路径</text>
+
+  <text x="48" y="556" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">两段拼起来才算一次真组合：装配路径走过 Loader，观测点落在进程之外。</text>
+</svg>

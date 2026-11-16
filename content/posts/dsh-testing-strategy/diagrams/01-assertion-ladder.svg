@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d1-title f04-d1-desc">
+  <title id="f04-d1-title">四个断言层次</title>
+  <desc id="f04-d1-desc">从内部字段到磁盘世界共四层：内部字段误报风险最高，磁盘世界最低；风险越低的层越经得起实现改动。</desc>
+  <defs>
+    <marker id="f04-d1-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">ASSERTION LADDER</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">断言贴哪一层，决定了它能抓到什么</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">同一段行为，从内部字段换成文件字节，误报会下降，漏报也会下降，成本上升。</text>
+
+  <text x="64" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">层</text>
+  <text x="290" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">断言对象</text>
+  <text x="600" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">误报风险</text>
+  <text x="720" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">能抓到的缺陷</text>
+
+  <!-- row 1 -->
+  <rect x="48" y="140" width="864" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">磁盘世界</text>
+  <text x="64" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">最慢，但骗不过</text>
+  <text x="290" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">workspace.expected/</text>
+  <text x="290" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">全树逐字节比较</text>
+  <rect x="600" y="177" width="12" height="12" rx="2" fill="#bf4520"/>
+  <rect x="618" y="177" width="12" height="12" rx="2" fill="#e4e4e4"/>
+  <rect x="636" y="177" width="12" height="12" rx="2" fill="#e4e4e4"/>
+  <text x="600" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">极低</text>
+  <text x="720" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">工具没生效、多写文件</text>
+  <text x="720" y="206" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">写错内容、残留临时文件</text>
+
+  <!-- row 2 -->
+  <rect x="48" y="244" width="864" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">模型可见请求</text>
+  <text x="64" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">对外契约，改动少</text>
+  <text x="290" y="290" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">adapter.requests[n]</text>
+  <text x="290" y="310" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">.messages / .tools</text>
+  <rect x="600" y="281" width="12" height="12" rx="2" fill="#bf4520"/>
+  <rect x="618" y="281" width="12" height="12" rx="2" fill="#e4e4e4"/>
+  <rect x="636" y="281" width="12" height="12" rx="2" fill="#e4e4e4"/>
+  <text x="600" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">低</text>
+  <text x="720" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">prompt 混入不该有的内容</text>
+  <text x="720" y="310" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">工具 schema 漏项、归属错</text>
+
+  <!-- row 3 -->
+  <rect x="48" y="348" width="864" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">事件流</text>
+  <text x="64" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">最常用的一层</text>
+  <text x="290" y="394" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">session.snapshotEvents()</text>
+  <text x="290" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">type / seq / data</text>
+  <rect x="600" y="385" width="12" height="12" rx="2" fill="#bf4520"/>
+  <rect x="618" y="385" width="12" height="12" rx="2" fill="#bf4520"/>
+  <rect x="636" y="385" width="12" height="12" rx="2" fill="#e4e4e4"/>
+  <text x="600" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">中</text>
+  <text x="720" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">顺序错、漏事件、多事件</text>
+  <text x="720" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">结果的来源关联断裂</text>
+
+  <!-- row 4 -->
+  <rect x="48" y="452" width="864" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#2d3142">内部字段</text>
+  <text x="64" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">最快，也最脆</text>
+  <text x="290" y="498" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">agent.phase.kind</text>
+  <text x="290" y="518" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">inbox.nextStep / status</text>
+  <rect x="600" y="489" width="12" height="12" rx="2" fill="#bf4520"/>
+  <rect x="618" y="489" width="12" height="12" rx="2" fill="#bf4520"/>
+  <rect x="636" y="489" width="12" height="12" rx="2" fill="#bf4520"/>
+  <text x="600" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">高</text>
+  <text x="720" y="498" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">状态机走错分支</text>
+  <text x="720" y="518" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">字段改名就误报</text>
+
+  <text x="48" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">越靠上的层越接近用户，越靠下的层越接近实现。仓库的取舍是两端都写，中间层尽量少写。</text>
+</svg>

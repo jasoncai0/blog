@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f07-03-title f07-03-desc">
+<title id="f07-03-title">一条 mux socket 上的四条逻辑流</title>
+<desc id="f07-03-desc">客户端与 RemoteStreamMuxServer 之间只有一条 WebSocket，$events 是唯一 generation source，$events/result 回结果，其余 endpoint 由 Host 注册，cancel 只结束单条流。</desc>
+<defs>
+<marker id="f07-03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+</defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="42" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" letter-spacing="2" fill="#bf4520">FIG 03 / MUX STREAMS</text>
+<text x="48" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="26" font-weight="600" fill="#2d3142">一条 socket，多条逻辑流</text>
+<text x="48" y="106" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="13" fill="#5a6580">streamId 只在一条连接内有效，溢出与取消都按流处理</text>
+
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+<rect x="48" y="250" width="150" height="110" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<text x="123" y="288" text-anchor="middle" font-size="14" font-weight="600" fill="#2d3142">客户端</text>
+<text x="123" y="310" text-anchor="middle" font-size="10" fill="#5a6580">session · 事件 · 工具</text>
+<text x="123" y="328" text-anchor="middle" font-size="10" fill="#5a6580">interactions: answer</text>
+
+<line x1="202" y1="305" x2="322" y2="305" stroke="#4f5d75" stroke-width="3" marker-end="url(#f07-03-arrow)"/>
+<text x="262" y="290" text-anchor="middle" font-size="10" fill="#5a6580">WebSocket</text>
+<text x="262" y="330" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">/api/remote.mux</text>
+
+<rect x="330" y="230" width="170" height="150" rx="6" fill="#ffffff" stroke="#bf4520"/>
+<text x="415" y="272" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3142">RemoteStream</text>
+<text x="415" y="292" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3142">MuxServer</text>
+<text x="415" y="318" text-anchor="middle" font-size="10" fill="#5a6580">open / item / end / cancel</text>
+<text x="415" y="336" text-anchor="middle" font-size="10" fill="#5a6580">error / end 下行</text>
+<text x="415" y="362" text-anchor="middle" font-size="9.5" fill="#bf4520">exactKeys 白名单</text>
+
+<path d="M500,305 L620,168" fill="none" stroke="#4f5d75" marker-end="url(#f07-03-arrow)"/>
+<path d="M500,305 L620,270" fill="none" stroke="#4f5d75" marker-end="url(#f07-03-arrow)"/>
+<path d="M500,305 L620,372" fill="none" stroke="#4f5d75" marker-end="url(#f07-03-arrow)"/>
+<path d="M500,305 L620,474" fill="none" stroke="#4f5d75" marker-end="url(#f07-03-arrow)"/>
+
+<rect x="620" y="130" width="292" height="76" rx="6" fill="#ffffff" stroke="#bf4520"/>
+<text x="638" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#bf4520">$events</text>
+<text x="638" y="176" font-size="10.5" fill="#2d3142">唯一 generation source，ready 之后才是事件</text>
+<text x="638" y="194" font-size="9.5" fill="#5a6580">只有 answering client 注册</text>
+
+<rect x="620" y="232" width="292" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<text x="638" y="258" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#2d3142">$events/result</text>
+<text x="638" y="278" font-size="10.5" fill="#2d3142">结果回执，和请求按 id 配</text>
+<text x="638" y="296" font-size="9.5" fill="#5a6580">不携带事件</text>
+
+<rect x="620" y="334" width="292" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<text x="638" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#2d3142">open 时指定的 endpoint</text>
+<text x="638" y="380" font-size="10.5" fill="#2d3142">流内 item 上行，end 半关闭</text>
+<text x="638" y="398" font-size="9.5" fill="#5a6580">endpoint 名由 Host 注册</text>
+
+<rect x="620" y="436" width="292" height="76" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<text x="638" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#2d3142">cancel 一条流</text>
+<text x="638" y="482" font-size="10.5" fill="#2d3142">同 socket 上其他流继续跑</text>
+<text x="638" y="500" font-size="9.5" fill="#5a6580">上行不重放，重开拿不到旧数据</text>
+</g>
+
+<rect x="48" y="526" width="864" height="44" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<text x="68" y="553" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11" fill="#2d3142">上行窗口默认 262144 字节（含 JSON 外壳）；溢出只结束这一条流，socket 和其他流不受影响</text>
+
+<text x="48" y="586" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">SOURCE packages/api/gateway/src/stream-protocol.ts · stream-server.ts · index.ts</text>
+</svg>

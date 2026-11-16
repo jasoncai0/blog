@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-02-desc">
+<title id="f02-02-title">迁移链：四个包，四条相邻边</title>
+<desc id="f02-02-desc">v0 到 v4 的编解码器与四个迁移包的职责，以及相邻断言的失败方式。</desc>
+<defs><marker id="f02-02-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6580"/></marker></defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="50" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="19" font-weight="600" fill="#2d3142" text-anchor="start">四个包，四条相邻边</text>
+<text x="48" y="74" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="400" fill="#5a6580" text-anchor="start">链上只允许 vN 到 vN+1；缺一段就整条拒绝，不做跳跃迁移</text>
+<rect x="102" y="112" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="168" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">codec v0</text>
+<text x="168" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" font-weight="400" fill="#5a6580" text-anchor="middle">releasedV0Codec</text>
+<line x1="236" y1="139" x2="256" y2="139" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-02-arrow)"/>
+<rect x="258" y="112" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="324" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">codec v1</text>
+<text x="324" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" font-weight="400" fill="#5a6580" text-anchor="middle">releasedV1Codec</text>
+<line x1="392" y1="139" x2="412" y2="139" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-02-arrow)"/>
+<rect x="414" y="112" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="480" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">codec v2</text>
+<text x="480" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" font-weight="400" fill="#5a6580" text-anchor="middle">releasedV2Codec</text>
+<line x1="548" y1="139" x2="568" y2="139" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-02-arrow)"/>
+<rect x="570" y="112" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="636" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">codec v3</text>
+<text x="636" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" font-weight="400" fill="#5a6580" text-anchor="middle">releasedV3Codec</text>
+<line x1="704" y1="139" x2="724" y2="139" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-02-arrow)"/>
+<rect x="726" y="112" width="132" height="54" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="792" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="14" font-weight="600" fill="#2d3142" text-anchor="middle">codec v4</text>
+<text x="792" y="154" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.4" font-weight="400" fill="#5a6580" text-anchor="middle">releasedV4Codec</text>
+<rect x="48" y="206" width="864" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="64" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="600" fill="#bf4520" text-anchor="start">sessionFormatV0ToV1</text>
+<text x="886" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="400" fill="#5a6580" text-anchor="end">v0 到 v1</text>
+<text x="64" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#2d3142" text-anchor="start">只做 legacy 归一化与改名；冻结清单外的事件一律拒绝。</text>
+<rect x="48" y="262" width="864" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="64" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="600" fill="#bf4520" text-anchor="start">sessionFormatV1ToV2</text>
+<text x="886" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="400" fill="#5a6580" text-anchor="end">v1 到 v2</text>
+<text x="64" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#2d3142" text-anchor="start">把顶层 chunk 内嵌进 message；seq 重排稠密；cut 改由 end-seed 推导。</text>
+<rect x="48" y="318" width="864" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="64" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="600" fill="#bf4520" text-anchor="start">sessionFormatV2ToV3</text>
+<text x="886" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="400" fill="#5a6580" text-anchor="end">v2 到 v3</text>
+<text x="64" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#2d3142" text-anchor="start">system prompt 提升为 message；重映射本地引用；翻译 PTC 与 preset 名。</text>
+<rect x="48" y="374" width="864" height="48" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="64" y="394" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" font-weight="600" fill="#bf4520" text-anchor="start">sessionFormatV3ToV4</text>
+<text x="886" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="400" fill="#5a6580" text-anchor="end">v3 到 v4</text>
+<text x="64" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#2d3142" text-anchor="start">工具结果升为 tool role；重命名 message source；补子会话证据。</text>
+<text x="48" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">相邻断言：to !== from + 1 时构造 catalog 就失败（chain.ts:30）。</text>
+<text x="48" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">缺边：Session migration v2-&gt;v3 is missing（chain.ts:68）。</text>
+<text x="48" y="504" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">多余边或回边：does not lead to current v4（chain.ts:74）。</text>
+<text x="48" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#bf4520" text-anchor="start">stage 依次以 decoded、transformed 传递；任何 stage 改动预先声明的 cut 都会被拒绝（chain.ts:200）。</text>
+<text x="48" y="568" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">catalog 是生成文件：currentVersion 与四条边在编译期固定（generated.ts:17）。</text>
+</svg>

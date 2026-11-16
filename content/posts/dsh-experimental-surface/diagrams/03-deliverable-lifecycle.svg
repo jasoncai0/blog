@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="f06-03-title f06-03-desc">
+  <title id="f06-03-title">交付物在 turn 边界上的两条采集路径</title>
+  <desc id="f06-03-desc">时间轴从上到下：turn 开始做 git 快照；工具执行时文件工具记录编辑前后的整文件内容，present 工具写 deliverables/presented 事件；turn 结束再取 git 快照并汇总差异；之后由 Host 服务在 Session 存活期提供给客户端渲染。</desc>
+  <defs>
+    <marker id="f06-03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+    <marker id="f06-03-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" letter-spacing="2" fill="#bf4520">FIG 03 / DELIVERABLE LIFECYCLE</text>
+  <text x="48" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="26" font-weight="600" fill="#2d3142">交付物在 turn 边界上采集</text>
+  <text x="48" y="104" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="13" fill="#5a6580">两条来源：文件系统快照与模型声明，最后都落到 Host 服务供客户端读取</text>
+
+  <line x1="84" y1="132" x2="84" y2="530" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f06-03-arrow-accent)"/>
+  <circle cx="84" cy="176" r="4" fill="#bf4520"/>
+  <circle cx="84" cy="286" r="4" fill="#bf4520"/>
+  <circle cx="84" cy="396" r="4" fill="#bf4520"/>
+  <circle cx="84" cy="486" r="4" fill="#bf4520"/>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <text x="110" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" letter-spacing="1.5" fill="#5a6580">TURN 开始</text>
+    <rect x="110" y="162" width="330" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="128" y="188" font-size="13" font-weight="600" fill="#2d3142">git working-tree 快照</text>
+    <text x="128" y="208" font-size="10.5" fill="#5a6580">记下这一轮开始前的文件状态</text>
+
+    <text x="110" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" letter-spacing="1.5" fill="#5a6580">工具执行</text>
+    <rect x="110" y="272" width="330" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="128" y="298" font-size="13" font-weight="600" fill="#2d3142">文件工具：编辑前后整文件捕获</text>
+    <text x="128" y="318" font-size="10.5" fill="#5a6580">补上 git 覆盖不到的路径</text>
+
+    <rect x="500" y="272" width="330" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="518" y="298" font-size="13" font-weight="600" fill="#2d3142">present 工具</text>
+    <text x="518" y="318" font-size="10.5" fill="#5a6580">追加 deliverables/presented 事件</text>
+
+    <text x="110" y="372" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" letter-spacing="1.5" fill="#5a6580">TURN 结束</text>
+    <rect x="110" y="382" width="330" height="64" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="128" y="408" font-size="13" font-weight="600" fill="#2d3142">二次快照 + 差异汇总</text>
+    <text x="128" y="428" font-size="10.5" fill="#5a6580">每个文件给出 turn 起止对比</text>
+
+    <text x="110" y="472" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" letter-spacing="1.5" fill="#5a6580">之后</text>
+    <rect x="110" y="482" width="330" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="128" y="508" font-size="13" font-weight="600" fill="#2d3142">Host 服务</text>
+    <text x="128" y="528" font-size="10.5" fill="#5a6580">只在 Session 存活期提供</text>
+
+    <rect x="500" y="482" width="330" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="518" y="508" font-size="13" font-weight="600" fill="#2d3142">客户端</text>
+    <text x="518" y="528" font-size="10.5" fill="#5a6580">turn 末渲染，只有客户端读</text>
+  </g>
+
+  <line x1="275" y1="226" x2="275" y2="266" stroke="#5a6580" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#f06-03-arrow)"/>
+  <line x1="275" y1="336" x2="275" y2="376" stroke="#5a6580" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#f06-03-arrow)"/>
+  <line x1="275" y1="446" x2="275" y2="476" stroke="#5a6580" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#f06-03-arrow)"/>
+  <line x1="665" y1="336" x2="665" y2="476" stroke="#5a6580" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#f06-03-arrow)"/>
+  <line x1="440" y1="514" x2="494" y2="514" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f06-03-arrow)"/>
+  <text x="672" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="10" fill="#5a6580">事件整体并入</text>
+
+  <text x="48" y="584" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#5a6580">SOURCE packages/deliverables/* · docs/subsystems 交付物说明</text>
+</svg>

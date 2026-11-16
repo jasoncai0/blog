@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="f07-04-title f07-04-desc">
+<title id="f07-04-title">断线到 ready 的九个步骤</title>
+<desc id="f07-04-desc">物理层检测失效、退避、换 socket；连接层装 listener、等 ready、发布 generation；状态层 resync 历史、重拉投影、放开输入。</desc>
+<defs>
+<marker id="f07-04-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+</defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="42" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" letter-spacing="2" fill="#bf4520">FIG 04 / RECONNECT WALKTHROUGH</text>
+<text x="48" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="26" font-weight="600" fill="#2d3142">断线到 ready 的九步</text>
+<text x="48" y="106" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="13" fill="#5a6580">顺序错了不会立刻报错，只会丢事件或把窗口错位</text>
+
+<g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+<rect x="48" y="140" width="280" height="54" rx="6" fill="#2d3142"/>
+<text x="72" y="164" font-size="12" font-weight="600" fill="#ffffff">物理层</text>
+<text x="72" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#c9ccd6">STEP 1 – 3</text>
+<rect x="340" y="140" width="280" height="54" rx="6" fill="#2d3142"/>
+<text x="364" y="164" font-size="12" font-weight="600" fill="#ffffff">连接层</text>
+<text x="364" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#c9ccd6">STEP 4 – 6</text>
+<rect x="632" y="140" width="280" height="54" rx="6" fill="#2d3142"/>
+<text x="656" y="164" font-size="12" font-weight="600" fill="#ffffff">状态层</text>
+<text x="656" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#c9ccd6">STEP 7 – 9</text>
+
+<rect x="48" y="210" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="74" cy="240" r="13" fill="#bf4520"/>
+<text x="74" y="245" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">1</text>
+<text x="98" y="244" font-size="13" font-weight="600" fill="#2d3142">检测失效</text>
+<text x="98" y="266" font-size="9.5" fill="#5a6580">$events 结束、流报错、首帧不是</text>
+<text x="98" y="282" font-size="9.5" fill="#5a6580">ready、事件帧畸形，任一即失效</text>
+
+<rect x="48" y="318" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="74" cy="348" r="13" fill="#bf4520"/>
+<text x="74" y="353" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">2</text>
+<text x="98" y="352" font-size="13" font-weight="600" fill="#2d3142">退避</text>
+<text x="98" y="374" font-size="9.5" fill="#5a6580">500ms 起，×2，上限 10s</text>
+<text x="98" y="390" font-size="9.5" fill="#5a6580">每次再加 50%–100% jitter</text>
+
+<rect x="48" y="426" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="74" cy="456" r="13" fill="#bf4520"/>
+<text x="74" y="461" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">3</text>
+<text x="98" y="460" font-size="13" font-weight="600" fill="#2d3142">换 socket</text>
+<text x="98" y="482" font-size="9.5" fill="#5a6580">Gateway 换掉物理连接</text>
+<text x="98" y="498" font-size="9.5" fill="#5a6580">重新打开 $events</text>
+
+<rect x="340" y="210" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="366" cy="240" r="13" fill="#2d3142"/>
+<text x="366" y="245" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">4</text>
+<text x="390" y="244" font-size="13" font-weight="600" fill="#2d3142">装增量 listener</text>
+<text x="390" y="266" font-size="9.5" fill="#5a6580">Host 先装监听，再发 ready</text>
+<text x="390" y="282" font-size="9.5" fill="#5a6580">顺序反了会丢第一段增量</text>
+
+<rect x="340" y="318" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="366" cy="348" r="13" fill="#2d3142"/>
+<text x="366" y="353" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">5</text>
+<text x="390" y="352" font-size="13" font-weight="600" fill="#2d3142">等 ready 帧</text>
+<text x="390" y="374" font-size="9.5" fill="#5a6580">首帧不是 ready 就当场重试</text>
+<text x="390" y="390" font-size="9.5" fill="#5a6580">15s 等不到算超时</text>
+
+<rect x="340" y="426" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="366" cy="456" r="13" fill="#2d3142"/>
+<text x="366" y="461" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">6</text>
+<text x="390" y="460" font-size="13" font-weight="600" fill="#2d3142">发布 generation</text>
+<text x="390" y="482" font-size="9.5" fill="#5a6580">ready 之后才 onConnected</text>
+<text x="390" y="498" font-size="9.5" fill="#5a6580">基线不会跑到观察前面</text>
+
+<rect x="632" y="210" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="658" cy="240" r="13" fill="#bf4520"/>
+<text x="658" y="245" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">7</text>
+<text x="682" y="244" font-size="13" font-weight="600" fill="#2d3142">resync 历史</text>
+<text x="682" y="266" font-size="9.5" fill="#5a6580">baseSeq 归零，重开窗口</text>
+<text x="682" y="282" font-size="9.5" fill="#5a6580">installWindow 写回新基线</text>
+
+<rect x="632" y="318" width="280" height="92" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<circle cx="658" cy="348" r="13" fill="#bf4520"/>
+<text x="658" y="353" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">8</text>
+<text x="682" y="352" font-size="13" font-weight="600" fill="#2d3142">重拉投影</text>
+<text x="682" y="374" font-size="9.5" fill="#5a6580">清空 store、refreshList</text>
+<text x="682" y="390" font-size="9.5" fill="#5a6580">按 parent abort 后重拉</text>
+
+<rect x="632" y="426" width="280" height="92" rx="6" fill="#ffffff" stroke="#bf4520"/>
+<circle cx="658" cy="456" r="13" fill="#bf4520"/>
+<text x="658" y="461" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">9</text>
+<text x="682" y="460" font-size="13" font-weight="600" fill="#2d3142">放开输入</text>
+<text x="682" y="482" font-size="9.5" fill="#5a6580">connecting → syncing → ready</text>
+<text x="682" y="498" font-size="9.5" fill="#5a6580">输入框在 ready 之前保持禁用</text>
+</g>
+
+<rect x="48" y="536" width="864" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+<text x="68" y="561" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11" fill="#2d3142">错序的后果：事件落旧代际（丢）、基线早于观察（丢）、窗口错位（重或漏）、投影停在断线前</text>
+
+<text x="48" y="590" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#5a6580">SOURCE packages/client/connection/src/recovery-config.ts · session-controller/src/client/sessions/*</text>
+</svg>

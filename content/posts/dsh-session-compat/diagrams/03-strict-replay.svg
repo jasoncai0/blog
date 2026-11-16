@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-03-desc">
+<title id="f02-03-title">严格回放：四道闸，先拒绝再重建</title>
+<desc id="f02-03-desc">解码、v4 准入、关系校验、surface 折叠四道检查，以及各自的失败消息。</desc>
+<defs><marker id="f02-03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6580"/></marker></defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="50" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="19" font-weight="600" fill="#2d3142" text-anchor="start">严格回放：四道闸，先拒绝再重建</text>
+<text x="48" y="74" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="400" fill="#5a6580" text-anchor="start">每一步都可能说不；没有跳过未知事件的兜底分支</text>
+<rect x="44" y="118" width="200" height="148" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<circle cx="70" cy="144" r="13" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="70" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#bf4520" text-anchor="middle">1</text>
+<text x="92" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="start">逐行解码</text>
+<text x="60" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.6" font-weight="400" fill="#5a6580" text-anchor="start">snapshotSessionFormatJson</text>
+<text x="60" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">非无损 JSON、负 seq、-0 在这</text>
+<text x="60" y="217" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">里就失败。</text>
+<line x1="246" y1="192" x2="266" y2="192" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-03-arrow)"/>
+<rect x="268" y="118" width="200" height="148" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<circle cx="294" cy="144" r="13" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="294" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#bf4520" text-anchor="middle">2</text>
+<text x="316" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="start">v4 准入</text>
+<text x="284" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.6" font-weight="400" fill="#5a6580" text-anchor="start">restoreReleasedV4Artifact</text>
+<text x="284" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">seq 必须等于下标；未知类型先看</text>
+<text x="284" y="217" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">ignorable。</text>
+<line x1="470" y1="192" x2="490" y2="192" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-03-arrow)"/>
+<rect x="492" y="118" width="200" height="148" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<circle cx="518" cy="144" r="13" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="518" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#bf4520" text-anchor="middle">3</text>
+<text x="540" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="start">重建关系</text>
+<text x="508" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.6" font-weight="400" fill="#5a6580" text-anchor="start">assertReleasedV4Relationships</text>
+<text x="508" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">seeded 的最后一条 end-seed</text>
+<text x="508" y="217" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">必须落在 cut 上。</text>
+<line x1="694" y1="192" x2="714" y2="192" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-03-arrow)"/>
+<rect x="716" y="118" width="200" height="148" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<circle cx="742" cy="144" r="13" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="742" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#bf4520" text-anchor="middle">4</text>
+<text x="764" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="start">折叠 surface</text>
+<text x="732" y="176" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.6" font-weight="400" fill="#5a6580" text-anchor="start">foldSurface</text>
+<text x="732" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">逐事件期望 seq 等于下标，消息</text>
+<text x="732" y="217" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">引用必须可解析。</text>
+<rect x="44" y="296" width="872" height="72" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.4"/>
+<text x="60" y="322" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13" font-weight="600" fill="#bf4520" text-anchor="start">任何一道闸失败，都不返回半个会话</text>
+<text x="60" y="345" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#2d3142" text-anchor="start">抛 SessionFormatError（格式不自洽）或 SessionFormatUnsupportedMigrationError（读得懂但拒绝迁移）</text>
+<rect x="44" y="392" width="280" height="56" rx="6" fill="#f7f7f7" stroke="#e4e4e4" stroke-width="1"/>
+<text x="58" y="415" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.6" font-weight="400" fill="#2d3142" text-anchor="start">format v4 event 7 is not dense</text>
+<text x="58" y="435" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#5a6580" text-anchor="start">seq 与下标不一致</text>
+<rect x="340" y="392" width="280" height="56" rx="6" fill="#f7f7f7" stroke="#e4e4e4" stroke-width="1"/>
+<text x="354" y="415" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.6" font-weight="400" fill="#2d3142" text-anchor="start">unknown event type &quot;plugin/x&quot;</text>
+<text x="354" y="435" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#5a6580" text-anchor="start">未知类型且没有 ignorable</text>
+<rect x="636" y="392" width="280" height="56" rx="6" fill="#f7f7f7" stroke="#e4e4e4" stroke-width="1"/>
+<text x="650" y="415" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.6" font-weight="400" fill="#2d3142" text-anchor="start">seed must be contiguous from 0</text>
+<text x="650" y="435" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.6" font-weight="400" fill="#5a6580" text-anchor="start">seed 的 seq 不从 0 开始</text>
+<text x="44" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">这些消息都带具体下标，方便定位到某一行。</text>
+<rect x="44" y="512" width="872" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="60" y="535" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="400" fill="#5a6580" text-anchor="start">recoverable 是另一条路：只丢弃未提交的尾部坏行，</text>
+<text x="60" y="553" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.8" font-weight="400" fill="#5a6580" text-anchor="start">一旦后面的 turn/end 证明这段已提交，就把解码错误抛出来（generation.ts:360）。</text>
+</svg>

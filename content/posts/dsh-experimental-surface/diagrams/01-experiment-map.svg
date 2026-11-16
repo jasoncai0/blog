@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="f06-01-title f06-01-desc">
+  <title id="f06-01-title">61 个实验包按七个功能域分组</title>
+  <desc id="f06-01-desc">九宫格列出桌面执行 5 个、浏览器 4 个、集成桥 14 个、会话与检索 13 个、语音与翻译 6 个、卡片与交互 5 个、客户端面板 7 个、工程配套 7 个，合计 61 个目录；底部说明 bundle 只做组合。</desc>
+  <defs>
+    <marker id="f06-01-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+  </defs>
+  <rect width="960" height="600" fill="#f5f5f5"/>
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" letter-spacing="2" fill="#bf4520">FIG 01 / EXPERIMENT SURFACE</text>
+  <text x="48" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="26" font-weight="600" fill="#2d3142">61 个目录，七个功能域</text>
+  <text x="48" y="104" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="13" fill="#5a6580">目录名以 -bundle 结尾的 9 个只做组合，不提供新能力</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui">
+    <rect x="48" y="126" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="66" y="158" font-size="15" font-weight="600" fill="#2d3142">桌面执行</text>
+    <text x="300" y="160" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">5</text>
+    <text x="66" y="186" font-size="10.5" fill="#5a6580">cua · cua-macos · cua-bundle</text>
+    <text x="66" y="204" font-size="10.5" fill="#5a6580">cua-driver-mcp · cua-driver-native</text>
+
+    <rect x="342" y="126" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="360" y="158" font-size="15" font-weight="600" fill="#2d3142">浏览器</text>
+    <text x="594" y="160" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">4</text>
+    <text x="360" y="186" font-size="10.5" fill="#5a6580">playwright · chrome-devtools</text>
+    <text x="360" y="204" font-size="10.5" fill="#5a6580">stagehand-native · runtime</text>
+
+    <rect x="636" y="126" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="654" y="158" font-size="15" font-weight="600" fill="#2d3142">集成桥</text>
+    <text x="888" y="160" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">14</text>
+    <text x="654" y="186" font-size="10.5" fill="#5a6580">hook-protocol · webhook · liveshare</text>
+    <text x="654" y="204" font-size="10.5" fill="#5a6580">inspector · plugin-market</text>
+
+    <rect x="48" y="246" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="66" y="278" font-size="15" font-weight="600" fill="#2d3142">会话与检索</text>
+    <text x="300" y="280" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">13</text>
+    <text x="66" y="306" font-size="10.5" fill="#5a6580">session-search · terminal · ralph</text>
+    <text x="66" y="324" font-size="10.5" fill="#5a6580">worktree · tool-session-query</text>
+
+    <rect x="342" y="246" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="360" y="278" font-size="15" font-weight="600" fill="#2d3142">语音与翻译</text>
+    <text x="594" y="280" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">6</text>
+    <text x="360" y="306" font-size="10.5" fill="#5a6580">speech-to-text · translator</text>
+    <text x="360" y="324" font-size="10.5" fill="#5a6580">voice-input · cot-translation</text>
+
+    <rect x="636" y="246" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="654" y="278" font-size="15" font-weight="600" fill="#2d3142">卡片与交互</text>
+    <text x="888" y="280" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">5</text>
+    <text x="654" y="306" font-size="10.5" fill="#5a6580">action-cards · skill-badge</text>
+    <text x="654" y="324" font-size="10.5" fill="#5a6580">client-ui-action-cards · auto-review</text>
+
+    <rect x="48" y="366" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="66" y="398" font-size="15" font-weight="600" fill="#2d3142">客户端面板</text>
+    <text x="300" y="400" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">7</text>
+    <text x="66" y="426" font-size="10.5" fill="#5a6580">stats · cot-translation · forge</text>
+    <text x="66" y="444" font-size="10.5" fill="#5a6580">voice-input · claude-code-mods</text>
+
+    <rect x="342" y="366" width="270" height="104" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+    <text x="360" y="398" font-size="15" font-weight="600" fill="#2d3142">工程配套</text>
+    <text x="594" y="400" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">7</text>
+    <text x="360" y="426" font-size="10.5" fill="#5a6580">forge-github · webworker-runtime</text>
+    <text x="360" y="444" font-size="10.5" fill="#5a6580">ptc-runtime-python · worktree</text>
+
+    <rect x="636" y="366" width="270" height="104" rx="6" fill="#ffffff" stroke="#bf4520"/>
+    <text x="654" y="398" font-size="15" font-weight="600" fill="#2d3142">合计</text>
+    <text x="888" y="400" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="28" font-weight="600" fill="#bf4520">61</text>
+    <text x="654" y="426" font-size="10.5" fill="#5a6580">全部进 release family</text>
+    <text x="654" y="444" font-size="10.5" fill="#5a6580">私有清单为空数组</text>
+  </g>
+
+  <rect x="48" y="500" width="858" height="56" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="66" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="12" fill="#2d3142">9 个 bundle 只做组合 · 7 个客户端面板没有 Host 服务 · 15 个可选 bundle 默认关闭</text>
+  <text x="66" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui" font-size="11" fill="#5a6580">对照 packages/experimental/AGENTS.md 与 official-bundles 的可选清单阅读</text>
+
+  <text x="48" y="584" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="10" fill="#5a6580">SOURCE packages/experimental/* · 61 dirs at fcc0ad46</text>
+</svg>

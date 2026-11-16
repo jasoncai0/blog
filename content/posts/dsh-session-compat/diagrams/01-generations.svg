@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f02-title f02-01-desc">
+<title id="f02-01-title">会话文件的代际：文件名先标识版本</title>
+<desc id="f02-01-desc">v0 到 v4 的规范文件名、每一代的主要变化，以及运行时如何选中最高的规范代际。</desc>
+<defs><marker id="f02-01-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6580"/></marker></defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<text x="48" y="50" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="19" font-weight="600" fill="#2d3142" text-anchor="start">五代同堂：文件名先标识版本</text>
+<text x="48" y="74" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="400" fill="#5a6580" text-anchor="start">同一个目录里可以并存 v0 到 v4，运行时取数值最大的规范名</text>
+<rect x="48" y="104" width="560" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<rect x="62" y="120" width="48" height="32" rx="6" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="86" y="141" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#bf4520" text-anchor="middle">v0</text>
+<text x="126" y="131" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#2d3142" text-anchor="start">session.jsonl</text>
+<text x="126" y="151" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">没有版本后缀。legacy 平铺文件，与旧目录约定重名。</text>
+<line x1="76" y1="168" x2="76" y2="178" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-01-arrow)"/>
+<rect x="48" y="180" width="560" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<rect x="62" y="196" width="48" height="32" rx="6" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="86" y="217" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#bf4520" text-anchor="middle">v1</text>
+<text x="126" y="207" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#2d3142" text-anchor="start">session.v1.jsonl</text>
+<text x="126" y="227" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">legacy 归一化：事件改名、删字段、翻译退休的结束原因。</text>
+<line x1="76" y1="244" x2="76" y2="254" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-01-arrow)"/>
+<rect x="48" y="256" width="560" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<rect x="62" y="272" width="48" height="32" rx="6" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="86" y="293" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#bf4520" text-anchor="middle">v2</text>
+<text x="126" y="283" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#2d3142" text-anchor="start">session.v2.jsonl</text>
+<text x="126" y="303" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">assistant/chunk 内嵌进 message，seq 重排为稠密序列。</text>
+<line x1="76" y1="320" x2="76" y2="330" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-01-arrow)"/>
+<rect x="48" y="332" width="560" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<rect x="62" y="348" width="48" height="32" rx="6" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="86" y="369" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#bf4520" text-anchor="middle">v3</text>
+<text x="126" y="359" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#2d3142" text-anchor="start">session.v3.jsonl</text>
+<text x="126" y="379" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">system prompt 提升为 system/message，信封规范化。</text>
+<line x1="76" y1="396" x2="76" y2="406" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f02-01-arrow)"/>
+<rect x="48" y="408" width="560" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<rect x="62" y="424" width="48" height="32" rx="6" fill="#fbe9e2" stroke="#e8c3b6"/>
+<text x="86" y="445" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#bf4520" text-anchor="middle">v4</text>
+<text x="126" y="435" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12.5" font-weight="600" fill="#2d3142" text-anchor="start">session.v4.jsonl</text>
+<text x="126" y="455" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">工具结果升为 tool role，补写有证据的 interrupted turn。</text>
+<rect x="640" y="104" width="272" height="226" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="660" y="130" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13.5" font-weight="600" fill="#2d3142" text-anchor="start">选择与校验</text>
+<circle cx="662" cy="152" r="2.2" fill="#bf4520"/>
+<text x="672" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">扫描目录只比较文件名里的数字，取最大者。</text>
+<circle cx="662" cy="179" r="2.2" fill="#bf4520"/>
+<text x="672" y="183" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">header.version 与文件名不一致时直接报错</text>
+<text x="672" y="198" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">，不猜。</text>
+<circle cx="662" cy="221" r="2.2" fill="#bf4520"/>
+<text x="672" y="225" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">.v0、前导零、大写、临时名都不算代际。</text>
+<circle cx="662" cy="248" r="2.2" fill="#bf4520"/>
+<text x="672" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">stat 与 list 只读 header，不读事件行。</text>
+<circle cx="662" cy="275" r="2.2" fill="#bf4520"/>
+<text x="672" y="279" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">迁移写后继文件，源文件保持逐字节不变。</text>
+<rect x="640" y="344" width="272" height="128" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="660" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="13.5" font-weight="600" fill="#2d3142" text-anchor="start">读多深，看哪一层</text>
+<text x="660" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">扫描目录：只比文件名</text>
+<text x="660" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">stat 与 list：读 header 换算版本</text>
+<text x="660" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.2" font-weight="400" fill="#5a6580" text-anchor="start">完整打开：读 body，再过四道闸</text>
+<text x="48" y="520" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="400" fill="#5a6580" text-anchor="start">压缩后缀（.zstd）跟在规范名后面，不构成新的代际。</text>
+<text x="48" y="550" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="400" fill="#bf4520" text-anchor="start">选代际只看名字；版本字段负责第二次确认，两者冲突就是损坏。</text>
+</svg>

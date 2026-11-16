@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f05-d3-title f05-d3-desc">
+  <title id="f05-d3-title">取消期间到达的唤醒如何被闩住</title>
+  <desc id="f05-d3-desc">取消已经落下之后再来的唤醒输入，不会被塞进正在中止的那次活动，而是记在 wakeRequested 上，等 kick 的 finally 把 phase 归到 idle 之后再开一轮。</desc>
+  <defs>
+    <marker id="f05-d3-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#5a6580"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">WAKE LATCH</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">晚到的输入挂在下一轮上</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">abort 已经触发，新输入就塞不进这次活动；它只改两个字段，等收尾时再开一次。</text>
+
+  <line x1="140" y1="196" x2="588" y2="196" stroke="#ececec" stroke-width="1"/>
+  <line x1="140" y1="258" x2="588" y2="258" stroke="#ececec" stroke-width="1"/>
+  <line x1="140" y1="320" x2="588" y2="320" stroke="#ececec" stroke-width="1"/>
+  <line x1="140" y1="382" x2="588" y2="382" stroke="#ececec" stroke-width="1"/>
+  <line x1="140" y1="444" x2="588" y2="444" stroke="#ececec" stroke-width="1"/>
+  <!-- row 1 -->
+  <line x1="48" y1="146" x2="48" y2="508" stroke="#e4e4e4" stroke-width="1"/>
+  <circle cx="48" cy="172" r="4" fill="#5a6580"/>
+  <text x="64" y="166" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">t1</text>
+  <text x="64" y="182" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">跑着</text>
+  <text x="150" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">turn 3 在跑，模型流还没有结束，phase.kind 是 running。</text>
+  <text x="150" y="184" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">phase.abort.signal.aborted === false</text>
+
+  <!-- row 2 -->
+  <circle cx="48" cy="234" r="4" fill="#bf4520"/>
+  <text x="64" y="228" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">t2</text>
+  <text x="64" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">取消</text>
+  <text x="150" y="228" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">cancel(user) 落下：先清 inbox 和 latch，再 abort 信号。</text>
+  <text x="150" y="246" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">inbox.clear() · phase.wakeRequested = false</text>
+
+  <!-- row 3 -->
+  <circle cx="48" cy="296" r="4" fill="#bf4520"/>
+  <text x="64" y="290" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">t3</text>
+  <text x="64" y="306" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">插话</text>
+  <text x="150" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">followup('继续') 到达，此时信号已经中止。</text>
+  <text x="150" y="308" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">wakingAfterAbort = wakeup &amp;&amp; phase.kind !== 'idle' &amp;&amp; signal.aborted</text>
+
+  <!-- row 4 -->
+  <circle cx="48" cy="358" r="4" fill="#bf4520"/>
+  <text x="64" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">t4</text>
+  <text x="64" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">改道</text>
+  <text x="150" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">写入位置从 next-step 改成 next-turn，需求挂在 wakeRequested 上。</text>
+  <text x="150" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">phase.wakeRequested = true</text>
+
+  <!-- row 5 -->
+  <circle cx="48" cy="420" r="4" fill="#bf4520"/>
+  <text x="64" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">t5</text>
+  <text x="64" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">收尾</text>
+  <text x="150" y="414" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">turn/end 写下 aborted，kick 的 finally 归 idle 并看到闩与待办。</text>
+  <text x="150" y="432" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">if (wakeRequested &amp;&amp; inbox.hasPending) this.wakeDriver()</text>
+
+  <!-- row 6 -->
+  <circle cx="48" cy="482" r="4" fill="#5a6580"/>
+  <text x="64" y="476" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">t6</text>
+  <text x="64" y="492" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">下一轮</text>
+  <text x="150" y="476" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">新活动开起来，那条消息作为 turn 4 的输入被 claim。</text>
+  <text x="150" y="494" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">turn 4 · inbox.claim('next-turn', 4)</text>
+
+  <!-- latch column -->
+  <text x="752" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#5a6580">WAKE REQUESTED</text>
+  <rect x="752" y="148" width="160" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="768" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">未置位</text>
+  <rect x="752" y="210" width="160" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="768" y="234" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">清零</text>
+  <rect x="752" y="272" width="160" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="768" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">仍未置位</text>
+  <rect x="752" y="334" width="160" height="40" rx="6" fill="#fdf6f3" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="768" y="358" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">置位</text>
+  <rect x="752" y="396" width="160" height="40" rx="6" fill="#fdf6f3" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="768" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">读取并排空</text>
+  <rect x="752" y="458" width="160" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="768" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">回到未置位</text>
+  <line x1="832" y1="188" x2="832" y2="206" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f05-d3-a)"/>
+  <line x1="832" y1="250" x2="832" y2="268" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f05-d3-a)"/>
+  <line x1="832" y1="312" x2="832" y2="330" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f05-d3-a)"/>
+  <line x1="832" y1="374" x2="832" y2="392" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f05-d3-a)"/>
+  <line x1="832" y1="436" x2="832" y2="454" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f05-d3-a)"/>
+
+  <text x="48" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">三个条件同时成立才会闩住：有 wakeup、phase 不在 idle、信号已中止。少一个，输入要么立刻开新活动，要么被丢掉。</text>
+  <text x="48" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">cause 是 disposed 时整条路径跳过，进程退出前不再拉起任何活动。</text>
+</svg>

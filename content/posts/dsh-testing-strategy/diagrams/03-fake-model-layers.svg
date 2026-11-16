@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f04-d3-title f04-d3-desc">
+  <title id="f04-d3-title">四种假模型的位置</title>
+  <desc id="f04-d3-desc">从直接构造 StreamChunk 到回放录制会话，四档假模型的保真度依次升高，成本也依次升高；选档标准是只假昂贵或非确定的边界。</desc>
+  <defs>
+    <marker id="f04-d3-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">FAKE MODEL TIERS</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">假模型有四档，位置决定它盖住哪一层</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">越往右假得越像真的，跑得越慢。默认选能盖住被测行为的最左一档。</text>
+
+  <!-- card 1 -->
+  <rect x="48" y="164" width="192" height="220" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="166" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="end">01</text>
+  <text x="64" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">直接构造 chunk</text>
+  <text x="64" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">StreamChunk[]</text>
+  <circle cx="70" cy="262" r="4" fill="#bf4520"/><circle cx="84" cy="262" r="4" fill="#e4e4e4"/><circle cx="98" cy="262" r="4" fill="#e4e4e4"/><circle cx="112" cy="262" r="4" fill="#e4e4e4"/><circle cx="126" cy="262" r="4" fill="#e4e4e4"/>
+  <line x1="64" y1="286" x2="224" y2="286" stroke="#e4e4e4" stroke-width="1"/>
+  <text x="64" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">假掉的是</text>
+  <text x="64" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">模型输出的字节序列</text>
+  <text x="64" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">用在</text>
+  <text x="64" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">step 内的流式行为</text>
+
+  <!-- card 2 -->
+  <rect x="268" y="164" width="192" height="220" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="386" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="end">02</text>
+  <text x="284" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">MockAdapter 子类</text>
+  <text x="284" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">extends LlmAdapter</text>
+  <circle cx="290" cy="262" r="4" fill="#bf4520"/><circle cx="304" cy="262" r="4" fill="#bf4520"/><circle cx="318" cy="262" r="4" fill="#e4e4e4"/><circle cx="332" cy="262" r="4" fill="#e4e4e4"/><circle cx="346" cy="262" r="4" fill="#e4e4e4"/>
+  <line x1="284" y1="286" x2="444" y2="286" stroke="#e4e4e4" stroke-width="1"/>
+  <text x="284" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">假掉的是</text>
+  <text x="284" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">adapter 这一层边界</text>
+  <text x="284" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">用在</text>
+  <text x="284" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">loop 与 session 组合</text>
+
+  <!-- card 3 -->
+  <rect x="488" y="164" width="192" height="220" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="606" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="end">03</text>
+  <text x="504" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">本地 SSE 服务</text>
+  <text x="504" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">llm-mock-server</text>
+  <circle cx="510" cy="262" r="4" fill="#bf4520"/><circle cx="524" cy="262" r="4" fill="#bf4520"/><circle cx="538" cy="262" r="4" fill="#bf4520"/><circle cx="552" cy="262" r="4" fill="#e4e4e4"/><circle cx="566" cy="262" r="4" fill="#e4e4e4"/>
+  <line x1="504" y1="286" x2="664" y2="286" stroke="#e4e4e4" stroke-width="1"/>
+  <text x="504" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">假掉的是</text>
+  <text x="504" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">HTTP 与 SSE 传输</text>
+  <text x="504" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">用在</text>
+  <text x="504" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">限流、坏 chunk、重试</text>
+
+  <!-- card 4 -->
+  <rect x="708" y="164" width="192" height="220" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="826" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="end">04</text>
+  <text x="724" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#2d3142">回放录制会话</text>
+  <text x="724" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">llm-replay</text>
+  <circle cx="730" cy="262" r="4" fill="#bf4520"/><circle cx="744" cy="262" r="4" fill="#bf4520"/><circle cx="758" cy="262" r="4" fill="#bf4520"/><circle cx="772" cy="262" r="4" fill="#bf4520"/><circle cx="786" cy="262" r="4" fill="#e4e4e4"/>
+  <line x1="724" y1="286" x2="884" y2="286" stroke="#e4e4e4" stroke-width="1"/>
+  <text x="724" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">假掉的是</text>
+  <text x="724" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">整个 provider</text>
+  <text x="724" y="350" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">用在</text>
+  <text x="724" y="368" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">端到端快照回归</text>
+
+  <!-- axis -->
+  <line x1="48" y1="418" x2="896" y2="418" stroke="#5a6580" stroke-width="1.2" marker-end="url(#f04-d3-a)"/>
+  <text x="48" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">便宜、快、易写</text>
+  <text x="900" y="440" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580" text-anchor="end">逼真、慢、能抓到传输层缺陷</text>
+
+  <!-- rule -->
+  <rect x="48" y="466" width="864" height="80" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="492" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">选档规则</text>
+  <text x="64" y="516" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142">只假昂贵或非确定的边界，边界下游的一切保持真实：会话存储、工具注册表、JSONL 落盘、投影。</text>
+  <text x="64" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">四档里只有第 02 档能既跑真 loop 又快，所以它承担了绝大多数 agent 行为测试。</text>
+
+  <text x="48" y="572" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同一份脚本，换档只改构造方式：chunk 数组 → adapter 子类 → HTTP 服务 → 录制回放。</text>
+</svg>

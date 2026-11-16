@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f05-d2-title f05-d2-desc">
+  <title id="f05-d2-title">滚动池与有序提交</title>
+  <desc id="f05-d2-desc">上限为二的滚动池里，A、B 同时起跑；A 结算后 C 补位，B 结算后 D 补位。D 虽然先结束，仍要等 C 提交后才能提交。</desc>
+  <defs>
+    <marker id="f05-d2-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="48" y="40" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">ROLLING POOL</text>
+  <text x="48" y="68" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="21" font-weight="600" fill="#2d3142">派发可以重叠，提交只能排队</text>
+  <text x="48" y="90" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#5a6580">槽位一空就补下一个调用；结果沿模型顺序逐个提交，遇到空槽就停。</text>
+
+  <rect x="48" y="112" width="76" height="22" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="86" y="127" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142" text-anchor="middle">上限 2</text>
+  <circle cx="152" cy="123" r="5" fill="#bf4520"/>
+  <text x="164" y="127" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">提交时刻</text>
+  <text x="238" y="127" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">色条长度表示执行耗时，不含排队</text>
+
+  <!-- guides -->
+  <line x1="470" y1="152" x2="470" y2="392" stroke="#e4e4e4" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="590" y1="152" x2="590" y2="392" stroke="#e4e4e4" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="470" y="148" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580" text-anchor="middle">A 结算</text>
+  <text x="590" y="148" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580" text-anchor="middle">B 结算</text>
+
+  <!-- lane A -->
+  <text x="48" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">call A</text>
+  <text x="48" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">parallel</text>
+  <rect x="200" y="172" width="270" height="36" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <circle cx="470" cy="190" r="5" fill="#bf4520"/>
+
+  <!-- lane B -->
+  <text x="48" y="240" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">call B</text>
+  <text x="48" y="254" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">parallel</text>
+  <rect x="200" y="226" width="390" height="36" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <circle cx="590" cy="244" r="5" fill="#bf4520"/>
+
+  <!-- lane C -->
+  <text x="48" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">call C</text>
+  <text x="48" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">parallel</text>
+  <rect x="470" y="280" width="210" height="36" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <circle cx="680" cy="298" r="5" fill="#bf4520"/>
+
+  <!-- lane D -->
+  <text x="48" y="348" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" fill="#2d3142">call D</text>
+  <text x="48" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">parallel</text>
+  <rect x="590" y="334" width="72" height="36" rx="6" fill="#ffffff" stroke="#bf4520"/>
+  <line x1="662" y1="352" x2="686" y2="352" stroke="#bf4520" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#f05-d2-a)"/>
+  <circle cx="700" cy="352" r="5" fill="#bf4520"/>
+  <text x="640" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">D 早就跑完，但游标卡在 C 上</text>
+
+  <!-- start bracket -->
+  <line x1="190" y1="172" x2="190" y2="262" stroke="#5a6580" stroke-width="1"/>
+  <line x1="190" y1="172" x2="198" y2="172" stroke="#5a6580" stroke-width="1"/>
+  <line x1="190" y1="262" x2="198" y2="262" stroke="#5a6580" stroke-width="1"/>
+  <text x="200" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">t=0 两个一起起跑，槽位占满</text>
+
+  <text x="478" y="272" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">A 一空，C 补位</text>
+  <text x="598" y="326" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">B 一空，D 补位</text>
+
+  <!-- commit order -->
+  <rect x="48" y="410" width="864" height="86" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="64" y="436" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#bf4520">COMMIT ORDER</text>
+  <text x="64" y="460" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">A → B → C → D。前三个各自结算时立即提交，D 要等 C 提交完才挤进来。</text>
+  <text x="64" y="478" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">这条顺序就是模型看到的结果顺序，也是 tool/result 写进日志的顺序。</text>
+
+  <text x="48" y="544" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">如果改成谁先完成谁先提交，D 会插到 C 前面，模型拿到的结果顺序就和自己给出的调用顺序对不上。</text>
+  <text x="48" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">慢调用挡住后面已完成的结果，是这套调度主动接受的代价。</text>
+</svg>

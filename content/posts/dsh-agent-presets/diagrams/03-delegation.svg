@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="f08-03-title f08-03-desc" font-family="PingFang SC, Hiragino Sans GB, Helvetica Neue, Arial, sans-serif">
+<title id="f08-03-title">委派时的 preset 继承与覆盖</title>
+<desc id="f08-03-desc">父会话的修订向下接到默认继承的子代理；显式指定按 id 重新解析；没有服务时回退宿主组合。覆盖只作用于子 scope。</desc>
+<defs>
+<marker id="f08-03-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/></marker>
+<marker id="f08-03-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/></marker>
+</defs>
+<rect width="960" height="600" fill="#f5f5f5"/>
+<circle cx="40" cy="40" r="4" fill="#bf4520"/>
+<text x="52" y="46" font-size="21" fill="#2d3142" text-anchor="start" font-weight="600">子代理的 preset：继承、指定、回退</text>
+<text x="52" y="72" font-size="13" fill="#5a6580" text-anchor="start" font-weight="400">三条来源加一层只作用于子 scope 的覆盖</text>
+<rect x="300" y="94" width="360" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="480" y="120" font-size="14" fill="#2d3142" text-anchor="middle" font-weight="600">父会话 Agent</text>
+<text x="480" y="142" font-size="11.5" fill="#5a6580" text-anchor="middle" font-weight="400">绑定 Generation #1（standard，修订 1）</text>
+<rect x="40" y="210" width="280" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="60" y="238" font-size="13.5" fill="#bf4520" text-anchor="start" font-weight="600">默认继承</text>
+<circle cx="64" cy="260" r="2.5" fill="#bf4520"/>
+<text x="76" y="264" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">composeFrom(childCtx, parent)</text>
+<circle cx="64" cy="282" r="2.5" fill="#bf4520"/>
+<text x="76" y="286" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">join 同一个 scope key</text>
+<circle cx="64" cy="304" r="2.5" fill="#bf4520"/>
+<text x="76" y="308" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">工具与 section 同修订</text>
+<line x1="480" y1="166" x2="180" y2="204" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f08-03-arrow)"/>
+<rect x="340" y="210" width="280" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="360" y="238" font-size="13.5" fill="#2d3142" text-anchor="start" font-weight="600">显式 agentPreset</text>
+<circle cx="364" cy="260" r="2.5" fill="#5a6580"/>
+<text x="376" y="264" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">mount(childCtx, id)</text>
+<circle cx="364" cy="282" r="2.5" fill="#5a6580"/>
+<text x="376" y="286" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">取该 id 的当前修订</text>
+<circle cx="364" cy="304" r="2.5" fill="#5a6580"/>
+<text x="376" y="308" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">需 allowedAgentPresets 放行</text>
+<line x1="480" y1="166" x2="480" y2="204" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f08-03-arrow)"/>
+<rect x="640" y="210" width="280" height="120" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="660" y="238" font-size="13.5" fill="#5a6580" text-anchor="start" font-weight="600">没有 preset 服务</text>
+<circle cx="664" cy="260" r="2.5" fill="#5a6580"/>
+<text x="676" y="264" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">回退宿主组合</text>
+<circle cx="664" cy="282" r="2.5" fill="#5a6580"/>
+<text x="676" y="286" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">不挂 preset 树</text>
+<circle cx="664" cy="304" r="2.5" fill="#5a6580"/>
+<text x="676" y="308" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">权限仍从子日志重放</text>
+<line x1="480" y1="166" x2="780" y2="204" stroke="#5a6580" stroke-width="1.4" marker-end="url(#f08-03-arrow)"/>
+<rect x="140" y="366" width="680" height="100" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="160" y="392" font-size="13" fill="#2d3142" text-anchor="start" font-weight="600">挂载后统一覆盖，只写子 scope</text>
+<rect x="160" y="406" width="196" height="28" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="258" y="425" font-size="11.5" fill="#2d3142" text-anchor="middle" font-weight="400">subagent:delegation 段落</text>
+<rect x="392" y="406" width="196" height="28" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="490" y="425" font-size="11.5" fill="#2d3142" text-anchor="middle" font-weight="400">tools.restrict 收窄</text>
+<rect x="624" y="406" width="196" height="28" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="722" y="425" font-size="11.5" fill="#2d3142" text-anchor="middle" font-weight="400">历史 persona section</text>
+<text x="160" y="454" font-size="11.5" fill="#2d3142" text-anchor="start" font-weight="400">权限策略不进 preset：delegated policy 从子会话日志重放。</text>
+<line x1="480" y1="330" x2="480" y2="362" stroke="#bf4520" stroke-width="1.4" marker-end="url(#f08-03-arrow-acc)"/>
+<rect x="40" y="490" width="420" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="60" y="516" font-size="13" fill="#2d3142" text-anchor="start" font-weight="600">fork（会话命令）</text>
+<text x="60" y="540" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">读源投影取 preset；seeded；header 只加 isSeeded 与 agentPreset。</text>
+<text x="60" y="558" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">模型用当前默认路由，不跟随源会话。</text>
+<rect x="500" y="490" width="420" height="82" rx="6" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+<text x="520" y="516" font-size="13" fill="#2d3142" text-anchor="start" font-weight="600">spawn（子代理工具）</text>
+<text x="520" y="540" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">header 写 parentSession、origin: subagent、delegationDepth；</text>
+<text x="520" y="558" font-size="11.5" fill="#5a6580" text-anchor="start" font-weight="400">可选 agentPreset 只对 spawn 生效。</text>
+</svg>
