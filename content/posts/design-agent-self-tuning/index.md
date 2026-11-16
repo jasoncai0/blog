@@ -29,7 +29,7 @@ slug: "design-agent-self-tuning"
 
 ## 二、七层：把 Agent 拆成能观测的层
 
-<figure><div class="diagram"><img src="diagrams/01-architecture.png" alt="一次请求的装配链路是：用户画布操作 → " style="width:100%;height:auto;display:block"></div><figcaption>一次请求的装配链路是：用户画布操作 → Agent Loop → Context 组装（读 Memory 与资产树）→ Skill / MCP → LLM Gateway → 画布与产物；产物提交给 Review Agent 巡检，巡检结果进指标与归因。上方是调优回流：指标与归因 → 调优器与灰度 → 策略版本库，生效时改的是 Context 的预算与 Skill 的描述。</figcaption></figure>
+<figure><div class="diagram"><img src="/posts/design-agent-self-tuning/diagrams/01-architecture.png" alt="自我调优设计 Agent 架构：五层主链路与调优回流" style="width:100%;height:auto;display:block"></div><figcaption>一次请求的装配链路是：用户画布操作 → Agent Loop → Context 组装（读 Memory 与资产树）→ Skill / MCP → LLM Gateway → 画布与产物；产物提交给 Review Agent 巡检，巡检结果进指标与归因。上方是调优回流：指标与归因 → 调优器与灰度 → 策略版本库，生效时改的是 Context 的预算与 Skill 的描述。</figcaption></figure>
 
 从下往上：
 
@@ -51,7 +51,7 @@ slug: "design-agent-self-tuning"
 
 ## 三、七步闭环：一轮改动怎么走
 
-<figure><div class="diagram"><img src="diagrams/02-loop.png" alt="一轮改动的时序。线上运行只产信号，归因与" style="width:100%;height:auto;display:block"></div><figcaption>一轮改动的时序。线上运行只产信号，归因与候选生成在离线侧完成，灰度发布是唯一能改线上行为的环节，回滚是它的逆操作。</figcaption></figure>
+<figure><div class="diagram"><img src="/posts/design-agent-self-tuning/diagrams/02-loop.png" alt="自我调优闭环：一轮改动的时序" style="width:100%;height:auto;display:block"></div><figcaption>一轮改动的时序。线上运行只产信号，归因与候选生成在离线侧完成，灰度发布是唯一能改线上行为的环节，回滚是它的逆操作。</figcaption></figure>
 
 1. **采集。** 每次任务落一条 trace，包含用户输入、检索到的资产、激活的 Skill、工具调用与结果、产物、用户后续动作。这一步复用现有调用日志，加字段就行，一天的工作量。
 
