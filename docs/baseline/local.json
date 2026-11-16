@@ -71,14 +71,41 @@
   "pre": 9,
   "table": 4
  },
- "coding-agent-pitfalls": {
-  "figure": 4,
+ "coding-agent-loop": {
+  "figure": 2,
   "h1": 1,
-  "h2": 13,
-  "h3": 12,
+  "h2": 3,
+  "h3": 4,
+  "hr": 1,
+  "pre": 4,
+  "table": 1
+ },
+ "coding-agent-pitfalls": {
+  "figure": 1,
+  "h1": 1,
+  "h2": 6,
+  "h3": 0,
   "hr": 0,
-  "pre": 15,
-  "table": 3
+  "pre": 0,
+  "table": 1
+ },
+ "coding-agent-sandbox": {
+  "figure": 1,
+  "h1": 1,
+  "h2": 3,
+  "h3": 4,
+  "hr": 1,
+  "pre": 10,
+  "table": 1
+ },
+ "coding-agent-sessions": {
+  "figure": 0,
+  "h1": 1,
+  "h2": 2,
+  "h3": 4,
+  "hr": 1,
+  "pre": 1,
+  "table": 0
  },
  "completion-claims": {
   "figure": 3,
