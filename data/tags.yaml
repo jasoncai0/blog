@@ -58,6 +58,9 @@ llm-training:
 inference:
   name: 推理
   description: 推理链路、显存、批处理与延迟成本
+rsi:
+  name: RSI
+  description: 递归自我改进、研发自动化与起飞速度
 
 lineage:
   name: 血缘
