@@ -303,6 +303,14 @@ ToolRegistryTest.java:[41,17] 找不到符号
 验证场景是真实 DeepSeek 生成 `src/Fixed.java`：第一次写文件弹 `FILE_WRITE`，选 `Allow for session`；第二次运行弹 `EXECUTE`，选 `Allow once`。两次审批都有 `.agent/permissions.jsonl` 审计记录，最终 stdout 为 `fixed-card-ok`，run 状态 `SUCCEEDED`。
 
 
+### 8.3 长会话历史：分页不是把旧事件重新播一遍
+
+资产系统那个 run 留下了 96 MB、12,786 条事件。最初服务启动时会读取每个 run 的全部 `events.jsonl`，浏览器选中后又从 `seq=0` 把事件全部重放，结果一个失败会话就能把页面拖死。改用 MySQL 存事件后，历史接口只返回最后 150 条 compact 事件：LLM body 只保留 2,000 字预览，工具参数和输出也设上限；完整请求体单独按 `seq` 取。
+
+分页本身又踩了一个状态回放的坑：点“加载更早事件”把旧的 `run.started`、`usage` 重放了一遍，页面上的 `FAILED` 会变回 `RUNNING`，token 也会跳回旧值。修法是在分页结束后重新应用当前 snapshot，只让历史事件生成 trace，不让它们改写运行状态。进度条也不该用 DOM 节点数，而要用已加载事件数；没有更早页时直接隐藏“加载更早事件”。
+
+验证：`run-2952644c` 首屏 `150 of 12,786 events loaded`，加载一页后变 `300 of 12,786`，状态保持 `FAILED`；MySQL 里 150 条 tail 约 64 ms，单条 130 KB 的完整 LLM body 约 54 ms。
+
 ## 9. 坑八：Trace 很有用，但别把 key 写进去
 
 模型请求体 trace 是排障利器。UI 里每次 `llm.request` 默认折叠，点开才显示完整 JSON：`model`、`temperature`、`messages`、`tools`、`tool_choice`。
