@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="690" viewBox="0 0 960 690" role="img" aria-labelledby="f04-title f04-desc">
+  <title id="f04-title">反思机制：无进展检查点与两层循环护栏</title>
+  <desc id="f04-desc">每个工具轮次结束后比较文件列表和验证状态；无进展计数达到 8 时注入反思检查点，模型调用 reflect 记录诊断、证据、尝试和下一步；达到 16 时停止。另有两层执行前护栏：同名同参数连续 4 次，或 run_command 形状在最近 10 次中出现 8 次。</desc>
+  <defs>
+    <marker id="f04-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="f04-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+    <marker id="f04-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f7d3a"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="690" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">JADE / REFLECTION</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="15" font-weight="600" fill="#2d3142">没有进展时，先让模型自证，再让框架止损</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">反思不是额外一次裁判调用；它是注入同一会话的结构化检查点，真正兜底的是确定性停止条件</text>
+
+  <!-- progress decision -->
+  <rect x="40" y="112" width="250" height="64" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="135" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">每个工具轮次结束</text>
+  <text x="56" y="153" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">比较 state.files() 与 verified</text>
+  <text x="56" y="167" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">只看“是否有新文件 / 新验证”</text>
+
+  <path d="M 290 144 L 330 144" stroke="#8a93a6" marker-end="url(#f04-a)"/>
+  <rect x="336" y="116" width="160" height="56" rx="28" fill="#fff8f5" stroke="#bf4520"/>
+  <text x="416" y="140" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520" text-anchor="middle">有进展？</text>
+  <text x="416" y="157" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6" text-anchor="middle">files changed / verified</text>
+
+  <path d="M 496 144 L 540 144" stroke="#4f7d3a" marker-end="url(#f04-g)"/>
+  <rect x="546" y="116" width="170" height="56" rx="6" fill="#f9faf7" stroke="#4f7d3a"/>
+  <text x="562" y="139" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f7d3a">reset n = 0</text>
+  <text x="562" y="157" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">有进展就不触发反思</text>
+
+  <path d="M 416 172 L 416 202" stroke="#bf4520" marker-end="url(#f04-r)"/>
+  <rect x="316" y="208" width="200" height="56" rx="6" fill="#fff8f5" stroke="#bf4520"/>
+  <text x="416" y="231" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520" text-anchor="middle">noProgressTurns++</text>
+  <text x="416" y="249" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75" text-anchor="middle">连续工具轮次计数</text>
+
+  <!-- thresholds -->
+  <path d="M 416 264 L 416 292" stroke="#8a93a6" marker-end="url(#f04-a)"/>
+  <rect x="286" y="298" width="260" height="72" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="302" y="320" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">n &lt; 8：继续正常循环</text>
+  <text x="302" y="340" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">不打断探索；计数每轮重算</text>
+  <text x="302" y="356" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">REFLECT_AFTER = 8</text>
+
+  <rect x="286" y="388" width="260" height="80" rx="6" fill="#fff8f5" stroke="#bf4520"/>
+  <text x="302" y="410" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">8 ≤ n &lt; 16：注入检查点</text>
+  <text x="302" y="429" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">同一 streak 只注入一次，不另起模型调用</text>
+  <text x="302" y="445" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">reflection.requested</text>
+  <text x="302" y="459" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">模型下一轮看到 REFLECTION CHECKPOINT</text>
+
+  <rect x="286" y="486" width="260" height="78" rx="6" fill="#2d3142" stroke="#2d3142"/>
+  <text x="302" y="510" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#ffffff">n ≥ 16：确定性停止</text>
+  <text x="302" y="529" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#d8d8d8">状态 LOOP_DETECTED，工作区/transcript 保留</text>
+  <text x="302" y="545" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#d8d8d8">STALL_AFTER = 16</text>
+  <text x="302" y="559" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#d8d8d8">loop.detected · reason=no_progress</text>
+
+  <!-- reflect card -->
+  <path d="M 546 424 L 584 424" stroke="#bf4520" marker-end="url(#f04-r)"/>
+  <rect x="590" y="298" width="330" height="266" rx="8" fill="#ffffff" stroke="#bf4520"/>
+  <text x="608" y="322" font-family="'SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">reflect · 结构化自证</text>
+  <text x="608" y="340" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6">工具不写工作区；不会自动改变控制流</text>
+
+  <rect x="608" y="354" width="294" height="126" rx="5" fill="#f9faf7" stroke="#d8d8d8"/>
+  <text x="622" y="374" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f7d3a">diagnosis</text>
+  <text x="696" y="374" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">当前阻塞是什么</text>
+  <text x="622" y="392" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f7d3a">evidence[]</text>
+  <text x="696" y="392" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">命令/文件里的具体证据</text>
+  <text x="622" y="410" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f7d3a">attempts[]</text>
+  <text x="696" y="410" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">已经试过什么</text>
+  <text x="622" y="428" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f7d3a">next_action</text>
+  <text x="696" y="428" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">一个能改变结果的下一步</text>
+  <text x="622" y="446" font-family="'SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f7d3a">should_stop</text>
+  <text x="696" y="446" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">true 表示需要用户输入</text>
+  <text x="622" y="466" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">→ .agent/reflections.jsonl · reflection.recorded</text>
+
+  <rect x="608" y="492" width="294" height="52" rx="5" fill="#fff8f5" stroke="#f0d3c6"/>
+  <text x="622" y="511" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">反思的价值在下一轮：模型带着诊断和 next_action 继续</text>
+  <text x="622" y="528" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#4f5d75">如果模型忽略检查点，16 轮的停止条件仍然生效</text>
+
+  <!-- hard guards band -->
+  <rect x="40" y="584" width="880" height="84" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="606" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">执行前护栏 · 先拒绝工具调用，再给模型 tool error</text>
+
+  <rect x="56" y="618" width="390" height="36" rx="4" fill="#fff8f5" stroke="#f0d3c6"/>
+  <text x="70" y="633" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">同一工具 + 完全相同参数连续 4 次</text>
+  <text x="70" y="647" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">repeats ≥ 4 → LOOP_DETECTED</text>
+
+  <rect x="462" y="618" width="442" height="36" rx="4" fill="#fff8f5" stroke="#f0d3c6"/>
+  <text x="476" y="633" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#bf4520">run_command 形状在最近 10 次中出现 8 次</text>
+  <text x="476" y="647" font-family="'SF Mono',ui-monospace,monospace" font-size="7" fill="#8a93a6">数字归一化为 #；javap/sed 只改行号也会被抓</text>
+
+  <text x="480" y="681" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#8a93a6" text-anchor="middle">三层防线各管一种失败：确定性重复、命令形状漂移、长时间无进展；不靠模型“自觉”终止</text>
+</svg>

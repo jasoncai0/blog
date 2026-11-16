@@ -72,13 +72,13 @@
   "table": 4
  },
  "coding-agent-pitfalls": {
-  "figure": 3,
+  "figure": 4,
   "h1": 1,
   "h2": 13,
-  "h3": 8,
+  "h3": 12,
   "hr": 0,
-  "pre": 13,
-  "table": 2
+  "pre": 15,
+  "table": 3
  },
  "completion-claims": {
   "figure": 3,
@@ -367,6 +367,15 @@
   "hr": 0,
   "pre": 0,
   "table": 3
+ },
+ "dsh-self-improvement": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 16,
+  "h3": 20,
+  "hr": 1,
+  "pre": 2,
+  "table": 7
  },
  "dsh-session-event-sourcing": {
   "figure": 4,

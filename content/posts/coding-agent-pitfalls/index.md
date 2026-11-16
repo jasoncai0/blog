@@ -17,7 +17,7 @@ slug: "coding-agent-pitfalls"
 
 真正花时间的，是下面这些判断：
 
-1. **`MAX_STEPS` 不是错误原因。** 它只说明循环在配置的轮次停了；工件可能已经跑通，也可能根本没编译过。默认已改为不限轮数，用 token 预算和重复调用护栏防止失控。
+1. **`MAX_STEPS` 不是错误原因。** 它只说明循环在显式配置的轮次停了；工件可能已经跑通，也可能根本没编译过。默认已改为不限轮数，用无进展反思、重复调用和命令形状护栏防止失控；token 预算只是可选的成本上限。
 2. **源码发现就是安全边界。** 把 Go SDK 下载进工作区后，验证器会把 SDK 里的 JavaScript 当成项目源码。
 3. **写沙箱不是容器。** Maven 的共享缓存、JVM 的临时目录、下载网络、本地端口，各自都是独立假设。
 4. **编译通过不等于运行通过，运行通过不等于测试通过。** 验证器只证明它实际执行过的那一步。
@@ -31,7 +31,7 @@ slug: "coding-agent-pitfalls"
 
 `INTAKE → CONTEXT → SKILLS → PLAN → MODEL → TOOLS → OBSERVE → VERIFY → COMPACT → CHECKPOINT`
 
-模型只负责提案：调用哪个工具、写什么文件、什么时候停。文件真的落盘，`javac` / `python3` / `node` / `go` 真的执行，输出再作为 tool message 回灌给模型。默认最多 10 个 turn。
+模型只负责提案：调用哪个工具、写什么文件、什么时候停。文件真的落盘，`javac` / `python3` / `node` / `go` 真的执行，输出再作为 tool message 回灌给模型。默认不限制 turn；连续 8 个工具轮次没有进展时注入反思检查点，16 轮停止。
 
 {{< fig "diagrams/01-architecture.svg" "Jade 的运行结构：Web/CLI 只观察；AgentService 管 run 生命周期；AgentLoop 管十阶段循环；工具和技能注册表提供能力；工作区与验证器负责把“说了”变成“做了”。" >}}
 
@@ -68,11 +68,77 @@ Operation not permitted
 
 `MAX_STEPS` 是“循环结束”，不是“代码失败”。
 
-**2026-11-16 更新：** 项目已移除默认轮次上限，`AGENT_MAX_STEPS=0` 表示不限制轮数；正数仍可作为显式上限。长任务改由两个护栏兜底：默认不设 token 预算（`AGENT_TOKEN_BUDGET=0`），需要成本上限的无人值守任务可显式设置；重复工具调用检测（同名同参数连续 4 次即停止）。终态相应增加 `BUDGET_EXCEEDED` 和 `LOOP_DETECTED`。`MAX_STEPS` 只在使用正数上限时出现。
+**2026-11-16 更新：** 项目已移除默认轮次上限，`AGENT_MAX_STEPS=0` 表示不限制轮数；正数仍可作为显式上限。默认不设 token 预算（`AGENT_TOKEN_BUDGET=0`），需要成本上限的无人值守任务可显式设置。终态增加 `BUDGET_EXCEEDED` 和 `LOOP_DETECTED`；`MAX_STEPS` 只在使用正数上限时出现。
 
 这个取舍和主流实现一致：Claude Agent SDK 的 `max_turns`、`max_budget_usd` 默认都是 `None`，agent loop 以“模型不再调用工具”为正常终点；DSH 默认 profile 里是 token-meter 与上下文压缩，硬预算由可选的 per-turn 插件提供，不是 base 的默认行为。总 token 预算适合无人值守/CI 的成本上限，不适合作为交互式长任务的默认刹车。
 
-取消预算后很快遇到反例：旧会话 `run-2952644c` 在一条追问里连续 15 分钟用 `javap ... | sed -n '60,80p'` 翻字节码，每次参数只改行号，四连重复检测抓不到；事件日志涨到 96 MB、641 步，最后 Jade 进程被系统 `SIGKILL`。补救不是把 token 预算加回来，而是增加“无进展”判据：**连续 20 个工具轮次既没有文件变化、也没有新的验证通过，就按 `LOOP_DETECTED` 停止**。这条护栏针对“读了很多、什么都没改”的探索循环，不限制正常长任务。
+取消预算后很快遇到反例：旧会话 `run-2952644c` 在一条追问里连续 15 分钟用 `javap ... | sed -n '60,80p'` 翻字节码，每次参数只改行号，四连重复检测抓不到；事件日志涨到 96 MB、641 步，最后 Jade 进程被系统 `SIGKILL`。补救不是把 token 预算加回来，而是把“循环”拆成三种不同的失败，分别加护栏：
+
+1. **完全相同**：同名工具、完全相同参数连续 4 次，执行前拒绝。
+2. **形状相同**：`run_command` 去掉数字差异后的命令形状，在最近 10 次里出现 8 次，执行前拒绝。`sed -n '60,80p'` 和 `sed -n '80,100p'` 属于同一种形状。
+3. **长时间无进展**：有工具调用，但既没有新增文件，也没有新的验证通过。连续 8 轮触发反思检查点，16 轮确定性停止。
+
+前两层是硬护栏；第三层先给模型一次结构化自证的机会，再决定是否止损。
+
+### 2.1 反思机制：无进展时先让模型自证
+
+反思不是另起一个“裁判模型”，也不是再跑一次任务摘要。它只做两件事：在同一个会话里注入一条结构化的 `REFLECTION CHECKPOINT`，以及提供一个不修改工作区的 `reflect` 工具，让模型把“为什么卡住”写成可检查的字段。
+
+触发判据很窄：
+
+```java
+boolean madeProgress = !state.files().equals(filesBefore)
+        || (!verifiedBefore && context.verified());
+```
+
+也就是说，只有**文件列表新增/删除**，或**上一次没通过、这一次通过了验证**，才算进展。读文件、跑失败的诊断命令、重复 `list_files` 都不算。这个判据故意保守：它不评价模型“有没有思考”，只评价工作区有没有变化。
+
+{{< fig "diagrams/04-reflection-loop.svg" "反思机制不是让模型自由发挥，而是三层确定性护栏：8 轮无进展注入检查点，16 轮停止；执行前还有同参数 4 连和同命令形状 8/10 两次拦截。reflect 工具只记录诊断、证据、尝试和下一步，不修改工作区。" >}}
+
+### 8 轮：把“别再重复”变成一条必须回答的提示
+
+连续 8 个工具轮次无进展时，`AgentLoop` 往对话里追加一条 user message，而不是调用另一个模型：
+
+```text
+REFLECTION CHECKPOINT
+You have made no workspace change and produced no new verification
+for 8 consecutive tool turns. ...
+Call the `reflect` tool now with:
+- diagnosis
+- evidence
+- attempts
+- next_action
+- should_stop
+```
+
+同一段连续无进展里只注入一次，避免每轮刷屏。模型下一轮会看到这条消息；如果它还有别的策略，应该在这里给出一个具体的 `next_action`，而不是继续换行号切同一个文件。
+
+`reflect` 工具是第 13 个内置工具，schema 要求五个字段：
+
+| 字段 | 用途 |
+|---|---|
+| `diagnosis` | 当前阻塞是什么 |
+| `evidence[]` | 命令/文件里的具体证据 |
+| `attempts[]` | 已经试过什么 |
+| `next_action` | 一个能改变结果的下一步 |
+| `should_stop` | 是否必须等用户输入 |
+
+它不修改工作区，也不需要权限审批；每次调用会追加 `.agent/reflections.jsonl`，并发 `reflection.recorded` 事件。UI 把 `reflection.requested` 和 `reflection.recorded` 都渲染成系统卡片，长会话里能直接看到模型在哪一轮开始绕圈、它自己怎么解释。
+
+但 `reflect` 本身**不算进展**。它只把下一步具体化；只有真正写文件或通过验证，`noProgressTurns` 才会清零。`should_stop=true` 也只是模型的自述，不会直接触发框架停止——真正的止损仍然是 16 轮的确定性条件。
+
+### 16 轮：反思无效就停
+
+如果 16 个连续工具轮次仍然没有文件变化和新验证，`AgentLoop` 设置 `LOOP_DETECTED`，错误信息明确写出“连续 16 轮无进展”，保存工作区和 transcript 后结束。它不是“模型觉得该停”，而是框架自己停。
+
+这层的价值不在于让模型变聪明，而在于把失败变成可解释的终态。以前是 641 步、96 MB events 后被系统 `SIGKILL`；现在是 16 轮、一个有 `reason=no_progress` 的 `loop.detected` 事件，工作区还能继续检查或追问。
+
+### 边界
+
+- 它检测的是“工具轮次无进展”，不是“回答质量差”。模型可能连续读 15 轮才形成正确判断；8 轮检查点会打断它，但不阻止它继续。
+- `madeProgress` 只看文件列表和验证状态，不比较文件内容。修改已有文件但尚未验证时，可能被算作无进展；这是有意的保守。
+- `reflect` 的质量取决于模型。框架只能保证“要求它自证”和“无效时停止”，不能保证诊断一定正确。
+- 命令形状归一化只处理 `run_command` 的数字差异；真正的语义循环仍靠无进展计数和 16 轮上限兜底。
 
 ## 3. 坑二：SDK 下载到工作区，验证器把 SDK 当项目
 
@@ -287,6 +353,8 @@ ToolRegistryTest.java:[41,17] 找不到符号
 
 验证用的是一段真实的 Java 会话：同一个 `run-c66e8593`，先让程序打印 `jade-v1`，追问改成 `jade-v2`，服务重启后再追问改成 `jade-v3`。三轮共用 `run-20261115-171012-47495a` 工作区，最终文件、transcript 和 73,139 tokens 的累计 usage 都对得上。后端集成测试也覆盖了“关闭服务 -> 恢复 -> 追问”的路径。
 
+这里还有一个反直觉的坑：为了支持连续会话，`run.finished` 不再关闭事件日志。服务端没问题，但一次性 CLI 仍然只等 `RunEventLog.closed()`，于是产物和最终回答都完成了，进程又挂了 9 分钟。`jstack` 停在 `RunEventLog.awaitAfter`。修法是 CLI 在“事件已消费完且当前快照已终止”时退出，同时保留服务端的日志生命周期。教训是：同一套事件流，长驻 Web 和一次性 CLI 需要两个不同的退出条件。
+
 ### 8.2 审批卡不能藏在滚动区里
 
 权限流程第一次联调时，后端状态已经是 `WAITING_APPROVAL`，`GET /api/runs/<id>/permissions` 也返回了 pending 请求，但浏览器里看不到任何批准按钮。现场很容易误判成 SSE 丢了事件。
@@ -351,6 +419,8 @@ ToolRegistryTest.java:[41,17] 找不到符号
 | 现象 | 先看 | 不要做 |
 |---|---|---|
 | `MAX_STEPS` | verification、events、工作区 | 直接判定代码失败 |
+| 反复读同一文件 | `reflection.requested`、`reflection.recorded`、命令形状 | 只把轮数调大 |
+| CLI 跑完不退出 | `run.finished`、终端快照、`RunEventLog.awaitAfter` | 直接 kill，误判成模型卡住 |
 | 语言选错 | SDK/依赖目录、扩展名统计 | 只看文件数量 |
 | Maven 失败 | `~/.m2` 权限、网络、tmp | 只加 turn 上限 |
 | 启动失败 | 端口、临时目录、bind 权限 | 只看编译日志 |
