@@ -68,7 +68,9 @@ Operation not permitted
 
 `MAX_STEPS` 是“循环结束”，不是“代码失败”。
 
-**2026-11-16 更新：** 项目已移除默认轮次上限，`AGENT_MAX_STEPS=0` 表示不限制轮数；正数仍可作为显式上限。长任务改由两个护栏兜底：累计 token 预算（默认 2,000,000）和重复工具调用检测（同名同参数连续 4 次即停止）。终态相应增加 `BUDGET_EXCEEDED` 和 `LOOP_DETECTED`。`MAX_STEPS` 只在使用正数上限时出现。
+**2026-11-16 更新：** 项目已移除默认轮次上限，`AGENT_MAX_STEPS=0` 表示不限制轮数；正数仍可作为显式上限。长任务改由两个护栏兜底：默认不设 token 预算（`AGENT_TOKEN_BUDGET=0`），需要成本上限的无人值守任务可显式设置；重复工具调用检测（同名同参数连续 4 次即停止）。终态相应增加 `BUDGET_EXCEEDED` 和 `LOOP_DETECTED`。`MAX_STEPS` 只在使用正数上限时出现。
+
+这个取舍和主流实现一致：Claude Agent SDK 的 `max_turns`、`max_budget_usd` 默认都是 `None`，agent loop 以“模型不再调用工具”为正常终点；DSH 默认 profile 里是 token-meter 与上下文压缩，硬预算由可选的 per-turn 插件提供，不是 base 的默认行为。总 token 预算适合无人值守/CI 的成本上限，不适合作为交互式长任务的默认刹车。
 
 ## 3. 坑二：SDK 下载到工作区，验证器把 SDK 当项目
 
