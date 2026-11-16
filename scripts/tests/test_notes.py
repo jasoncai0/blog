@@ -299,6 +299,106 @@ def test_note_whose_text_was_edited_is_marked_stale(page, base):
     assert "旧批注" in page.locator(".nt-input").input_value()
 
 
+TRANSLATE_JS = """(needle) => {
+  // 模拟沉浸式翻译：在原文段落最前面插一段译文（双语模式）
+  const body = document.querySelector('.post-body');
+  for (const block of body.children) {
+    if (!block.textContent.includes(needle)) continue;
+    if (block.querySelector('[data-immersive-translate-effect]')) return false;
+    const box = document.createElement('div');
+    box.className = 'immersive-translate-target-wrapper';
+    box.setAttribute('data-immersive-translate-effect', '1');
+    const p = document.createElement('p');
+    p.textContent = 'This is a translated paragraph that is much longer than the original text.';
+    box.appendChild(p);
+    block.insertBefore(box, block.firstChild);
+    return true;
+  }
+  return false;
+}"""
+
+
+def mark_texts(page):
+    return page.evaluate("() => [...document.querySelectorAll('mark.note-hl')].map(m => m.textContent)")
+
+
+def test_translation_insert_does_not_break_anchor_offsets(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "翻译插件在场")
+    page.reload()
+    page.wait_for_timeout(500)
+    before = page.locator("mark.note-hl").first.bounding_box()
+    assert page.evaluate(TRANSLATE_JS, "收敛是必要条件")
+    # 插件把包着高亮的节点换掉（真实插件重写文本时会这样），高亮必须按原文重画
+    page.evaluate("""() => {
+      const mark = document.querySelector('mark.note-hl');
+      const span = document.createElement('span');
+      span.textContent = mark.textContent;
+      mark.replaceWith(span);
+    }""")
+    page.wait_for_timeout(900)
+    texts = mark_texts(page)
+    assert texts == ["收敛是必要条件"], f"高亮应只包原文，实际 {texts!r}"
+    after = page.locator("mark.note-hl").first.bounding_box()
+    assert abs(after["x"] - before["x"]) < 2, "高亮应仍落在原文那句的起点，而不是被译文挤到别处"
+    page.locator("mark.note-hl").first.click()
+    page.wait_for_selector(".nt-pop", state="visible", timeout=5000)
+    assert "翻译插件在场" in page.locator(".nt-input").input_value()
+
+
+def test_highlights_opt_out_of_translation(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "别翻译我")
+    page.reload()
+    page.wait_for_timeout(500)
+    attrs = page.evaluate("""() => {
+      const m = document.querySelector('mark.note-hl');
+      return [m.getAttribute('translate'), m.classList.contains('notranslate')];
+    }""")
+    assert attrs == ["no", True], f"高亮片段应带 translate=no / notranslate，实际 {attrs!r}"
+
+
+def test_highlight_is_repainted_when_translation_replaces_it(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "被冲掉再画回来")
+    page.reload()
+    page.wait_for_timeout(500)
+    page.evaluate("""() => {
+      const mark = document.querySelector('mark.note-hl');
+      const span = document.createElement('span');
+      span.textContent = mark.textContent;
+      mark.replaceWith(span);
+    }""")
+    page.wait_for_timeout(900)
+    assert page.locator("mark.note-hl").count() >= 1, "高亮丢了应该自动重画"
+
+
+def test_selecting_translated_text_does_not_open_toolbar(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "原文批注")
+    page.reload()
+    page.wait_for_timeout(500)
+    assert page.evaluate(TRANSLATE_JS, "收敛是必要条件")
+    page.wait_for_timeout(400)
+    page.evaluate("""() => {
+      const box = document.querySelector('.immersive-translate-target-wrapper');
+      const text = box.querySelector('p').firstChild;
+      const range = document.createRange();
+      range.setStart(text, 0);
+      range.setEnd(text, 10);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.dispatchEvent(new Event('selectionchange'));
+    }""")
+    page.wait_for_timeout(400)
+    assert page.locator(".nt-actions").count() == 0, "译文里划词不该弹批注工具条"
+
+
 def test_export_produces_json(page, base):
     page.goto(base + ARTICLE)
     page.wait_for_timeout(300)
@@ -489,6 +589,10 @@ CASES = [
     (test_note_list_click_opens_thread_floors, False, DESKTOP),
     (test_note_relocates_when_paragraphs_shift, False, DESKTOP),
     (test_note_whose_text_was_edited_is_marked_stale, False, DESKTOP),
+    (test_translation_insert_does_not_break_anchor_offsets, False, DESKTOP),
+    (test_highlight_is_repainted_when_translation_replaces_it, False, DESKTOP),
+    (test_selecting_translated_text_does_not_open_toolbar, False, DESKTOP),
+    (test_highlights_opt_out_of_translation, False, DESKTOP),
     (test_export_produces_json, False, {**DESKTOP, "accept_downloads": True}),
     (test_home_marks_articles_with_notes, False, DESKTOP),
     (test_selection_spanning_inline_code_is_wrapped_in_parts, False, DESKTOP),

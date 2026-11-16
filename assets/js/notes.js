@@ -29,6 +29,20 @@ let openPop = null;
 
 const BLOCKED = new Set(["PRE", "SCRIPT", "STYLE", "SVG", "FIGCAPTION"]);
 
+// 沉浸式翻译之类的插件会把译文插进正文（双语模式），这些节点既不能当锚点，也不能包 mark。
+const IT_SELECTOR = [
+  "[data-immersive-translate-effect]",
+  ".immersive-translate-target-wrapper",
+  ".immersive-translate-translation-element",
+  ".immersive-translate-target-inner",
+  ".immersive-translate-loading",
+].join(",");
+
+function inTranslation(node) {
+  const el = node?.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+  return Boolean(el && el.closest && el.closest(IT_SELECTOR));
+}
+
 // SVG 里的 tagName 是小写的（svg/text/g），统一转大写再查，否则 SVG 守卫永远不命中。
 const tagOf = (node) => String(node.tagName || "").toUpperCase();
 
@@ -74,6 +88,7 @@ export function anchorOf(range, body) {
   const endBlock = blockOf(range.endContainer, body);
   if (!startBlock || startBlock !== endBlock) return null;
   if (skipped(range.startContainer)) return null;
+  if (inTranslation(range.startContainer) || inTranslation(range.endContainer)) return null;
   const q = range.toString();
   if (!q.trim()) return null;
   const before = textBefore(startBlock, range.startContainer, range.startOffset);
@@ -89,7 +104,7 @@ export function anchorOf(range, body) {
 export function locate(anchor, body) {
   const block = body.children[anchor.block];
   if (!block) return [];
-  const text = block.textContent;
+  const text = sourceText(block);
   const hits = [];
   let at = text.indexOf(anchor.q);
   while (at >= 0) {
@@ -124,8 +139,8 @@ function commonPrefix(a, b) {
 function locateEverywhere(anchor, body) {
   const candidates = [];
   for (const block of body.children) {
-    if (blockedInside(block)) continue;
-    const text = block.textContent;
+    if (blockedInside(block) || inTranslation(block)) continue;
+    const text = sourceText(block);
     let at = text.indexOf(anchor.q);
     while (at >= 0) {
       const score =
@@ -150,10 +165,18 @@ function textNodesOf(block) {
   let pos = 0;
   let node;
   while ((node = walker.nextNode())) {
+    if (inTranslation(node)) continue;
     out.push({ node, start: pos, end: pos + node.length });
     pos += node.length;
   }
   return out;
+}
+
+// 原文（去掉译文节点）拼出来的字符串；locate 与 wrapRange 都用它，偏移才不会错位。
+function sourceText(block) {
+  let text = "";
+  for (const item of textNodesOf(block)) text += item.node.nodeValue;
+  return text;
 }
 
 function wrapRange(block, start, end, id) {
@@ -169,8 +192,10 @@ function wrapRange(block, start, end, id) {
     if (from > 0) target = target.splitText(from);
     if (blockedInside(target.parentElement)) continue;
     const mark = document.createElement("mark");
-    mark.className = "note-hl";
+    mark.className = "note-hl notranslate";
     mark.dataset.note = id;
+    // 让翻译插件跳过高亮片段本身，否则它会把原文换成译文，高亮就再也对不回去。
+    mark.setAttribute("translate", "no");
     target.parentNode.insertBefore(mark, target);
     mark.appendChild(target);
     wrapped += 1;
@@ -375,6 +400,36 @@ function initNotes() {
   };
   paintAll();
 
+  // 翻译插件会在正文里插节点、拆文本；高亮被它冲掉时就重画一次（只在真的丢了的时候）。
+  let painting = false;
+  let repaintTimer = null;
+  const notesMissingMarks = () =>
+    notesFor(all, slug).some((note) => !body.querySelector(`mark.note-hl[data-note="${note.id}"]`));
+  const repaint = () => {
+    painting = true;
+    try {
+      paintAll();
+      renderList();
+    } finally {
+      setTimeout(() => {
+        painting = false;
+      }, 0);
+    }
+  };
+  const observer = new MutationObserver((records) => {
+    if (painting) return;
+    const touchedMarks = records.some((r) => r.target?.closest?.("mark.note-hl"));
+    const relevant = records.some(
+      (r) => !r.target?.closest?.(".nt-pop, .note-list, .nt-actions, .cal-grid"),
+    );
+    if (!relevant && !touchedMarks) return;
+    clearTimeout(repaintTimer);
+    repaintTimer = setTimeout(() => {
+      if (notesMissingMarks()) repaint();
+    }, 250);
+  });
+  observer.observe(body, { childList: true, subtree: true, characterData: true });
+
   // 本地先行，连上服务端后再合并（服务端更新的取服务端，本地独有的推上去）。
   pullNotes(slug)
     .then(({ notes, deleted }) => {
@@ -410,7 +465,8 @@ function initNotes() {
     closePop();
 
     pop = document.createElement("div");
-    pop.className = "nt-pop";
+    pop.className = "nt-pop notranslate";
+    pop.setAttribute("translate", "no");
 
     const head = document.createElement("div");
     head.className = "nt-head";
@@ -584,7 +640,8 @@ function initNotes() {
     if (!anchor) return;
 
     bar = document.createElement("div");
-    bar.className = "nt-actions";
+    bar.className = "nt-actions notranslate";
+    bar.setAttribute("translate", "no");
     const make = (action, label) => {
       const button = document.createElement("button");
       button.type = "button";
