@@ -72,6 +72,8 @@ Operation not permitted
 
 这个取舍和主流实现一致：Claude Agent SDK 的 `max_turns`、`max_budget_usd` 默认都是 `None`，agent loop 以“模型不再调用工具”为正常终点；DSH 默认 profile 里是 token-meter 与上下文压缩，硬预算由可选的 per-turn 插件提供，不是 base 的默认行为。总 token 预算适合无人值守/CI 的成本上限，不适合作为交互式长任务的默认刹车。
 
+取消预算后很快遇到反例：旧会话 `run-2952644c` 在一条追问里连续 15 分钟用 `javap ... | sed -n '60,80p'` 翻字节码，每次参数只改行号，四连重复检测抓不到；事件日志涨到 96 MB、641 步，最后 Jade 进程被系统 `SIGKILL`。补救不是把 token 预算加回来，而是增加“无进展”判据：**连续 20 个工具轮次既没有文件变化、也没有新的验证通过，就按 `LOOP_DETECTED` 停止**。这条护栏针对“读了很多、什么都没改”的探索循环，不限制正常长任务。
+
 ## 3. 坑二：SDK 下载到工作区，验证器把 SDK 当项目
 
 失败的 Go 任务里，模型没有找到系统 Go，于是把 Go 1.22.5 的 67,305,977 字节 tarball 下载到工作区：
