@@ -386,6 +386,15 @@
   "pre": 10,
   "table": 9
  },
+ "dsh-plan-mode": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 12,
+  "h3": 0,
+  "hr": 0,
+  "pre": 2,
+  "table": 6
+ },
  "dsh-ptc-runtime": {
   "figure": 4,
   "h1": 1,
