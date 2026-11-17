@@ -162,13 +162,13 @@
   "table": 9
  },
  "dsh-agent-team": {
-  "figure": 4,
+  "figure": 6,
   "h1": 1,
-  "h2": 16,
+  "h2": 17,
   "h3": 0,
   "hr": 0,
   "pre": 2,
-  "table": 4
+  "table": 5
  },
  "dsh-architecture-anatomy": {
   "figure": 4,
@@ -665,6 +665,15 @@
   "pre": 20,
   "table": 5
  },
+ "dsh-vs-jade-gap-analysis": {
+  "figure": 0,
+  "h1": 1,
+  "h2": 8,
+  "h3": 5,
+  "hr": 0,
+  "pre": 0,
+  "table": 1
+ },
  "dsh-web-and-browser": {
   "figure": 4,
   "h1": 1,
@@ -727,6 +736,15 @@
   "hr": 0,
   "pre": 1,
   "table": 0
+ },
+ "jade-p0-context-parallel-plan": {
+  "figure": 0,
+  "h1": 1,
+  "h2": 8,
+  "h3": 11,
+  "hr": 0,
+  "pre": 6,
+  "table": 1
  },
  "kv-cache-anatomy": {
   "figure": 11,

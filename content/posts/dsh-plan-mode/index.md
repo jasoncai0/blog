@@ -181,6 +181,8 @@ when: ({ agent }) => this.selectedActive(agent.session) || this.planState(agent.
 
 判断方法：缺「该不该现在动手」用 plan mode；缺「拆没拆清楚、做到哪」用 `todo_write`。两个都缺就都用，它们不互斥。
 
+再加一层：需要并行、或需要盲评时才会用到 team。三者的判据与作用域，见 [Team 那篇](/posts/dsh-agent-team.html) 第 11 节。
+
 ## 10. 踩坑点
 
 1. 把 plan mode 当权限控制。它只改提示词，限制在沙箱与审批。
