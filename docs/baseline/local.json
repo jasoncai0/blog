@@ -116,6 +116,15 @@
   "pre": 8,
   "table": 2
  },
+ "design-agent-eval-system": {
+  "figure": 8,
+  "h1": 1,
+  "h2": 18,
+  "h3": 0,
+  "hr": 0,
+  "pre": 2,
+  "table": 15
+ },
  "design-agent-memory": {
   "figure": 10,
   "h1": 1,
