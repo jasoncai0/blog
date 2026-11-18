@@ -300,6 +300,12 @@ class Store:
         ).fetchone()
         return dict(row) if row else None
 
+    def latest_job(self, note_id: str) -> dict | None:
+        row = self.conn.execute(
+            "SELECT * FROM jobs WHERE note_id=? ORDER BY created DESC LIMIT 1", (note_id,)
+        ).fetchone()
+        return dict(row) if row else None
+
     def pending_jobs(self) -> list[dict]:
         rows = self.conn.execute(
             "SELECT * FROM jobs WHERE status='pending' ORDER BY created LIMIT 50"
@@ -663,7 +669,7 @@ class Handler(BaseHTTPRequestHandler):
                         "t": row["t"],
                         "thread": json.loads(row["thread"]),
                         "updated": row["updated"],
-                        "job": job_summary(active) if (active := self.store.active_job(row["id"])) else None,
+                        "job": job_summary(latest) if (latest := self.store.latest_job(row["id"])) else None,
                     }
                     for row in self.store.notes_for(slug)
                 ]

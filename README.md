@@ -51,6 +51,25 @@ hugo server              # http://localhost:1313
 hugo --minify --cleanDestinationDir   # 只出产物到 public/
 ```
 
+## 批注唤醒会话（实验）
+
+文章可以用 `{{< source-session >}}` 之类的方式带上来源会话（见 `layouts/partials/source-session.html`），把 slug 与会话 id 写进服务端 `sessions` 表：
+
+```bash
+curl -X PUT https://jasoncai.site/api/sessions/ot-crdt-lww \
+  -H 'X-Edit-Key: <口令>' -H 'Content-Type: application/json' \
+  -d '{"session_id":"<dsh session id>","workspace":"default-workspace"}'
+```
+
+之后在页面某句上写批注，**带问号或含「为什么 / 怎么 / 是不是」**会自动入队；其余只存不回，气泡里点「让 AI 回答」手动入队。
+
+- 队列在服务端：`jobs` 表，`pending → running → done | blocked`，`attempts` 上限 3。
+- Mac 上的 `notes-bridge`（launchd 常驻）通过 SSE 长连接接活，用 `dsh --profile headless --session-id <id>` 续跑原会话，把最后一段回答作为 AI 楼层 POST 回 `/replies`。
+- 页面不开新标签：`EventSource` 订阅 `note.updated`，新楼层一到就插进气泡。
+- 密钥不放 plist：`~/.dsh/notes-bridge.env`（600），进程启动时自己读；缺 `DEEPSEEK_API_KEY` 时 job 会 blocked 并显示原因。
+
+排障：`tail -f ~/Library/Logs/notes-bridge.log`；服务器 `journalctl -u notesd -f`；队列 `curl -s https://jasoncai.site/api/jobs?status=pending`。
+
 ## 发布
 
 ```bash

@@ -25,6 +25,22 @@ import time
 import urllib.error
 import urllib.request
 
+def _load_env_file(path: str = "~/.dsh/notes-bridge.env") -> None:
+    """launchd 里没有 shell，密钥放 600 的文件里，进程自己读。"""
+    full = os.path.expanduser(path)
+    if not os.path.exists(full):
+        return
+    with open(full, encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+_load_env_file()
+
 API = os.environ.get("NOTES_API", "http://127.0.0.1:8099/api").rstrip("/")
 BRIDGE_TOKEN = os.environ.get("BRIDGE_TOKEN", "").strip()
 EDIT_KEY = os.environ.get("NOTES_EDIT_KEY", "").strip()
@@ -92,7 +108,6 @@ def run_session(prompt: str, session_id: str, timeout: int = 600) -> str:
         session_id,
         "--approval-policy",
         "never",
-        "--print",
         prompt,
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
@@ -100,7 +115,10 @@ def run_session(prompt: str, session_id: str, timeout: int = 600) -> str:
     if "session.lock" in err or "locked" in err.lower():
         raise RuntimeError("locked")
     if proc.returncode != 0:
-        raise RuntimeError(err[-500:] or f"exit {proc.returncode}")
+        # stderr 前半是 MCP 之类的噪声，真正的失败原因在 `dsh: ...` 那行。
+        lines = [ln.strip() for ln in err.splitlines() if ln.strip()]
+        reason = next((ln for ln in reversed(lines) if ln.startswith("dsh:")), "")
+        raise RuntimeError(reason.removeprefix("dsh: ").strip() or (lines[-1] if lines else f"exit {proc.returncode}"))
     return parse_reply(proc.stdout)
 
 
@@ -168,7 +186,7 @@ def subscribe() -> None:
     )
     while True:
         try:
-            with urllib.request.urlopen(req, timeout=0) as resp:
+            with urllib.request.urlopen(req, timeout=3600) as resp:
                 for raw in resp:
                     line = raw.decode("utf-8", "replace").strip()
                     if line.startswith("event:"):
