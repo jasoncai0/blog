@@ -123,10 +123,13 @@ function syncProgress() {
       const local = parseStore(safeGet() || "");
       const merged = mergeProgress(local, data.progress);
       safeSet(serializeStore(merged));
-      // 只把「本地更新」的进度推回去；服务端本来就有的条目不用回环一遍。
-      for (const [slug, entry] of Object.entries(merged)) {
-        const cur = local[slug];
-        if (cur && (cur.p > (entry.p || 0) || (cur.d && !entry.d))) queueProgress(slug, cur);
+      // 把「服务端没有、或本地更高」的进度推回去。
+      // 老读者的进度只存在浏览器里（同步功能上线之前读的），这里一并补传，
+      // 否则那些篇目会一直显示「未读」。
+      const remote = data.progress || {};
+      for (const [slug, cur] of Object.entries(local)) {
+        const srv = remote[slug];
+        if (!srv || (cur.p || 0) > (srv.p || 0) || (cur.d && !srv.d)) queueProgress(slug, cur);
       }
       return merged;
     })

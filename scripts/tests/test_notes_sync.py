@@ -221,6 +221,25 @@ def test_home_shows_server_side_marks(page, base):
         other.close()
 
 
+def test_local_only_progress_is_uploaded_from_home(context, base):
+    """老数据只在浏览器里（服务端没有）时，打开首页就应该补传上去。"""
+    slug = "agent-vs-computer"
+    before = api("/progress")["progress"]
+    assert slug not in before, "这个用例要求服务端一开始没有这篇的进度"
+    context.add_init_script(
+        f"window.__NOTES_API__ = {json.dumps(API)};"
+        "localStorage.setItem('jasoncai:read:v1', JSON.stringify({"
+        f'"{slug}": {{"p": 77, "t": Date.now(), "d": false}}'
+        "}));"
+    )
+    page = context.new_page()
+    page.goto(base + "/")
+    wait_until(lambda: slug in api("/progress")["progress"], timeout=8.0)
+    stored = api("/progress")["progress"][slug]
+    assert stored["p"] == 77, f"服务端应补上本地那 77%，实际 {stored}"
+
+
+
 def test_offline_write_is_queued_and_flushed_later(page, base):
     page.route("**/api/**", lambda route: route.abort())
     page.goto(base + ARTICLE)
@@ -393,6 +412,7 @@ CASES = [
     (test_deleted_note_does_not_come_back, False, DESKTOP),
     (test_progress_from_server_resumes_on_a_new_device, False, DESKTOP),
     (test_home_shows_server_side_marks, False, DESKTOP),
+    (test_local_only_progress_is_uploaded_from_home, True, DESKTOP),
     (test_offline_write_is_queued_and_flushed_later, False, DESKTOP),
     (test_progress_arriving_after_load_still_resumes, False, DESKTOP),
     (test_all_local_notes_upload_from_any_page, True, DESKTOP),

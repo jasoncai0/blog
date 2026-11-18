@@ -102,6 +102,7 @@ python3 server/import_notes.py notes-<slug>.json --dry-run                # 先�
 - 本地键 `jasoncai:read:v1`，同时同步到 `server/notesd.py`（`/api/progress`）；换设备、清缓存都能接上。
 - 首页顶部可按「读取状态」过滤：`全部 / 读过 / 未读完 / 未读`。读过 = `p ≥ 95` 或 `d`，未读完 = `0 < p < 95`，未读 = 没有记录。按钮上的数字是当前篇数；状态写进 URL（`?read=done|reading|unread`），刷新和分享都保持，没有 JS 时显示全部。
 - 进度**只增不减**：服务端 `PUT` 取 `max(p)`、`d` 只增不减；客户端落盘同样取最大值。180 天时效只影响「要不要展示」，不会让一条 100% 的记录在下次重读时被清掉。
+- 同步功能上线前读过的篇目只存在浏览器里。打开任意页面时会把「服务端没有、或本地更高」的进度补传上去，不用逐篇重新打开。
 - 想清空：控制台执行 `localStorage.removeItem('jasoncai:read:v1')`；服务端数据要清就删 `/var/lib/notesd/notes.db` 里的 `progress` 表。
 - 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有进度与过滤。
 - 内部实现见 `docs/superpowers/specs/2026-11-10-reading-progress-design.md`。
