@@ -126,6 +126,16 @@ python3 server/import_notes.py notes-<slug>.json --dry-run                # 先�
 - 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有进度与过滤。
 - 内部实现见 `docs/superpowers/specs/2026-11-10-reading-progress-design.md`。
 
+## 段落折叠
+
+文章页每个 `h2` 前有个小三角，点一下把这一节（到下一个 `h2` 之前的所有内容，含 `h3`）收起来；再点展开。默认全展开，状态按文章存在本机 `localStorage["jasoncai:fold:v1"]`（`{slug: [headingId]}`）。
+
+- 带 `#锚点` 进来、或点左侧目录跳到被折叠的节，会自动展开那一节。
+- 折叠只改 `hidden`，不搬 DOM，所以批注的段落下标、阅读进度的位置都不受影响。
+- 没有 JS 时没有三角、正文全展开。
+
+校验：`hugo --minify && python3 scripts/tests/test_fold.py`（7 例）。
+
 ## 侧栏
 
 首页左栏是写作日历和标签云，文章页左栏是目录；窄屏（<900px）时它们堆到正文上方。

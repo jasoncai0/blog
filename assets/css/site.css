@@ -685,3 +685,20 @@ mark.note-hl:focus { outline: 2px solid rgba(191, 69, 32, 0.35); outline-offset:
 .nt-key-title { margin: 0 0 4px; font-size: 14px; font-weight: 600; }
 .nt-key-hint { margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .nt-key-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+
+/* 段落折叠：h2 前面的小三角 */
+.post-body h2 { position: relative; }
+.fold-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; margin: 0 8px 0 -26px; padding: 0;
+  vertical-align: middle; border: 0; border-radius: 4px;
+  background: none; color: var(--soft); opacity: .45; cursor: pointer;
+  transition: opacity .15s, transform .15s;
+}
+.post-body h2:hover .fold-toggle, .fold-toggle:focus-visible { opacity: 1; }
+.post-body h2.is-folded { margin-bottom: 8px; }
+.post-body h2.is-folded .fold-toggle { transform: rotate(-90deg); opacity: 1; color: var(--accent); }
+.fold-toggle:hover { background: rgba(45, 49, 66, .07); }
+@media (max-width: 900px) {
+  .fold-toggle { margin-left: -22px; opacity: .6; }
+}

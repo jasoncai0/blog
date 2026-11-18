@@ -199,11 +199,93 @@ function initTocSpy() {
   update();
 }
 
+const FOLD_KEY = "jasoncai:fold:v1";
+
+function initFold() {
+  const body = document.querySelector(".post-body");
+  if (!body) return;
+  const slug = body.dataset.progressPost || location.pathname;
+  const heads = [...body.querySelectorAll("h2[id]")];
+  if (heads.length < 2) return;
+
+  const readAll = () => {
+    try {
+      return JSON.parse(localStorage.getItem(FOLD_KEY) || "{}") || {};
+    } catch {
+      return {};
+    }
+  };
+  const writeAll = (all) => {
+    try {
+      localStorage.setItem(FOLD_KEY, JSON.stringify(all));
+    } catch {
+      /* 存不了就只在本次生效 */
+    }
+  };
+  const storedIds = () => new Set(Array.isArray(readAll()[slug]) ? readAll()[slug] : []);
+
+  const sections = heads.map((h) => {
+    const nodes = [];
+    for (let n = h.nextElementSibling; n && n.tagName !== "H2"; n = n.nextElementSibling) nodes.push(n);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "fold-toggle";
+    btn.setAttribute("aria-expanded", "true");
+    btn.setAttribute("aria-label", "折叠本节");
+    btn.innerHTML =
+      '<svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    h.prepend(btn);
+    return { h, nodes, btn };
+  });
+
+  const apply = (sec, folded, persist = true) => {
+    sec.nodes.forEach((n) => (folded ? n.setAttribute("hidden", "") : n.removeAttribute("hidden")));
+    sec.h.classList.toggle("is-folded", folded);
+    sec.btn.setAttribute("aria-expanded", String(!folded));
+    sec.btn.setAttribute("aria-label", folded ? "展开本节" : "折叠本节");
+    if (!persist) return;
+    const ids = storedIds();
+    if (folded) ids.add(sec.h.id);
+    else ids.delete(sec.h.id);
+    const all = readAll();
+    if (ids.size) all[slug] = [...ids];
+    else delete all[slug];
+    writeAll(all);
+  };
+
+  sections.forEach((sec) => {
+    if (storedIds().has(sec.h.id)) apply(sec, true, false);
+    sec.btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      apply(sec, !sec.h.classList.contains("is-folded"));
+    });
+  });
+
+  const reveal = (rawId) => {
+    let id = rawId;
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      /* 保持原样 */
+    }
+    const sec = sections.find((s) => s.h.id === id);
+    if (sec && sec.h.classList.contains("is-folded")) apply(sec, false);
+    return !!sec;
+  };
+
+  document.querySelectorAll('nav.toc a[href^="#"]').forEach((a) => {
+    a.addEventListener("click", () => reveal(a.getAttribute("href").slice(1)));
+  });
+  if (location.hash) reveal(location.hash.slice(1));
+  window.addEventListener("hashchange", () => reveal(location.hash.slice(1)));
+}
+
 export function boot() {
   initCalendar();
   initDayClick();
   initToc();
   initTocSpy();
+  initFold();
 }
 
 if (document.readyState === "loading") {
