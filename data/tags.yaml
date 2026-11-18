@@ -69,3 +69,7 @@ lineage:
 sandbox:
   name: 沙箱
   description: 进程沙箱、权限隔离与内核强制
+
+github-trending:
+  name: GitHub 趋势
+  description: 每周 GitHub Trending 榜单的分类汇总与项目分析
