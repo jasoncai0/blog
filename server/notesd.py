@@ -35,6 +35,8 @@ from urllib.parse import unquote, urlparse
 MAX_BODY = 64 * 1024
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,79}$")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{5,63}$")
+SESSION_RE = re.compile(r"^[0-9a-zA-Z][0-9a-zA-Z-]{7,63}$")
+WS_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
 MAX_THREAD = 50
 MAX_THREAD_TEXT = 4000
 MAX_Q = 400
@@ -67,6 +69,13 @@ CREATE TABLE IF NOT EXISTS progress (
   p    INTEGER NOT NULL,
   t    INTEGER NOT NULL,
   d    INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS sessions (
+  slug       TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  workspace  TEXT NOT NULL DEFAULT '',
+  title      TEXT NOT NULL DEFAULT '',
+  updated    INTEGER NOT NULL DEFAULT 0
 );
 """
 
@@ -209,6 +218,21 @@ class Store:
             )
             self.conn.commit()
             return {"p": best_p, "t": best_t, "d": bool(best_d)}
+
+
+    def upsert_session(self, slug: str, session_id: str, workspace: str, title: str) -> dict:
+        with self._lock, self.conn:
+            self.conn.execute(
+                "INSERT INTO sessions(slug, session_id, workspace, title, updated) VALUES(?,?,?,?,?) "
+                "ON CONFLICT(slug) DO UPDATE SET session_id=excluded.session_id, "
+                "workspace=excluded.workspace, title=excluded.title, updated=excluded.updated",
+                (slug, session_id, workspace, title, now()),
+            )
+        return self.session_for(slug) or {}
+
+    def session_for(self, slug: str) -> dict | None:
+        row = self.conn.execute("SELECT * FROM sessions WHERE slug=?", (slug,)).fetchone()
+        return dict(row) if row else None
 
 
 class Limiter:
@@ -389,6 +413,34 @@ class Handler(BaseHTTPRequestHandler):
                 p = max(0, min(100, int(p)))
                 result = self.store.put_progress(slug, p, int(t), bool(body.get("d")))
                 self.send_json(HTTPStatus.OK, {"ok": True, **result})
+                return
+            self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
+            return
+
+        if parts[0] == "sessions" and len(parts) == 2:
+            slug = parts[1]
+            if not SLUG_RE.match(slug):
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
+                return
+            if self.command == "GET":
+                self.send_json(HTTPStatus.OK, {"session": self.store.session_for(slug)})
+                return
+            if self.command == "PUT":
+                body = self.read_json()
+                if body is None:
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad json"})
+                    return
+                sid = body.get("session_id") or ""
+                if not SESSION_RE.match(str(sid)):
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad session id"})
+                    return
+                ws = str(body.get("workspace") or "")
+                if ws and not WS_RE.match(ws):
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad workspace"})
+                    return
+                title = clean_text(body.get("title"), 120)
+                session = self.store.upsert_session(slug, str(sid), ws, title)
+                self.send_json(HTTPStatus.OK, {"ok": True, "session": session})
                 return
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
             return

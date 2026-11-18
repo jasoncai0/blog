@@ -148,6 +148,27 @@ class NotesdTest(unittest.TestCase):
                               {"author": "AI", "text": "hi"})
         self.assertEqual(status, 404)
 
+    def test_session_round_trip(self):
+        status, _ = self.call("PUT", "/api/sessions/ot-crdt-lww", {
+            "session_id": "0f3a1c2d-1234-4abc-9def-001122334455",
+            "workspace": "default-workspace",
+            "title": "OT/CRDT 那篇",
+        })
+        self.assertEqual(status, 200)
+        status, body = self.call("GET", "/api/sessions/ot-crdt-lww")
+        self.assertEqual(status, 200)
+        self.assertEqual(body["session"]["session_id"], "0f3a1c2d-1234-4abc-9def-001122334455")
+        self.assertEqual(body["session"]["workspace"], "default-workspace")
+
+    def test_session_rejects_bad_id(self):
+        status, _ = self.call("PUT", "/api/sessions/ot-crdt-lww", {"session_id": "../../etc/passwd"})
+        self.assertEqual(status, 400)
+
+    def test_session_missing_returns_null(self):
+        status, body = self.call("GET", "/api/sessions/nope-never")
+        self.assertEqual(status, 200)
+        self.assertIsNone(body["session"])
+
     def test_reply_rejects_empty_text(self):
         self.call("PUT", "/api/notes/thread-test/thr-0002", self.note("thr-0002"))
         status, _ = self.call("POST", "/api/notes/thread-test/thr-0002/replies", {"author": "AI", "text": "   "})

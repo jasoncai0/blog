@@ -7,6 +7,7 @@
 <p class="back"><a href="{{ "/" | relURL }}">← 返回首页</a></p>
 <h1>{{ .Title }}</h1>
 <p class="post-meta">{{ .Date.Format "2006-01-02" }}</p>
+{{ partial "source-session.html" . }}
 {{ partial "tag-chips.html" . }}
 <div class="post-body" data-progress-post="{{ .File.ContentBaseName }}">
 {{ .Content }}

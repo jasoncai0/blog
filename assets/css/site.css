@@ -369,6 +369,8 @@ figcaption {
 }
 
 /* ---- tag chips / post meta / Hugo TOC ---- */
+.src-session { margin: 2px 0 0; font-size: 11px; font-family: var(--mono); color: var(--soft); }
+.src-session code { font-size: 11px; background: none; padding: 0; }
 .post-meta {
   margin: 0 0 10px;
   font-family: var(--mono);

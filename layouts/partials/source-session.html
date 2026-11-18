@@ -1,0 +1,3 @@
+{{- with .Params.source_session -}}
+<p class="src-session">来自会话 <code>{{ printf "%.8s" (string .) }}…</code></p>
+{{- end -}}
