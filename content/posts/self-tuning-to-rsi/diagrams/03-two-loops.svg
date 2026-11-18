@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="800" viewBox="0 0 1360 800" role="img" aria-label="内环策略调优与外环元改进">
+
+<defs>
+  <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+    <circle cx="1.4" cy="1.4" r="1.3" fill="#dfe4ec"/>
+  </pattern>
+  <filter id="soft" x="-8%" y="-12%" width="116%" height="132%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3.2" flood-color="#1b2440" flood-opacity="0.10"/>
+  </filter>
+  <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#7c8798"/>
+  </marker>
+  <marker id="arrow-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#10b981"/>
+  </marker>
+  <marker id="arrow-purple" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#8b5cf6"/>
+  </marker>
+  <marker id="arrow-pink" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#e11d48"/>
+  </marker>
+  <marker id="arrow-dark" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#2d3748"/>
+  </marker>
+</defs>
+
+<rect width="1360" height="800" fill="#f7f8fa"/><rect width="1360" height="800" fill="url(#dots)" opacity="0.75"/><text x="40.0" y="46.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.18em">TWO LOOPS · 内环与外环</text><text x="40.0" y="78.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="600" fill="#1f2937" text-anchor="start">内环改策略，外环改内环的零件</text><text x="40.0" y="100.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="400" fill="#8b95a6" text-anchor="start">上一篇只有内环；外环是新增的，它改评估器、归因器、空间与任务分布，必须过人 gate</text>
+<rect x="40" y="136" width="620" height="250" rx="12" fill="#ffffff" stroke="#34d399" stroke-width="1.2" stroke-dasharray="6 4" opacity="0.95"/><text x="56.0" y="156.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="600" fill="#64748b" text-anchor="start" letter-spacing="0.10em">内环 · 策略调优｜动作空间 = 参数 / 片段 / Skill / 工具</text>
+<rect x="64" y="186" width="160" height="58" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="76.0" y="211.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">采集 trace</text>
+<text x="76.0" y="228.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">信号</text>
+<line x1="226" y1="215" x2="256" y2="215" stroke="#2d3748" stroke-width="1.2"  marker-end="url(#arrow-dark)"/>
+<rect x="260" y="186" width="160" height="58" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="272.0" y="211.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">判分</text>
+<text x="272.0" y="228.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">分数</text>
+<line x1="422" y1="215" x2="452" y2="215" stroke="#2d3748" stroke-width="1.2"  marker-end="url(#arrow-dark)"/>
+<rect x="456" y="186" width="160" height="58" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="468.0" y="211.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">归因</text>
+<text x="468.0" y="228.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">六类</text>
+<rect x="64" y="282" width="160" height="58" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="76.0" y="307.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">候选</text>
+<text x="76.0" y="324.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">diff</text>
+<line x1="226" y1="311" x2="256" y2="311" stroke="#2d3748" stroke-width="1.2"  marker-end="url(#arrow-dark)"/>
+<rect x="260" y="282" width="160" height="58" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="272.0" y="307.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">回放</text>
+<text x="272.0" y="324.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">三集</text>
+<line x1="422" y1="311" x2="452" y2="311" stroke="#2d3748" stroke-width="1.2"  marker-end="url(#arrow-dark)"/>
+<rect x="456" y="282" width="160" height="58" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="468.0" y="307.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">灰度</text>
+<text x="468.0" y="324.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">闸门</text>
+<path d="M536,246 V266 H144 V280" fill="none" stroke="#2d3748" stroke-width="1.2"  marker-end="url(#arrow-dark)"/>
+<rect x="700" y="136" width="620" height="250" rx="12" fill="#ffffff" stroke="#a78bfa" stroke-width="1.2" stroke-dasharray="6 4" opacity="0.95"/><text x="716.0" y="156.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="600" fill="#64748b" text-anchor="start" letter-spacing="0.10em">外环 · 元改进｜改的是内环的零件</text>
+<rect x="724" y="186" width="272" height="58" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="738.0" y="210.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">改评估器</text>
+<text x="738.0" y="227.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">锚点 / 探针 / 版本</text>
+<rect x="1020" y="186" width="272" height="58" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="1034.0" y="210.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">改归因器</text>
+<text x="1034.0" y="227.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">规则 → 可学习</text>
+<rect x="724" y="282" width="272" height="58" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="738.0" y="306.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">改空间</text>
+<text x="738.0" y="323.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">新增能力单元</text>
+<rect x="1020" y="282" width="272" height="58" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="1034.0" y="306.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="600" fill="#1f2937" text-anchor="start">改任务</text>
+<text x="1034.0" y="323.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="400" fill="#8b95a6" text-anchor="start">失败驱动合成</text>
+<rect x="360" y="440" width="470" height="92" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="380.0" y="474.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">改进器 · Meta-Optimizer</text>
+<text x="380.0" y="494.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#8b95a6" text-anchor="start">唯一同时看见两个环的东西：读内环的失败，提外环的改动</text>
+<text x="380.0" y="512.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="600" fill="#b91c1c" text-anchor="start">也是整个系统里最该被约束的东西</text>
+<rect x="900" y="440" width="420" height="92" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="920.0" y="474.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">人 gate</text>
+<text x="920.0" y="494.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#8b95a6" text-anchor="start">批准 / 否决 / 加约束；只对外环动作生效</text>
+<text x="920.0" y="512.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#8b95a6" text-anchor="start">内环的常规参数变更仍走灰度，不走这里</text>
+<path d="M616,311 H636 V368 H56 V215 H60" fill="none" stroke="#2d3748" stroke-width="1.2"  marker-end="url(#arrow-dark)"/>
+<text x="566.0" y="358.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="500" fill="#64748b" text-anchor="start">下一轮</text>
+<path d="M470,388 V410 Q470,418 478,418 H512 Q520,418 520,426 V436" fill="none" stroke="#8b5cf6" stroke-width="1.6"  marker-end="url(#arrow-purple)"/>
+<text x="486.0" y="404.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="500" fill="#7c3aed" text-anchor="start">失败样本 + 归因</text>
+<line x1="832" y1="486" x2="892" y2="486" stroke="#8b5cf6" stroke-width="1.6"  marker-end="url(#arrow-purple)"/>
+<text x="862.0" y="478.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="500" fill="#7c3aed" text-anchor="middle">提议</text>
+<path d="M1010,438 V392" fill="none" stroke="#8b5cf6" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow-purple)"/>
+<text x="1020.0" y="416.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="500" fill="#7c3aed" text-anchor="start">批准后生效</text>
+<line x1="698" y1="200" x2="664" y2="200" stroke="#0d9488" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow-green)"/>
+<text x="616.0" y="178.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.8" font-weight="500" fill="#0d9488" text-anchor="end">外环批准后装回</text>
+<rect x="40" y="570" width="1280" height="96" rx="12" fill="#ffffff" stroke="#c3cbd8" stroke-width="1.2" stroke-dasharray="6 4" opacity="0.95"/><text x="56.0" y="590.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="600" fill="#64748b" text-anchor="start" letter-spacing="0.10em">不可自改 · 刹车的四颗螺丝</text>
+<rect x="64" y="598" width="286" height="52" rx="8" fill="#f8fafc" stroke="#c3cbd8" stroke-width="1"/>
+<text x="78.0" y="620.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.2" font-weight="600" fill="#1f2937" text-anchor="start">评估锚点集</text>
+<text x="78.0" y="638.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.2" font-weight="400" fill="#8b95a6" text-anchor="start">改了就失去参照</text>
+<rect x="368" y="598" width="286" height="52" rx="8" fill="#f8fafc" stroke="#c3cbd8" stroke-width="1"/>
+<text x="382.0" y="620.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.2" font-weight="600" fill="#1f2937" text-anchor="start">预算与权限</text>
+<text x="382.0" y="638.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.2" font-weight="400" fill="#8b95a6" text-anchor="start">物理边界，不是目标</text>
+<rect x="672" y="598" width="286" height="52" rx="8" fill="#f8fafc" stroke="#c3cbd8" stroke-width="1"/>
+<text x="686.0" y="620.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.2" font-weight="600" fill="#1f2937" text-anchor="start">kill switch</text>
+<text x="686.0" y="638.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.2" font-weight="400" fill="#8b95a6" text-anchor="start">60 秒回默认快照</text>
+<rect x="976" y="598" width="286" height="52" rx="8" fill="#f8fafc" stroke="#c3cbd8" stroke-width="1"/>
+<text x="990.0" y="620.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.2" font-weight="600" fill="#1f2937" text-anchor="start">审计日志</text>
+<text x="990.0" y="638.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.2" font-weight="400" fill="#8b95a6" text-anchor="start">不可变，不可删</text>
+<line x1="40" y1="700" x2="1320" y2="700" stroke="#d9dee7" stroke-width="0.8"/><text x="40.0" y="717.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.16em">图例</text><rect x="100" y="709" width="11" height="11" rx="3" fill="#f0fdf7" stroke="#34d399" stroke-width="1"/><text x="117.0" y="718.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">内环（已有）</text><rect x="194.0" y="709" width="11" height="11" rx="3" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1"/><text x="211.0" y="718.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">外环（新增）</text><rect x="288.0" y="709" width="11" height="11" rx="3" fill="#fffbeb" stroke="#fbbf24" stroke-width="1"/><text x="305.0" y="718.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">人 gate</text>
+<text x="40.0" y="756.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="400" fill="#7c8798" text-anchor="start">外环不是把内环自动化得更彻底，而是给内环增加「改零件」的能力。</text>
+</svg>

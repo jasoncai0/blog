@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="780" viewBox="0 0 1360 780" role="img" aria-label="β 与代际时间平面上的现状与演进路径">
+
+<defs>
+  <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+    <circle cx="1.4" cy="1.4" r="1.3" fill="#dfe4ec"/>
+  </pattern>
+  <filter id="soft" x="-8%" y="-12%" width="116%" height="132%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3.2" flood-color="#1b2440" flood-opacity="0.10"/>
+  </filter>
+  <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#7c8798"/>
+  </marker>
+  <marker id="arrow-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#10b981"/>
+  </marker>
+  <marker id="arrow-purple" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#8b5cf6"/>
+  </marker>
+  <marker id="arrow-pink" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#e11d48"/>
+  </marker>
+  <marker id="arrow-dark" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#2d3748"/>
+  </marker>
+</defs>
+
+<rect width="1360" height="780" fill="#f7f8fa"/><rect width="1360" height="780" fill="url(#dots)" opacity="0.75"/><text x="40.0" y="46.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.18em">BETA × T · 两条边的收益不一样</text><text x="40.0" y="78.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="600" fill="#1f2937" text-anchor="start">先抬 β，再缩 T</text><text x="40.0" y="100.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="400" fill="#8b95a6" text-anchor="start">T 减半只让曲线快一倍；β 过 1 才换形状。横轴对数刻度，纵轴线性</text>
+<rect x="210" y="176.0" width="670" height="154.66666666666663" fill="#ecfdf5" opacity="0.85"/>
+<text x="224.0" y="318.7" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="600" fill="#047857" text-anchor="start">β &gt; 1：形状变化区</text>
+<line x1="210" y1="640.0" x2="880" y2="640.0" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="198.0" y="643.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="end">0.2</text>
+<line x1="210" y1="562.7" x2="880" y2="562.7" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="198.0" y="565.7" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="end">0.4</text>
+<line x1="210" y1="485.3" x2="880" y2="485.3" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="198.0" y="488.3" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="end">0.6</text>
+<line x1="210" y1="408.0" x2="880" y2="408.0" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="198.0" y="411.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="end">0.8</text>
+<line x1="210" y1="330.7" x2="880" y2="330.7" stroke="#10b981" stroke-width="1" />
+<text x="198.0" y="333.7" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#047857" text-anchor="end">1.0</text>
+<line x1="210" y1="253.3" x2="880" y2="253.3" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="198.0" y="256.3" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="end">1.2</text>
+<line x1="210" y1="176.0" x2="880" y2="176.0" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="198.0" y="179.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="end">1.4</text>
+<line x1="210.0" y1="176" x2="210.0" y2="640" stroke="#d9dee7" stroke-width="0.8" stroke-dasharray="3 5"/>
+<text x="210.0" y="658.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="middle">30d</text>
+<line x1="360.1" y1="176" x2="360.1" y2="640" stroke="#d9dee7" stroke-width="0.8" stroke-dasharray="3 5"/>
+<text x="360.1" y="658.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="middle">14d</text>
+<line x1="496.7" y1="176" x2="496.7" y2="640" stroke="#d9dee7" stroke-width="0.8" stroke-dasharray="3 5"/>
+<text x="496.7" y="658.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="middle">7d</text>
+<line x1="663.6" y1="176" x2="663.6" y2="640" stroke="#d9dee7" stroke-width="0.8" stroke-dasharray="3 5"/>
+<text x="663.6" y="658.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="middle">3d</text>
+<line x1="880.0" y1="176" x2="880.0" y2="640" stroke="#d9dee7" stroke-width="0.8" stroke-dasharray="3 5"/>
+<text x="880.0" y="658.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="500" fill="#64748b" text-anchor="middle">1d</text>
+<line x1="210" y1="640" x2="880" y2="640" stroke="#94a3b8" stroke-width="1.2"/>
+<line x1="210" y1="176" x2="210" y2="640" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="545.0" y="684.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="500" fill="#4b5563" text-anchor="middle">代际时间 T（天，对数刻度）</text>
+<g transform="translate(152,408.0) rotate(-90)"><text x="0.0" y="0.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="500" fill="#4b5563" text-anchor="middle">改进弹性 β</text></g>
+<circle cx="360.1" cy="485.3" r="7" fill="#1f2937"/>
+<circle cx="360.1" cy="485.3" r="13" fill="none" stroke="#1f2937" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text x="378.1" y="489.3" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="600" fill="#1f2937" text-anchor="start">现状：T≈14 天，β&lt;1</text>
+<text x="378.1" y="505.3" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.4" font-weight="400" fill="#8b95a6" text-anchor="start">参数级弱闭环</text>
+<path d="M360.1,469.3 V362.0" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-purple)"/>
+<path d="M360.1,336.0 V284.7" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-purple)"/>
+<path d="M346.1,272.7 H577.0" fill="none" stroke="#0d9488" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-green)"/>
+<rect x="314.1" y="342.0" width="92" height="17" rx="8" fill="#f5f3ff" stroke="#ddd6fe"/>
+<text x="360.1" y="354.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.2" font-weight="600" fill="#7c3aed" text-anchor="middle">M2 扩空间</text>
+<rect x="314.1" y="264.7" width="92" height="17" rx="8" fill="#f5f3ff" stroke="#ddd6fe"/>
+<text x="360.1" y="276.7" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.2" font-weight="600" fill="#7c3aed" text-anchor="middle">M3 自生成任务</text>
+<rect x="920" y="176" width="400" height="66" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.1"/>
+<text x="938.0" y="202.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11" font-weight="600" fill="#1f2937" text-anchor="start">T 减半</text>
+<text x="938.0" y="221.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#6b7280" text-anchor="start">曲线快一倍，形状不变</text>
+<rect x="920" y="254" width="400" height="66" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.1"/>
+<text x="938.0" y="280.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11" font-weight="600" fill="#1f2937" text-anchor="start">β 过 1</text>
+<text x="938.0" y="299.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#6b7280" text-anchor="start">翻倍时间固定，增长换形状</text>
+<rect x="920" y="332" width="400" height="66" rx="10" fill="#fff5f6" stroke="#fb7185" stroke-width="1.1"/>
+<text x="938.0" y="358.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11" font-weight="600" fill="#1f2937" text-anchor="start">M1 修闭合点</text>
+<text x="938.0" y="377.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#6b7280" text-anchor="start">让 β 这个量可信，位置不动</text>
+<text x="920.0" y="428.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="600" fill="#1f2937" text-anchor="start">为什么顺序是 M1→M2→M3→M4</text>
+<text x="920.0" y="448.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#8b95a6" text-anchor="start">闭合点不独立时，β 量的是裁判的偏好，不是能力。</text>
+<text x="920.0" y="466.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#8b95a6" text-anchor="start">先修量具，再改空间，最后买速度。</text>
+<line x1="40" y1="690" x2="1320" y2="690" stroke="#d9dee7" stroke-width="0.8"/><text x="40.0" y="707.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.16em">图例</text><rect x="100" y="699" width="11" height="11" rx="3" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1"/><text x="117.0" y="708.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">扩空间（抬 β）</text><rect x="203.35" y="699" width="11" height="11" rx="3" fill="#f0fdf7" stroke="#34d399" stroke-width="1"/><text x="220.3" y="708.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">缩周期（乘速度）</text><rect x="314.35" y="699" width="11" height="11" rx="3" fill="#fff5f6" stroke="#fb7185" stroke-width="1"/><text x="331.4" y="708.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">修量具</text>
+<text x="40.0" y="748.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="400" fill="#7c8798" text-anchor="start">箭头位置是方向示意，不是拟合值；β 与 T 目前都只能间接推断。</text>
+</svg>

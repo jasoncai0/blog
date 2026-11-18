@@ -998,6 +998,15 @@
   "pre": 0,
   "table": 3
  },
+ "self-tuning-to-rsi": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 9,
+  "h3": 11,
+  "hr": 0,
+  "pre": 0,
+  "table": 2
+ },
  "vector-engine-milvus-es-pg": {
   "figure": 4,
   "h1": 1,
