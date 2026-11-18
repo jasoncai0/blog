@@ -43,9 +43,13 @@ class BridgeTest(unittest.TestCase):
 
         def post(method, path, body=None, timeout=20):
             calls.append((method, path, body))
+            if method == "GET" and path.startswith("/sessions/"):
+                return 200, {"session": {"workspace": "demo-ws"}}
             return 200, {"ok": True}
 
-        ok = notes_bridge.claim_and_run(job, runner=lambda prompt, sid: "结论：不需要", post=post)
+        ok = notes_bridge.claim_and_run(
+            job, runner=lambda prompt, sid, cwd=None: "结论：不需要", post=post
+        )
         self.assertTrue(ok)
         paths = [c[1] for c in calls]
         self.assertEqual(paths[0], "/jobs/job-1/claim")
@@ -63,7 +67,7 @@ class BridgeTest(unittest.TestCase):
             calls.append((method, path, body))
             return 200, {"ok": True}
 
-        def boom(prompt, sid):
+        def boom(prompt, sid, cwd=None):
             raise RuntimeError("session.lock held")
 
         ok = notes_bridge.claim_and_run(
@@ -81,7 +85,7 @@ class BridgeTest(unittest.TestCase):
 
         ok = notes_bridge.claim_and_run(
             {"id": "j", "slug": "s", "note_id": "n", "session_id": "x", "note": {}},
-            runner=lambda p, s: "never", post=post,
+            runner=lambda p, s, cwd=None: "never", post=post,
         )
         self.assertFalse(ok)
 

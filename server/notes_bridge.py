@@ -99,7 +99,16 @@ def parse_reply(stdout: str) -> str:
     return last
 
 
-def run_session(prompt: str, session_id: str, timeout: int = 600) -> str:
+def workspace_dir(workspace: str) -> str:
+    """会话记的是工作区，dsh 要求 cwd 与它一致，否则拒绝 resume。"""
+    if not workspace:
+        return os.path.expanduser("~")
+    if workspace.startswith("/"):
+        return workspace
+    return os.path.expanduser(f"~/Documents/deepseek-harness/{workspace}")
+
+
+def run_session(prompt: str, session_id: str, cwd: str | None = None, timeout: int = 600) -> str:
     cmd = [
         DSH_BIN,
         "--profile",
@@ -110,7 +119,9 @@ def run_session(prompt: str, session_id: str, timeout: int = 600) -> str:
         "never",
         prompt,
     ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    proc = subprocess.run(
+        cmd, capture_output=True, text=True, timeout=timeout, cwd=cwd or os.path.expanduser("~")
+    )
     err = (proc.stderr or "").strip()
     if "session.lock" in err or "locked" in err.lower():
         raise RuntimeError("locked")
@@ -146,7 +157,9 @@ def claim_and_run(job: dict, runner=run_session, post=_request) -> bool:
     if status != 200:
         return False
     try:
-        text = runner(build_prompt(job), job["session_id"])
+        status, body = post("GET", f"/sessions/{job['slug']}")
+        workspace = (body.get("session") or {}).get("workspace") if status == 200 else ""
+        text = runner(build_prompt(job), job["session_id"], cwd=workspace_dir(workspace or ""))
         if not text.strip():
             raise RuntimeError("empty reply")
         status, _ = post(
