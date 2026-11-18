@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="b1t b1d">
+  <title id="b1t">博客批注到会话回复的整体拓扑</title>
+  <desc id="b1d">浏览器与服务器之间走 HTTPS 与 SSE；服务器上的 nginx 把 /api 反代给 notesd，notesd 读写 SQLite；Mac 上的 notes-bridge 主动向 notesd 开一条 SSE 长连接，收到任务后调用 dsh headless 恢复原会话，再把回复 POST 回 notesd。</desc>
+  <defs>
+    <marker id="b1a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="b1ao" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+    <marker id="b1as" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto"><polygon points="8 0, 0 3, 8 6" fill="#4f5d75"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">BROWSER ⇄ NOTESD ⇄ BRIDGE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">两台机器，三个进程，一条出站长连接</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">服务器不知道 Mac 在哪，所以由 Mac 主动连上来；连接建好之后，服务器可以顺着它随时往回推</text>
+
+  <rect x="32" y="130" width="170" height="330" rx="10" fill="none" stroke="rgba(45,49,66,0.16)" stroke-dasharray="5 5"/>
+  <text x="44" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#5a6580">读者</text>
+
+  <rect x="48" y="200" width="138" height="92" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="117" y="228" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">浏览器</text>
+  <text x="117" y="248" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">文章页 + 批注面板</text>
+  <text x="117" y="266" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">读公开 / 写要口令</text>
+
+  <rect x="48" y="330" width="138" height="66" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+  <text x="117" y="352" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#4f5d75">SSE 订阅</text>
+  <text x="117" y="370" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">新楼层到达即插入</text>
+
+  <rect x="232" y="130" width="360" height="390" rx="10" fill="#efefef" stroke="rgba(45,49,66,0.16)"/>
+  <text x="244" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">62.234.122.22 · 腾讯云</text>
+
+  <rect x="252" y="170" width="150" height="52" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="327" y="192" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">nginx</text>
+  <text x="327" y="209" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">80 / 443</text>
+
+  <rect x="422" y="170" width="150" height="52" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+  <text x="497" y="192" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#4f5d75">/var/www/blog</text>
+  <text x="497" y="209" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">Hugo 产物</text>
+
+  <rect x="252" y="300" width="150" height="70" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="327" y="324" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">notesd</text>
+  <text x="327" y="342" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">127.0.0.1:8099</text>
+  <text x="327" y="358" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">笔记 · 进度 · 任务</text>
+
+  <rect x="422" y="300" width="150" height="70" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+  <text x="497" y="324" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#4f5d75">SQLite</text>
+  <text x="497" y="342" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">notes / progress</text>
+  <text x="497" y="358" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">sessions / jobs</text>
+
+  <rect x="622" y="130" width="306" height="390" rx="10" fill="none" stroke="rgba(45,49,66,0.16)" stroke-dasharray="5 5"/>
+  <text x="634" y="150" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.1em" fill="#5a6580">你的 Mac · 必须开机</text>
+
+  <rect x="642" y="186" width="266" height="70" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="775" y="210" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">notes-bridge</text>
+  <text x="775" y="228" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">launchd 常驻 · 单并发</text>
+  <text x="775" y="244" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">重连 1s→30s · 先补拉 pending</text>
+
+  <rect x="642" y="300" width="266" height="66" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+  <text x="775" y="322" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#4f5d75">dsh --profile headless</text>
+  <text x="775" y="340" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">--session-id &lt;原会话&gt; --approval-policy never</text>
+  <text x="775" y="356" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">一轮 30s–3min</text>
+
+  <rect x="642" y="404" width="266" height="60" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+  <text x="775" y="426" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#4f5d75">会话日志</text>
+  <text x="775" y="444" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">~/.dsh/sessions/&lt;workspace&gt;/&lt;id&gt;</text>
+
+  <path d="M186 232 H 246" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b1a)"/>
+  <text x="192" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">HTTPS</text>
+
+  <path d="M186 356 H 246" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#b1ao)"/>
+  <text x="192" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">SSE</text>
+
+  <path d="M327 222 V 294" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b1a)"/>
+  <text x="335" y="262" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">location /api/</text>
+
+  <path d="M402 335 H 416" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b1a)"/>
+  <path d="M416 322 H 402" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b1a)"/>
+
+  <path d="M592 318 C 618 318, 620 226, 642 226" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#b1ao)"/>
+  <path d="M642 244 C 618 244, 616 336, 592 336" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#b1as)"/>
+
+  <path d="M775 256 V 294" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b1a)"/>
+  <text x="783" y="278" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">spawn</text>
+
+  <path d="M775 366 V 398" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b1a)"/>
+  <text x="783" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">resume</text>
+
+  <line x1="252" y1="398" x2="286" y2="398" stroke="#bf4520" stroke-width="1.6"/>
+  <text x="294" y="401" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">SSE 长连接（Mac 出站）：订阅任务，事件顺着同一条连接回写</text>
+  <text x="48" y="536" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">回复仍然走 HTTP：bridge 拿到回答后 POST /api/notes/&lt;slug&gt;/&lt;id&gt;/replies，页面那边再从 SSE 收到新楼层。</text>
+</svg>

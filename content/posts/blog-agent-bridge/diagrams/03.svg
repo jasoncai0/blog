@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="b3t b3d">
+  <title id="b3t">job 从 pending 到 done 或 blocked 的状态机</title>
+  <desc id="b3d">任务创建后处于 pending；bridge 认领后进入 running；回复写入成功置为 done；失败且重试未满 3 次退回 pending，满 3 次或会话锁被长期占用则置为 blocked，blocked 可以由人工放回 pending。</desc>
+  <defs>
+    <marker id="b3a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="b3ao" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+    <marker id="b3ag" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3d6b52"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">JOB LIFECYCLE</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">任务只有四个状态，失败要能被看见</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">队列存在服务器上，所以关机、断网、进程被杀都不会让一条批注凭空消失</text>
+
+  <text x="86" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.1em" fill="#5a6580">入队</text>
+  <path d="M135 132 V 164" fill="none" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#b3a)"/>
+
+  <rect x="60" y="170" width="150" height="86" rx="8" fill="#ffffff" stroke="rgba(45,49,66,0.2)"/>
+  <text x="135" y="202" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#2d3142">pending</text>
+  <text x="135" y="224" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">已落库，等 bridge</text>
+  <text x="135" y="240" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">attempts 0–2</text>
+
+  <rect x="330" y="170" width="150" height="86" rx="8" fill="#ffffff" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="405" y="202" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#2d3142">running</text>
+  <text x="405" y="224" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">已认领，进程在跑</text>
+  <text x="405" y="240" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">心跳 30s · 超时 10min</text>
+
+  <rect x="600" y="170" width="150" height="86" rx="8" fill="#ffffff" stroke="#3d6b52" stroke-width="1.4"/>
+  <text x="675" y="202" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#2d3142">done</text>
+  <text x="675" y="224" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">回复已写入 notes</text>
+  <text x="675" y="240" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">页面同时收到 SSE</text>
+
+  <rect x="330" y="330" width="150" height="86" rx="8" fill="#ffffff" stroke="rgba(191,69,32,0.55)" stroke-dasharray="4 3"/>
+  <text x="405" y="362" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="12" font-weight="600" fill="#2d3142">blocked</text>
+  <text x="405" y="384" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">重试 3 次仍失败</text>
+  <text x="405" y="400" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">页面显示原因 + 手动重试</text>
+
+  <path d="M210 210 H 324" fill="none" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#b3a)"/>
+  <text x="232" y="202" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">claim</text>
+
+  <path d="M480 210 H 594" fill="none" stroke="#3d6b52" stroke-width="1.3" marker-end="url(#b3ag)"/>
+  <text x="496" y="202" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#3d6b52">reply 写入成功</text>
+
+  <path d="M330 240 H 258 V 300 H 135 V 262" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#b3a)"/>
+  <text x="146" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">失败 / 超时且 attempts &lt; 3（退避 5s → 30s）</text>
+
+  <path d="M405 256 V 324" fill="none" stroke="#bf4520" stroke-width="1.3" marker-end="url(#b3ao)"/>
+  <text x="415" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">attempts ≥ 3 或会话锁被占用 &gt; 5min</text>
+
+  <path d="M405 416 V 452 H 108 V 262" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#b3a)"/>
+  <text x="150" y="466" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">手动重试</text>
+
+  <text x="48" y="508" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">blocked 不是终点：那条批注会显示「AI 回复失败」和一个重试按钮，点一下把同一条 job 放回 pending。</text>
+</svg>

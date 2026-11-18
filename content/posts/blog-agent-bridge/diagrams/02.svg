@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="680" viewBox="0 0 960 680" role="img" aria-labelledby="b2t b2d">
+  <title id="b2t">一条批注从提交到页面出现 AI 回复的时序</title>
+  <desc id="b2d">读者在页面提交批注，notesd 落库并建任务，沿 SSE 推给 Mac 上的 bridge；bridge 认领任务后调用 dsh headless 恢复原会话，拿到回答再 POST 回 notesd；页面通过自己的 SSE 收到新楼层并就地插入。</desc>
+  <defs>
+    <marker id="b2a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+    <marker id="b2ao" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">ONE COMMENT, END TO END</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一条批注走完全程需要十步</text>
+  <text x="48" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">橙色是「沿已有连接推送」，灰色是普通请求与进程调用；从第 1 步到第 10 步，端到端 30 秒到 3 分钟</text>
+
+  <rect x="34" y="122" width="152" height="46" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="110" y="143" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">页面</text>
+  <text x="110" y="159" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">浏览器</text>
+
+  <rect x="262" y="122" width="140" height="46" rx="6" fill="#ffffff" stroke="#bf4520" stroke-width="1.3"/>
+  <text x="332" y="143" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">notesd</text>
+  <text x="332" y="159" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">服务器</text>
+
+  <rect x="472" y="122" width="140" height="46" rx="6" fill="#ffffff" stroke="#2d3142"/>
+  <text x="542" y="143" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">bridge</text>
+  <text x="542" y="159" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">你的 Mac</text>
+
+  <rect x="682" y="122" width="130" height="46" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.2)"/>
+  <text x="747" y="143" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">dsh headless</text>
+  <text x="747" y="159" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">一次性进程</text>
+
+  <rect x="842" y="122" width="86" height="46" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.2)"/>
+  <text x="885" y="143" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">原会话</text>
+  <text x="885" y="159" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">JSONL</text>
+
+  <line x1="110" y1="168" x2="110" y2="612" stroke="rgba(45,49,66,0.22)" stroke-dasharray="4 4"/>
+  <line x1="332" y1="168" x2="332" y2="612" stroke="rgba(45,49,66,0.22)" stroke-dasharray="4 4"/>
+  <line x1="542" y1="168" x2="542" y2="612" stroke="rgba(45,49,66,0.22)" stroke-dasharray="4 4"/>
+  <line x1="747" y1="168" x2="747" y2="612" stroke="rgba(45,49,66,0.22)" stroke-dasharray="4 4"/>
+  <line x1="885" y1="168" x2="885" y2="612" stroke="rgba(45,49,66,0.22)" stroke-dasharray="4 4"/>
+
+  <path d="M110 216 H 326" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b2a)"/>
+  <text x="118" y="208" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">1  POST /replies（写口令）</text>
+
+  <path d="M332 252 h 26 v 22 h -26" fill="none" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#b2a)"/>
+  <text x="366" y="248" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">2  落库 + 建 job(pending)</text>
+
+  <path d="M332 306 H 548" fill="none" stroke="#bf4520" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#b2ao)"/>
+  <text x="352" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">3  SSE job.created（逆向：沿 Mac 拉起的连接推送）</text>
+
+  <path d="M542 342 H 338" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b2a)"/>
+  <text x="356" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">4  claim → running（带上 bridge token）</text>
+
+  <path d="M542 378 H 741" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b2a)"/>
+  <text x="556" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">5  spawn --session-id &lt;id&gt;</text>
+
+  <path d="M747 414 H 879" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b2a)"/>
+  <text x="760" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">6  读上下文 + 追加一轮</text>
+
+  <path d="M885 452 H 753" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b2a)"/>
+  <text x="790" y="444" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">7  回答（30s–3min）</text>
+
+  <path d="M747 490 H 548" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b2a)"/>
+  <text x="556" y="482" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">8  取最后一段文本</text>
+
+  <path d="M542 528 H 338" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#b2a)"/>
+  <text x="356" y="520" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#4f5d75">9  POST /replies（author: AI）</text>
+
+  <path d="M332 566 H 116" fill="none" stroke="#bf4520" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#b2ao)"/>
+  <text x="356" y="558" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">10  SSE note.updated → 插入新楼层</text>
+
+  <line x1="34" y1="596" x2="928" y2="596" stroke="rgba(45,49,66,0.12)" stroke-dasharray="4 4"/>
+  <text x="48" y="638" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">第 10 步之前页面一直停在「已收到，AI 正在处理」；这一行状态由 job 状态驱动，不靠前端猜。</text>
+  <text x="48" y="658" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">若第 4 步之后进程崩溃或断线，job 停在 running；超时 10 分钟后回到 pending，重试次数上限 3。</text>
+</svg>
