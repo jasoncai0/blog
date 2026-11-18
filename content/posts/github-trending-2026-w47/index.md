@@ -19,22 +19,22 @@ slug: "github-trending-2026-w47"
 
 | # | 项目 | 一句话 | 类别 | 本周 +★ | 总 ★ |
 |---|------|--------|------|--------:|-----:|
-| 1 | [meta/astryx ↓](#p-astryx) | Meta 开源设计系统，组件与 token 成套 | 前端与设计 | 8,700 | 30,389 |
-| 2 | [GoogleChrome/modern-web-guidance-src ↓](#p-modern-web-guidance-src) | Chrome 的 web 实践技能包，给 agent 用 | AI 编程代理 | 7,015 | 8,642 |
-| 3 | [dream-num/univer ↓](#p-univer) | 可嵌入产品的 office SDK，表格起步 | 其他 | 5,845 | 29,758 |
-| 4 | [anthropics/skills ↓](#p-skills) | Claude 技能包参考实现，写 skill 照抄 | AI 编程代理 | 4,847 | 196,973 |
-| 5 | [we-promise/sure ↓](#p-sure) | 自托管个人财务面板，社区接盘版 | 其他 | 4,786 | 16,371 |
-| 6 | [alibaba/open-code-review ↓](#p-open-code-review) | 阿里评审助手开源版，CI 里的 AI 评审 | 开发者工具 | 3,675 | 54,073 |
-| 7 | [ZhuLinsen/daily_stock_analysis ↓](#p-daily-stock-analysis) | 多市场选股分析，每天推看板到 IM | 其他 | 3,653 | 73,243 |
-| 8 | [vercel-labs/agent-browser ↓](#p-agent-browser) | 给 agent 的浏览器 CLI，读无障碍树 | 开发者工具 | 3,429 | 52,510 |
-| 9 | [tradermonty/claude-trading-skills ↓](#p-claude-trading-skills) | 散户交易技能包，行情到筛股一条流程 | AI 编程代理 | 2,985 | 6,969 |
-| 10 | [ChromeDevTools/chrome-devtools-mcp ↓](#p-chrome-devtools-mcp) | 把 DevTools 交给 agent 自查页面 | 开发者工具 | 2,948 | 58,139 |
-| 11 | [backnotprop/plannotator ↓](#p-plannotator) | agent 计划的批注台，动手前先圈问题 | AI 编程代理 | 2,926 | 13,246 |
-| 12 | [ag-ui-protocol/ag-ui ↓](#p-ag-ui) | agent 与前端的事件协议，接流式输出 | AI 编程代理 | 2,773 | 20,259 |
-| 13 | [openai/codex-security ↓](#p-codex-security) | OpenAI 安全 CLI，找漏洞并给修复 | 安全 | 2,531 | 14,029 |
-| 14 | [elementalsouls/Claude-BugHunter ↓](#p-claude-bughunter) | 漏洞挖掘技能包，按 24 类组织报告模式 | 安全 | 2,508 | 10,280 |
-| 15 | [mvanhorn/last30days-skill ↓](#p-last30days-skill) | 跨社媒研究技能，按互动量排序 | AI 编程代理 | 1,548 | 69,540 |
-| 16 | [google-labs-code/stitch-skills ↓](#p-stitch-skills) | Stitch 配套技能集，设计稿接到代码 | AI 编程代理 | 1,197 | 10,262 |
+| 1 | [meta/astryx](https://github.com/meta/astryx) | [Meta 开源设计系统，组件与 token 成套 ↓](#p-astryx) | 前端与设计 | 8,700 | 30,389 |
+| 2 | [GoogleChrome/modern-web-guidance-src](https://github.com/GoogleChrome/modern-web-guidance-src) | [Chrome 的 web 实践技能包，给 agent 用 ↓](#p-modern-web-guidance-src) | AI 编程代理 | 7,015 | 8,642 |
+| 3 | [dream-num/univer](https://github.com/dream-num/univer) | [可嵌入产品的 office SDK，表格起步 ↓](#p-univer) | 其他 | 5,845 | 29,758 |
+| 4 | [anthropics/skills](https://github.com/anthropics/skills) | [Claude 技能包参考实现，写 skill 照抄 ↓](#p-skills) | AI 编程代理 | 4,847 | 196,973 |
+| 5 | [we-promise/sure](https://github.com/we-promise/sure) | [自托管个人财务面板，社区接盘版 ↓](#p-sure) | 其他 | 4,786 | 16,371 |
+| 6 | [alibaba/open-code-review](https://github.com/alibaba/open-code-review) | [阿里评审助手开源版，CI 里的 AI 评审 ↓](#p-open-code-review) | 开发者工具 | 3,675 | 54,073 |
+| 7 | [ZhuLinsen/daily_stock_analysis](https://github.com/ZhuLinsen/daily_stock_analysis) | [多市场选股分析，每天推看板到 IM ↓](#p-daily-stock-analysis) | 其他 | 3,653 | 73,243 |
+| 8 | [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) | [给 agent 的浏览器 CLI，读无障碍树 ↓](#p-agent-browser) | 开发者工具 | 3,429 | 52,510 |
+| 9 | [tradermonty/claude-trading-skills](https://github.com/tradermonty/claude-trading-skills) | [散户交易技能包，行情到筛股一条流程 ↓](#p-claude-trading-skills) | AI 编程代理 | 2,985 | 6,969 |
+| 10 | [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | [把 DevTools 交给 agent 自查页面 ↓](#p-chrome-devtools-mcp) | 开发者工具 | 2,948 | 58,139 |
+| 11 | [backnotprop/plannotator](https://github.com/backnotprop/plannotator) | [agent 计划的批注台，动手前先圈问题 ↓](#p-plannotator) | AI 编程代理 | 2,926 | 13,246 |
+| 12 | [ag-ui-protocol/ag-ui](https://github.com/ag-ui-protocol/ag-ui) | [agent 与前端的事件协议，接流式输出 ↓](#p-ag-ui) | AI 编程代理 | 2,773 | 20,259 |
+| 13 | [openai/codex-security](https://github.com/openai/codex-security) | [OpenAI 安全 CLI，找漏洞并给修复 ↓](#p-codex-security) | 安全 | 2,531 | 14,029 |
+| 14 | [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) | [漏洞挖掘技能包，按 24 类组织报告模式 ↓](#p-claude-bughunter) | 安全 | 2,508 | 10,280 |
+| 15 | [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) | [跨社媒研究技能，按互动量排序 ↓](#p-last30days-skill) | AI 编程代理 | 1,548 | 69,540 |
+| 16 | [google-labs-code/stitch-skills](https://github.com/google-labs-code/stitch-skills) | [Stitch 配套技能集，设计稿接到代码 ↓](#p-stitch-skills) | AI 编程代理 | 1,197 | 10,262 |
 
 表里最该注意的是：AI 编程代理这一类 7 个项目就吃掉 23,291 星，占全榜 38%，但其中没有一个在做「更好的模型」或「更快的推理」，全在做 agent 周边。
 
