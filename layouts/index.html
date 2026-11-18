@@ -11,6 +11,13 @@
 <p class="links"><a href="{{ .Site.Params.github }}">GitHub</a></p>
 </header>
 
+<nav class="read-filter" aria-label="按阅读状态过滤" hidden>
+<button type="button" data-read="all" data-label="全部" aria-pressed="true">全部</button>
+<button type="button" data-read="done" data-label="读过" aria-pressed="false">读过</button>
+<button type="button" data-read="reading" data-label="未读完" aria-pressed="false">未读完</button>
+<button type="button" data-read="unread" data-label="未读" aria-pressed="false">未读</button>
+</nav>
+
 <ul class="posts">
 {{- range $pages.ByDate.Reverse }}
 <li data-date="{{ .Date.Format "2006-01-02" }}" data-progress-post="{{ .File.ContentBaseName }}"><time>{{ .Date.Format "2006-01-02" }}</time><div class="entry"><a href="{{ .RelPermalink }}">{{ .Title }}</a><p class="summary">{{ .Params.summary }}</p><div class="post-foot">{{ partial "tag-chips.html" . }}<span class="read-mark"></span><span class="note-mark"></span></div></div></li>

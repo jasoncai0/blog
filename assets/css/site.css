@@ -427,6 +427,24 @@ nav.toc #TableOfContents a:hover { color: var(--accent); }
 header { margin-bottom: 40px; }
 .tagline { margin: 0; color: var(--muted); font-size: 15px; }
 .links { margin: 10px 0 0; font-size: 13px; letter-spacing: 0.02em; }
+
+.read-filter {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 0 0 20px;
+}
+.read-filter button {
+  font: inherit; font-size: 12px; line-height: 1;
+  color: var(--muted); background: none;
+  border: 1px solid var(--rule); border-radius: 999px;
+  padding: 6px 11px; cursor: pointer;
+}
+.read-filter button:hover { color: var(--ink); border-color: rgba(45, 49, 66, 0.28); }
+.read-filter button[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: rgba(191, 69, 32, 0.45);
+  background: rgba(191, 69, 32, 0.06);
+}
+
 ul.posts { list-style: none; margin: 0; padding: 0; }
 ul.posts li {
   display: flex;

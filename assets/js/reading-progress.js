@@ -44,8 +44,8 @@ function saveEntry(slug, percent) {
 }
 
 // 首页：把每篇的最大进度标在标题下方，没读过的篇目不留空壳。
-function markHome() {
-  const store = parseStore(safeGet() || "");
+function markHome(store = parseStore(safeGet() || "")) {
+  homeStore = store;
   for (const item of document.querySelectorAll("[data-progress-post]")) {
     const mark = item.querySelector(".read-mark");
     if (!mark) continue;
@@ -54,6 +54,66 @@ function markHome() {
     mark.textContent = text;
     mark.hidden = !text;
   }
+}
+
+
+const HOME_MODES = new Set(["all", "done", "reading", "unread"]);
+let homeStore = {};
+let homeMode = "all";
+
+function readState(entry) {
+  if (!entry) return "unread";
+  if (entry.d || entry.p >= DONE_THRESHOLD) return "done";
+  return entry.p > 0 ? "reading" : "unread";
+}
+
+function renderFilter() {
+  for (const li of document.querySelectorAll("ul.posts > li[data-progress-post]")) {
+    const state = readState(readEntry(homeStore, li.dataset.progressPost));
+    li.hidden = homeMode !== "all" && state !== homeMode;
+  }
+  for (const btn of document.querySelectorAll(".read-filter button[data-read]")) {
+    btn.setAttribute("aria-pressed", btn.dataset.read === homeMode ? "true" : "false");
+  }
+}
+
+function updateCounts() {
+  const counts = { all: 0, done: 0, reading: 0, unread: 0 };
+  for (const li of document.querySelectorAll("ul.posts > li[data-progress-post]")) {
+    counts.all += 1;
+    counts[readState(readEntry(homeStore, li.dataset.progressPost))] += 1;
+  }
+  for (const btn of document.querySelectorAll(".read-filter button[data-read]")) {
+    const n = counts[btn.dataset.read];
+    if (n === undefined) continue;
+    btn.textContent = `${btn.dataset.label} ${n}`;
+  }
+}
+
+function refreshHome() {
+  markHome(homeStore);
+  updateCounts();
+  renderFilter();
+}
+
+// 首页过滤：默认「全部」，状态写进 ?read=done|reading|unread，刷新和分享都保持。
+function initHomeFilter() {
+  const bar = document.querySelector(".read-filter");
+  if (!bar) return;
+  const params = new URLSearchParams(location.search);
+  const wanted = params.get("read") || "all";
+  homeMode = HOME_MODES.has(wanted) ? wanted : "all";
+  bar.hidden = false;
+  bar.addEventListener("click", (event) => {
+    const btn = event.target.closest("button[data-read]");
+    if (!btn) return;
+    homeMode = HOME_MODES.has(btn.dataset.read) ? btn.dataset.read : "all";
+    const url = new URL(location.href);
+    if (homeMode === "all") url.searchParams.delete("read");
+    else url.searchParams.set("read", homeMode);
+    history.replaceState(null, "", url);
+    renderFilter();
+  });
 }
 
 // 与服务端对账：取每篇的最大进度，合并进本地后再决定要不要推回。
@@ -76,13 +136,20 @@ function syncProgress() {
 function boot() {
   const host = document.querySelector(".post-body[data-progress-post]");
   if (!host) {
-    markHome();
+    homeStore = parseStore(safeGet() || "");
+    initHomeFilter();
+    refreshHome();
     syncProgress().then((merged) => {
-      if (merged) markHome();
+      if (merged) {
+        homeStore = merged;
+        refreshHome();
+      }
     });
     // 从文章页后退回来时页面可能直接来自 bfcache，标记要在恢复后重算一次
     window.addEventListener("pageshow", (event) => {
-      if (event.persisted) markHome();
+      if (!event.persisted) return;
+      homeStore = parseStore(safeGet() || "");
+      refreshHome();
     });
     return;
   }

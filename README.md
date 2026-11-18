@@ -99,10 +99,11 @@ python3 server/import_notes.py notes-<slug>.json --dry-run                # 先�
 
 文章页顶部有一条 2px 的进度条，右下角在滚动后出现百分比胶囊（≥95% 显示「读完」）；再次打开同一篇会回到上次位置，并提示「从 N% 继续」。首页每篇的 tag 行后会标出读到哪了。
 
-- 只存在**读者自己的浏览器**里，键名 `jasoncai:read:v1`，不上传服务器。
-- 想清空：控制台执行 `localStorage.removeItem('jasoncai:read:v1')`。
-- 同一篇只记最高进度；超过 300 篇或 180 天未访问的条目会被自动丢弃。
-- 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有进度功能。
+- 本地键 `jasoncai:read:v1`，同时同步到 `server/notesd.py`（`/api/progress`）；换设备、清缓存都能接上。
+- 首页顶部可按「读取状态」过滤：`全部 / 读过 / 未读完 / 未读`。读过 = `p ≥ 95` 或 `d`，未读完 = `0 < p < 95`，未读 = 没有记录。按钮上的数字是当前篇数；状态写进 URL（`?read=done|reading|unread`），刷新和分享都保持，没有 JS 时显示全部。
+- 进度**只增不减**：服务端 `PUT` 取 `max(p)`、`d` 只增不减；客户端落盘同样取最大值。180 天时效只影响「要不要展示」，不会让一条 100% 的记录在下次重读时被清掉。
+- 想清空：控制台执行 `localStorage.removeItem('jasoncai:read:v1')`；服务端数据要清就删 `/var/lib/notesd/notes.db` 里的 `progress` 表。
+- 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有进度与过滤。
 - 内部实现见 `docs/superpowers/specs/2026-11-10-reading-progress-design.md`。
 
 ## 侧栏

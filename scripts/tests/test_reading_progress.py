@@ -247,6 +247,78 @@ def test_home_marks(context, base):
     assert empty.inner_text().strip() == "" and not empty.is_visible()
 
 
+
+def test_home_filter_by_read_state(context, base):
+    preset(context, {"hello": {"p": 100, "d": True}, "ot-crdt-lww": {"p": 40}})
+    page = context.new_page()
+    page.goto(base + "/")
+    page.wait_for_selector(".read-filter:not([hidden])")
+    total = page.locator("ul.posts > li").count()
+    assert total > 3
+    assert page.locator("ul.posts > li:visible").count() == total, "默认应该显示全部"
+
+    page.click('.read-filter button[data-read="done"]')
+    page.wait_for_timeout(150)
+    assert page.locator("ul.posts > li:visible").count() == 1
+    assert page.locator('ul.posts > li:visible[data-progress-post="hello"]').count() == 1
+
+    page.click('.read-filter button[data-read="reading"]')
+    page.wait_for_timeout(150)
+    assert page.locator("ul.posts > li:visible").count() == 1
+    assert page.locator('ul.posts > li:visible[data-progress-post="ot-crdt-lww"]').count() == 1
+
+    page.click('.read-filter button[data-read="unread"]')
+    page.wait_for_timeout(150)
+    assert page.locator("ul.posts > li:visible").count() == total - 2
+    assert page.locator('ul.posts > li:visible[data-progress-post="hello"]').count() == 0
+
+    page.click('.read-filter button[data-read="all"]')
+    page.wait_for_timeout(150)
+    assert page.locator("ul.posts > li:visible").count() == total
+
+
+def test_home_filter_deep_link(context, base):
+    preset(context, {"hello": {"p": 100, "d": True}, "ot-crdt-lww": {"p": 40}})
+    page = context.new_page()
+    page.goto(base + "/?read=done")
+    page.wait_for_selector(".read-filter:not([hidden])")
+    page.wait_for_timeout(150)
+    assert page.locator("ul.posts > li:visible").count() == 1
+    assert page.locator('.read-filter button[data-read="done"]').get_attribute("aria-pressed") == "true"
+    page.click('.read-filter button[data-read="reading"]')
+    page.wait_for_timeout(150)
+    assert "read=reading" in page.url
+
+
+def test_home_filter_keeps_counts(context, base):
+    preset(context, {"hello": {"p": 100, "d": True}, "ot-crdt-lww": {"p": 40}})
+    page = context.new_page()
+    page.goto(base + "/")
+    page.wait_for_selector(".read-filter:not([hidden])")
+    page.wait_for_timeout(200)
+    assert "1" in page.locator('.read-filter button[data-read="done"]').inner_text()
+    assert "1" in page.locator('.read-filter button[data-read="reading"]').inner_text()
+
+
+def test_home_filter_hidden_without_js(context, base):
+    page = context.new_page()
+    page.goto(base + "/")
+    assert page.locator(".read-filter").is_hidden(), "没有 JS 时不显示过滤控件"
+    assert page.locator("ul.posts > li:visible").count() == page.locator("ul.posts > li").count()
+
+
+def test_low_scroll_does_not_lower_home_mark(context, base):
+    preset(context, {"hello": {"p": 80}})
+    page = context.new_page()
+    page.goto(base + "/posts/hello.html")
+    page.wait_for_timeout(1500)
+    page.goto(base + "/")
+    page.wait_for_selector('[data-progress-post="hello"] .read-mark')
+    page.wait_for_timeout(200)
+    text = page.locator('[data-progress-post="hello"] .read-mark').inner_text()
+    assert "80" in text, f"重读开头不能把首页的 80% 拉低，实际是 {text!r}"
+
+
 CASES = [
     (test_article_scroll_records_progress, False, {}),
     (test_chip_appears_after_scrolling, False, {}),
@@ -262,6 +334,11 @@ CASES = [
     (test_partial_view_is_not_done, True, {}),
     (test_short_post_fills_viewport, True, {"viewport": {"width": 900, "height": 2400}}),
     (test_no_js_page_intact, True, {"java_script_enabled": False}),
+    (test_home_filter_by_read_state, True, {}),
+    (test_home_filter_deep_link, True, {}),
+    (test_home_filter_keeps_counts, True, {}),
+    (test_home_filter_hidden_without_js, True, {"java_script_enabled": False}),
+    (test_low_scroll_does_not_lower_home_mark, True, {}),
     (test_storage_failure_is_silent, True, {}),
 ]
 
