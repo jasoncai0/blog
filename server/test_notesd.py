@@ -4,10 +4,12 @@
     python3 server/test_notesd.py
 """
 
+import http.client
 import json
 import os
 import tempfile
 import threading
+import time
 import unittest
 import urllib.request
 from http.server import ThreadingHTTPServer
@@ -147,6 +149,71 @@ class NotesdTest(unittest.TestCase):
         status, _ = self.call("POST", "/api/notes/thread-test/ghost-0001/replies",
                               {"author": "AI", "text": "hi"})
         self.assertEqual(status, 404)
+
+    def stream(self, path, headers=None, timeout=3):
+        conn = http.client.HTTPConnection("127.0.0.1", self.httpd.server_address[1], timeout=timeout)
+        conn.request("GET", path, headers=headers or {})
+        return conn, conn.getresponse()
+
+    def first_event(self, resp, timeout=3):
+        deadline = time.time() + timeout
+        event, data = None, None
+        while time.time() < deadline:
+            line = resp.fp.readline().decode()
+            if not line:
+                break
+            if line.startswith("event:"):
+                event = line.split(":", 1)[1].strip()
+            elif line.startswith("data:"):
+                data = line.split(":", 1)[1].strip()
+            elif line.strip() == "" and event:
+                return event, json.loads(data or "{}")
+        return None, None
+
+    def test_bridge_stream_requires_token(self):
+        notesd.Handler.bridge_token = "btok"
+        try:
+            conn, resp = self.stream("/api/jobs/stream")
+            self.assertEqual(resp.status, 401)
+            conn.close()
+            conn, resp = self.stream("/api/jobs/stream", {"X-Bridge-Token": "wrong"})
+            self.assertEqual(resp.status, 401)
+            conn.close()
+        finally:
+            notesd.Handler.bridge_token = ""
+
+    def test_bridge_stream_disabled_without_token(self):
+        notesd.Handler.bridge_token = ""
+        conn, resp = self.stream("/api/jobs/stream")
+        self.assertEqual(resp.status, 503)
+        conn.close()
+
+    def test_bridge_stream_pushes_new_job(self):
+        notesd.Handler.bridge_token = "btok"
+        try:
+            slug = "stream-jobs"
+            self.register(slug)
+            self.call("PUT", f"/api/notes/{slug}/job-0006", self.note("job-0006"))
+            conn, resp = self.stream("/api/jobs/stream", {"X-Bridge-Token": "btok"})
+            self.assertEqual(resp.status, 200)
+            self.call("POST", f"/api/notes/{slug}/job-0006/ask", {})
+            event, data = self.first_event(resp)
+            self.assertEqual(event, "job.created")
+            self.assertEqual(data["slug"], slug)
+            conn.close()
+        finally:
+            notesd.Handler.bridge_token = ""
+
+    def test_note_stream_pushes_reply(self):
+        slug = "stream-note"
+        self.call("PUT", f"/api/notes/{slug}/job-0007", self.note("job-0007"))
+        conn, resp = self.stream(f"/api/notes/{slug}/stream")
+        self.assertEqual(resp.status, 200)
+        self.call("POST", f"/api/notes/{slug}/job-0007/replies", {"author": "AI", "text": "结论：不需要", "t": 3000})
+        event, data = self.first_event(resp)
+        self.assertEqual(event, "note.updated")
+        self.assertEqual(data["note"]["id"], "job-0007")
+        conn.close()
 
     def register(self, slug, sid="0f3a1c2d-1234-4abc-9def-001122334455"):
         self.call("PUT", f"/api/sessions/{slug}", {"session_id": sid, "workspace": "default-workspace"})

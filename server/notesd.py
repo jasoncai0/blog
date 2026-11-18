@@ -24,6 +24,7 @@ import argparse
 import json
 import os
 import re
+import queue
 import sqlite3
 import threading
 import time
@@ -110,6 +111,8 @@ class Store:
         self._lock = threading.Lock()
         self.conn = sqlite3.connect(path, check_same_thread=False, timeout=10)
         self.conn.row_factory = sqlite3.Row
+        self._subs: dict[str, list[queue.Queue]] = defaultdict(list)
+        self._subs_lock = threading.Lock()
         self.conn.executescript(SCHEMA)
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.commit()
@@ -197,7 +200,8 @@ class Store:
                 "thread": thread,
                 "updated": updated,
             }
-            return "ok", note
+        self.publish(f"note:{slug}", "note.updated", {"note": note})
+        return "ok", note
 
     def delete_note(self, slug: str, note_id: str) -> bool:
         with self._lock:
@@ -240,6 +244,27 @@ class Store:
             return {"p": best_p, "t": best_t, "d": bool(best_d)}
 
 
+    # ---- events ----
+    def subscribe(self, channel: str) -> queue.Queue:
+        q: queue.Queue = queue.Queue(maxsize=100)
+        with self._subs_lock:
+            self._subs[channel].append(q)
+        return q
+
+    def unsubscribe(self, channel: str, q: queue.Queue) -> None:
+        with self._subs_lock:
+            if q in self._subs.get(channel, []):
+                self._subs[channel].remove(q)
+
+    def publish(self, channel: str, event: str, data: dict) -> None:
+        with self._subs_lock:
+            queues = list(self._subs.get(channel, []))
+        for q in queues:
+            try:
+                q.put_nowait({"event": event, "data": data})
+            except queue.Full:
+                pass
+
     # ---- jobs ----
     def create_job(self, slug: str, note_id: str, session_id: str, prompt: str, kind: str) -> dict:
         job_id = "job-" + os.urandom(6).hex()
@@ -250,7 +275,9 @@ class Store:
                 "VALUES(?,?,?,?,?,?,'pending',?,?)",
                 (job_id, slug, note_id, session_id, kind, prompt, ts, ts),
             )
-        return self.job(job_id) or {}
+        job = self.job(job_id) or {}
+        self.publish("jobs", "job.created", job)
+        return job
 
     def job(self, job_id: str) -> dict | None:
         row = self.conn.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
@@ -296,7 +323,10 @@ class Store:
                 "UPDATE jobs SET status=?, error=?, updated=? WHERE id=?",
                 (status, error, now(), job_id),
             )
-        return self.job(job_id)
+        job = self.job(job_id)
+        if job:
+            self.publish("jobs", "job.updated", job)
+        return job
 
     def upsert_session(self, slug: str, session_id: str, workspace: str, title: str) -> dict:
         with self._lock, self.conn:
@@ -444,6 +474,33 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         self.route(write=True)
 
+    def stream(self, channel: str) -> None:
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+        self.send_header("Cache-Control", "no-cache")
+        self.send_header("X-Accel-Buffering", "no")
+        self.send_header("Connection", "close")
+        self.end_headers()
+        self.close_connection = True
+        q = self.store.subscribe(channel)
+        try:
+            self.wfile.write(b": connected\n\n")
+            self.wfile.flush()
+            while True:
+                try:
+                    ev = q.get(timeout=15)
+                except queue.Empty:
+                    self.wfile.write(b": ping\n\n")
+                    self.wfile.flush()
+                    continue
+                body = json.dumps(ev["data"], ensure_ascii=False)
+                self.wfile.write(f"event: {ev['event']}\ndata: {body}\n\n".encode())
+                self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+        finally:
+            self.store.unsubscribe(channel, q)
+
     def route(self, write: bool) -> None:
         if not self.limiter.allow(self.client_ip(), write):
             self.send_json(HTTPStatus.TOO_MANY_REQUESTS, {"error": "rate limited"})
@@ -493,6 +550,17 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(HTTPStatus.OK, {"ok": True, **result})
                 return
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
+            return
+
+        if parts[0] == "jobs" and len(parts) == 2 and parts[1] == "stream" and self.command == "GET":
+            expected = type(self).bridge_token
+            if not expected:
+                self.send_json(HTTPStatus.SERVICE_UNAVAILABLE, {"error": "bridge token not configured"})
+                return
+            if self.headers.get("X-Bridge-Token", "") != expected:
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "bridge token required"})
+                return
+            self.stream("jobs")
             return
 
         if parts[0] == "jobs":
@@ -561,6 +629,14 @@ class Handler(BaseHTTPRequestHandler):
             if len(parts) == 1 and self.command == "GET":
                 self.send_json(HTTPStatus.OK, {"notes": self.store.counts()})
                 return
+            if len(parts) == 3 and parts[2] == "stream" and self.command == "GET":
+                slug = parts[1]
+                if not SLUG_RE.match(slug):
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
+                    return
+                self.stream(f"note:{slug}")
+                return
+
             if len(parts) == 2 and self.command == "GET":
                 slug = parts[1]
                 if not SLUG_RE.match(slug):
@@ -684,6 +760,7 @@ def main() -> None:
     Handler.store = Store(args.db)
     Handler.limiter = Limiter()
     Handler.edit_key = os.environ.get("NOTES_EDIT_KEY", "").strip()
+    Handler.bridge_token = os.environ.get("BRIDGE_TOKEN", "").strip()
 
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)
     httpd.daemon_threads = True
