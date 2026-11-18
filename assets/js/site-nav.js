@@ -16,7 +16,7 @@ function initCalendar() {
   const todayWeek = todayIso
     ? Number(root.querySelector(`[data-date="${todayIso}"]`)?.closest(".cal-week")?.dataset.week ?? total - 1)
     : total - 1;
-  let size = 12;
+  let size = 4;
   let start = windowStart(total, size, todayWeek);
 
   const paint = () => {

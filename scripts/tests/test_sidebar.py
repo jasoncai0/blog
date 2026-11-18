@@ -82,9 +82,9 @@ def test_list_items_carry_dates(page, base):
     assert page.locator('ul.posts li[data-date="2026-11-11"]').count() >= 5
 
 
-def test_only_recent_12_weeks_visible_by_default(page, base):
+def test_only_recent_4_weeks_visible_by_default(page, base):
     page.goto(base + "/")
-    assert page.locator("nav.calendar .cal-week:not(.is-hidden)").count() == 12
+    assert page.locator("nav.calendar .cal-week:not(.is-hidden)").count() == 4
 
 
 def test_year_toggle_shows_all_weeks(page, base):
@@ -240,7 +240,7 @@ CASES = [
     (test_calendar_renders_year_grid, False, DESKTOP),
     (test_calendar_empty_days_are_not_links, False, DESKTOP),
     (test_list_items_carry_dates, False, DESKTOP),
-    (test_only_recent_12_weeks_visible_by_default, False, DESKTOP),
+    (test_only_recent_4_weeks_visible_by_default, False, DESKTOP),
     (test_year_toggle_shows_all_weeks, False, DESKTOP),
     (test_clicking_a_day_flashes_that_day, False, DESKTOP),
     (test_date_input_moves_window_and_marks_target, False, DESKTOP),
