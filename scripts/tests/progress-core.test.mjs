@@ -79,3 +79,24 @@ test("shouldResume 只在 5–94 之间为真", () => {
   assert.equal(c.shouldResume({ p: 95, d: true }), false);
   assert.equal(c.shouldResume(null), false);
 });
+
+test("过期条目不会让进度回退", () => {
+  const now = Date.now();
+  const stale = now - (c.MAX_AGE_MS + 24 * 60 * 60 * 1000);
+  const store = { hello: { p: 100, t: stale, d: true } };
+  const next = c.writeEntry(store, "hello", 20, now);
+  assert.equal(next.hello.p, 100, "旧记录虽然过期，重读时也不能把 100% 拉回 20%");
+  assert.equal(next.hello.d, true, "读完状态不能回退");
+});
+
+test("两次写入取较大者，读完状态只增不减", () => {
+  const now = Date.now();
+  let s = c.writeEntry({}, "a", 80, now);
+  s = c.writeEntry(s, "a", 40, now + 1000);
+  assert.equal(s.a.p, 80);
+  s = c.writeEntry(s, "a", 99, now + 2000);
+  assert.equal(s.a.d, true);
+  s = c.writeEntry(s, "a", 30, now + 3000);
+  assert.equal(s.a.p, 99);
+  assert.equal(s.a.d, true);
+});

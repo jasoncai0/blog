@@ -93,6 +93,18 @@ class NotesdTest(unittest.TestCase):
         _, body = self.call("GET", "/api/summary")
         self.assertEqual(body["notes"].get("tally-x"), 1)
 
+    def test_progress_never_regresses(self):
+        self.call("PUT", "/api/progress/regress", {"p": 80, "t": 1000, "d": False})
+        _, body = self.call("PUT", "/api/progress/regress", {"p": 40, "t": 2000, "d": False})
+        self.assertEqual(body["p"], 80, "后到的低进度不能覆盖已经上报过的 80%")
+        self.assertEqual(body["t"], 2000)
+        _, body = self.call("PUT", "/api/progress/regress", {"p": 30, "t": 3000, "d": False})
+        self.assertEqual(body["p"], 80)
+        self.call("PUT", "/api/progress/regress2", {"p": 100, "t": 1000, "d": True})
+        _, body = self.call("PUT", "/api/progress/regress2", {"p": 10, "t": 1500, "d": False})
+        self.assertEqual(body["d"], True, "读完标记不能因为之后的低进度被撤销")
+        self.assertEqual(body["p"], 100)
+
     def test_progress_merges_max_and_done_sticks(self):
         self.assertEqual(self.call("PUT", "/api/progress/hello", {"p": 40, "t": 100, "d": False})[0], 200)
         _, body = self.call("PUT", "/api/progress/hello", {"p": 20, "t": 90, "d": False})

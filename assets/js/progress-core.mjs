@@ -44,9 +44,15 @@ export function readEntry(store, slug, now = Date.now()) {
 }
 
 // 同一篇只记最高进度；d 一旦为真就不再回落；t 每次刷新，用于修剪。
+// 这里刻意不看 180 天时效：过期只是「不再展示」，不能让一条 100% 的记录
+// 在下次重读 20% 时被当成不存在，否则进度和读完状态都会回退。
 export function writeEntry(store, slug, percent, now) {
   const next = { ...(store || {}) };
-  const old = readEntry(next, slug, now);
+  const raw = next[slug];
+  const old =
+    raw && typeof raw.p === "number" && Number.isFinite(raw.p)
+      ? { p: raw.p, t: raw.t, d: raw.d === true }
+      : null;
   const p = Math.min(100, Math.max(0, Math.round(Number(percent) || 0)));
   const best = old ? Math.max(old.p, p) : p;
   next[slug] = {
