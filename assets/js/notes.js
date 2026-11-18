@@ -13,6 +13,8 @@ import {
 } from "./notes-core.mjs";
 import {
   AuthError,
+  askAI,
+  openNoteStream,
   getEditKey,
   postReply,
   pullNotes,
@@ -458,6 +460,32 @@ function initNotes() {
   const fmtTime = (t) =>
     new Date(t).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
+  function paintJob(row, text, button, job, hasAI) {
+    const status = job?.status || "";
+    const showAsk = !status && !hasAI;
+    row.classList.toggle("is-hidden", !showAsk && !status);
+    button.hidden = !showAsk && status !== "blocked";
+    button.disabled = false;
+    if (status === "pending") {
+      text.textContent = "已收到，AI 正在处理";
+      row.classList.remove("is-blocked");
+    } else if (status === "running") {
+      text.textContent = "AI 正在处理…";
+      row.classList.remove("is-blocked");
+    } else if (status === "blocked") {
+      text.textContent = `AI 回复失败${job.error ? "：" + job.error : ""}`;
+      row.classList.add("is-blocked");
+      button.textContent = "重试";
+    } else if (showAsk) {
+      text.textContent = "";
+      row.classList.remove("is-blocked");
+      button.textContent = "让 AI 回答";
+    } else {
+      text.textContent = "";
+      row.classList.remove("is-blocked");
+    }
+  }
+
   function openPopById(id, { focus = true, anchorEl = null } = {}) {
     const mark = body.querySelector(`mark.note-hl[data-note="${id}"]`);
     const note = notesFor(all, slug).find((n) => n.id === id);
@@ -466,6 +494,7 @@ function initNotes() {
 
     pop = document.createElement("div");
     pop.className = "nt-pop notranslate";
+    pop.dataset.note = id;
     pop.setAttribute("translate", "no");
 
     const head = document.createElement("div");
@@ -523,6 +552,34 @@ function initNotes() {
       list.append(row);
     });
 
+    const jobRow = document.createElement("div");
+    jobRow.className = "nt-job";
+    jobRow.dataset.note = id;
+    const jobText = document.createElement("span");
+    jobText.className = "nt-job-text";
+    const askBtn = document.createElement("button");
+    askBtn.type = "button";
+    askBtn.className = "nt-ask";
+    askBtn.dataset.act = "ask";
+    askBtn.textContent = "让 AI 回答";
+    const hasAI = note.thread.some((m) => m.author === "AI");
+    paintJob(jobRow, jobText, askBtn, note.job, hasAI);
+    askBtn.addEventListener("click", async () => {
+      askBtn.disabled = true;
+      try {
+        await askAI(slug, id);
+        paintJob(jobRow, jobText, askBtn, { status: "pending", attempts: 0 }, hasAI);
+      } catch (err) {
+        askBtn.disabled = false;
+        if (err instanceof AuthError) {
+          promptForKey(() => askBtn.click());
+        } else {
+          jobText.textContent = err.message || "没能排进队列";
+        }
+      }
+    });
+    jobRow.append(jobText, askBtn);
+
     const replyBox = document.createElement("div");
     replyBox.className = "nt-reply";
     const replyInput = document.createElement("textarea");
@@ -572,7 +629,7 @@ function initNotes() {
     delBtn.textContent = "删除";
     foot.append(saveBtn, delBtn);
 
-    pop.append(head, first, list, replyBox, foot);
+    pop.append(head, first, list, jobRow, replyBox, foot);
     document.body.append(pop);
 
     if (!mark) {
@@ -800,6 +857,32 @@ function initNotes() {
   });
 
   renderList();
+
+  // 服务端有新楼层或任务状态变化时，页面自己更新，不用手动刷新。
+  openNoteStream(slug, (kind, data) => {
+    if (kind === "note.updated" && data?.note?.id) {
+      const incoming = data.note;
+      const current = notesFor(all, slug).find((n) => n.id === incoming.id);
+      if (current && JSON.stringify(current.thread) === JSON.stringify(incoming.thread)) return;
+      all = save({ ...all, [slug]: notesFor(all, slug).map((n) => (n.id === incoming.id ? incoming : n)) });
+      paintAll();
+      renderList();
+      if (pop && pop.dataset.note === incoming.id) {
+        const wasFocused = document.activeElement?.closest(".nt-pop");
+        const scrollTop = pop.querySelector(".nt-thread")?.parentElement?.scrollTop || 0;
+        openPopById(incoming.id, { focus: !wasFocused });
+        const fresh = document.querySelector(".nt-pop");
+        if (fresh && scrollTop) fresh.scrollTop = scrollTop;
+      }
+      return;
+    }
+    if (kind === "job.updated" && data?.note_id) {
+      const row = document.querySelector(`.nt-job[data-note="${data.note_id}"]`);
+      if (!row) return;
+      const note = notesFor(all, slug).find((n) => n.id === data.note_id);
+      paintJob(row, row.querySelector(".nt-job-text"), row.querySelector(".nt-ask"), data.job, !!note?.thread?.some((m) => m.author === "AI"));
+    }
+  });
 
   window.addEventListener("scroll", hideBar, { passive: true });
 }

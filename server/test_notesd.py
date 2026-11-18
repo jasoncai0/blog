@@ -232,6 +232,27 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual(mine[0]["kind"], "auto")
         self.assertEqual(mine[0]["status"], "pending")
 
+    def test_note_payload_carries_active_job(self):
+        slug = "jobs-payload"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0008", self.note("job-0008"))
+        self.call("POST", f"/api/notes/{slug}/job-0008/ask", {})
+        _, body = self.call("GET", f"/api/notes/{slug}")
+        note = next(n for n in body["notes"] if n["id"] == "job-0008")
+        self.assertEqual(note["job"]["status"], "pending")
+        self.assertEqual(note["job"]["attempts"], 0)
+
+    def test_note_stream_announces_job_updates(self):
+        slug = "jobs-stream2"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0009", self.note("job-0009"))
+        conn, resp = self.stream(f"/api/notes/{slug}/stream")
+        self.call("POST", f"/api/notes/{slug}/job-0009/ask", {})
+        event, data = self.first_event(resp)
+        self.assertEqual(event, "job.updated")
+        self.assertEqual(data["note_id"], "job-0009")
+        conn.close()
+
     def test_statement_reply_does_not_create_job(self):
         slug = "jobs-plain"
         self.register(slug)

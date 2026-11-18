@@ -185,6 +185,39 @@ export async function postReply(slug, noteId, text, author = "我") {
   return res.json();
 }
 
+export async function askAI(slug, noteId) {
+  const headers = { "Content-Type": "application/json" };
+  const key = getEditKey();
+  if (key) headers["X-Edit-Key"] = key;
+  const res = await fetch(`${API}/notes/${slug}/${noteId}/ask`, { method: "POST", headers, body: "{}" });
+  if (res.status === 401) throw new AuthError("edit key required");
+  if (res.status === 409) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error === "no session" ? "这篇文章没有关联的会话" : "已经有一条在排队了");
+  }
+  if (!res.ok) throw new Error(`ask ${res.status}`);
+  return res.json();
+}
+
+export function openNoteStream(slug, onEvent) {
+  const source = new EventSource(`${API}/notes/${slug}/stream`);
+  source.addEventListener("note.updated", (evt) => {
+    try {
+      onEvent("note.updated", JSON.parse(evt.data));
+    } catch {
+      /* 坏事件直接丢 */
+    }
+  });
+  source.addEventListener("job.updated", (evt) => {
+    try {
+      onEvent("job.updated", JSON.parse(evt.data));
+    } catch {
+      /* 同上 */
+    }
+  });
+  return source;
+}
+
 export const pullSummary = () => getJSON("summary");
 export const pullNotes = (slug) => getJSON(`notes/${slug}`);
 

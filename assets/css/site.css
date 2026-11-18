@@ -643,6 +643,14 @@ mark.note-hl:focus { outline: 2px solid rgba(191, 69, 32, 0.35); outline-offset:
 .nt-floor-no { color: var(--soft); font-variant-numeric: tabular-nums; }
 .nt-floor.is-ai .nt-author { color: var(--accent); font-weight: 500; }
 .nt-text { margin: 6px 0 0; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+.nt-job { display: flex; align-items: center; gap: 8px; margin: 10px 0 0; font-size: 11px; color: var(--muted); }
+.nt-job.is-hidden { display: none; }
+.nt-job.is-blocked { color: var(--accent); }
+.nt-job .nt-ask {
+  margin-left: auto; font: inherit; font-size: 11px; padding: 2px 8px; cursor: pointer;
+  border: 1px solid var(--rule); border-radius: 999px; background: var(--paper); color: var(--ink);
+}
+.nt-job .nt-ask:hover { border-color: var(--accent); color: var(--accent); }
 .nt-reply { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
 .nt-reply-input,
 .nt-key-input {

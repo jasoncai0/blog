@@ -101,6 +101,15 @@ CREATE TABLE IF NOT EXISTS sessions (
 """
 
 
+def job_summary(job: dict) -> dict:
+    return {
+        "id": job.get("id", ""),
+        "status": job.get("status", ""),
+        "attempts": job.get("attempts", 0),
+        "error": job.get("error", ""),
+    }
+
+
 def now() -> int:
     return int(time.time() * 1000)
 
@@ -277,6 +286,7 @@ class Store:
             )
         job = self.job(job_id) or {}
         self.publish("jobs", "job.created", job)
+        self.publish(f"note:{slug}", "job.updated", {"note_id": note_id, "job": job_summary(job)})
         return job
 
     def job(self, job_id: str) -> dict | None:
@@ -326,6 +336,7 @@ class Store:
         job = self.job(job_id)
         if job:
             self.publish("jobs", "job.updated", job)
+            self.publish(f"note:{job['slug']}", "job.updated", {"note_id": job["note_id"], "job": job_summary(job)})
         return job
 
     def upsert_session(self, slug: str, session_id: str, workspace: str, title: str) -> dict:
@@ -652,6 +663,7 @@ class Handler(BaseHTTPRequestHandler):
                         "t": row["t"],
                         "thread": json.loads(row["thread"]),
                         "updated": row["updated"],
+                        "job": job_summary(active) if (active := self.store.active_job(row["id"])) else None,
                     }
                     for row in self.store.notes_for(slug)
                 ]
