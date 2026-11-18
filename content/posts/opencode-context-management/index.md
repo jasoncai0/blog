@@ -1,7 +1,7 @@
 ---
 title: "OpenCode 上下文管理机制"
 date: "2026-11-09T03:05:00+08:00"
-summary: "每个 Step 如何重建上下文、token 预算如何触发摘要压缩、checkpoint 与原生压缩如何回放，以及缓存友好性设计；含 6 张机制图。"
+summary: "每个 Step 如何重建上下文、token 预算如何触发摘要压缩、checkpoint 与原生压缩如何回放，以及缓存友好性设计；结论按 P0–P3 影响排序，含 6 张机制图。"
 description: "基于 opencode 2.2.5 源码，拆解 Session 上下文的装载、token 计量、摘要压缩、checkpoint、原生压缩与缓存策略。"
 tags: ["opencode", "context-engineering"]
 slug: "opencode-context-management"
@@ -11,18 +11,41 @@ slug: "opencode-context-management"
 > 代码引用以仓库根目录 `.opencode-src/` 为基准；`packages/core/src/session/` 下的文件在正文中省略该前缀。
 > 本文讨论的是 V2 的 Session 运行时。V1 的 tail-turn / pruning 配置字段已在配置层被拒绝，差异见第 15 节。
 
-## 0. 先给结论
+## 0. 先给结论（按影响排序）
 
-OpenCode 的上下文管理，不是"在内存里维护一个不断增长的 messages 数组"，而是**每个 Step 都从持久化历史重新装载一次上下文**，并在装载之后、发请求之前决定是否压缩。
+下面九条按"判断错要付多大代价"排：P0 错了会直接推出错误结论或错误操作，P3 是可以晚点再看的调参项。每条都标了对应章节，细节去那里看。
 
-- **单一事实来源**：所有消息以追加事件写入 SQLite，再由 projector 投影成 `session_message` 行；模型看到的上下文是这些行的一个"窗口"。
-- **窗口有边界**：历史从"最近一次 completed compaction"开始读取，更早的消息仍在库里，但不再发送。
-- **预算是双轨的**：上一轮 provider 返回的 `tokens` 是**实测值**，其后新增消息按字符数**估算**；两者相加达到 `ceiling` 就触发压缩。
-- **压缩是摘要，不是删除**：旧对话被写成结构化 summary，最近约 15k token 的对话被序列化成 `recent-context`；两者合并为**一条 user 消息**（checkpoint）进入后续请求。
-- **压缩优先复用缓存**：摘要请求 = 当前请求的完整前缀 + 追加的 summary prompt，因此 provider 的 prompt cache 在有效期内仍然命中；只有压缩完成后的第一步需要重建前缀。
-- **降级有顺序**：请求放不下时，先尝试原样发送，再去掉保留尾部，最后才把 transcript 扁平化成文本；文本内部还分 L0–L4 五级，从最旧的交换开始降级。
-- **原生压缩是另一条路径**：provider 返回加密 window，只对生成它的 provider + model 可回放；换模型时退回更早的边界（summary 或原始 transcript）。
-- **瘦身发生在源头**：工具输出在执行后立即截断（2000 行 / 50 KiB）并落盘，图片有 25 MiB / 15 MiB 的请求体预算，历史里的 reasoning 和 provider metadata 跨模型时会被丢弃。
+### P0 · 决定会不会当场坏
+
+**P0-1 上下文是每次重建的投影，不在内存里。** 没有常驻的 `messages` 数组；所有消息以追加事件写入 SQLite，projector 投影成 `session_message` 行，模型看到的是这些行的一个窗口，窗口从最近一次 completed compaction 开始（§2、§3）。把它想成"内存里不断变长的数组"，关于缓存、压缩时机、fork 的推论会全错。
+
+**P0-2 触发线是 `window − max(floor(window×15%), 16k)`，用量走"实测 + 估算"双轨。** 上一轮 provider 返回的 `tokens` 是实测值，其后新增消息按 4 字符/token 估算，两者相加过线才压缩（§4.1、§4.3）。窗口未知时 `ceiling = +∞`，自动压缩永不触发，只能等 provider 报 too long（§4.3）。
+
+**P0-3 压缩会改写历史形态，丢掉的细节拿不回来。** 旧对话写成 summary，最近约 15k token 序列化成 `<recent-context>` 文本：工具输出截到 1250 字符、图片只留占位、reasoning 丢弃；两者合并成一条 user 消息进入后续请求（§6.2、§7.1）。
+
+### P1 · 决定出错时退到哪
+
+**P1-1 降级有严格顺序。** 请求放不下时先原样发送，再去掉保留尾部，最后把 transcript 扁平化成文本；文本内部还分 L0–L4，从最旧的交换开始降（§6.5–6.7）。溢出触发的压缩按 85/70/50/35 逐级收缩，同一个 Step 只恢复一次（§3、§6.1）。
+
+**P1-2 压缩只能压历史，压不了固定开销。** system prompt 与工具 schema 每次都随请求发出，属于固定成本。128k 窗口里有 120k 是它们时，压缩最多腾出几 k，问题不在历史长度（§12）。
+
+### P2 · 决定花多少钱、慢多少
+
+**P2-1 缓存让路是结构性的。** 消息只追加不原地修改；摘要请求等于当前请求的完整前缀再加一段 prompt，所以缓存有效期内仍然命中。代价是压缩完成后的第一步要重建对话前缀，这一段缓存用不上（§11）。
+
+**P2-2 原生压缩是 provider 私有的旁路。** provider 返回加密 window，只对生成它的 provider + model 可回放；换模型时退回更早的 summary 或原始 transcript，不会静默改成摘要，模型不支持时直接报 `provider.unsupported-operation`（§8、§12）。
+
+### P3 · 决定要不要动配置
+
+**P3-1 瘦身尽量发生在源头。** 工具输出执行后立即截断（2000 行 / 50 KiB）并落盘，图片有 25 MiB / 15 MiB 的请求体预算，跨模型时丢 reasoning 与 provider metadata（§10）。压缩只是最后一道闸门，指望它兜住所有超长输入会一直触发。
+
+**P3-2 三个旋钮先看这三个。** `compaction.keep.tokens`（默认 15000）换保真度，`compaction.buffer`（默认 15%，至少 16k）换压缩提前量，`agents.compaction.model` 换摘要质量与成本（§13）。
+
+### 按这张表怎么用
+
+1. 上下文变长、账单变高：先算固定开销（工具 schema、系统指令）占多少，再看压缩。P1-2 决定这里有没有解。
+2. 压缩触发太频繁：调 `buffer`，或让单步增长别太大。默认 15% / 16k 是按 p99≈22k 的单步增长定的（§4.3）。
+3. 出现 too long：先确认 `ceiling` 不是 `+∞`（窗口未知），再确认固定开销没占满窗口，最后才怀疑历史。
 
 一句话：**上下文是"每次重建的投影 + 预算驱动的摘要压缩 + 前缀稳定的缓存策略"三者合力的结果。**
 
