@@ -564,9 +564,33 @@ function initNotes() {
     askBtn.textContent = "让 AI 回答";
     const hasAI = note.thread.some((m) => m.author === "AI");
     paintJob(jobRow, jobText, askBtn, note.job, hasAI);
+    // 点「让 AI 回答」时先落一次批注：用户常常写完问题直接点，不等「保存」。
+    const persistFirstFloor = () => {
+      const current = notesFor(all, slug).find((n) => n.id === id);
+      if (!current) return null;
+      if ((current.thread[0]?.text || "") === input.value) return current;
+      all = save(setThreadText(all, slug, id, input.value, Date.now()));
+      const updated = notesFor(all, slug).find((n) => n.id === id);
+      queueNote(slug, updated);
+      renderList();
+      return updated;
+    };
+
     askBtn.addEventListener("click", async () => {
+      if (!input.value.trim()) {
+        input.focus();
+        jobText.textContent = "先写一句问题，再让 AI 回答";
+        return;
+      }
+      persistFirstFloor();
       askBtn.disabled = true;
       try {
+        const { authNeeded } = await syncNow();
+        if (authNeeded) {
+          askBtn.disabled = false;
+          promptForKey(() => askBtn.click());
+          return;
+        }
         await askAI(slug, id);
         paintJob(jobRow, jobText, askBtn, { status: "pending", attempts: 0 }, hasAI);
       } catch (err) {

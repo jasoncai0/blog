@@ -578,7 +578,40 @@ def test_bubble_still_follows_the_mark_on_wide_screen(page, base):
     assert abs(box["x"] - mark["x"]) <= 2, f"气泡应贴住高亮，实际 {box} vs {mark}"
 
 
+def test_ask_saves_the_typed_annotation_first(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "旧批注")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.locator("mark.note-hl").first.click()
+    page.wait_for_timeout(200)
+    page.fill(".nt-pop .nt-input", "为什么丢掉所有编辑也算收敛？")
+    page.click(".nt-pop .nt-ask")
+    page.wait_for_timeout(500)
+    stored = page.evaluate(
+        """() => JSON.parse(localStorage.getItem('jasoncai:notes:v1'))['ot-crdt-lww'][0]['thread'][0]['text']"""
+    )
+    assert stored == "为什么丢掉所有编辑也算收敛？", f"点 AI 之前应当先存批注：{stored}"
+
+
+def test_ask_without_text_asks_for_a_question(page, base):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.locator("mark.note-hl").first.click()
+    page.wait_for_timeout(200)
+    page.click(".nt-pop .nt-ask")
+    page.wait_for_timeout(300)
+    hint = page.locator(".nt-pop .nt-job-text").inner_text()
+    assert "先写" in hint, f"空批注时应当提示先写问题：{hint}"
+
+
 CASES = [
+    (test_ask_saves_the_typed_annotation_first, False, DESKTOP),
+    (test_ask_without_text_asks_for_a_question, False, DESKTOP),
     (test_highlight_persists_across_reload, False, DESKTOP),
     (test_highlight_paints_only_the_selected_occurrence, False, DESKTOP),
     (test_toolbar_appears_above_selection, False, DESKTOP),
