@@ -129,6 +129,11 @@ class NotesdTest(unittest.TestCase):
             )
             self.assertEqual(status, 200)
             self.assertEqual(self.call("GET", "/api/notes/hello")[0], 200)
+            # 阅读进度是匿名的：访客都能写，不受口令影响。
+            self.assertEqual(
+                self.call("PUT", "/api/progress/anon-probe", {"p": 40, "t": 1700000000000, "d": False})[0],
+                200,
+            )
         finally:
             notesd.Handler.edit_key = ""
 

@@ -533,7 +533,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(HTTPStatus.OK, {"ok": True, "time": now()})
             return
 
-        if write and not self.write_allowed():
+        # 阅读进度是匿名的（每个访客都会写），不收口令；笔记与任务要口令。
+        anonymous = parts[0] == "progress"
+        if write and not anonymous and not self.write_allowed():
             self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "edit key required"})
             return
 
