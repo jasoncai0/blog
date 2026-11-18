@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>site.jasoncai.notes-bridge</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>__HOME__/Documents/deepseek-harness/default-workspace/blog/server/notes_bridge.py</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>NOTES_API</key><string>https://jasoncai.site/api</string>
+    <key>BRIDGE_TOKEN</key><string>__BRIDGE_TOKEN__</string>
+    <key>NOTES_EDIT_KEY</key><string>__EDIT_KEY__</string>
+    <key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>__HOME__/Library/Logs/notes-bridge.log</string>
+  <key>StandardErrorPath</key><string>__HOME__/Library/Logs/notes-bridge.log</string>
+</dict>
+</plist>
