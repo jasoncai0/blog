@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-labelledby="t3 d3">
+  <title id="t3">run 的状态转换</title>
+  <desc id="d3">queue 到 running 的单向迁移，running 按取消、退出码、产物情况分到 succeeded、failed、canceled 三个终态；daemon 重启会把未完成的 run 直接改写成 canceled 并带 errorCode。</desc>
+  <defs>
+    <marker id="a3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="a3acc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.28" fill="#5a6580">RUN STATE · packages/contracts/src/api/chat.ts:446 · chat-run-lifecycle.ts:67</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">五个状态，没有 interrupted</text>
+
+  <rect x="56" y="96" width="140" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="126" y="126" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142">queued</text>
+
+  <rect x="300" y="96" width="150" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="375" y="126" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142">running</text>
+
+  <rect x="600" y="36" width="150" height="48" fill="#2d3142"/>
+  <text x="675" y="65" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#ffffff">succeeded</text>
+
+  <rect x="600" y="112" width="150" height="48" fill="#2d3142"/>
+  <text x="675" y="141" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#ffffff">failed</text>
+
+  <rect x="600" y="188" width="150" height="48" fill="#ffffff" stroke="#bf4520" stroke-width="1.4"/>
+  <text x="675" y="217" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#bf4520">canceled</text>
+
+  <rect x="56" y="196" width="180" height="48" fill="#ffffff" stroke="#bf4520" stroke-dasharray="4 3"/>
+  <text x="146" y="216" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520">daemon 重启</text>
+  <text x="146" y="232" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">DAEMON_RESTARTED</text>
+
+  <line x1="196" y1="122" x2="294" y2="122" stroke="#4f5d75" marker-end="url(#a3)"/>
+  <text x="245" y="112" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">worker 取到，重检终态</text>
+
+  <path d="M375 96 L375 74 L410 74 L410 96" fill="none" stroke="#4f5d75"/>
+  <text x="392" y="66" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">steer 注入</text>
+
+  <line x1="450" y1="104" x2="594" y2="68" stroke="#4f5d75" marker-end="url(#a3)"/>
+  <text x="452" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">exit 0 · 干净结束</text>
+
+  <line x1="450" y1="128" x2="594" y2="136" stroke="#4f5d75" marker-end="url(#a3)"/>
+  <text x="498" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">exit ≠ 0 且无产物</text>
+
+  <line x1="450" y1="140" x2="594" y2="206" stroke="#bf4520" stroke-width="1.2" marker-end="url(#a3acc)"/>
+  <text x="462" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">stop</text>
+
+  <line x1="236" y1="220" x2="594" y2="220" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#a3acc)"/>
+  <text x="330" y="214" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">启动期改写：未完成的 run 一律 canceled</text>
+
+  <text x="56" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">终态判定看四件事，顺序固定：用户是否取消 → 退出码 → 本轮有没有产出 artifact → turn 是否干净结束。</text>
+  <text x="56" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">canceled 带 cancelOrigin（user_stop / project_cleanup / daemon_shutdown / unknown）；重启写的是同一个 canceled，只多一个 errorCode。</text>
+  <text x="56" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">reconcileDurableRunTerminals 在启动后扫 runs/&lt;id&gt;/state.json，把写早了的 failed 修回 succeeded，剩下的才真中断。</text>
+
+  <text x="56" y="360" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">终态路径</text>
+  <text x="56" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">runs.ts:2497 取消 → terminateProcessTree SIGTERM（3s）→ SIGKILL（0.5s）→ finish() 写终态并拆除监听</text>
+  <text x="56" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">steer 只对 running 有效：runtime_unsupported / run_terminal / stdin_closed 三种拒绝都会回 409。</text>
+</svg>

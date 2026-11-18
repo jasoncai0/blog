@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 610" role="img" aria-labelledby="t2 d2">
+  <title id="t2">一次生成的时序</title>
+  <desc id="d2">浏览器发起 POST /api/chat，daemon 先建立 SSE 响应再检测并启动 CLI 子进程，子进程的 stdout 事件被转发给浏览器并每 250 毫秒批量落库，退出后由 finish 判定终态并折叠进 messages.events_json。</desc>
+  <defs>
+    <marker id="a2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="a2acc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.28" fill="#5a6580">SEQUENCE · routes/runs.ts:3500 · server.ts:15163 · runs.ts:1774</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">先建流，再 spawn</text>
+  <text x="924" y="54" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">顺序颠倒会丢掉进程启动瞬间的输出</text>
+
+  <rect x="46" y="74" width="132" height="30" fill="#2d3142"/>
+  <text x="112" y="93" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#ffffff">Web / 渲染层</text>
+  <rect x="252" y="74" width="132" height="30" fill="#2d3142"/>
+  <text x="318" y="93" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#ffffff">daemon routes</text>
+  <rect x="418" y="74" width="120" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="478" y="93" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">detection</text>
+  <rect x="596" y="74" width="132" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="662" y="93" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">CLI 子进程</text>
+  <rect x="790" y="74" width="132" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="856" y="93" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">SQLite / 磁盘</text>
+
+  <g stroke="rgba(45,49,66,0.22)" stroke-dasharray="3 3">
+    <line x1="112" y1="104" x2="112" y2="580"/>
+    <line x1="318" y1="104" x2="318" y2="580"/>
+    <line x1="478" y1="104" x2="478" y2="580"/>
+    <line x1="662" y1="104" x2="662" y2="580"/>
+    <line x1="856" y1="104" x2="856" y2="580"/>
+  </g>
+
+  <!-- 1 -->
+  <line x1="112" y1="130" x2="312" y2="130" stroke="#4f5d75" marker-end="url(#a2)"/>
+  <text x="120" y="124" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">POST /api/chat</text>
+  <text x="326" y="124" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">校验：503 → 400 → 404 → 409 IDEMPOTENCY_CONFLICT</text>
+
+  <!-- 2 -->
+  <line x1="318" y1="164" x2="118" y2="164" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#a2acc)"/>
+  <text x="326" y="158" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">先写 SSE 头（no-transform / X-Accel-Buffering: no），25s keepalive</text>
+
+  <!-- 3 -->
+  <line x1="318" y1="198" x2="472" y2="198" stroke="#4f5d75" marker-end="url(#a2)"/>
+  <text x="326" y="192" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">detectAgents · resolveAgentLaunch</text>
+
+  <!-- 4 -->
+  <line x1="318" y1="232" x2="656" y2="232" stroke="#4f5d75" marker-end="url(#a2)"/>
+  <text x="326" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">spawn：buildArgs → argv 预算检查 → stdin 送整段 prompt</text>
+
+  <!-- 5 -->
+  <line x1="318" y1="266" x2="118" y2="266" stroke="#4f5d75" stroke-dasharray="5 3" marker-end="url(#a2)"/>
+  <text x="326" y="260" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">agent status: running</text>
+
+  <!-- 6 -->
+  <line x1="656" y1="300" x2="324" y2="300" stroke="#4f5d75" stroke-dasharray="5 3" marker-end="url(#a2)"/>
+  <text x="440" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">stdout 帧 → normalize → DaemonAgentPayload</text>
+
+  <!-- 7 -->
+  <line x1="318" y1="334" x2="850" y2="334" stroke="#4f5d75" stroke-dasharray="5 3" marker-end="url(#a2)"/>
+  <text x="326" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">250ms 批量写 message_event_batches；终态才折叠 events_json</text>
+
+  <!-- 8 -->
+  <line x1="318" y1="368" x2="118" y2="368" stroke="#4f5d75" marker-end="url(#a2)"/>
+  <text x="326" y="362" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">agent 帧：text_delta · thinking_* · tool_use · usage</text>
+
+  <!-- 9 -->
+  <line x1="656" y1="402" x2="324" y2="402" stroke="#4f5d75" marker-end="url(#a2)"/>
+  <text x="326" y="396" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">进程退出，带 exit code</text>
+
+  <!-- 10 note -->
+  <rect x="318" y="420" width="368" height="34" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="328" y="434" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">FINISH() 判定顺序</text>
+  <text x="328" y="447" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">取消 → 退出码 0 → artifact 静默 → 有产物但非 0 → 干净结束 → 失败</text>
+
+  <!-- 11 -->
+  <line x1="318" y1="478" x2="850" y2="478" stroke="#4f5d75" stroke-dasharray="5 3" marker-end="url(#a2)"/>
+  <text x="326" y="472" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">messages.events_json + run_status + state.json</text>
+
+  <!-- 12 -->
+  <line x1="318" y1="512" x2="118" y2="512" stroke="#4f5d75" marker-end="url(#a2)"/>
+  <text x="326" y="506" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">end（含 usage、durMs）</text>
+
+  <!-- 13 -->
+  <line x1="850" y1="546" x2="324" y2="546" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#a2acc)"/>
+  <text x="326" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">chokidar 看到文件改动 → file-changed，前端按 mtime 重载预览</text>
+
+  <text x="36" y="596" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">断线重连按 Last-Event-ID 补帧；keepalive 注释帧只算进度，不算事件。</text>
+</svg>

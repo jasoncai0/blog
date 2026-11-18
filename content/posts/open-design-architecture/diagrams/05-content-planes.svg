@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 410" role="img" aria-labelledby="t5 d5">
+  <title id="t5">四类内容平面与 skill 的发现、遮蔽和消费</title>
+  <desc id="d5">skills、design-templates、design-systems、plugins 与 craft 都是磁盘目录；用户目录先扫并按 frontmatter name 遮蔽同名内置项；同一个 skill 记录同时进入 prompt、被拷进 run 的工作目录、并驱动新建面板的分组。</desc>
+  <defs>
+    <marker id="a5" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.28" fill="#5a6580">CONTENT PLANES · skills.ts:284 · cwd-aliases.ts:108</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">内容是可替换的目录，不是数据库行</text>
+  <text x="924" y="54" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">放一个文件夹进去就扩展了能力</text>
+
+  <rect x="36" y="76" width="168" height="66" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="48" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">skills/</text>
+  <text x="48" y="110" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">171 个 SKILL.md</text>
+  <text x="48" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">决定 agent 行为</text>
+
+  <rect x="217" y="76" width="168" height="66" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="229" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">design-templates/</text>
+  <text x="229" y="110" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">116 个渲染蓝图</text>
+  <text x="229" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">决定页面骨架</text>
+
+  <rect x="398" y="76" width="168" height="66" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="410" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">design-systems/</text>
+  <text x="410" y="110" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">154 个品牌包</text>
+  <text x="410" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">决定 token 与组件</text>
+
+  <rect x="579" y="76" width="168" height="66" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="591" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">plugins/</text>
+  <text x="591" y="110" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">6 个官方工作流</text>
+  <text x="591" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">决定阶段与工具门控</text>
+
+  <rect x="760" y="76" width="164" height="66" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="772" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">craft/</text>
+  <text x="772" y="110" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">13 条通用规则</text>
+  <text x="772" y="126" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">品牌无关，按需注入</text>
+
+  <line x1="120" y1="142" x2="120" y2="168" stroke="#4f5d75" marker-end="url(#a5)"/>
+  <line x1="301" y1="142" x2="301" y2="168" stroke="#4f5d75" marker-end="url(#a5)"/>
+  <line x1="482" y1="142" x2="482" y2="168" stroke="#4f5d75" marker-end="url(#a5)"/>
+  <line x1="663" y1="142" x2="663" y2="168" stroke="#4f5d75" marker-end="url(#a5)"/>
+  <line x1="842" y1="142" x2="842" y2="168" stroke="#4f5d75" marker-end="url(#a5)"/>
+
+  <rect x="36" y="170" width="888" height="46" fill="#2d3142"/>
+  <text x="52" y="190" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#ffffff">用户目录先扫，仓库目录后扫；frontmatter 的 name 相同就停（seenIds.has → continue），用户版本遮蔽内置版本</text>
+  <text x="52" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#c9cedb">每次 /api/skills 重新扫描磁盘 · 没有 watcher、没有 SIGHUP、没有安装步骤</text>
+
+  <path d="M300 216 L300 236" stroke="#4f5d75" marker-end="url(#a5)"/>
+  <path d="M480 216 L480 236" stroke="#4f5d75" marker-end="url(#a5)"/>
+  <path d="M660 216 L660 236" stroke="#4f5d75" marker-end="url(#a5)"/>
+
+  <rect x="36" y="238" width="280" height="82" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="48" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">进 PROMPT</text>
+  <text x="48" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">选中 skill 的 SKILL.md 正文，</text>
+  <text x="48" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不带 references/*.md；正文里指路。</text>
+  <text x="48" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">@ 提及与插件 skill 也会拼进来</text>
+
+  <rect x="340" y="238" width="280" height="82" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="352" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">进 RUN 的 CWD</text>
+  <text x="352" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">.od-skills/&lt;basename&gt;-&lt;sha256[:10]&gt;/</text>
+  <text x="352" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">真实拷贝、dereference，不是符号链接；</text>
+  <text x="352" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">每轮清空重拷，隔离写入</text>
+
+  <rect x="644" y="238" width="280" height="82" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="656" y="256" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">进 UI</text>
+  <text x="656" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">od.mode / od.surface / od.category</text>
+  <text x="656" y="290" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">决定新建面板的分组与筛选；</text>
+  <text x="656" y="308" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">缺 od: 块时按 prototype 兜底</text>
+
+  <text x="36" y="348" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">六个新建 tab（原型 / Live Artifact / 幻灯片 / 模板 / 媒体 / 其他）与七个注册模式刻意不等价：tab 是入口分组，mode 是运行期行为，转换写在 NewProjectPanel.tsx 与 skills.ts 里。</text>
+  <text x="36" y="366" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">设计系统包还要求 manifest.json 里 schemaVersion 固定、id 等于目录名、files.design 指向 DESIGN.md，token 里未声明的 var() 直接判错。</text>
+  <text x="36" y="386" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">远程导入只接受 github:owner/repo 或公开 .tar.gz，拒路径穿越、符号链接、超过 50MiB 与覆盖已有 id 的包。</text>
+</svg>

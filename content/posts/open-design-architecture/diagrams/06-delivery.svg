@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-labelledby="t6 d6">
+  <title id="t6">交付物的三条物化路径</title>
+  <desc id="d6">支持工具的 CLI 直接写项目文件，由文件监听触发预览刷新和交付校验；纯文本流的 run 只能输出一个 artifact 块，由宿主解析物化；Live Artifact 是第三种记录，按需刷新并保留快照。</desc>
+  <defs>
+    <marker id="a6" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.28" fill="#5a6580">DELIVERABLES · execution-profile.ts · plain-stream.ts · live-artifacts/store.ts</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">产物长什么样，由 streamFormat 决定</text>
+  <text x="924" y="54" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">Normal Artifact = 入口文件 + manifest</text>
+
+  <rect x="36" y="70" width="888" height="26" fill="#ececec"/>
+  <text x="48" y="87" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">executionProfileFromStreamFormat(streamFormat) → streamFormat === 'plain' ? 'text_artifact' : 'filesystem'　（判据只有一行）</text>
+
+  <text x="36" y="116" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">路径 A · FILESYSTEM · 21 个</text>
+  <rect x="240" y="102" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="252" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">CLI 直接写项目文件</text>
+  <text x="252" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">不经过 daemon</text>
+  <line x1="406" y1="128" x2="420" y2="128" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="422" y="102" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="434" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">chokidar → SSE</text>
+  <text x="434" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">file-changed 事件</text>
+  <line x1="588" y1="128" x2="602" y2="128" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="604" y="102" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="616" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">预览按 mtime 重载</text>
+  <text x="616" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">80/250ms 合并刷新</text>
+  <line x1="770" y1="128" x2="784" y2="128" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="786" y="102" width="138" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="798" y="122" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">交付校验</text>
+  <text x="798" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">入口必须在本轮写过</text>
+
+  <text x="36" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">路径 B · TEXT_ARTIFACT · 6 个</text>
+  <rect x="240" y="192" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="252" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">文本里一个 artifact 块</text>
+  <text x="252" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">属性只认引号形式</text>
+  <line x1="406" y1="218" x2="420" y2="218" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="422" y="192" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="434" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">plain-stream 解析</text>
+  <text x="434" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">代码围栏里的示例跳过</text>
+  <line x1="588" y1="218" x2="602" y2="218" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="604" y="192" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="616" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">物化 + 边车</text>
+  <text x="616" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">&lt;name&gt;.artifact.json</text>
+  <line x1="770" y1="218" x2="784" y2="218" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="786" y="192" width="138" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="798" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">进入产物列表</text>
+  <text x="798" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">单 run 上限 50 个</text>
+
+  <text x="36" y="296" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#bf4520">路径 C · LIVE ARTIFACT · 可刷新</text>
+  <rect x="240" y="282" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="252" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">sourceJson 数据源</text>
+  <text x="252" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">本地文件 / daemon 工具</text>
+  <line x1="406" y1="308" x2="420" y2="308" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="422" y="282" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="434" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">刷新状态机</text>
+  <text x="434" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">锁 → running → 单调序号提交</text>
+  <line x1="588" y1="308" x2="602" y2="308" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="604" y="282" width="164" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="616" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">模板渲染</text>
+  <text x="616" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">单遍插值，禁 script/iframe</text>
+  <line x1="770" y1="308" x2="784" y2="308" stroke="#4f5d75" marker-end="url(#a6)"/>
+  <rect x="786" y="282" width="138" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="798" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">快照</text>
+  <text x="798" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">provenance 一起落盘</text>
+
+  <text x="36" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">A 的判定原因是一个封闭枚举：not_succeeded / no_artifact / project_missing / entry_missing / entry_not_touched / type_mismatch，每一种都对应操作者能看懂的一句提示。</text>
+  <text x="36" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">B 只在没有文件系统工具时启用；给支持工具的 CLI 塞 artifact 块，产物会被当成普通消息丢掉。</text>
+  <text x="36" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">C 与 A、B 都不同：它是一张带刷新状态的记录，落盘在 &lt;project&gt;/.live-artifacts/&lt;id&gt;/，对文件面板和 ZIP 隐藏。</text>
+  <text x="36" y="416" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">三条路径都不做产物回收：文件版本无保留期，live 快照只增不减，磁盘只涨。</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 350" role="img" aria-labelledby="t1 d1">
+  <title id="t1">OpenDesign 的三层进程与单一数据根</title>
+  <desc id="d1">渲染层通过 HTTP 与 SSE 连到 daemon 控制面；daemon 负责解析数据根、托管 SQLite 与 run 状态文件，并 spawn CLI 子进程；CLI 子进程不经过 daemon，直接往项目目录写文件。</desc>
+  <defs>
+    <marker id="a1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="a1acc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.28" fill="#5a6580">SYSTEM TOPOLOGY · apps/web · apps/daemon · 27 adapters</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">三层进程，一个数据根</text>
+  <text x="924" y="54" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">OD_DATA_DIR → server.ts:1432</text>
+
+  <rect x="36" y="74" width="204" height="118" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="48" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">渲染层</text>
+  <text x="48" y="114" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">React 单页 · apps/web</text>
+  <text x="48" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">路由手写 src/router.ts</text>
+  <text x="48" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">静态导出 out/ 由 daemon 托管</text>
+  <text x="48" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">桌面入口 od://app/</text>
+
+  <rect x="292" y="74" width="344" height="118" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="304" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">控制面 · EXPRESS 127.0.0.1:7456</text>
+  <text x="304" y="114" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">routes/ 47 个文件 + SSE 传输</text>
+  <text x="304" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">runs 在内存，状态落 runs/&lt;id&gt;/state.json</text>
+  <text x="304" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">SQLite app.sqlite（WAL）</text>
+  <text x="304" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">token 校验 → origin guard → 路由</text>
+
+  <rect x="688" y="74" width="236" height="118" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="700" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">执行面</text>
+  <text x="700" y="114" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">每个 run 一个子进程</text>
+  <text x="700" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">27 个 adapter 定义</text>
+  <text x="700" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">stdin 送整段 prompt</text>
+  <text x="700" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">stdout 送事件帧</text>
+
+  <line x1="240" y1="128" x2="286" y2="128" stroke="#4f5d75" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="263" y="108" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">HTTP</text>
+  <text x="263" y="119" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">SSE</text>
+  <line x1="636" y1="128" x2="682" y2="128" stroke="#4f5d75" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="662" y="108" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">spawn</text>
+  <text x="662" y="119" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">stdio</text>
+
+  <rect x="36" y="232" width="888" height="86" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="52" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">数据根 · 启动时解析一次并 realpath 规范化</text>
+  <text x="52" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">app.sqlite · projects/ · artifacts/ · runs/ · logs/</text>
+  <text x="52" y="296" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">mcp/ · plugins/ · memory/ · agents.local.json · agent runtime home</text>
+  <text x="908" y="254" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">唯一例外：导入文件夹项目留在 baseDir</text>
+
+  <line x1="436" y1="192" x2="436" y2="226" stroke="#4f5d75" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="444" y="212" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">SQLite · state.json</text>
+  <line x1="806" y1="192" x2="806" y2="226" stroke="#bf4520" stroke-width="1.2" marker-end="url(#a1acc)"/>
+  <text x="798" y="212" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">直接写项目文件，不经过 daemon</text>
+
+  <text x="36" y="338" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">daemon 只看见文件改动（chokidar → file-changed 事件）；渲染层从不解析 agent 的写文件请求。</text>
+</svg>

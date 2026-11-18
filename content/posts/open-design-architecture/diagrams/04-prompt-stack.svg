@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 590" role="img" aria-labelledby="t4 d4">
+  <title id="t4">System prompt 的组装顺序</title>
+  <desc id="d4">composeSystemPrompt 按固定顺序拼接十四个区块，从注入抗性到角色守卫；函数第一行就按 odNextStrategyRecipe 分叉成两套实现；组装完成后只做字节预算检查，不做裁剪。</desc>
+  <defs>
+    <marker id="a4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.28" fill="#5a6580">PROMPT COMPOSITION · prompts/system.ts:899 · 顺序即优先级</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">十三个区块，一条字节闸门</text>
+  <text x="924" y="54" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">slim core 为默认</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+    <rect x="40" y="76" width="520" height="26" fill="#2d3142"/>
+    <text x="52" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#ffffff">composeSystemPrompt(request, context)</text>
+
+    <rect x="40" y="102" width="520" height="26" fill="#ececec"/>
+    <text x="52" y="120" font-size="10" fill="#2d3142">01 注入抗性 · slim charter（按 variant 换头）</text>
+    <rect x="40" y="128" width="520" height="26" fill="#ffffff"/>
+    <text x="52" y="146" font-size="10" fill="#4f5d75">02 UI 语言 · 示例提示 · 设计方向与共享框架</text>
+    <rect x="40" y="154" width="520" height="26" fill="#ececec"/>
+    <text x="52" y="172" font-size="10" fill="#4f5d75">03 项目记忆 · 用户与项目自定义指令</text>
+
+    <rect x="40" y="180" width="520" height="26" fill="#ffffff"/>
+    <text x="52" y="198" font-size="10" fill="#2d3142">04 设计系统：USAGE.md → DESIGN.md 全文 → tokens.css</text>
+    <rect x="40" y="206" width="520" height="26" fill="#ececec"/>
+    <text x="52" y="224" font-size="10" fill="#2d3142">05 设计系统：组件 manifest（或 components.html）+ 富文件索引</text>
+    <rect x="40" y="232" width="520" height="26" fill="#ffffff"/>
+    <text x="52" y="250" font-size="10" fill="#4f5d75">06 craft 规则（13 条，冲突时品牌 token 优先）</text>
+    <rect x="40" y="258" width="520" height="26" fill="#ececec"/>
+    <text x="52" y="276" font-size="10" fill="#2d3142">07 skill 本体 · 语义文件名约定 · 项目文件清单</text>
+    <rect x="40" y="284" width="520" height="26" fill="#ffffff"/>
+    <text x="52" y="302" font-size="10" fill="#4f5d75">08 plugin 块 · 阶段 atom 块（按 pipeline 当前 stage 渲染）</text>
+    <rect x="40" y="310" width="520" height="26" fill="#ececec"/>
+    <text x="52" y="328" font-size="10" fill="#4f5d75">09 deck 框架 · media 契约 · 评委面板</text>
+    <rect x="40" y="336" width="520" height="26" fill="#ffffff"/>
+    <text x="52" y="354" font-size="10" fill="#2d3142">10 本轮变量：设计系统覆盖 · 视觉方向 · 运行参数</text>
+    <rect x="40" y="362" width="520" height="26" fill="#ececec"/>
+    <text x="52" y="380" font-size="10" fill="#2d3142">11 文件系统交接：暂存的 skill 路径 · 写入边界</text>
+    <rect x="40" y="388" width="520" height="26" fill="#ffffff"/>
+    <text x="52" y="406" font-size="10" fill="#4f5d75">12 提问表单 · 渲染约定 · 评论者身份</text>
+    <rect x="40" y="414" width="520" height="26" fill="#2d3142"/>
+    <text x="52" y="432" font-size="10" fill="#ffffff">13 角色边界守卫（最后一段，压住前面的所有指令）</text>
+  </g>
+
+  <line x1="300" y1="440" x2="300" y2="464" stroke="#4f5d75" marker-end="url(#a4)"/>
+  <rect x="40" y="466" width="520" height="42" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="52" y="484" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#bf4520">checkPromptArgvBudget</text>
+  <text x="52" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">POSIX 120,000 B · Windows 32,767−256 B · 超限直接 AGENT_PROMPT_TOO_LARGE，不裁剪</text>
+
+  <rect x="592" y="76" width="332" height="104" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="604" y="94" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">分叉点在函数第一行</text>
+  <text x="604" y="114" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#2d3142">if (odNextStrategyRecipe) return v2(...)</text>
+  <text x="604" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">legacy 栈在 apps/daemon/src/prompts/；</text>
+  <text x="604" y="150" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">OD Next 配方来自插件场景，代码在 contracts。</text>
+  <text x="604" y="168" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">两条路径各有一套测试与快照。</text>
+
+  <rect x="592" y="192" width="332" height="120" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="604" y="210" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">五对手抄镜像已经漂移</text>
+  <text x="604" y="230" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">daemon 的 prompts/*.ts 与 contracts 同名文件：</text>
+  <text x="604" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">system.ts 2048 行 vs 1141 行</text>
+  <text x="604" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">core-slim.ts 在 contracts 侧根本不存在</text>
+  <text x="604" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">#7568：deck 协议只加在 legacy 一侧，</text>
+  <text x="604" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">两个守护都没带 recipe，所以全绿。</text>
+
+  <rect x="592" y="324" width="332" height="122" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="604" y="342" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">明确不做</text>
+  <text x="604" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">1　按 DESIGN.md 分节裁剪（od.design_system.sections 未实现）</text>
+  <text x="604" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">2　prompt 里的 {{ }} 变量替换</text>
+  <text x="604" y="398" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">3　把设计系统目录拷进 run 的 CWD</text>
+  <text x="604" y="422" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">skill 除外：每轮拷一份到 .od-skills/，</text>
+  <text x="604" y="438" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">防止 agent 改写仓库里的发布资源。</text>
+
+  <text x="36" y="530" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="1.1" fill="#5a6580">为什么顺序重要</text>
+  <text x="36" y="548" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">有设计系统时 "设计方向" 整段跳过；craft 夹在品牌 token 与 skill 之间，冲突时前者赢；角色守卫放最后，用来压住 skill 与用户指令。</text>
+  <text x="36" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">文档里那句提醒留着：绿色测试不证明两边都带上了你的改动。</text>
+</svg>
