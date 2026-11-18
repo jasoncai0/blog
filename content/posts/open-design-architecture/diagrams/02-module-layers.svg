@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520" role="img" aria-labelledby="layersTitle layersDesc" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <title id="layersTitle">代码分层：契约在中间，工具在边缘</title>
+  <desc id="layersDesc">27 个 workspace 包按 import 方向分成五层：应用与外壳、服务与执行面、契约与边界、平台原语、开发与发布。apps/web 没有任何一条边指向 apps/daemon/src。</desc>
+  <defs>
+    <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4f5d75"/>
+    </marker>
+    <marker id="a7acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">CODE LAYERS · 27 WORKSPACE PACKAGES</text>
+  <text x="36" y="62" font-size="16" font-weight="600" fill="#2d3142">代码分层：契约在中间，工具在边缘</text>
+  <text x="924" y="38" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">apps 5 · packages 17 · tools 4 · shells 1</text>
+
+  <!-- 第一层：应用与外壳 -->
+  <text x="36" y="108" font-size="10" font-weight="600" fill="#2d3142">应用与外壳</text>
+  <text x="36" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">apps/* · 4 个</text>
+
+  <rect x="170" y="92" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="182" y="110" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">apps/web</text>
+  <text x="182" y="125" font-size="8" fill="#4f5d75">Next 静态产物 · 手写路由</text>
+
+  <rect x="362" y="92" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="374" y="110" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">apps/desktop</text>
+  <text x="374" y="125" font-size="8" fill="#4f5d75">Electron 主进程 · 受信边界</text>
+
+  <rect x="554" y="92" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="566" y="110" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">apps/packaged</text>
+  <text x="566" y="125" font-size="8" fill="#4f5d75">组装根 · od:// 转发</text>
+
+  <rect x="746" y="92" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="758" y="110" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">apps/closure</text>
+  <text x="758" y="125" font-size="8" fill="#4f5d75">可独立分发的内容</text>
+
+  <!-- 第二层：服务与执行面 -->
+  <text x="36" y="204" font-size="10" font-weight="600" fill="#2d3142">服务与执行面</text>
+  <text x="36" y="218" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">apps/daemon</text>
+
+  <rect x="170" y="188" width="360" height="44" fill="#2d3142"/>
+  <text x="182" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#f5f5f5">apps/daemon</text>
+  <text x="182" y="221" font-size="8" fill="#c9cedb">Express · /api/* · SSE · SQLite · 子进程生死</text>
+  <text x="545" y="206" font-size="9" fill="#4f5d75">CLI 子进程不在仓库里。</text>
+  <text x="545" y="220" font-size="9" fill="#4f5d75">27 个 adapter 只描述怎么调它们。</text>
+
+  <!-- 第三层：契约与边界 -->
+  <text x="36" y="280" font-size="10" font-weight="600" fill="#2d3142">契约与边界</text>
+  <text x="36" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">packages/* · 17 个</text>
+
+  <rect x="170" y="264" width="142" height="44" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="180" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">contracts</text>
+  <text x="180" y="297" font-size="8" fill="#4f5d75">HTTP/SSE DTO · 纯 TS</text>
+
+  <rect x="323" y="264" width="142" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="333" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">sidecar-proto</text>
+  <text x="333" y="297" font-size="8" fill="#4f5d75">动作名 · 状态 DTO</text>
+
+  <rect x="476" y="264" width="142" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="486" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">sidecar</text>
+  <text x="486" y="297" font-size="8" fill="#4f5d75">身份 · IPC · 发现</text>
+
+  <rect x="629" y="264" width="142" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="639" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">launcher-proto</text>
+  <text x="639" y="297" font-size="8" fill="#4f5d75">启动协议</text>
+
+  <rect x="782" y="264" width="142" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="792" y="282" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">host</text>
+  <text x="792" y="297" font-size="8" fill="#4f5d75">渲染层宿主桥协议</text>
+
+  <!-- 第四层：平台原语 -->
+  <text x="36" y="366" font-size="10" font-weight="600" fill="#2d3142">平台原语</text>
+  <text x="36" y="380" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">packages/*</text>
+
+  <rect x="170" y="350" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="182" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">platform</text>
+  <text x="182" y="383" font-size="8" fill="#4f5d75">进程 · 端口 · 路径</text>
+
+  <rect x="362" y="350" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="374" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">release</text>
+  <text x="374" y="383" font-size="8" fill="#4f5d75">版本 · 渠道原语</text>
+
+  <rect x="554" y="350" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="566" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">standalone</text>
+  <text x="566" y="383" font-size="8" fill="#4f5d75">校验 · 物化 · 启动</text>
+
+  <rect x="746" y="350" width="178" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="758" y="368" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">diagnostics</text>
+  <text x="758" y="383" font-size="8" fill="#4f5d75">日志收集 · 脱敏 · 打包</text>
+
+  <!-- 第五层：开发与发布 -->
+  <text x="36" y="452" font-size="10" font-weight="600" fill="#2d3142">开发与发布</text>
+  <text x="36" y="466" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">tools/* · shells/*</text>
+
+  <rect x="170" y="436" width="142" height="36" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="180" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">tools/dev</text>
+  <text x="180" y="465" font-size="8" fill="#4f5d75">唯一生命周期入口</text>
+
+  <rect x="323" y="436" width="142" height="36" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="333" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">tools/pack</text>
+  <text x="333" y="465" font-size="8" fill="#4f5d75">打包 · 更新</text>
+
+  <rect x="476" y="436" width="142" height="36" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="486" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">tools/release</text>
+  <text x="486" y="465" font-size="8" fill="#4f5d75">发布元数据</text>
+
+  <rect x="629" y="436" width="142" height="36" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="639" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">tools/serve</text>
+  <text x="639" y="465" font-size="8" fill="#4f5d75">fixture 服务</text>
+
+  <rect x="782" y="436" width="142" height="36" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="792" y="452" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9.5" font-weight="600" fill="#2d3142">shells/terminal</text>
+  <text x="792" y="465" font-size="8" fill="#4f5d75">sh/ps1 · 无 TS 运行时</text>
+
+  <!-- 被禁止的那条边 -->
+  <line x1="259" y1="140" x2="259" y2="184" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#a7acc)"/>
+  <line x1="253" y1="152" x2="265" y2="164" stroke="#bf4520" stroke-width="1.2"/>
+  <line x1="265" y1="152" x2="253" y2="164" stroke="#bf4520" stroke-width="1.2"/>
+  <text x="284" y="161" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">web 不许 import daemon/src</text>
+
+  <text x="36" y="496" font-size="9" fill="#5a6580">实测 import 边：packaged → web + daemon + desktop + 6 个包；daemon → 10 个包；web → 6 个包。</text>
+  <text x="36" y="510" font-size="9" fill="#5a6580">依赖只能自上而下；tools/* 与 shells/* 不被 apps 反向依赖，只由 pnpm 脚本调用。</text>
+</svg>

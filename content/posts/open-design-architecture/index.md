@@ -71,6 +71,12 @@ RUNTIME_DATA_DIR = resolveDataDir(process.env.OD_DATA_DIR, PROJECT_ROOT, {
 
 还有一条组织约束值得抄：同一个能力必须同时出现在 web UI 和 `od` 子命令里，且两边打同一组 `/api/*`（`AGENTS.md`，UI/CLI dual-track）。`packages/contracts` 只放 HTTP 与 SSE 的 DTO，`apps/web` 不许 import `apps/daemon/src`。薄契约挡住了前后端各自长出自己的方言。
 
+进程图回答谁在跑。仓库里 27 个 workspace 包回答另一个问题：谁能 import 谁。
+
+{{< fig "diagrams/02-module-layers.svg" "27 个包分五层，import 只能自上而下。红色那条是被禁止的边：web 拿不到 daemon 的内部实现，只能对着 contracts 的 DTO 编程。" >}}
+
+压在中间的是 `packages/contracts`。它和 `platform`、`sidecar`、`sidecar-proto` 一起被两端同时依赖，是这 4 个包里唯一只做类型与纯函数的那个：HTTP 与 SSE 的 DTO，加上两端共用的解析函数，不碰 Node fs、Express 和浏览器 API。`apps/web` 的 6 条内部依赖里没有 `apps/daemon`，这条缺失由 `AGENTS.md` 写死，没有构建期检查，只在 review 时守。`apps/packaged` 是唯一同时依赖 web 与 daemon 的包，它负责把两个 sidecar 拉起来并注册回 daemon（`sidecars.ts:905-920`）。`tools/*` 和 `shells/*` 在图的底部：不被任何 app 反向依赖，只由 `pnpm` 脚本调用；`shells/terminal` 里没有 TypeScript 运行时，只有 sh/ps1 启动器与 JSON Schema 契约。
+
 ## 3. 核心模块
 
 ### 3.1 daemon 的注册顺序就是它的契约
@@ -93,7 +99,7 @@ RUNTIME_DATA_DIR = resolveDataDir(process.env.OD_DATA_DIR, PROJECT_ROOT, {
 
 真正容易做错的是这一条：**先建 SSE 响应，再 spawn 子进程**。`routes/runs.ts:2867` 建流，`:2900` 才启动。反过来的话，进程启动最初几十毫秒的输出没有接收者。
 
-{{< fig "diagrams/02-run-sequence.svg" "一次生成的时序。红色的两步是这套设计的骨架：先写 SSE 头，再 spawn；文件改动由 chokidar 传递。" >}}
+{{< fig "diagrams/03-run-sequence.svg" "一次生成的时序。红色的两步是这套设计的骨架：先写 SSE 头，再 spawn；文件改动由 chokidar 传递。" >}}
 
 run 先以 `status: 'queued'` 落库（`:1044`），同时在 `<data>/runs/<id>/` 下写 `state.json` 和 `events.jsonl`。这里有一个容易误判的事实：**SQLite 里没有 runs 表**。run 是进程内的内存对象，状态挂在 `messages` 行上，诊断库里另有一张 `active_runs` 只给排障用。
 
@@ -101,7 +107,7 @@ run 先以 `status: 'queued'` 落库（`:1044`），同时在 `<data>/runs/<id>/
 
 终态只有一个出口：`finish()`（`runs.ts:1774`），判定顺序固定（`chat-run-lifecycle.ts:67-105`）：用户取消 → 退出码 0 → ACP 的正常 SIGTERM 覆盖 → artifact 静默关闭 → 退出码非 0 但本轮有产物 → turn 干净结束 → 失败。
 
-{{< fig "diagrams/03-run-states.svg" "run 的五个状态。重启不是第六个状态，它是 queued/running 到 canceled 的一条边，多带一个 errorCode。" >}}
+{{< fig "diagrams/04-run-states.svg" "run 的五个状态。重启不是第六个状态，它是 queued/running 到 canceled 的一条边，多带一个 errorCode。" >}}
 
 取消路径在 `runs.ts:2497`：`terminateProcessTree` 先 SIGTERM，等 3 秒（`OD_CHAT_RUN_CANCEL_GRACE_MS`），再 SIGKILL，再等 500 毫秒。重启路径在 `run-restart-recovery.ts:53-88`：未完成的 run 一律改写成 `canceled`，`terminalAt` 取最后一次活动时间。启动之后 `reconcileDurableRunTerminals` 还会扫一遍 `state.json`，把写早了的 `failed` 修回 `succeeded`，剩下的才算真中断。
 
@@ -149,7 +155,7 @@ if (odNextStrategyRecipe) return composeOdNextStrategyRequestPromptV2(...)
 
 没有 recipe 就走 slim core charter（`core-slim.ts:425`，默认；`OD_PROMPT_CORE=classic` 切回）。正文有三十余个区块，按职责能合并成下面十三组。
 
-{{< fig "diagrams/04-prompt-stack.svg" "prompt 的组装顺序与两道闸门。左列是顺序，右侧三块是分叉点、已发生的漂移和明确不做的三件事。" >}}
+{{< fig "diagrams/05-prompt-stack.svg" "prompt 的组装顺序与两道闸门。左列是顺序，右侧三块是分叉点、已发生的漂移和明确不做的三件事。" >}}
 
 顺序里有三处判断值得单独拎出来。有设计系统时，"设计方向"整段被跳过（`:1150`），因为 `DESIGN.md` 已经回答了风格问题。craft 规则夹在品牌 token 块与 skill 正文之间（`:1331`），冲突时品牌 token 优先。角色边界守卫放在最后一段（`:1530`），用来压住前面所有指令，包括用户自己写的。
 
@@ -161,7 +167,7 @@ if (odNextStrategyRecipe) return composeOdNextStrategyRequestPromptV2(...)
 
 ### 3.5 内容平面：四类目录加一套通用规则
 
-{{< fig "diagrams/05-content-planes.svg" "四类内容平面、遮蔽规则，以及同一条 skill 记录的三处消费：prompt、工作目录、UI 分组。" >}}
+{{< fig "diagrams/06-content-planes.svg" "四类内容平面、遮蔽规则，以及同一条 skill 记录的三处消费：prompt、工作目录、UI 分组。" >}}
 
 规模：`skills/` 171 个 `SKILL.md`，`design-templates/` 116 个，`design-systems/` 154 个包，`plugins/_official/` 6 个工作流，`craft/` 13 条品牌无关规则。
 
@@ -179,7 +185,7 @@ if (odNextStrategyRecipe) return composeOdNextStrategyRequestPromptV2(...)
 
 ### 3.6 交付物：两条物理路径，加一条刷新路径
 
-{{< fig "diagrams/06-delivery.svg" "三条交付路径。A 与 B 由 streamFormat 分流，C 是一种带刷新状态的记录，与项目文件列表互不可见。" >}}
+{{< fig "diagrams/07-delivery.svg" "三条交付路径。A 与 B 由 streamFormat 分流，C 是一种带刷新状态的记录，与项目文件列表互不可见。" >}}
 
 定义先说清：一个 Normal Artifact 等于一个入口文件加一个 manifest，恰好各一个。盘上是普通项目文件外加一个 `<name>.artifact.json` 边车。manifest 字段在 `manifest.ts:217-249`：`version` 恒为 1、`kind`（html / deck / react-component / markdown-document / svg / diagram / code-snippet / mini-app / design-system）、`entry`、`renderer`、`status`、`exports`、`primary`、`supportingFiles`。路径必须相对、不超过 260 字符、不含 `..`，`supportingFiles` 最多 128 个。
 
