@@ -118,6 +118,15 @@ class NotesdTest(unittest.TestCase):
         self.assertTrue(after["d"])
         self.assertEqual(after["p"], 60)
 
+    def test_session_accepts_absolute_workspace(self):
+        code, body = self.call(
+            "PUT",
+            "/api/sessions/abs-ws",
+            {"session_id": "session-abcdefgh", "workspace": "/Users/x/Documents/ws"},
+        )
+        self.assertEqual(code, 200, body)
+        self.assertEqual(body["session"]["workspace"], "/Users/x/Documents/ws")
+
     def test_edit_key_guards_writes(self):
         notesd.Handler.edit_key = "s3cret"
         try:
