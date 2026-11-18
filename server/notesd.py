@@ -30,13 +30,15 @@ import time
 from collections import defaultdict, deque
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 MAX_BODY = 64 * 1024
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,79}$")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{5,63}$")
 SESSION_RE = re.compile(r"^[0-9a-zA-Z][0-9a-zA-Z-]{7,63}$")
 WS_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
+QUESTION_RE = re.compile(r"[?？]|为什么|怎么|是不是|如何|能不能")
+MAX_ATTEMPTS = 3
 MAX_THREAD = 50
 MAX_THREAD_TEXT = 4000
 MAX_Q = 400
@@ -70,6 +72,24 @@ CREATE TABLE IF NOT EXISTS progress (
   t    INTEGER NOT NULL,
   d    INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS jobs (
+  id         TEXT PRIMARY KEY,
+  slug       TEXT NOT NULL,
+  note_id    TEXT NOT NULL,
+  session_id TEXT NOT NULL,
+  kind       TEXT NOT NULL DEFAULT 'auto',
+  prompt     TEXT NOT NULL DEFAULT '',
+  status     TEXT NOT NULL DEFAULT 'pending',
+  attempts   INTEGER NOT NULL DEFAULT 0,
+  worker     TEXT NOT NULL DEFAULT '',
+  claimed_at INTEGER NOT NULL DEFAULT 0,
+  heartbeat  INTEGER NOT NULL DEFAULT 0,
+  error      TEXT NOT NULL DEFAULT '',
+  created    INTEGER NOT NULL DEFAULT 0,
+  updated    INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS jobs_status ON jobs(status, created);
+CREATE INDEX IF NOT EXISTS jobs_note ON jobs(note_id, status);
 CREATE TABLE IF NOT EXISTS sessions (
   slug       TEXT PRIMARY KEY,
   session_id TEXT NOT NULL,
@@ -219,6 +239,64 @@ class Store:
             self.conn.commit()
             return {"p": best_p, "t": best_t, "d": bool(best_d)}
 
+
+    # ---- jobs ----
+    def create_job(self, slug: str, note_id: str, session_id: str, prompt: str, kind: str) -> dict:
+        job_id = "job-" + os.urandom(6).hex()
+        ts = now()
+        with self._lock, self.conn:
+            self.conn.execute(
+                "INSERT INTO jobs(id, slug, note_id, session_id, kind, prompt, status, created, updated) "
+                "VALUES(?,?,?,?,?,?,'pending',?,?)",
+                (job_id, slug, note_id, session_id, kind, prompt, ts, ts),
+            )
+        return self.job(job_id) or {}
+
+    def job(self, job_id: str) -> dict | None:
+        row = self.conn.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
+        return dict(row) if row else None
+
+    def active_job(self, note_id: str) -> dict | None:
+        row = self.conn.execute(
+            "SELECT * FROM jobs WHERE note_id=? AND status IN ('pending','running') ORDER BY created DESC LIMIT 1",
+            (note_id,),
+        ).fetchone()
+        return dict(row) if row else None
+
+    def pending_jobs(self) -> list[dict]:
+        rows = self.conn.execute(
+            "SELECT * FROM jobs WHERE status='pending' ORDER BY created LIMIT 50"
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def claim_job(self, job_id: str, worker: str) -> dict | None:
+        ts = now()
+        with self._lock, self.conn:
+            cur = self.conn.execute(
+                "UPDATE jobs SET status='running', worker=?, attempts=attempts+1, claimed_at=?, "
+                "heartbeat=?, updated=? WHERE id=? AND status='pending'",
+                (worker, ts, ts, ts, job_id),
+            )
+            if cur.rowcount != 1:
+                return None
+        return self.job(job_id)
+
+    def finish_job(self, job_id: str, ok: bool, error: str) -> dict | None:
+        row = self.job(job_id)
+        if row is None:
+            return None
+        if ok:
+            status, error = "done", ""
+        elif row["attempts"] >= MAX_ATTEMPTS:
+            status = "blocked"
+        else:
+            status = "pending"
+        with self._lock, self.conn:
+            self.conn.execute(
+                "UPDATE jobs SET status=?, error=?, updated=? WHERE id=?",
+                (status, error, now(), job_id),
+            )
+        return self.job(job_id)
 
     def upsert_session(self, slug: str, session_id: str, workspace: str, title: str) -> dict:
         with self._lock, self.conn:
@@ -417,6 +495,40 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
             return
 
+        if parts[0] == "jobs":
+            if len(parts) == 1 and self.command == "GET":
+                query = parse_qs(urlparse(self.path).query)
+                status = (query.get("status") or ["pending"])[0]
+                if status != "pending":
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "only status=pending"})
+                    return
+                self.send_json(HTTPStatus.OK, {"jobs": self.store.pending_jobs()})
+                return
+            if len(parts) == 3 and self.command == "POST" and parts[2] == "claim":
+                body = self.read_json()
+                if body is None:
+                    body = {}
+                worker = clean_text(body.get("worker"), 40) or "bridge"
+                job = self.store.claim_job(parts[1], worker)
+                if job is None:
+                    self.send_json(HTTPStatus.CONFLICT, {"error": "not claimable"})
+                    return
+                self.send_json(HTTPStatus.OK, {"ok": True, "job": job})
+                return
+            if len(parts) == 3 and self.command == "POST" and parts[2] == "done":
+                body = self.read_json()
+                if body is None:
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad json"})
+                    return
+                job = self.store.finish_job(parts[1], bool(body.get("ok")), clean_text(body.get("error"), 200))
+                if job is None:
+                    self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such job"})
+                    return
+                self.send_json(HTTPStatus.OK, {"ok": True, "job": job})
+                return
+            self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
+            return
+
         if parts[0] == "sessions" and len(parts) == 2:
             slug = parts[1]
             if not SLUG_RE.match(slug):
@@ -472,6 +584,28 @@ class Handler(BaseHTTPRequestHandler):
                     {"notes": notes, "deleted": self.store.deleted_ids(slug)},
                 )
                 return
+            if len(parts) == 4 and parts[3] == "ask" and self.command == "POST":
+                slug, note_id = parts[1], parts[2]
+                if not SLUG_RE.match(slug) or not ID_RE.match(note_id):
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad path"})
+                    return
+                session = self.store.session_for(slug)
+                if not session:
+                    self.send_json(HTTPStatus.CONFLICT, {"error": "no session"})
+                    return
+                if self.store.active_job(note_id):
+                    self.send_json(HTTPStatus.CONFLICT, {"error": "already queued"})
+                    return
+                row = self.store.note(slug, note_id)
+                if row is None:
+                    self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
+                    return
+                thread = json.loads(row["thread"])
+                prompt = (thread[0].get("text") if thread else "") or row["q"]
+                job = self.store.create_job(slug, note_id, session["session_id"], prompt, "manual")
+                self.send_json(HTTPStatus.OK, {"ok": True, "job": job})
+                return
+
             if len(parts) == 4 and parts[3] == "replies" and self.command == "POST":
                 slug, note_id = parts[1], parts[2]
                 if not SLUG_RE.match(slug) or not ID_RE.match(note_id):
@@ -497,6 +631,15 @@ class Handler(BaseHTTPRequestHandler):
                 if status == "full":
                     self.send_json(HTTPStatus.CONFLICT, {"error": "thread full"})
                     return
+                session = self.store.session_for(slug)
+                if (
+                    session
+                    and QUESTION_RE.search(reply["text"])
+                    and not self.store.active_job(note_id)
+                ):
+                    thread = (note or {}).get("thread") or []
+                    prompt = (thread[0].get("text") if thread else "") or reply["text"]
+                    self.store.create_job(slug, note_id, session["session_id"], prompt, "auto")
                 self.send_json(HTTPStatus.OK, {"ok": True, "note": note})
                 return
 

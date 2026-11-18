@@ -148,6 +148,62 @@ class NotesdTest(unittest.TestCase):
                               {"author": "AI", "text": "hi"})
         self.assertEqual(status, 404)
 
+    def register(self, slug, sid="0f3a1c2d-1234-4abc-9def-001122334455"):
+        self.call("PUT", f"/api/sessions/{slug}", {"session_id": sid, "workspace": "default-workspace"})
+
+    def test_question_reply_creates_job(self):
+        slug = "jobs-auto"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0001", self.note("job-0001"))
+        status, _ = self.call("POST", f"/api/notes/{slug}/job-0001/replies",
+                              {"author": "我", "text": "这里为什么不用向量时钟？", "t": 2000})
+        self.assertEqual(status, 200)
+        status, body = self.call("GET", "/api/jobs?status=pending")
+        self.assertEqual(status, 200)
+        mine = [j for j in body["jobs"] if j["slug"] == slug]
+        self.assertEqual(len(mine), 1)
+        self.assertEqual(mine[0]["kind"], "auto")
+        self.assertEqual(mine[0]["status"], "pending")
+
+    def test_statement_reply_does_not_create_job(self):
+        slug = "jobs-plain"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0002", self.note("job-0002"))
+        self.call("POST", f"/api/notes/{slug}/job-0002/replies", {"author": "我", "text": "这句是全文转折", "t": 2000})
+        _, body = self.call("GET", "/api/jobs?status=pending")
+        self.assertEqual([j for j in body["jobs"] if j["slug"] == slug], [])
+
+    def test_ask_twice_returns_409(self):
+        slug = "jobs-manual"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0003", self.note("job-0003"))
+        self.assertEqual(self.call("POST", f"/api/notes/{slug}/job-0003/ask", {})[0], 200)
+        self.assertEqual(self.call("POST", f"/api/notes/{slug}/job-0003/ask", {})[0], 409)
+
+    def test_ask_without_session_returns_409(self):
+        self.call("PUT", "/api/notes/jobs-none/job-0004", self.note("job-0004"))
+        self.assertEqual(self.call("POST", "/api/notes/jobs-none/job-0004/ask", {})[0], 409)
+
+    def test_job_claim_done_and_retry_budget(self):
+        slug = "jobs-life"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0005", self.note("job-0005"))
+        _, body = self.call("POST", f"/api/notes/{slug}/job-0005/ask", {})
+        job_id = body["job"]["id"]
+        status, claimed = self.call("POST", f"/api/jobs/{job_id}/claim", {"worker": "bridge-1"})
+        self.assertEqual(status, 200)
+        self.assertEqual(claimed["job"]["status"], "running")
+        self.assertEqual(self.call("POST", f"/api/jobs/{job_id}/claim", {"worker": "bridge-2"})[0], 409)
+        _, done = self.call("POST", f"/api/jobs/{job_id}/done", {"ok": False, "error": "locked"})
+        self.assertEqual(done["job"]["status"], "pending")
+        self.assertEqual(done["job"]["attempts"], 1)
+        for _ in range(2):
+            _, claimed = self.call("POST", f"/api/jobs/{job_id}/claim", {"worker": "bridge-1"})
+            _, done = self.call("POST", f"/api/jobs/{job_id}/done", {"ok": False, "error": "locked"})
+        self.assertEqual(done["job"]["status"], "blocked")
+        self.assertEqual(done["job"]["attempts"], 3)
+        self.assertEqual(done["job"]["error"], "locked")
+
     def test_session_round_trip(self):
         status, _ = self.call("PUT", "/api/sessions/ot-crdt-lww", {
             "session_id": "0f3a1c2d-1234-4abc-9def-001122334455",
