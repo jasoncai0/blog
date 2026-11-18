@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="952" viewBox="0 0 1360 952" role="img" aria-label="六类归因的级联判定">
+
+<defs>
+  <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+    <circle cx="1.4" cy="1.4" r="1.3" fill="#dfe4ec"/>
+  </pattern>
+  <filter id="soft" x="-8%" y="-12%" width="116%" height="132%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3.2" flood-color="#1b2440" flood-opacity="0.10"/>
+  </filter>
+  <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#7c8798"/>
+  </marker>
+  <marker id="arrow-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#10b981"/>
+  </marker>
+  <marker id="arrow-purple" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#8b5cf6"/>
+  </marker>
+  <marker id="arrow-pink" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#e11d48"/>
+  </marker>
+  <marker id="arrow-dark" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#2d3748"/>
+  </marker>
+</defs>
+
+<rect width="1360" height="952" fill="#f7f8fa"/><rect width="1360" height="952" fill="url(#dots)" opacity="0.75"/><text x="40.0" y="46.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.18em">ATTRIBUTION · 级联判定</text><text x="40.0" y="78.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="600" fill="#1f2937" text-anchor="start">一条失败 trace，六道闸，一个未知桶</text><text x="40.0" y="100.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="400" fill="#8b95a6" text-anchor="start">顺序按因果链从上游到下游，查证成本也从低到高；命中即停，不再往下猜</text>
+<rect x="40" y="126" width="900" height="58" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2" stroke-dasharray="6 4" filter="url(#soft)"/>
+<text x="58.0" y="150.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11" font-weight="600" fill="#334155" text-anchor="start">先摘掉两个非策略出口</text>
+<rect x="58.0" y="160.0" width="120.4" height="16" rx="8.0" fill="#ffffff"/><text x="118.2" y="170.9" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8" font-weight="500" fill="#64748b" text-anchor="middle">硬约束回归 → 回滚 + 修代码</text>
+<rect x="204.4" y="160.0" width="83.2" height="16" rx="8.0" fill="#ffffff"/><text x="246.0" y="170.9" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8" font-weight="500" fill="#64748b" text-anchor="middle">评测误判 → 改尺子</text>
+<text x="922.0" y="168.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="end">不进调优器</text>
+<rect x="40" y="206" width="520" height="64" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="54.0" y="218.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="65.1" y="228.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#64748b" text-anchor="middle">G1</text>
+<text x="98.0" y="230.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">资产在库里，召回却没带上？</text>
+<text x="56.0" y="256.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">recall@8 = 0 且 asset_id ∈ 租户资产树</text>
+<rect x="600" y="206" width="340" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="614.0" y="218.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="625.1" y="228.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#7c3aed" text-anchor="middle">C1</text>
+<text x="658.0" y="230.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">召回缺失</text>
+<text x="616.0" y="256.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">→ 旋钮 topK · 阈值 · 查询改写</text>
+<line x1="562" y1="238.0" x2="594" y2="238.0" stroke="#10b981" stroke-width="1.8"  marker-end="url(#arrow-green)"/>
+<text x="582.0" y="229.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="600" fill="#059669" text-anchor="middle">是</text>
+<line x1="160" y1="270" x2="160" y2="291" stroke="#7c8798" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="170.0" y="287.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">否</text>
+<rect x="40" y="296" width="520" height="64" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="54.0" y="308.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="65.1" y="318.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#64748b" text-anchor="middle">G2</text>
+<text x="98.0" y="320.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">Skill 存在且可用，却没被激活？</text>
+<text x="56.0" y="346.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">skill_calls 无该 Skill，输入满足其 schema</text>
+<rect x="600" y="296" width="340" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="614.0" y="308.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="625.1" y="318.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#7c3aed" text-anchor="middle">C2</text>
+<text x="658.0" y="320.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">技能未激活</text>
+<text x="616.0" y="346.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">→ 旋钮 Skill 描述 · 触发词</text>
+<line x1="562" y1="328.0" x2="594" y2="328.0" stroke="#10b981" stroke-width="1.8"  marker-end="url(#arrow-green)"/>
+<text x="582.0" y="319.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="600" fill="#059669" text-anchor="middle">是</text>
+<line x1="160" y1="360" x2="160" y2="381" stroke="#7c8798" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="170.0" y="377.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">否</text>
+<rect x="40" y="386" width="520" height="64" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="54.0" y="398.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="65.1" y="408.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#64748b" text-anchor="middle">G3</text>
+<text x="98.0" y="410.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">工具失败、超时或降级？</text>
+<text x="56.0" y="436.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">error_rate ↑ 或 latency &gt; timeout 或降级标记</text>
+<rect x="600" y="386" width="340" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="614.0" y="398.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="625.1" y="408.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#7c3aed" text-anchor="middle">C3</text>
+<text x="658.0" y="410.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">工具超时</text>
+<text x="616.0" y="436.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">→ 旋钮 超时 · 重试 · 降级开关</text>
+<line x1="562" y1="418.0" x2="594" y2="418.0" stroke="#10b981" stroke-width="1.8"  marker-end="url(#arrow-green)"/>
+<text x="582.0" y="409.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="600" fill="#059669" text-anchor="middle">是</text>
+<line x1="160" y1="450" x2="160" y2="471" stroke="#7c8798" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="170.0" y="467.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">否</text>
+<rect x="40" y="476" width="520" height="64" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="54.0" y="488.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="65.1" y="498.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#64748b" text-anchor="middle">G4</text>
+<text x="98.0" y="500.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">上下文或预算被截断？</text>
+<text x="56.0" y="526.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">上下文利用率 &gt; 0.9，或触发过 compaction</text>
+<rect x="600" y="476" width="340" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="614.0" y="488.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="625.1" y="498.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#7c3aed" text-anchor="middle">C4</text>
+<text x="658.0" y="500.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">预算不足</text>
+<text x="616.0" y="526.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">→ 旋钮 预算档位 · 压缩阈值</text>
+<line x1="562" y1="508.0" x2="594" y2="508.0" stroke="#10b981" stroke-width="1.8"  marker-end="url(#arrow-green)"/>
+<text x="582.0" y="499.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="600" fill="#059669" text-anchor="middle">是</text>
+<line x1="160" y1="540" x2="160" y2="561" stroke="#7c8798" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="170.0" y="557.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">否</text>
+<rect x="40" y="566" width="520" height="64" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="54.0" y="578.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="65.1" y="588.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#64748b" text-anchor="middle">G5</text>
+<text x="98.0" y="590.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">工具调用对，但理解偏了？</text>
+<text x="56.0" y="616.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">参数符合 schema，产物偏离；用户改措辞</text>
+<rect x="600" y="566" width="340" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="614.0" y="578.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="625.1" y="588.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#7c3aed" text-anchor="middle">C5</text>
+<text x="658.0" y="590.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">提示歧义</text>
+<text x="616.0" y="616.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">→ 旋钮 prompt 片段 · few-shot</text>
+<line x1="562" y1="598.0" x2="594" y2="598.0" stroke="#10b981" stroke-width="1.8"  marker-end="url(#arrow-green)"/>
+<text x="582.0" y="589.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="600" fill="#059669" text-anchor="middle">是</text>
+<line x1="160" y1="630" x2="160" y2="651" stroke="#7c8798" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="170.0" y="647.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">否</text>
+<rect x="40" y="656" width="520" height="64" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="54.0" y="668.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="65.1" y="678.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#64748b" text-anchor="middle">G6</text>
+<text x="98.0" y="680.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">换强模型、多跑 3 次仍不过？</text>
+<text x="56.0" y="706.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">升一档模型 3/3 失败，同输入可复现</text>
+<rect x="600" y="656" width="340" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<rect x="614.0" y="668.0" width="22.2" height="15" rx="7.5" fill="#ffffff"/><text x="625.1" y="678.2" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.5" font-weight="500" fill="#7c3aed" text-anchor="middle">C6</text>
+<text x="658.0" y="680.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="600" fill="#1f2937" text-anchor="start">模型能力不足</text>
+<text x="616.0" y="706.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="400" fill="#8b95a6" text-anchor="start">→ 旋钮 路由权重（升档）</text>
+<line x1="562" y1="688.0" x2="594" y2="688.0" stroke="#10b981" stroke-width="1.8"  marker-end="url(#arrow-green)"/>
+<text x="582.0" y="679.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="600" fill="#059669" text-anchor="middle">是</text>
+<line x1="160" y1="720" x2="160" y2="759" stroke="#7c8798" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="170.0" y="737.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">否</text>
+<rect x="40" y="764" width="900" height="62" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2" stroke-dasharray="6 4" filter="url(#soft)"/>
+<text x="58.0" y="790.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#334155" text-anchor="start">六道全否 → 未知桶</text>
+<text x="58.0" y="810.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">6 个框都不填也是正确输出；不许硬塞进最近的一类，进每周人审队列。</text>
+<rect x="976" y="206" width="344" height="470" rx="10" fill="#ffffff" stroke="#d9dee7" stroke-width="1.2" filter="url(#soft)"/>
+<text x="996.0" y="234.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11" font-weight="600" fill="#1f2937" text-anchor="start">每条失败落四个字段</text>
+<text x="996.0" y="262.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">类</text>
+<text x="1080.0" y="262.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">C1–C6，或「未知」</text>
+<text x="996.0" y="289.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">置信度</text>
+<text x="1080.0" y="289.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">0.9 / 0.7 / 0.5 三档</text>
+<text x="996.0" y="316.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">证据指针</text>
+<text x="1080.0" y="316.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">字段路径 + 值</text>
+<text x="996.0" y="343.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">反例检查</text>
+<text x="1080.0" y="343.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">跳过了哪几闸</text>
+<line x1="996" y1="390" x2="1300" y2="390" stroke="#d9dee7" stroke-width="0.8"/>
+<text x="996.0" y="412.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">同时命中怎么判</text>
+<text x="996.0" y="430.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">取更上游的类</text>
+<text x="996.0" y="445.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">置信度降一档</text>
+<text x="996.0" y="460.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">上游能解释下游，反过来不成立</text>
+<line x1="996" y1="486" x2="1300" y2="486" stroke="#d9dee7" stroke-width="0.8"/>
+<text x="996.0" y="508.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">归因质量</text>
+<text x="996.0" y="526.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">100 条/周双人复核</text>
+<text x="996.0" y="541.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">一致率 ≥ 80%</text>
+<text x="996.0" y="556.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">未知桶 5–15%</text>
+<text x="996.0" y="571.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">置信度 &lt; 0.6 → 人审</text>
+<line x1="996" y1="606" x2="1300" y2="606" stroke="#d9dee7" stroke-width="0.8"/>
+<text x="996.0" y="628.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">最容易混的一对</text>
+<text x="996.0" y="646.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">C4 预算 vs C6 能力：</text>
+<text x="996.0" y="661.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#8b95a6" text-anchor="start">被截断的模型看起来就是能力不行</text>
+<rect x="976" y="700" width="344" height="146" rx="10" fill="#ffffff" stroke="#d9dee7" stroke-width="1.2" filter="url(#soft)"/>
+<text x="996.0" y="726.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11" font-weight="600" fill="#1f2937" text-anchor="start">六类之外的三条出口</text>
+<text x="996.0" y="752.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">人审</text>
+<text x="1048.0" y="752.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#8b95a6" text-anchor="start">归属不清、置信度 &lt; 0.6</text>
+<text x="996.0" y="784.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">改代码</text>
+<text x="1048.0" y="784.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#8b95a6" text-anchor="start">硬约束回归、画布写入</text>
+<text x="996.0" y="816.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#334155" text-anchor="start">改尺子</text>
+<text x="1048.0" y="816.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#8b95a6" text-anchor="start">人机判定长期不一致</text>
+<line x1="40" y1="884" x2="1320" y2="884" stroke="#d9dee7" stroke-width="0.8"/><text x="40.0" y="901.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.16em">图例</text><rect x="100" y="893" width="11" height="11" rx="3" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1"/><text x="117.0" y="902.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">闸门 / 判定条件</text><rect x="208.02499999999998" y="893" width="11" height="11" rx="3" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1"/><text x="225.0" y="902.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">可调类</text><rect x="276.525" y="893" width="11" height="11" rx="3" fill="#f0fdf7" stroke="#34d399" stroke-width="1"/><text x="293.5" y="902.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">命中即停</text><rect x="353.525" y="893" width="11" height="11" rx="3" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1"/><text x="370.5" y="902.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">未知 → 人审</text>
+</svg>

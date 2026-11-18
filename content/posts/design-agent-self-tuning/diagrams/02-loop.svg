@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="900" viewBox="0 0 1360 900" role="img" aria-label="自我调优闭环的一轮时序">
+
+<defs>
+  <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+    <circle cx="1.4" cy="1.4" r="1.3" fill="#dfe4ec"/>
+  </pattern>
+  <filter id="soft" x="-8%" y="-12%" width="116%" height="132%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3.2" flood-color="#1b2440" flood-opacity="0.10"/>
+  </filter>
+  <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#7c8798"/>
+  </marker>
+  <marker id="arrow-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#10b981"/>
+  </marker>
+  <marker id="arrow-purple" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#8b5cf6"/>
+  </marker>
+  <marker id="arrow-pink" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#e11d48"/>
+  </marker>
+  <marker id="arrow-dark" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0,0 9,3.5 0,7" fill="#2d3748"/>
+  </marker>
+</defs>
+
+<rect width="1360" height="900" fill="#f7f8fa"/><rect width="1360" height="900" fill="url(#dots)" opacity="0.75"/><text x="40.0" y="46.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.18em">LOOP · 一轮改动的时序</text><text x="40.0" y="78.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="600" fill="#1f2937" text-anchor="start">从线上信号到生效，一轮改动怎么走</text><text x="40.0" y="100.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="400" fill="#8b95a6" text-anchor="start">线上只产信号；归因与回放在离线侧完成；灰度是唯一能改线上行为的环节</text>
+<rect x="34" y="196" width="1292" height="144" rx="10" fill="#ffffff" stroke="#d9dee7" stroke-width="1" stroke-dasharray="6 4" opacity="0.72"/>
+<text x="44.0" y="213.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.12em">线上运行</text>
+<rect x="34" y="350" width="1292" height="102" rx="10" fill="#ffffff" stroke="#d9dee7" stroke-width="1" stroke-dasharray="6 4" opacity="0.72"/>
+<text x="44.0" y="367.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.12em">归因</text>
+<rect x="34" y="462" width="1292" height="148" rx="10" fill="#ffffff" stroke="#d9dee7" stroke-width="1" stroke-dasharray="6 4" opacity="0.72"/>
+<text x="44.0" y="479.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.12em">离线验证</text>
+<rect x="34" y="620" width="1292" height="212" rx="10" fill="#ffffff" stroke="#d9dee7" stroke-width="1" stroke-dasharray="6 4" opacity="0.72"/>
+<text x="44.0" y="637.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.12em">灰度与决策</text>
+<line x1="104" y1="182" x2="104" y2="836" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 5"/>
+<line x1="294" y1="182" x2="294" y2="836" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 5"/>
+<rect x="291" y="226" width="6" height="106" rx="3" fill="#059669" opacity="0.22" stroke="#059669" stroke-width="0.9"/>
+<line x1="484" y1="182" x2="484" y2="836" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 5"/>
+<rect x="481" y="254" width="6" height="44" rx="3" fill="#e11d48" opacity="0.22" stroke="#e11d48" stroke-width="0.9"/>
+<line x1="674" y1="182" x2="674" y2="836" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 5"/>
+<rect x="671" y="306" width="6" height="136" rx="3" fill="#7c3aed" opacity="0.22" stroke="#7c3aed" stroke-width="0.9"/>
+<line x1="864" y1="182" x2="864" y2="836" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 5"/>
+<rect x="861" y="392" width="6" height="268" rx="3" fill="#059669" opacity="0.22" stroke="#059669" stroke-width="0.9"/>
+<line x1="1054" y1="182" x2="1054" y2="836" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 5"/>
+<rect x="1051" y="484" width="6" height="84" rx="3" fill="#7c3aed" opacity="0.22" stroke="#7c3aed" stroke-width="0.9"/>
+<line x1="1244" y1="182" x2="1244" y2="836" stroke="#d9dee7" stroke-width="1" stroke-dasharray="4 5"/>
+<rect x="1241" y="640" width="6" height="152" rx="3" fill="#b45309" opacity="0.22" stroke="#b45309" stroke-width="0.9"/>
+<rect x="26" y="116" width="156" height="64" rx="10" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="104.0" y="142.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#1f2937" text-anchor="middle">用户</text>
+<text x="104.0" y="160.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" fill="#8b95a6" text-anchor="middle">画布操作</text>
+<rect x="216" y="116" width="156" height="64" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="294.0" y="142.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#1f2937" text-anchor="middle">Agent 运行时</text>
+<text x="294.0" y="160.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" fill="#8b95a6" text-anchor="middle">Loop / Context</text>
+<rect x="406" y="116" width="156" height="64" rx="10" fill="#fff5f6" stroke="#fb7185" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="484.0" y="142.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#1f2937" text-anchor="middle">Review Agent</text>
+<text x="484.0" y="160.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" fill="#8b95a6" text-anchor="middle">规则 + 裁判</text>
+<rect x="596" y="116" width="156" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="674.0" y="142.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#1f2937" text-anchor="middle">指标与归因</text>
+<text x="674.0" y="160.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" fill="#8b95a6" text-anchor="middle">trace / 通过率</text>
+<rect x="786" y="116" width="156" height="64" rx="10" fill="#f0fdf7" stroke="#34d399" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="864.0" y="142.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#1f2937" text-anchor="middle">调优器</text>
+<text x="864.0" y="160.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" fill="#8b95a6" text-anchor="middle">生成候选配置</text>
+<rect x="976" y="116" width="156" height="64" rx="10" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="1054.0" y="142.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#1f2937" text-anchor="middle">离线回放</text>
+<text x="1054.0" y="160.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" fill="#8b95a6" text-anchor="middle">历史 + golden set</text>
+<rect x="1166" y="116" width="156" height="64" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.2"  filter="url(#soft)"/>
+<text x="1244.0" y="142.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="600" fill="#1f2937" text-anchor="middle">灰度发布</text>
+<text x="1244.0" y="160.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="7.6" font-weight="400" fill="#8b95a6" text-anchor="middle">阶梯 / 闸门</text>
+<line x1="107" y1="240" x2="287" y2="240" stroke="#0f766e" stroke-width="1.6"  marker-end="url(#arrow-green)"/><rect x="177.0" y="224" width="44.0" height="14" rx="3" fill="#f7f8fa"/><text x="199.0" y="235.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">设计任务</text>
+<line x1="297" y1="266" x2="477" y2="266" stroke="#0f766e" stroke-width="1.6"  marker-end="url(#arrow-green)"/><rect x="367.0" y="250" width="44.0" height="14" rx="3" fill="#f7f8fa"/><text x="389.0" y="261.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">提交产物</text>
+<line x1="481" y1="288" x2="301" y2="288" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/><rect x="356.4" y="272" width="65.2" height="14" rx="3" fill="#f7f8fa"/><text x="389.0" y="283.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">分数 + 违规项</text>
+<line x1="297" y1="320" x2="667" y2="320" stroke="#8b5cf6" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow-purple)"/><rect x="444.8" y="304" width="78.4" height="14" rx="3" fill="#f7f8fa"/><text x="484.0" y="315.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#7c3aed" text-anchor="middle">写 trace（异步）</text>
+<path d="M674,368 H728 Q738,368 738,378 V386 Q738,396 728,396 H682" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+<text x="748.0" y="386.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="start">周批次：失败样本</text>
+<line x1="677" y1="428" x2="857" y2="428" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/><rect x="728.4" y="412" width="81.2" height="14" rx="3" fill="#f7f8fa"/><text x="769.0" y="423.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">归因结论 + 置信度</text>
+<line x1="867" y1="496" x2="1047" y2="496" stroke="#0f766e" stroke-width="1.6"  marker-end="url(#arrow-green)"/><rect x="918.4" y="480" width="81.2" height="14" rx="3" fill="#f7f8fa"/><text x="959.0" y="491.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">候选配置 + 回放集</text>
+<line x1="1051" y1="556" x2="871" y2="556" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/><rect x="913.0" y="540" width="92.0" height="14" rx="3" fill="#f7f8fa"/><text x="959.0" y="551.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">指标对比：不降才放行</text>
+<line x1="867" y1="648" x2="1237" y2="648" stroke="#0f766e" stroke-width="1.6"  marker-end="url(#arrow-green)"/><rect x="1009.0" y="632" width="90.0" height="14" rx="3" fill="#f7f8fa"/><text x="1054.0" y="643.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">提交变更（含 diff）</text>
+<line x1="1241" y1="692" x2="301" y2="692" stroke="#8b5cf6" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow-purple)"/><rect x="730.8" y="676" width="76.4" height="14" rx="3" fill="#f7f8fa"/><text x="769.0" y="687.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#7c3aed" text-anchor="middle">下发 config v+1</text>
+<line x1="1241" y1="736" x2="681" y2="736" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow)"/><rect x="917.6" y="720" width="82.8" height="14" rx="3" fill="#f7f8fa"/><text x="959.0" y="731.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#475569" text-anchor="middle">24h 指标 + 回滚率</text>
+<line x1="1241" y1="788" x2="301" y2="788" stroke="#8b5cf6" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrow-purple)"/><rect x="740.4" y="772" width="57.2" height="14" rx="3" fill="#f7f8fa"/><text x="769.0" y="783.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#7c3aed" text-anchor="middle">生效 / 回滚</text>
+<line x1="40" y1="862" x2="1320" y2="862" stroke="#d9dee7" stroke-width="0.8"/><text x="40.0" y="879.0" font-family="'SFMono-Regular','JetBrains Mono','Geist Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#8b95a6" text-anchor="start" letter-spacing="0.16em">图例</text><rect x="100" y="871" width="11" height="11" rx="3" fill="#f0fdf7" stroke="#34d399" stroke-width="1"/><text x="117.0" y="880.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">主路径请求</text><rect x="185.5" y="871" width="11" height="11" rx="3" fill="#f7f4ff" stroke="#a78bfa" stroke-width="1"/><text x="202.5" y="880.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">异步追踪</text><rect x="262.5" y="871" width="11" height="11" rx="3" fill="#f4f6f9" stroke="#c3cbd8" stroke-width="1"/><text x="279.5" y="880.0" font-family="'Geist','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#4b5563" text-anchor="start">返回</text>
+</svg>

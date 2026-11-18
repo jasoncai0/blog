@@ -135,13 +135,13 @@
   "table": 12
  },
  "design-agent-self-tuning": {
-  "figure": 2,
+  "figure": 4,
   "h1": 1,
-  "h2": 7,
-  "h3": 0,
+  "h2": 12,
+  "h3": 21,
   "hr": 0,
   "pre": 0,
-  "table": 1
+  "table": 14
  },
  "dsh-agent-messaging": {
   "figure": 4,
