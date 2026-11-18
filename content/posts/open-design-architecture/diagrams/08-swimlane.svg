@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" role="img" aria-labelledby="swimTitle swimDesc" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+  <title id="swimTitle">一次 deck 生成的泳道时序：从建项目到导出</title>
+  <desc id="swimDesc">六个泳道分别是渲染层、daemon 路由、run 与 prompt、CLI 子进程、项目目录、导出产物。十二步里第 4、6 步是骨架：先把 SSE 头写出去，再 spawn 子进程。</desc>
+  <defs>
+    <marker id="b8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4f5d75"/>
+    </marker>
+    <marker id="b8acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">WALKTHROUGH · routes/project/index.ts:3936 · routes/runs.ts:3500</text>
+  <text x="36" y="62" font-size="16" font-weight="600" fill="#2d3142">一次 deck 生成的泳道时序</text>
+  <text x="924" y="38" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">skill: deck-swiss-international</text>
+
+  <!-- 泳道头 -->
+  <rect x="62" y="72" width="136" height="26" fill="#2d3142"/>
+  <text x="130" y="89" text-anchor="middle" font-size="9" fill="#f5f5f5">渲染层 web</text>
+
+  <rect x="212" y="72" width="136" height="26" fill="#2d3142"/>
+  <text x="280" y="89" text-anchor="middle" font-size="9" fill="#f5f5f5">daemon 路由</text>
+
+  <rect x="362" y="72" width="136" height="26" fill="#2d3142"/>
+  <text x="430" y="89" text-anchor="middle" font-size="9" fill="#f5f5f5">run + prompt</text>
+
+  <rect x="512" y="72" width="136" height="26" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="580" y="89" text-anchor="middle" font-size="9" fill="#2d3142">CLI 子进程</text>
+
+  <rect x="662" y="72" width="136" height="26" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="730" y="89" text-anchor="middle" font-size="9" fill="#2d3142">项目目录</text>
+
+  <rect x="812" y="72" width="136" height="26" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="880" y="89" text-anchor="middle" font-size="9" fill="#2d3142">导出与产物</text>
+
+  <!-- 生命线 -->
+  <line x1="130" y1="98" x2="130" y2="576" stroke="rgba(45,49,66,0.18)" stroke-dasharray="2 4"/>
+  <line x1="280" y1="98" x2="280" y2="576" stroke="rgba(45,49,66,0.18)" stroke-dasharray="2 4"/>
+  <line x1="430" y1="98" x2="430" y2="576" stroke="rgba(45,49,66,0.18)" stroke-dasharray="2 4"/>
+  <line x1="580" y1="98" x2="580" y2="576" stroke="rgba(45,49,66,0.18)" stroke-dasharray="2 4"/>
+  <line x1="730" y1="98" x2="730" y2="576" stroke="rgba(45,49,66,0.18)" stroke-dasharray="2 4"/>
+  <line x1="880" y1="98" x2="880" y2="576" stroke="rgba(45,49,66,0.18)" stroke-dasharray="2 4"/>
+
+  <!-- 步骤编号 -->
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" text-anchor="end">
+    <text x="58" y="129">01</text>
+    <text x="58" y="165">02</text>
+    <text x="58" y="201">03</text>
+    <text x="58" y="237">04</text>
+    <text x="58" y="273">05</text>
+    <text x="58" y="309">06</text>
+    <text x="58" y="345">07</text>
+    <text x="58" y="381">08</text>
+    <text x="58" y="417">09</text>
+    <text x="58" y="453">10</text>
+    <text x="58" y="489">11</text>
+    <text x="58" y="525">12</text>
+  </g>
+
+  <!-- 01 建项目 -->
+  <line x1="136" y1="126" x2="272" y2="126" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="204" y="121" text-anchor="middle" font-size="8.5" fill="#2d3142">POST /api/projects</text>
+
+  <!-- 02 建目录 -->
+  <line x1="286" y1="162" x2="724" y2="162" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="505" y="157" text-anchor="middle" font-size="8.5" fill="#2d3142">PROJECTS_DIR/&lt;id&gt; + projects 行</text>
+
+  <!-- 03 首轮 -->
+  <line x1="136" y1="198" x2="272" y2="198" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="204" y="193" text-anchor="middle" font-size="8.5" fill="#2d3142">POST /api/chat</text>
+
+  <!-- 04 先写 SSE 头 -->
+  <line x1="274" y1="234" x2="138" y2="234" stroke="#bf4520" stroke-width="1.2" marker-end="url(#b8acc)"/>
+  <text x="206" y="229" text-anchor="middle" font-size="8.5" fill="#bf4520">先写 SSE 头</text>
+
+  <!-- 05 拷 skill 拼 prompt -->
+  <line x1="436" y1="270" x2="724" y2="270" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="580" y="265" text-anchor="middle" font-size="8.5" fill="#2d3142">拷 skill 到 .od-skills/ 拼 prompt</text>
+
+  <!-- 06 spawn -->
+  <line x1="436" y1="306" x2="574" y2="306" stroke="#bf4520" stroke-width="1.2" marker-end="url(#b8acc)"/>
+  <text x="505" y="301" text-anchor="middle" font-size="8.5" fill="#bf4520">spawn + 送 prompt</text>
+
+  <!-- 07 直接写文件 -->
+  <line x1="586" y1="342" x2="724" y2="342" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="655" y="337" text-anchor="middle" font-size="8.5" fill="#2d3142">直接写 index.html</text>
+
+  <!-- 08 file-changed -->
+  <line x1="286" y1="378" x2="138" y2="378" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="212" y="373" text-anchor="middle" font-size="8.5" fill="#2d3142">chokidar → SSE</text>
+
+  <!-- 09 边车 -->
+  <line x1="286" y1="414" x2="724" y2="414" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="505" y="409" text-anchor="middle" font-size="8.5" fill="#2d3142">写 &lt;entry&gt;.artifact.json</text>
+
+  <!-- 10 finish -->
+  <line x1="424" y1="450" x2="288" y2="450" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="356" y="445" text-anchor="middle" font-size="8.5" fill="#2d3142">finish() → succeeded</text>
+
+  <!-- 11 预览 -->
+  <line x1="136" y1="486" x2="272" y2="486" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="204" y="481" text-anchor="middle" font-size="8.5" fill="#2d3142">预览 iframe ?v=mtime</text>
+
+  <!-- 12 导出 -->
+  <line x1="136" y1="522" x2="874" y2="522" stroke="#4f5d75" marker-end="url(#b8)"/>
+  <text x="505" y="517" text-anchor="middle" font-size="8.5" fill="#2d3142">导出 pptx / pdf / html / zip</text>
+
+  <text x="36" y="566" font-size="9" fill="#5a6580">红色两步是骨架：SSE 头在 spawn 之前写出，子进程启动阶段的输出才进得了流。</text>
+  <text x="36" y="580" font-size="9" fill="#5a6580">第 2、5、7、9 步都直接落盘，daemon 对 CLI 的写入只有 chokidar 这一条感知通道。</text>
+  <text x="36" y="600" font-size="9" fill="#5a6580">会话里点过"跳过提问"时，01 携带 pendingPrompt，03 省掉。</text>
+</svg>
