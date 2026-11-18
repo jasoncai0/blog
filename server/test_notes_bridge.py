@@ -60,6 +60,51 @@ class BridgeTest(unittest.TestCase):
         self.assertEqual(calls[-1][1], "/jobs/job-1/done")
         self.assertTrue(calls[-1][2]["ok"])
 
+    def test_falls_back_to_bridge_session_when_preset_is_not_composable(self):
+        import tempfile, os
+        import notes_bridge as nb
+
+        tmp = tempfile.mkdtemp()
+        old = nb.BRIDGE_STATE
+        nb.BRIDGE_STATE = os.path.join(tmp, "sessions.json")
+        calls = []
+
+        def post(method, path, body=None, timeout=20):
+            calls.append((method, path, body))
+            if path.startswith("/sessions/"):
+                return 200, {"session": {"workspace": "/tmp/ws"}}
+            return 200, {}
+
+        def runner(prompt, sid, cwd=None):
+            if sid == "session-orig-0001":
+                raise RuntimeError(
+                'session "session-orig-0001" runs under agent preset "standard", '
+                "which the one-shot runner does not compose"
+            )
+            return "结论：走自建会话"
+
+        created = []
+
+        def runner_new(prompt, cwd=None):
+            created.append(prompt[:20])
+            return "明白了", "session-bridge-0001"
+
+        job = {
+            "id": "job-1", "slug": "demo-post", "note_id": "n1", "session_id": "session-orig-0001",
+            "prompt": "为什么？", "note": {"q": "原文", "thread": [{"author": "我", "text": "为什么？"}]},
+        }
+        try:
+            ok = nb.claim_and_run(job, runner=runner, post=post, runner_new=runner_new)
+            assert ok, "应当成功"
+            assert created, "应当新建会话"
+            replies = [c for c in calls if c[1].endswith("/replies")]
+            assert replies and "自建会话" in replies[0][2]["text"]
+            import json
+            state = json.load(open(nb.BRIDGE_STATE))
+            assert state["demo-post"] == "session-bridge-0001"
+        finally:
+            nb.BRIDGE_STATE = old
+
     def test_claim_and_run_reports_failure(self):
         calls = []
 

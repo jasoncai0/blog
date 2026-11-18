@@ -126,6 +126,12 @@ python3 server/import_notes.py notes-<slug>.json --dry-run                # 先�
 - 没有 JS、或浏览器禁用了存储时，页面照常可读，只是没有进度与过滤。
 - 内部实现见 `docs/superpowers/specs/2026-11-10-reading-progress-design.md`。
 
+## AI 回复会话
+
+批注的「让 AI 回答」优先续上文章绑定的原会话。桌面端建的会话都带预设 `standard`，一次性 runner 组不出来，实测会报 `runs under agent preset "standard", which the one-shot runner does not compose`。
+
+遇到这个错，bridge 会自动改用**按文章自建**的 headless 会话（无预设）：第一次先把文章正文喂进去，之后同篇的提问都续这一个。映射存在 `~/.dsh/notes-bridge-sessions.json`，删掉某条就会重建。
+
 ## 段落折叠
 
 文章页每个 `h2` 前有个小三角，点一下把这一节（到下一个 `h2` 之前的所有内容，含 `h3`）收起来；再点展开。默认全展开，状态按文章存在本机 `localStorage["jasoncai:fold:v1"]`（`{slug: [headingId]}`）。
