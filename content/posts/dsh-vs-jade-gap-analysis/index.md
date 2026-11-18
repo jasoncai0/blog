@@ -7,7 +7,7 @@ tags: ["harness", "architecture", "context-engineering"]
 slug: "dsh-vs-jade-gap-analysis"
 ---
 
-> Jade 版本：`5772293`，108 个 Java 文件、10,740 行、73 个 `@Test`。DSH 版本：已安装的 `@deepseek-ai/dsh 0.2.2-rc.3`；另有一份 `0.2.2-rc.1` 解包源码只用于交叉核对，行号以 asar 安装版为准。分析日期：2026-11-18。
+> 分析快照：Jade `5772293`，108 个 Java 文件、10,740 行、73 个 `@Test`。当前进度：Jade `1.4.0`（`1b5ce8a`），15 个内置工具、143 个 `@Test`，P0/P1 与 MCP resources、Skills 目录化、沙箱可见性、MCP 启动重试均已交付；逐项代码见第 8 节。DSH 版本：已安装的 `@deepseek-ai/dsh 0.2.2-rc.3`；另有一份 `0.2.2-rc.1` 解包源码只用于交叉核对，行号以 asar 安装版为准。分析日期：2026-11-18。
 
 Jade 是一个单 jar 的本地 coding agent：十阶段循环、MySQL 事件持久化、权限审批、真实编译验证、Goal review。DSH 是一个 Cordis 插件树上的 harness：profile、bundle、子代理、workflow、桌面壳。
 
@@ -17,13 +17,13 @@ Jade 是一个单 jar 的本地 coding agent：十阶段循环、MySQL 事件持
 
 ## 0. 结论
 
-按用户价值排序，五个差距值得先补：
+按用户价值排序，五个差距值得先补。**截至 2026-11-18，这五项都已落地**，代码在 Jade `1.4.0`：
 
-1. **上下文安全网**（P0）：溢出后能压缩重试；工具输出能落盘并保留尾部。
-2. **并行只读工具调用**（P0）：同一轮多个读操作不再排队。
-3. **真流式输出**（P1）：模型 token 边生成边显示。
-4. **子代理委派**（P1）：只读调研丢给子上下文，父上下文只收摘要。
-5. **会话 fork**（P1）：从某个会话分叉出独立工作区，比较不同方案。
+1. **上下文安全网**（P0，已完成）：溢出后能压缩重试；工具输出能落盘并保留尾部。
+2. **并行只读工具调用**（P0，已完成）：同一轮多个读操作不再排队。
+3. **真流式输出**（P1，已完成）：模型 token 边生成边显示。
+4. **子代理委派**（P1，已完成）：只读调研丢给子上下文，父上下文只收摘要。
+5. **会话 fork**（P1，已完成）：从某个会话分叉出独立工作区，比较不同方案。
 
 其余差距要么是产品层，要么工作量大而收益靠后：MCP resources、技能目录化、跨平台沙箱、插件市场、桌面壳、Schedule/Team/Workflow。**不建议把 DSH 的 Cordis 插件树、profile/bundle 或桌面壳搬进 Jade。**
 
@@ -38,6 +38,8 @@ asar 内文件用 `read` 直接读；原生 `grep/find/glob` 不能进入 asar�
 有五处结论明确标为未验证：DSH 部署层是否额外限制 `maxSteps`；fork 子代理继承父上下文前缀的精确源码行；DSH 测试门禁与覆盖率；DSH HTTP MCP 的 `tools/list_changed` 与会话续期；Jade 真实 DeepSeek 的溢出错误体与 SSE 分块格式。计划里用 mock server 验证，真实错误码上线前需要手工补验。
 
 ## 2. 能力矩阵
+
+下表是 **2026-11-18 分析时（Jade `5772293`）的快照**，用来解释「为什么当时判定为缺口」。当前 `1.4.0` 的实现状态与代码见第 8 节，不要再用下表的「Jade 现状」判断今天的能力。
 
 差距等级：**高** = 影响正确性或核心能力；**中** = 明显的能力/体验缺口；**低** = 实现差异，暂不影响使用；**无** = 对等，或双方都没有。
 
@@ -63,7 +65,9 @@ asar 内文件用 `read` 直接读；原生 `grep/find/glob` 不能进入 asar�
 
 ## 3. 五个真正值得补的差距
 
-### 3.1 上下文安全网（P0）
+### 3.1 上下文安全网（P0，已实现）
+
+> 现状：`ToolOutputStore` + `read_tool_output` + 溢出压缩重试已上线，见 8.1。
 
 Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前不检查压力；`LlmException` 一律 `run.failed`（`:399-402`）。工具输出超过 30,000 字符时只保留前 30k（`:508,693-698`），而编译/测试错误通常在尾部。压缩器虽然对工具结果留了头 3000 + 尾 1000（`ContextCompactor.java:168-186`），但那是「已进入上下文之后」的二次裁剪，原始输出已经丢了。
 
@@ -73,7 +77,9 @@ Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前�
 
 边界：不做 DSH 的图片 offload、不做 zstd 会话格式、不做跨模型容量重测；只做文本工具输出、单次溢出重试、本地文件落盘。
 
-### 3.2 并行只读工具调用（P0）
+### 3.2 并行只读工具调用（P0，已实现）
+
+> 现状：`Tool.concurrencySafe()` + 只读白名单 + 上限 4 的并行池已上线，见 8.2。
 
 `AgentLoop.executeTools` 严格串行（`:462`）；`Tool` 没有 `concurrencySafe` 元数据（`Tool.java:7-14`）。一次「读 5 个文件 + 搜 3 个关键词」的调研要 8 个往返，墙钟时间随工具数线性增长。
 
@@ -81,7 +87,9 @@ Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前�
 
 边界：只对白名单 `list_files/read_file/search_text/load_skill` 开启；MCP 工具本轮不并行（共享 stdio 连接，线程安全未验证）；只要批次里有一个非白名单工具，整批退回串行。
 
-### 3.3 真流式输出（P1）
+### 3.3 真流式输出（P1，已实现）
+
+> 现状：`LlmClient.stream` + DeepSeek SSE + Web `assistant.delta` 已上线，见 8.3。
 
 `LlmClient` 只有阻塞 `chat()`（`LlmClient.java:3-13`）；`DeepSeekClient` 用 `BodyHandlers.ofString()` 且 `stream=false`（`:78,134`）。Web 的 SSE 只转发 agent 事件，模型 token 不是逐字到达。
 
@@ -89,7 +97,9 @@ Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前�
 
 边界：只做 DeepSeek/OpenAI-compatible SSE；不做 replay state、image chunk、adapter 热替换；Web 仍用现有 SSE 通道。
 
-### 3.4 子代理委派（P1）
+### 3.4 子代理委派（P1，已实现）
+
+> 现状：`delegate_task` + 只读白名单子 run 已上线，见 8.4。
 
 全库没有 subagent/fork（`README.md:626`）；所有调研都堆在父 transcript 里。`AgentService` 每个 run 一个虚拟线程，但没有父子 run 关系（`AgentService.java:87`；`SchemaMapper.java:7-29`）。
 
@@ -97,7 +107,9 @@ Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前�
 
 边界：v1 子代理只读（不能写、不能跑命令、不能再委派）；同 workspace 读；最多 2 个并发、深度 1、10 分钟超时；不做 DSH 的 fork 子代理、agent team、workflow。
 
-### 3.5 会话 fork（P1）
+### 3.5 会话 fork（P1，已实现）
+
+> 现状：`AgentService.fork` + `WorkspaceFork` 已上线，见 8.5。
 
 只有 resume/follow-up 继续同一 run（`AgentService.java:397-472`）；`EventStore` 没有 fork/copy，MySQL 没有 parent 列（`EventStore.java:1-38`；`SchemaMapper.java:7-29`）。README 明确说没有 branch/fork（`:626`）。
 
@@ -107,11 +119,11 @@ Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前�
 
 ## 4. 其余差距：有，但排在后面
 
-**MCP resources（P2）。** Jade 只实现 `initialize → tools/list → tools/call`（`McpConnection.java:55,77`）；DSH 有 `list_mcp_resources/list_mcp_resource_templates/read_mcp_resource` 三个模型工具（`P/dsh-mcp-resources/src/tools.ts:16-59`）。资源型 server 目前只能暴露成工具。等 P0/P1 稳定后再评估，先确认 Jade 的连接是否支持并发请求/分页。
+**MCP resources（P2，已实现）。** 分析时 Jade 只有 `initialize → tools/list → tools/call`（`McpConnection.java:55,77`）；现已按 server 的 `capabilities.resources` 注册 `list_resources`、`list_resource_templates`、`read_resource` 三个工具，支持游标分页与 text/blob 内容，见 8.6。prompts / sampling / OAuth 仍未实现。
 
-**Skills 目录化（P2）。** Jade 扫 3 个根，top-2 全文预载进 system prompt（`SkillRegistry.java:36-97`；`AgentLoop.java:642`）；DSH 只放 name+description，正文按需 inject，并有 chokidar 热更新。技能多了以后 system prompt 会被 top-2 全文占用。低成本改进，但优先级低于上下文安全网。
+**Skills 目录化（P2，部分实现）。** Jade 仍扫 3 个根，但新增 `AGENT_SKILL_PRELOAD=false` 的 catalog-only 模式；单条正文超过 4,000 字符时只注入 name+description，并要求 `load_skill` 回读。DSH 的 chokidar 热更新仍未做，见 8.7。
 
-**跨平台沙箱（P2）。** Jade 只有 macOS `sandbox-exec` 写监狱，默认 off，读与进程共享宿主（`CommandSandbox.java:26-80`）；DSH 有 Linux bwrap/Landlock、macOS Seatbelt、Windows ACL，并明确 `full/partial`（`D/subsystems/sandbox.md:5,30`）。安全价值高，但 Linux/Windows 后端是独立工程，需要真实三平台测试。先把「默认值/可见性/失败关闭」写清楚，不假装是容器。
+**跨平台沙箱（P2，部分完成）。** 仍只有 macOS `sandbox-exec` 写监狱，默认 off，读与进程共享宿主（`CommandSandbox.java:26-80`）；DSH 有 Linux bwrap/Landlock、macOS Seatbelt、Windows ACL（`D/subsystems/sandbox.md:5,30`）。本轮先做了可见性：`/api/health` 暴露模式与网络状态，Web 顶部 banner 明示默认不隔离，见 8.8；Linux/Windows 后端（C 项）暂缓。
 
 ## 5. 非目标
 
@@ -136,16 +148,17 @@ Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前�
 - **MySQL 持久化 + 启动恢复**：200 个会话、RUNNING→FAILED、SSE 重放（`AgentService.java:58,397-472`；`RunState.java:59-78`）。
 - **Goal review**：无工具 JSON 复核，连续 3 次拒绝失败（`AgentLoop.java:346-376`；`LlmGoalReviewer.java:26-81`）。
 - **单 jar、Jackson-only、无 Cordis**：安装/调试成本低，代码可读。
-- **73 个测试**：覆盖循环、压缩、权限、MCP stdio/HTTP、MySQL；比「功能多但测试不随产物发布」的 DSH 更容易本地回归。
+- **143 个测试**：覆盖循环、压缩、权限、流式、fork、子代理、MCP stdio/HTTP/资源、MySQL；比「功能多但测试不随产物发布」的 DSH 更容易本地回归。
 
 ## 7. 顺序与取舍
 
-先做两项 P0，做完停下评估：
+当时的执行顺序是：先做两项 P0，停下评估；再按「流式 → fork → 子代理」推进。**这条路线已经走完**：
 
-1. **上下文安全网** —— 约 2 人日。
-2. **并行只读工具** —— 约 1 人日。
+1. **上下文安全网** —— 已交付（S1–S6）。
+2. **并行只读工具** —— 已交付（S7–S8）。
+3. **流式 → fork → 子代理** —— 已交付（Phase 2 / Phase 3）。
 
-然后把 P1 按「流式 → fork → 子代理」推进。流式直接改善交互；fork 是子代理的前置（`parent_run_id`）；子代理最大，放最后。
+当前未做的是 C 项（Linux/Windows 沙箱后端）与 MCP prompts/sampling/OAuth。
 
 四个已定的设计取舍：
 
@@ -155,3 +168,129 @@ Jade 在每轮 VERIFY 之后才压缩（`AgentLoop.java:312-334`），请求前�
 - **MCP 命名**：Jade 的 `mcp_<server>_<tool>` 不改，避免破坏已有配置。
 
 具体到每个文件、每个测试的 P0 执行计划，见[《Jade P0 补齐计划》](/posts/jade-p0-context-parallel-plan.html)。完整评估文档在 [`docs/DSH-GAP-ANALYSIS.md`](https://github.com/jasoncai0/Jade/blob/main/docs/DSH-GAP-ANALYSIS.md)。
+
+## 8. TODO 与实现状态（2026-11-18，Jade 1.4.0）
+
+下表把原文的优先级清单当成 ToDo 表逐项对账。**已完成**的项附核心实现（每项 ≤20 行，省略异常、日志与参数校验）；**部分完成**与**未做**的项写明缺口。测试总数 143，`mvn test` 0 failures。
+
+<table style="table-layout:fixed;width:100%">
+<thead>
+<tr><th style="width:15%;white-space:normal">ToDo 项（优先级）</th><th style="width:27%;white-space:normal">状态与证据</th><th style="width:58%;white-space:normal">核心实现（Java，≤20 行）</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>上下文安全网</strong>（P0）</td>
+<td><strong>已完成</strong> · <code>5a50abc</code>、<code>edb5d9c</code> · 工具输出落盘 + 溢出压缩重试 + 同名工具分文件</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// ToolOutputStore.java:63
+public ToolOutputRef save(..., String callId, String output) {
+    String safeCall = "-" + safeSegment(callId, "call", 48);
+    Path target = directory.resolve(seq + "-" + tool + safeCall + ".txt");
+    Files.writeString(target, output, CREATE_NEW, UTF_8);
+}
+// AgentLoop.java:767
+if (!settings.overflowRecovery() || !e.isContextOverflow()) throw e;
+var recovery = compactor.compactForOverflow(messages, summarizer);
+messages.clear(); messages.addAll(recovery.messages());</code></pre></td>
+</tr>
+<tr>
+<td><strong>并行只读工具</strong>（P0）</td>
+<td><strong>已完成</strong> · <code>a0214d3</code> · 只读白名单并发，写/命令/审批仍串行</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// AgentLoop.java:604
+boolean canParallel = executable &gt;= 2
+    &amp;&amp; prepared.stream().filter(PreparedCall::executable)
+        .allMatch(i -&gt; tools.concurrencySafe(i.call.name())
+                   &amp;&amp; !i.permission.networkAllowed());
+if (canParallel) runParallel(prepared, context, control);
+else for (PreparedCall item : prepared) execute(item);
+// runParallel: 上限 4
+int workers = Math.min(4, runnable.size());</code></pre></td>
+</tr>
+<tr>
+<td><strong>真流式输出</strong>（P1）</td>
+<td><strong>已完成</strong> · <code>1c49e2a</code>、<code>b4852ec</code>、<code>2d2644e</code> · SSE + 增量总线 + Web 逐字渲染</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// DeepSeekClient.java:156
+HttpResponse&lt;InputStream&gt; response = http.send(
+    newRequest(endpoint, body, "text/event-stream"),
+    BodyHandlers.ofInputStream());
+if (status == 400 &amp;&amp; includeUsage &amp;&amp; mentionsStreamOptions(message)) {
+    includeUsage = false; continue;   // 去掉 stream_options 重试
+}
+ChatResult result = parseStream(response.body(), listener);</code></pre></td>
+</tr>
+<tr>
+<td><strong>子代理委派</strong>（P1）</td>
+<td><strong>已完成</strong> · <code>18bebe4</code> · 只读子 run、每父 2 并发、深度 1、父上下文只收摘要</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// SubagentService.java:40
+private static final Set&lt;String&gt; READ_ONLY_TOOLS = Set.of(
+    "list_files", "read_file", "search_text", "load_skill", "reflect");
+// SubagentService.java:66
+if (parent.state().isSubagent()) throw new IllegalArgumentException("max depth is 1");
+Semaphore slot = slots.computeIfAbsent(parent.id(),
+    ignored -&gt; new Semaphore(MAX_ACTIVE_PER_PARENT));
+acquired = slot.tryAcquire(timeout, TimeUnit.SECONDS);</code></pre></td>
+</tr>
+<tr>
+<td><strong>会话 fork</strong>（P1）</td>
+<td><strong>已完成</strong> · <code>5d9977e</code> · 复制 workspace + transcript 前缀 + 事件历史，父会话不变</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// AgentService.java:239
+if (parent.running() || !parentSnapshot.terminal())
+    throw new IllegalStateException("Only a finished session can be forked");
+WorkspaceFork.copy(source, target.root());
+List&lt;ChatMessage&gt; messages = RunArtifacts.loadMessages(source);
+long forkSeq = parentEvents.stream().mapToLong(AgentEvent::seq).max().orElse(0L);</code></pre></td>
+</tr>
+<tr>
+<td><strong>MCP resources</strong>（P2）</td>
+<td><strong>已完成</strong> · <code>854ba42</code> · 按 capabilities.resources 注册三个工具，支持分页与 text/blob</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// McpManager.java:62
+if (connection.resourcesSupported()) {
+    for (McpResourceTool.Kind kind : McpResourceTool.Kind.values()) {
+        String name = McpTool.toolName(server, McpResourceTool.suffix(kind), 0);
+        registry.register(new McpResourceTool(server, connection, kind, name));
+        resourceTools++;
+    }
+    status.put("resourceTools", resourceTools);
+}</code></pre></td>
+</tr>
+<tr>
+<td><strong>Skills 目录化</strong>（P2）</td>
+<td><strong>部分完成</strong> · <code>9d321cb</code> · catalog-only 开关 + 4,000 字符正文上限；chokidar 热更新未做</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// AgentLoop.java:727
+if (!settings.preloadSkills()) {
+    return "(catalog-only mode; call load_skill with a name...)";
+}
+if (skill.body().length() &lt;= 4_000) return skill.render();
+return "### Skill: " + skill.name() + "\n" + skill.description()
+     + "\n\n(full instructions are " + skill.body().length()
+     + " chars; call load_skill to read them)";</code></pre></td>
+</tr>
+<tr>
+<td><strong>沙箱可见性</strong>（P2）</td>
+<td><strong>已完成</strong> · <code>0247b8d</code> · health 字段 + Web banner；默认仍 off，不假装隔离</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// WebServer.java:136
+data.put("sandbox", sandbox.modeName());
+data.put("sandboxActive", sandbox.active());
+data.put("sandboxNetwork", sandbox.networkEnabled());
+data.put("sandboxDescription", sandbox.description());</code></pre></td>
+</tr>
+<tr>
+<td><strong>MCP HTTP 重连</strong>（P2）</td>
+<td><strong>已完成</strong> · <code>50f0777</code> · 启动 5 次指数退避；4xx / 非法 URL 不重试</td>
+<td><pre style="white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;margin:0;font-size:0.78em"><code>// McpManager.java:105
+int attempts = server.stdio() ? 1 : HTTP_CONNECT_ATTEMPTS; // 5
+long delay = HTTP_RETRY_INITIAL_MS;                        // 500ms
+for (int attempt = 1; attempt &lt;= attempts; attempt++) {
+    try { connection.initialize(); return connection; }
+    catch (RuntimeException e) {
+        if (!retryable(e)) throw e;
+        sleep(delay); delay = Math.min(delay * 2, 30_000);
+    }
+}</code></pre></td>
+</tr>
+<tr>
+<td><strong>跨平台沙箱</strong>（P2）</td>
+<td><strong>未做</strong> · C 项暂缓，等真实 Linux 用户；当前只有 macOS Seatbelt 写监狱</td>
+<td><code>—（未实现，不给代码）</code></td>
+</tr>
+</tbody>
+</table>

@@ -722,11 +722,11 @@
  "dsh-vs-jade-gap-analysis": {
   "figure": 0,
   "h1": 1,
-  "h2": 8,
+  "h2": 9,
   "h3": 5,
   "hr": 0,
-  "pre": 0,
-  "table": 1
+  "pre": 9,
+  "table": 2
  },
  "dsh-web-and-browser": {
   "figure": 4,
