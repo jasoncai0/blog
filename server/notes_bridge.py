@@ -194,18 +194,21 @@ def run_new(prompt: str, cwd: str | None = None, timeout: int = 600) -> tuple[st
     return text, session_id
 
 
+BUSY_MARK = "active write handle"
+
+
+def _busy(exc: Exception) -> bool:
+    """桌面端开着这条会话时，dsh 会拒接续：这是暂态，换一条新会话即可。"""
+    return BUSY_MARK in str(exc)
+
+
 def answer(job: dict, cwd: str, runner=run_session, runner_new=run_new) -> str:
-    """优先续原会话；原会话跑在 standard 预设（一次性 runner 组不出来）时，改用按文章自建的会话。"""
+    """优先续原会话；预设不可组合或会话被占用时，改用按文章自建的会话。"""
     prompt = build_prompt(job)
-    try:
-        return runner(prompt, job["session_id"], cwd=cwd)
-    except RuntimeError as exc:
-        if "does not compose" not in str(exc):
-            raise
     slug = job["slug"]
     state = _load_state()
-    sid = state.get(slug)
-    if not sid:
+
+    def fresh_session() -> str:
         seed = article_text(slug)
         if seed:
             digest = digest_for(slug, job.get("session_id") or "")
@@ -214,10 +217,28 @@ def answer(job: dict, cwd: str, runner=run_session, runner_new=run_new) -> str:
             first = "下面是这篇文章的写作背景和正文，读完只回「明白了」。\n\n" + seed
         else:
             first = "只回「明白了」。"
-        _, sid = runner_new(first, cwd=cwd)
-        state[slug] = sid
+        _, new_sid = runner_new(first, cwd=cwd)
+        state[slug] = new_sid
         _save_state(state)
-    return runner(prompt, sid, cwd=cwd)
+        return new_sid
+
+    try:
+        return runner(prompt, job["session_id"], cwd=cwd)
+    except RuntimeError as exc:
+        if not (_busy(exc) or "does not compose" in str(exc)):
+            raise
+        if _busy(exc):
+            return runner(prompt, fresh_session(), cwd=cwd)
+
+    sid = state.get(slug)
+    if sid:
+        try:
+            return runner(prompt, sid, cwd=cwd)
+        except RuntimeError as exc:
+            if not _busy(exc):
+                raise
+            return runner(prompt, fresh_session(), cwd=cwd)
+    return runner(prompt, fresh_session(), cwd=cwd)
 
 
 def _request(method: str, path: str, body: dict | None = None, timeout: int = 20) -> tuple[int, dict]:

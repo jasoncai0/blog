@@ -335,6 +335,21 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual(done["job"]["attempts"], 3)
         self.assertEqual(done["job"]["error"], "locked")
 
+    def test_busy_session_does_not_consume_retry_budget(self):
+        slug = "jobs-busy"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/busy-0001", self.note("busy-0001"))
+        _, body = self.call("POST", f"/api/notes/{slug}/busy-0001/ask", {})
+        job_id = body["job"]["id"]
+        busy = 'session "session-x" is already owned by an active write handle'
+        done = None
+        for _ in range(5):
+            self.call("POST", f"/api/jobs/{job_id}/claim", {"worker": "bridge-1"})
+            _, done = self.call("POST", f"/api/jobs/{job_id}/done", {"ok": False, "error": busy})
+            self.assertEqual(done["job"]["status"], "pending", "占用中的会话不该把任务打成 blocked")
+        self.assertLessEqual(done["job"]["attempts"], 1, "busy 不应消耗重试次数")
+        self.assertIn("active write handle", done["job"]["error"])
+
     def test_session_round_trip(self):
         status, _ = self.call("PUT", "/api/sessions/ot-crdt-lww", {
             "session_id": "0f3a1c2d-1234-4abc-9def-001122334455",

@@ -105,6 +105,48 @@ class BridgeTest(unittest.TestCase):
         finally:
             nb.BRIDGE_STATE = old
 
+    def test_busy_bridge_session_is_replaced_by_a_fresh_one(self):
+        import json, os, tempfile
+        import notes_bridge as nb
+
+        tmp = tempfile.mkdtemp()
+        old = nb.BRIDGE_STATE
+        nb.BRIDGE_STATE = os.path.join(tmp, "sessions.json")
+        with open(nb.BRIDGE_STATE, "w", encoding="utf-8") as fh:
+            json.dump({"demo-busy": "session-busy-0002"}, fh)
+        calls, created = [], []
+
+        def post(method, path, body=None, timeout=20):
+            calls.append((method, path, body))
+            if path.startswith("/sessions/"):
+                return 200, {"session": {"workspace": "/tmp/ws"}}
+            return 200, {}
+
+        def runner(prompt, sid, cwd=None):
+            if sid in ("session-busy-0002", "session-orig-0009"):
+                raise RuntimeError(
+                    f'session "{sid}" is already owned by an active write handle'
+                )
+            return "结论：换会话后答出来"
+
+        def runner_new(prompt, cwd=None):
+            created.append(prompt[:10])
+            return "明白了", "session-fresh-0003"
+
+        job = {
+            "id": "job-2", "slug": "demo-busy", "note_id": "n2", "session_id": "session-orig-0009",
+            "prompt": "为什么？", "note": {"q": "原文", "thread": [{"author": "我", "text": "为什么？"}]},
+        }
+        try:
+            ok = nb.claim_and_run(job, runner=runner, post=post, runner_new=runner_new)
+            self.assertTrue(ok, "会话被占用时应换新会话继续，而不是失败")
+            replies = [c for c in calls if c[1].endswith("/replies")]
+            self.assertTrue(replies and "换会话" in replies[0][2]["text"])
+            state = json.load(open(nb.BRIDGE_STATE))
+            self.assertEqual(state["demo-busy"], "session-fresh-0003")
+        finally:
+            nb.BRIDGE_STATE = old
+
     def test_claim_and_run_reports_failure(self):
         calls = []
 

@@ -40,6 +40,7 @@ SESSION_RE = re.compile(r"^[0-9a-zA-Z][0-9a-zA-Z-]{7,63}$")
 WS_RE = re.compile(r"^/?[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$")  # 允许绝对路径，bridge 直接当 cwd 用
 QUESTION_RE = re.compile(r"[?？]|为什么|怎么|是不是|如何|能不能")
 MAX_ATTEMPTS = 3
+BUSY_MARK = "active write handle"  # dsh 的会话被别的进程占着时的错误片断
 MAX_THREAD = 50
 MAX_THREAD_TEXT = 4000
 MAX_Q = 400
@@ -328,16 +329,21 @@ class Store:
         row = self.job(job_id)
         if row is None:
             return None
+        attempts = row["attempts"]
         if ok:
             status, error = "done", ""
-        elif row["attempts"] >= MAX_ATTEMPTS:
+        elif BUSY_MARK in (error or ""):
+            # 会话被桌面端占用是暂态，不是任务失败：退回队列，不消耗重试次数。
+            status = "pending"
+            attempts = max(0, attempts - 1)
+        elif attempts >= MAX_ATTEMPTS:
             status = "blocked"
         else:
             status = "pending"
         with self._lock, self.conn:
             self.conn.execute(
-                "UPDATE jobs SET status=?, error=?, updated=? WHERE id=?",
-                (status, error, now(), job_id),
+                "UPDATE jobs SET status=?, error=?, attempts=?, updated=? WHERE id=?",
+                (status, error, attempts, now(), job_id),
             )
         job = self.job(job_id)
         if job:
