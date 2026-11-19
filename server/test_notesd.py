@@ -282,6 +282,35 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual(self.call("POST", f"/api/notes/{slug}/job-0003/ask", {})[0], 200)
         self.assertEqual(self.call("POST", f"/api/notes/{slug}/job-0003/ask", {})[0], 409)
 
+    def test_auto_ask_skips_a_statement(self):
+        slug = "jobs-auto-statement"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0010", self.note("job-0010", q="收敛是必要条件", block=2))
+        status, body = self.call("POST", f"/api/notes/{slug}/job-0010/ask", {"auto": True})
+        self.assertEqual(status, 200)
+        self.assertFalse(body["triggered"])
+        self.assertIsNone(body["job"])
+
+    def test_auto_ask_queues_a_question(self):
+        slug = "jobs-auto-question"
+        self.register(slug)
+        note = self.note("job-0011", q="收敛是必要条件", block=2)
+        note["thread"][0]["text"] = "为什么这里说收敛不是目标？"
+        self.call("PUT", f"/api/notes/{slug}/job-0011", note)
+        status, body = self.call("POST", f"/api/notes/{slug}/job-0011/ask", {"auto": True})
+        self.assertEqual(status, 200)
+        self.assertTrue(body["triggered"])
+        self.assertEqual(body["job"]["kind"], "auto")
+
+    def test_reply_with_question_returns_the_created_job(self):
+        slug = "jobs-reply-auto"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0012", self.note("job-0012", q="收敛是必要条件", block=2))
+        status, body = self.call("POST", f"/api/notes/{slug}/job-0012/replies", {"text": "这里为什么不算反例？"})
+        self.assertEqual(status, 200)
+        self.assertTrue(body["triggered"])
+        self.assertEqual(body["job"]["note_id"], "job-0012")
+
     def test_ask_without_session_returns_409(self):
         self.call("PUT", "/api/notes/jobs-none/job-0004", self.note("job-0004"))
         self.assertEqual(self.call("POST", "/api/notes/jobs-none/job-0004/ask", {})[0], 409)

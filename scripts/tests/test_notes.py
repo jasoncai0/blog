@@ -609,7 +609,51 @@ def test_ask_without_text_asks_for_a_question(page, base):
     assert "先写" in hint, f"空批注时应当提示先写问题：{hint}"
 
 
+def test_save_shows_ai_is_answering_when_a_question_triggers_it(page, base):
+    asked = []
+    page.on("request", lambda req: asked.append(req.post_data) if req.url.endswith("/ask") else None)
+    page.route("**/api/notes/**/ask", lambda route: route.fulfill(
+        status=200,
+        content_type="application/json",
+        body='{"ok": true, "triggered": true, "job": {"id": "job-x", "status": "pending"}}',
+    ))
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "旧批注")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.locator("mark.note-hl").first.click()
+    page.wait_for_timeout(200)
+    page.fill(".nt-pop .nt-input", "为什么这里说收敛不是目标？")
+    page.click(".nt-pop [data-act='save']")
+    page.wait_for_timeout(800)
+    text = page.locator(".nt-job-text").first.inner_text()
+    assert "AI 正在回答中" in text, f"保存并触发后应当提示正在回答：{text}"
+    assert any(d and '"auto":true' in d.replace(" ", "") for d in asked), f"应当以 auto 方式触发：{asked}"
+
+
+def test_save_stays_quiet_when_nothing_triggers(page, base):
+    page.route("**/api/notes/**/ask", lambda route: route.fulfill(
+        status=200,
+        content_type="application/json",
+        body='{"ok": true, "triggered": false, "job": null}',
+    ))
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_note(page, "收敛是必要条件", "旧批注")
+    page.reload()
+    page.wait_for_timeout(400)
+    page.locator("mark.note-hl").first.click()
+    page.wait_for_timeout(200)
+    page.fill(".nt-pop .nt-input", "收敛是必要条件，不是充分条件")
+    page.click(".nt-pop [data-act='save']")
+    page.wait_for_timeout(800)
+    assert page.locator(".nt-pop").count() == 0, "保存后气泡应当关闭"
+
+
 CASES = [
+    (test_save_shows_ai_is_answering_when_a_question_triggers_it, False, DESKTOP),
+    (test_save_stays_quiet_when_nothing_triggers, False, DESKTOP),
     (test_ask_saves_the_typed_annotation_first, False, DESKTOP),
     (test_ask_without_text_asks_for_a_question, False, DESKTOP),
     (test_highlight_persists_across_reload, False, DESKTOP),

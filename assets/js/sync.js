@@ -185,11 +185,15 @@ export async function postReply(slug, noteId, text, author = "我") {
   return res.json();
 }
 
-export async function askAI(slug, noteId) {
+export async function askAI(slug, noteId, { auto = false } = {}) {
   const headers = { "Content-Type": "application/json" };
   const key = getEditKey();
   if (key) headers["X-Edit-Key"] = key;
-  const res = await fetch(`${API}/notes/${slug}/${noteId}/ask`, { method: "POST", headers, body: "{}" });
+  const res = await fetch(`${API}/notes/${slug}/${noteId}/ask`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ auto }),
+  });
   if (res.status === 401) throw new AuthError("edit key required");
   if (res.status === 409) {
     const body = await res.json().catch(() => ({}));

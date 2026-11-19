@@ -698,8 +698,14 @@ class Handler(BaseHTTPRequestHandler):
                     return
                 thread = json.loads(row["thread"])
                 prompt = (thread[0].get("text") if thread else "") or row["q"]
-                job = self.store.create_job(slug, note_id, session["session_id"], prompt, "manual")
-                self.send_json(HTTPStatus.OK, {"ok": True, "job": job})
+                body = self.read_json() or {}
+                if body.get("auto") and not QUESTION_RE.search(prompt):
+                    self.send_json(HTTPStatus.OK, {"ok": True, "triggered": False, "job": None})
+                    return
+                job = self.store.create_job(
+                    slug, note_id, session["session_id"], prompt, "auto" if body.get("auto") else "manual"
+                )
+                self.send_json(HTTPStatus.OK, {"ok": True, "triggered": True, "job": job})
                 return
 
             if len(parts) == 4 and parts[3] == "replies" and self.command == "POST":
@@ -728,6 +734,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.send_json(HTTPStatus.CONFLICT, {"error": "thread full"})
                     return
                 session = self.store.session_for(slug)
+                job = None
                 if (
                     session
                     and QUESTION_RE.search(reply["text"])
@@ -735,8 +742,8 @@ class Handler(BaseHTTPRequestHandler):
                 ):
                     thread = (note or {}).get("thread") or []
                     prompt = (thread[0].get("text") if thread else "") or reply["text"]
-                    self.store.create_job(slug, note_id, session["session_id"], prompt, "auto")
-                self.send_json(HTTPStatus.OK, {"ok": True, "note": note})
+                    job = self.store.create_job(slug, note_id, session["session_id"], prompt, "auto")
+                self.send_json(HTTPStatus.OK, {"ok": True, "note": note, "triggered": job is not None, "job": job})
                 return
 
             if len(parts) == 3 and self.command == "PUT":

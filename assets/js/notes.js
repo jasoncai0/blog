@@ -467,10 +467,10 @@ function initNotes() {
     button.hidden = !showAsk && status !== "blocked";
     button.disabled = false;
     if (status === "pending") {
-      text.textContent = "已收到，AI 正在处理";
+      text.textContent = "AI 正在回答中…";
       row.classList.remove("is-blocked");
     } else if (status === "running") {
-      text.textContent = "AI 正在处理…";
+      text.textContent = "AI 正在回答中…";
       row.classList.remove("is-blocked");
     } else if (status === "blocked") {
       text.textContent = `AI 回复失败${job.error ? "：" + job.error : ""}`;
@@ -486,7 +486,7 @@ function initNotes() {
     }
   }
 
-  function openPopById(id, { focus = true, anchorEl = null } = {}) {
+  function openPopById(id, { focus = true, anchorEl = null, job = null } = {}) {
     const mark = body.querySelector(`mark.note-hl[data-note="${id}"]`);
     const note = notesFor(all, slug).find((n) => n.id === id);
     if (!note || (!mark && !anchorEl)) return;
@@ -563,7 +563,7 @@ function initNotes() {
     askBtn.dataset.act = "ask";
     askBtn.textContent = "让 AI 回答";
     const hasAI = note.thread.some((m) => m.author === "AI");
-    paintJob(jobRow, jobText, askBtn, note.job, hasAI);
+    paintJob(jobRow, jobText, askBtn, job || note.job, hasAI);
     // 点「让 AI 回答」时先落一次批注：用户常常写完问题直接点，不等「保存」。
     const persistFirstFloor = () => {
       const current = notesFor(all, slug).find((n) => n.id === id);
@@ -628,7 +628,7 @@ function initNotes() {
         const data = await postReply(slug, id, text);
         all = save({ ...all, [slug]: notesFor(all, slug).map((n) => (n.id === id ? data.note : n)) });
         closePop();
-        openPopById(id);
+        openPopById(id, { job: data?.triggered ? data.job || { status: "pending" } : null });
         renderList();
       } catch (err) {
         replyBtn.disabled = false;
@@ -681,12 +681,26 @@ function initNotes() {
     // 从列表跳转过来时不抢焦点：焦点留在高亮上，键盘用户不会突然被扔进 textarea。
     if (focus) input.focus();
 
-    saveBtn.addEventListener("click", () => {
+    saveBtn.addEventListener("click", async () => {
       all = save(setThreadText(all, slug, id, input.value, Date.now()));
       queueNote(slug, notesFor(all, slug).find((n) => n.id === id));
       renderList();
+      const text = input.value.trim();
       closePop();
-      syncNow().then(({ authNeeded }) => authNeeded && promptForKey());
+      const { authNeeded } = await syncNow();
+      if (authNeeded) {
+        promptForKey();
+        return;
+      }
+      if (!text) return;
+      try {
+        const res = await askAI(slug, id, { auto: true });
+        if (res?.triggered) {
+          openPopById(id, { focus: false, job: res.job || { status: "pending" } });
+        }
+      } catch {
+        /* 自动触发失败不打扰用户：批注已经存住了，可以再点「让 AI 回答」 */
+      }
     });
     delBtn.addEventListener("click", () => {
       all = save(removeNote(all, slug, id));
