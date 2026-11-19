@@ -18,6 +18,7 @@ import {
   getEditKey,
   postReply,
   pullNotes,
+  pullNotesBulk,
   pullSummary,
   queueNote,
   syncNow,
@@ -269,19 +270,24 @@ async function pushLocalSlugs(currentSlug) {
     /* 存储被禁也不是致命问题 */
   }
   let all = readNotes(safeStore());
-  const slugs = Object.keys(all).filter((slug) => notesFor(all, slug).length);
+  const slugs = Object.keys(all)
+    .filter((slug) => notesFor(all, slug).length)
+    .filter((slug) => slug !== currentSlug);
   if (!slugs.length) return;
   let ok = true;
-  for (const slug of slugs) {
-    if (slug === currentSlug) continue;
+  for (let i = 0; i < slugs.length; i += 25) {
+    const chunk = slugs.slice(i, i + 25);
     try {
-      const { notes, deleted } = await pullNotes(slug);
+      const bundles = await pullNotesBulk(chunk);
       all = readNotes(safeStore());
-      const local = notesFor(all, slug);
-      if (!local.length) continue;
-      const { merged, adopted } = mergeNotes(local, notes, deleted);
-      all = save({ ...all, [slug]: merged });
-      uploadLocalOnly(slug, local, adopted);
+      for (const slug of chunk) {
+        const local = notesFor(all, slug);
+        if (!local.length) continue;
+        const bundle = bundles[slug] || { notes: [], deleted: [] };
+        const { merged, adopted } = mergeNotes(local, bundle.notes, bundle.deleted);
+        all = save({ ...all, [slug]: merged });
+        uploadLocalOnly(slug, local, adopted);
+      }
     } catch {
       ok = false;
     }
@@ -363,7 +369,9 @@ function initNotes() {
   const body = document.querySelector(".post-body[data-progress-post]");
   if (!body) {
     markHome();
-    pushLocalSlugs().then(() => markHome());
+    // 补传放到页面空闲时：它不该和首屏抢连接。
+    const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 900));
+    idle(() => pushLocalSlugs().then(() => markHome()));
     pullSummary()
       .then((data) => {
         serverCounts = data.notes || {};

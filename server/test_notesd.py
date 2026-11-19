@@ -88,6 +88,23 @@ class NotesdTest(unittest.TestCase):
         self.assertNotIn("n5abcde", [n["id"] for n in listing["notes"]])
         self.assertIn("n5abcde", listing["deleted"])
 
+    def test_bulk_notes_returns_one_bundle_per_slug(self):
+        self.call("PUT", "/api/notes/bulk-a/nb1abcde", self.note("nb1abcde", q="甲"))
+        self.call("PUT", "/api/notes/bulk-a/nb2abcde", self.note("nb2abcde", q="乙"))
+        self.call("PUT", "/api/notes/bulk-b/nb3abcde", self.note("nb3abcde", q="丙"))
+        self.call("DELETE", "/api/notes/bulk-a/nb2abcde")
+        status, body = self.call("GET", "/api/notes?slugs=bulk-a,bulk-b,bulk-c")
+        self.assertEqual(status, 200)
+        self.assertEqual(len(body["items"]["bulk-a"]["notes"]), 1)
+        self.assertEqual(body["items"]["bulk-a"]["deleted"], ["nb2abcde"])
+        self.assertEqual(len(body["items"]["bulk-b"]["notes"]), 1)
+        self.assertEqual(body["items"]["bulk-c"], {"notes": [], "deleted": []})
+
+    def test_bulk_notes_rejects_bad_slug(self):
+        status, body = self.call("GET", "/api/notes?slugs=ok-slug,Bad_Slug")
+        self.assertEqual(status, 400)
+        self.assertEqual(body["error"], "bad slug")
+
     def test_summary_counts_live_notes_only(self):
         self.call("PUT", "/api/notes/tally-x/n6abcde", self.note("n6abcde"))
         self.call("PUT", "/api/notes/tally-x/n7abcde", self.note("n7abcde"))

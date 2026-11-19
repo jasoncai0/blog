@@ -163,7 +163,7 @@ class Store:
                 """INSERT INTO notes (id, slug, q, pre, post, block, t, thread, deleted, updated)
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
                    ON CONFLICT(id) DO UPDATE SET
-                     q = excluded.q, pre = excluded.pre, post = excluded.post,
+                     slug = excluded.slug, q = excluded.q, pre = excluded.pre, post = excluded.post,
                      block = excluded.block, t = excluded.t, thread = excluded.thread,
                      deleted = 0, updated = excluded.updated""",
                 (
@@ -524,6 +524,23 @@ class Handler(BaseHTTPRequestHandler):
         finally:
             self.store.unsubscribe(channel, q)
 
+    def note_bundle(self, slug: str) -> dict:
+        notes = [
+            {
+                "id": row["id"],
+                "q": row["q"],
+                "pre": row["pre"],
+                "post": row["post"],
+                "block": row["block"],
+                "t": row["t"],
+                "thread": json.loads(row["thread"]),
+                "updated": row["updated"],
+                "job": job_summary(latest) if (latest := self.store.latest_job(row["id"])) else None,
+            }
+            for row in self.store.notes_for(slug)
+        ]
+        return {"notes": notes, "deleted": self.store.deleted_ids(slug)}
+
     def route(self, write: bool) -> None:
         if not self.limiter.allow(self.client_ip(), write):
             self.send_json(HTTPStatus.TOO_MANY_REQUESTS, {"error": "rate limited"})
@@ -652,6 +669,19 @@ class Handler(BaseHTTPRequestHandler):
 
         if parts[0] == "notes":
             if len(parts) == 1 and self.command == "GET":
+                query = parse_qs(urlparse(self.path).query)
+                raw = (query.get("slugs") or [""])[0]
+                if raw:
+                    # 批量取：首页要确认「本地有、服务端没有」的笔记，一篇文章一次请求太吵。
+                    slugs = [item for item in raw.split(",") if item][:50]
+                    if any(not SLUG_RE.match(slug) for slug in slugs):
+                        self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
+                        return
+                    self.send_json(
+                        HTTPStatus.OK,
+                        {"items": {slug: self.note_bundle(slug) for slug in slugs}},
+                    )
+                    return
                 self.send_json(HTTPStatus.OK, {"notes": self.store.counts()})
                 return
             if len(parts) == 3 and parts[2] == "stream" and self.command == "GET":
@@ -667,24 +697,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not SLUG_RE.match(slug):
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
                     return
-                notes = [
-                    {
-                        "id": row["id"],
-                        "q": row["q"],
-                        "pre": row["pre"],
-                        "post": row["post"],
-                        "block": row["block"],
-                        "t": row["t"],
-                        "thread": json.loads(row["thread"]),
-                        "updated": row["updated"],
-                        "job": job_summary(latest) if (latest := self.store.latest_job(row["id"])) else None,
-                    }
-                    for row in self.store.notes_for(slug)
-                ]
-                self.send_json(
-                    HTTPStatus.OK,
-                    {"notes": notes, "deleted": self.store.deleted_ids(slug)},
-                )
+                self.send_json(HTTPStatus.OK, self.note_bundle(slug))
                 return
             if len(parts) == 4 and parts[3] == "ask" and self.command == "POST":
                 slug, note_id = parts[1], parts[2]

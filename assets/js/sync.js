@@ -222,8 +222,21 @@ export function openNoteStream(slug, onEvent) {
   return source;
 }
 
-export const pullSummary = () => getJSON("summary");
+// summary 只拉一次：阅读进度和笔记都会用到它，没必要各发一遍。
+let summaryPromise = null;
+let summaryAt = 0;
+export const pullSummary = (maxAgeMs = 30000) => {
+  if (summaryPromise && Date.now() - summaryAt < maxAgeMs) return summaryPromise;
+  summaryAt = Date.now();
+  summaryPromise = getJSON("summary").catch((err) => {
+    summaryPromise = null;
+    throw err;
+  });
+  return summaryPromise;
+};
 export const pullNotes = (slug) => getJSON(`notes/${slug}`);
+export const pullNotesBulk = (slugs) =>
+  getJSON(`notes?slugs=${encodeURIComponent(slugs.join(","))}`).then((data) => data.items || {});
 
 // 本地与服务端的笔记合并：服务端更新时间不早于本地就采用服务端；墓碑直接删。
 export function mergeNotes(localList, serverNotes, deletedIds) {
