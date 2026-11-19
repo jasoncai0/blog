@@ -62,6 +62,15 @@
   "pre": 27,
   "table": 16
  },
+ "blog-agent-bridge": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "hr": 0,
+  "pre": 1,
+  "table": 5
+ },
  "claude-code-harness-layers": {
   "figure": 10,
   "h1": 1,
@@ -863,6 +872,87 @@
   "pre": 4,
   "table": 7
  },
+ "open-design-architecture": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 7,
+  "h3": 0,
+  "hr": 0,
+  "pre": 2,
+  "table": 2
+ },
+ "open-design-canvas": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 4,
+  "h3": 4,
+  "hr": 1,
+  "pre": 0,
+  "table": 1
+ },
+ "open-design-canvas-design": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 6,
+  "h3": 0,
+  "hr": 1,
+  "pre": 3,
+  "table": 2
+ },
+ "open-design-context": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 2,
+  "h3": 0,
+  "hr": 1,
+  "pre": 1,
+  "table": 0
+ },
+ "open-design-deliverables": {
+  "figure": 1,
+  "h1": 1,
+  "h2": 3,
+  "h3": 0,
+  "hr": 1,
+  "pre": 0,
+  "table": 0
+ },
+ "open-design-media": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 2,
+  "h3": 9,
+  "hr": 1,
+  "pre": 1,
+  "table": 0
+ },
+ "open-design-runtime": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 3,
+  "h3": 0,
+  "hr": 1,
+  "pre": 1,
+  "table": 0
+ },
+ "open-design-vs-coding-agent": {
+  "figure": 0,
+  "h1": 1,
+  "h2": 1,
+  "h3": 4,
+  "hr": 1,
+  "pre": 0,
+  "table": 1
+ },
+ "open-design-walkthrough": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 1,
+  "h3": 0,
+  "hr": 1,
+  "pre": 0,
+  "table": 0
+ },
  "opencode-architecture": {
   "figure": 4,
   "h1": 1,
@@ -988,6 +1078,24 @@
   "hr": 1,
   "pre": 0,
   "table": 10
+ },
+ "personal-agent-anatomy": {
+  "figure": 7,
+  "h1": 1,
+  "h2": 10,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 3
+ },
+ "personal-design-agent": {
+  "figure": 7,
+  "h1": 1,
+  "h2": 13,
+  "h3": 28,
+  "hr": 0,
+  "pre": 1,
+  "table": 5
  },
  "plan-carriers": {
   "figure": 3,
