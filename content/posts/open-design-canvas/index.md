@@ -10,7 +10,7 @@ series_order: 4
 
 > 源码版本：`nexu-io/open-design` `0725880`（package.json 0.27.2）。本地 clone 后逐文件核对，行号都对这个 commit。仓库 14,308 个文件，`apps/daemon/src/server.ts` 一个文件 18,959 行。
 
-本系列 8 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [产物面](/posts/open-design-deliverables.html) · 下一篇 [端到端](/posts/open-design-walkthrough.html)
+本系列 9 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [产物面](/posts/open-design-deliverables.html) · 下一篇 [画布设计稿](/posts/open-design-canvas-design.html)
 
 ## 3.9 结论：仓库里没有画布引擎
 
@@ -91,4 +91,4 @@ series_order: 4
 
 ---
 
-下一篇 [端到端](/posts/open-design-walkthrough.html) 把这条链路放进一次真实的生成里走一遍。回到 [分册索引](/posts/open-design-architecture.html#分册索引)。
+下一篇 [画布设计稿](/posts/open-design-canvas-design.html) 把"要加画布缺什么"展开成可实现的架构、数据模型与验收条件。回到 [分册索引](/posts/open-design-architecture.html#分册索引)。

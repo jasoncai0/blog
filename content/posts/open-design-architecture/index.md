@@ -1,7 +1,7 @@
 ---
 title: "OpenDesign 架构解剖（总览）：不拥有 agent 的设计工作台"
 date: 2026-11-18T22:22:00+08:00
-summary: "OpenDesign 把 agent loop 外包给用户机器上的编码 CLI，自己只做装配。总览页给定位、三层进程、27 个包的分层，再按执行面、上下文面、产物面、端到端、与编码 Agent 的分岔、生成面拆成六篇分册。"
+summary: "OpenDesign 把 agent loop 外包给用户机器上的编码 CLI，自己只做装配。总览页给定位、三层进程、27 个包的分层，再按执行面、上下文面、产物面、画布与落点、画布设计稿、端到端、与编码 Agent 的分岔、生成面拆成八篇分册。"
 tags: ["architecture", "agent"]
 slug: "open-design-architecture"
 series: "open-design"
@@ -83,7 +83,7 @@ RUNTIME_DATA_DIR = resolveDataDir(process.env.OD_DATA_DIR, PROJECT_ROOT, {
 
 ## 分册索引
 
-全书按"面"拆成七篇。编号沿用同一套，所以总览停在第 2 节、正文从第 3 节开始，代价与结论留在这一页。
+全书按"面"拆成八篇。编号沿用同一套，所以总览停在第 2 节、正文从第 3 节开始，代价与结论留在这一页。
 
 | 篇 | 内容 | 章节 | 图 |
 | --- | --- | --- | --- |
@@ -91,6 +91,7 @@ RUNTIME_DATA_DIR = resolveDataDir(process.env.OD_DATA_DIR, PROJECT_ROOT, {
 | [上下文面](/posts/open-design-context.html) | prompt 编译器、四类内容平面 | §3.4–3.5 | prompt 栈、内容平面 |
 | [产物面](/posts/open-design-deliverables.html) | 三条交付路径、持久化、外壳与协作 | §3.6–3.8 | 交付路径 |
 | [画布与落点](/posts/open-design-canvas.html) | 没有画布引擎的证据、产物落点链路、导入的画布 | §3.9–3.12 | 落点时序、三层归属 |
+| [画布设计稿](/posts/open-design-canvas-design.html) | 空间模型、落点投影、视口状态三处改造，附验收 | §3.13–3.18 | 功能架构、落点时序、节点状态 |
 | [端到端](/posts/open-design-walkthrough.html) | 一句话到一份 deck 的九步链路 | §4 | 十二步泳道、盘面结构 |
 | [与编码 Agent 的分岔](/posts/open-design-vs-coding-agent.html) | 完成判据、知识、评审、模态 | §5 | 对照表 |
 | [生成面](/posts/open-design-media.html) | 一条命令行加 run 级令牌、prompt 质量三道闸 | §6–7 | 派发结构、十一步时序、任务状态 |

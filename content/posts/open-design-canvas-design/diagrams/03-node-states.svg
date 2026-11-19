@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" width="960" height="360" role="img" aria-labelledby="t17 d17">
+  <title id="t17">画布节点的四种状态</title>
+  <desc id="d17">节点只有 pending、ready、stale、missing 四态；文件是真相，节点行是引用。文件消失进 missing，回来后先进 stale 等海报重出。</desc>
+  <defs>
+    <marker id="a17" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/>
+    </marker>
+    <marker id="a17acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">NODE STATE · canvas/project.ts · canvas/store.ts</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">节点四态：文件是真相，行只是引用</text>
+  <text x="924" y="52" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">删除只删行，不删文件</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+    <rect x="80" y="110" width="150" height="56" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.2)"/>
+    <text x="155" y="134" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">pending</text>
+    <text x="155" y="152" text-anchor="middle" font-size="8.5" fill="#4f5d75">投影器刚写入，还没海报</text>
+
+    <rect x="340" y="110" width="150" height="56" rx="2" fill="#2d3142"/>
+    <text x="415" y="134" text-anchor="middle" font-size="10" font-weight="600" fill="#f5f5f5">ready</text>
+    <text x="415" y="152" text-anchor="middle" font-size="8.5" fill="#c9cedb">可渲染：iframe + 海报都在</text>
+
+    <rect x="340" y="230" width="150" height="56" rx="2" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="415" y="254" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">stale</text>
+    <text x="415" y="272" text-anchor="middle" font-size="8.5" fill="#bf4520">文件变了，海报过期</text>
+
+    <rect x="80" y="230" width="150" height="56" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.2)" stroke-dasharray="3 3"/>
+    <text x="155" y="254" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">missing</text>
+    <text x="155" y="272" text-anchor="middle" font-size="8.5" fill="#4f5d75">文件不在了，占位不自动删</text>
+
+    <rect x="560" y="110" width="150" height="56" rx="2" fill="#f0efec" stroke="rgba(45,49,66,0.16)" stroke-dasharray="3 3"/>
+    <text x="635" y="134" text-anchor="middle" font-size="10" font-weight="600" fill="#4f5d75">行删除</text>
+    <text x="635" y="152" text-anchor="middle" font-size="8.5" fill="#5a6580">用户显式删，或项目删除</text>
+
+    <rect x="560" y="230" width="330" height="56" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+    <text x="574" y="250" font-size="9" fill="#4f5d75">rev 每次写入 +1；前端带旧 rev 的 PATCH 得 409 后重拉。</text>
+    <text x="574" y="268" font-size="9" fill="#4f5d75">四态之间没有"重试"计数：状态只由文件与海报的事实决定。</text>
+  </g>
+
+  <g stroke="#2d3142" stroke-width="1.1" fill="none" marker-end="url(#a17)">
+    <line x1="232" y1="138" x2="336" y2="138"/>
+    <line x1="150" y1="168" x2="150" y2="226"/>
+  </g>
+  <g stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#a17acc)">
+    <line x1="440" y1="168" x2="440" y2="226"/>
+    <line x1="392" y1="228" x2="392" y2="172"/>
+    <line x1="232" y1="258" x2="336" y2="258"/>
+  </g>
+  <g stroke="#5a6580" stroke-width="1" fill="none" stroke-dasharray="3 3" marker-end="url(#a17)">
+    <path d="M492,150 C 540,150 540,138 556,138"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5">
+    <text x="284" y="130" text-anchor="middle" fill="#4f5d75">ref 解析成项目内路径</text>
+    <text x="166" y="202" fill="#4f5d75">ref 打不开</text>
+    <text x="452" y="200" fill="#bf4520">file-changed</text>
+    <text x="378" y="200" text-anchor="end" fill="#bf4520">重出海报</text>
+    <text x="284" y="250" text-anchor="middle" fill="#bf4520">文件回来，先降级成 stale</text>
+    <text x="534" y="128" text-anchor="middle" font-size="8" fill="#5a6580">用户点删</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="36" y="322">stale 不会挡住预览：点开就现场渲染 iframe，海报在后台补。missing 也不会自动清行，因为"文件暂时不在"和"用户要删"是两件事。</text>
+    <text x="36" y="342" font-size="8.5" fill="#5a6580">投影器每次做完都对全量产物跑一遍 upsert，跑完把不在清单里的行标成 missing；这一步幂等，不需要 diff。</text>
+  </g>
+</svg>

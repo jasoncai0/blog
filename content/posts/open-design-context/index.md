@@ -11,7 +11,7 @@ series_order: 2
 
 > 源码版本：`nexu-io/open-design` `0725880`（package.json 0.27.2）。本地 clone 后逐文件核对，行号都对这个 commit。仓库 14,308 个文件，`apps/daemon/src/server.ts` 一个文件 18,959 行。
 
-本系列 8 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [执行面](/posts/open-design-runtime.html) · 下一篇 [产物面](/posts/open-design-deliverables.html)
+本系列 9 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [执行面](/posts/open-design-runtime.html) · 下一篇 [产物面](/posts/open-design-deliverables.html)
 
 ## 3.4 prompt 编译器
 

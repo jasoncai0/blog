@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" role="img" aria-labelledby="t15 d15">
+  <title id="t15">画布功能架构</title>
+  <desc id="d15">五层架构：交互入口、视图层、契约层、服务层、数据层。三个新增点分别落在数据层的节点表、服务层的投影器、契约与视图层的视口状态，其余复用现有预览、文件事件与边车链路。</desc>
+  <defs>
+    <marker id="a15" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">PROPOSED ARCHITECTURE · canvas_nodes · canvas/project.ts · tabs_state.canvas</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">功能架构：三层改造，两处复用</text>
+  <text x="924" y="52" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">① 空间模型 ② 落点投影 ③ 视口状态</text>
+
+  <g stroke="#5a6580" stroke-width="1" fill="none" marker-end="url(#a15)">
+    <line x1="70" y1="86" x2="70" y2="466"/>
+    <line x1="920" y1="466" x2="920" y2="86"/>
+  </g>
+  <text x="62" y="276" transform="rotate(-90 62 276)" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#5a6580">REQUEST ↓</text>
+  <text x="934" y="276" transform="rotate(90 934 276)" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.14em" fill="#5a6580">SIGNAL ↑</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+    <!-- band 1 -->
+    <text x="100" y="98" font-size="9.5" fill="#5a6580">交互入口</text>
+    <rect x="170" y="78" width="168" height="34" rx="2" fill="#ececec"/>
+    <text x="254" y="99" text-anchor="middle" font-size="9.5" fill="#2d3142">面板切换 tabs / canvas</text>
+    <rect x="350" y="78" width="160" height="34" rx="2" fill="#ececec"/>
+    <text x="430" y="99" text-anchor="middle" font-size="9.5" fill="#2d3142">agent · canvas.place</text>
+    <rect x="522" y="78" width="176" height="34" rx="2" fill="#ececec"/>
+    <text x="610" y="99" text-anchor="middle" font-size="9.5" fill="#2d3142">MCP · place_on_canvas</text>
+    <rect x="710" y="78" width="170" height="34" rx="2" fill="#ececec"/>
+    <text x="795" y="99" text-anchor="middle" font-size="9.5" fill="#2d3142">拖拽 · 滚轮 · Cmd+滚轮</text>
+
+    <!-- band 2 -->
+    <text x="100" y="146" font-size="9.5" fill="#5a6580">视图层</text>
+    <text x="100" y="160" font-size="8.5" fill="#8f97ad">apps/web</text>
+    <rect x="170" y="136" width="168" height="56" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <text x="182" y="155" font-size="9.5" font-weight="600" fill="#2d3142">CanvasSurface</text>
+    <text x="182" y="172" font-size="8.5" fill="#4f5d75">节点集合 · 命中测试 · 剔除</text>
+    <text x="182" y="185" font-size="8.5" fill="#4f5d75">视口外扩一屏才渲染</text>
+    <rect x="350" y="136" width="160" height="56" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <text x="362" y="155" font-size="9.5" font-weight="600" fill="#2d3142">NodeFrame</text>
+    <text x="362" y="172" font-size="8.5" fill="#4f5d75">iframe 或海报图</text>
+    <text x="362" y="185" font-size="8.5" fill="#4f5d75">沿用预览沙箱配置</text>
+    <rect x="522" y="136" width="176" height="56" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <text x="534" y="155" font-size="9.5" font-weight="600" fill="#2d3142">ViewportController</text>
+    <text x="534" y="172" font-size="8.5" fill="#4f5d75">平移 / 缩放 / 让位标记</text>
+    <text x="534" y="185" font-size="8.5" fill="#bf4520">③ 视口状态读写</text>
+    <rect x="710" y="136" width="170" height="56" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <text x="722" y="155" font-size="9.5" font-weight="600" fill="#2d3142">FileWorkspace</text>
+    <text x="722" y="172" font-size="8.5" fill="#4f5d75">标签集合（已有）</text>
+    <text x="722" y="185" font-size="8.5" fill="#4f5d75">与画布选中互相同步</text>
+
+    <!-- band 3 -->
+    <text x="100" y="234" font-size="9.5" fill="#5a6580">契约层</text>
+    <text x="100" y="248" font-size="8.5" fill="#8f97ad">contracts · 纯 TS</text>
+    <rect x="170" y="222" width="256" height="44" rx="2" fill="#ececec"/>
+    <text x="182" y="241" font-size="9.5" font-weight="600" fill="#2d3142">api/canvas.ts</text>
+    <text x="182" y="256" font-size="8.5" fill="#4f5d75">DTO · layoutNodes · clampViewport（纯函数）</text>
+    <rect x="438" y="222" width="248" height="44" rx="2" fill="#ececec"/>
+    <text x="450" y="241" font-size="9.5" font-weight="600" fill="#2d3142">sse/collab.ts</text>
+    <text x="450" y="256" font-size="8.5" fill="#4f5d75">canvas-changed { projectId, nodeIds }</text>
+    <rect x="698" y="222" width="182" height="44" rx="2" fill="#ececec"/>
+    <text x="710" y="241" font-size="9.5" font-weight="600" fill="#2d3142">api/projects.ts</text>
+    <text x="710" y="256" font-size="8.5" fill="#4f5d75">tabs_state.canvas（可选字段）</text>
+
+    <!-- band 4 -->
+    <text x="100" y="316" font-size="9.5" fill="#5a6580">服务层</text>
+    <text x="100" y="330" font-size="8.5" fill="#8f97ad">apps/daemon</text>
+    <rect x="170" y="300" width="150" height="56" rx="2" fill="#ececec"/>
+    <text x="182" y="319" font-size="9.5" font-weight="600" fill="#2d3142">canvas/routes.ts</text>
+    <text x="182" y="335" font-size="8.5" fill="#4f5d75">GET/PATCH/PUT</text>
+    <text x="182" y="348" font-size="8.5" fill="#4f5d75">rev 校验 · 权限</text>
+    <rect x="332" y="300" width="176" height="56" rx="2" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+    <text x="344" y="319" font-size="9.5" font-weight="600" fill="#2d3142">canvas/project.ts</text>
+    <text x="344" y="335" font-size="8.5" fill="#4f5d75">产物清单 → 布局 → upsert</text>
+    <text x="344" y="348" font-size="8.5" fill="#bf4520">② 落点投影（幂等）</text>
+    <rect x="520" y="300" width="150" height="56" rx="2" fill="#ececec"/>
+    <text x="532" y="319" font-size="9.5" font-weight="600" fill="#2d3142">canvas/store.ts</text>
+    <text x="532" y="335" font-size="8.5" fill="#4f5d75">节点 CRUD · rev++</text>
+    <text x="532" y="348" font-size="8.5" fill="#4f5d75">parent 只指向 frame</text>
+    <rect x="682" y="300" width="198" height="56" rx="2" fill="#f0efec" stroke="rgba(45,49,66,0.16)" stroke-dasharray="3 3"/>
+    <text x="694" y="319" font-size="9.5" font-weight="600" fill="#4f5d75">复用：preview-url</text>
+    <text x="694" y="335" font-size="8.5" fill="#5a6580">file-changed · reconcileHtml</text>
+    <text x="694" y="348" font-size="8.5" fill="#5a6580">emitProjectEvent</text>
+
+    <!-- band 5 -->
+    <text x="100" y="416" font-size="9.5" fill="#5a6580">数据层</text>
+    <text x="100" y="430" font-size="8.5" fill="#8f97ad">SQLite · 数据根</text>
+    <rect x="170" y="400" width="160" height="48" rx="2" fill="#2d3142"/>
+    <text x="182" y="419" font-size="9.5" font-weight="600" fill="#f5f5f5">canvas_nodes</text>
+    <text x="182" y="435" font-size="8.5" fill="#c9cedb">① x/y/w/h · rev · ref 唯一</text>
+    <rect x="342" y="400" width="182" height="48" rx="2" fill="#ececec"/>
+    <text x="354" y="419" font-size="9.5" font-weight="600" fill="#2d3142">tabs_state.state_json</text>
+    <text x="354" y="435" font-size="8.5" fill="#4f5d75">canvas.mode / view / selected</text>
+    <rect x="536" y="400" width="160" height="48" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <text x="548" y="419" font-size="9.5" font-weight="600" fill="#2d3142">项目目录</text>
+    <text x="548" y="435" font-size="8.5" fill="#4f5d75">文件真相，节点只引用</text>
+    <rect x="708" y="400" width="172" height="48" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <text x="720" y="419" font-size="9.5" font-weight="600" fill="#2d3142">canvas/posters</text>
+    <text x="720" y="435" font-size="8.5" fill="#4f5d75">低缩放时的静态截图</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="36" y="512">新增三个组件（红字与① ② ③），其余全部复用。daemon 不做布局计算：布局纯函数在 contracts 里，daemon 只落一次结果。</text>
+    <text x="36" y="530" font-size="8.5" fill="#5a6580">读路径走 GET /canvas；写路径带 rev；信号只带 nodeIds，前端重拉补齐，断线不补发。</text>
+  </g>
+</svg>

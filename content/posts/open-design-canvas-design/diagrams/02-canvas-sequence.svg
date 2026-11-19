@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" role="img" aria-labelledby="t16 d16">
+  <title id="t16">画布落点与渲染时序</title>
+  <desc id="d16">七步：CLI 写盘、chokidar 事件、边车补齐、投影布局、canvas-changed 信号、前端重拉、增量渲染。视口只在用户空闲且未接管时跟随。</desc>
+  <defs>
+    <marker id="a16" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/>
+    </marker>
+    <marker id="a16acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SEQUENCE · canvas/project.ts · canvas/routes.ts · sse/collab.ts</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">从写盘到上画布：七步</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5">
+    <rect x="30" y="78" width="150" height="26" rx="2" fill="#ececec"/>
+    <text x="105" y="95" text-anchor="middle" fill="#2d3142">CLI 子进程</text>
+    <rect x="204" y="78" width="150" height="26" rx="2" fill="#ececec"/>
+    <text x="279" y="95" text-anchor="middle" fill="#2d3142">项目目录</text>
+    <rect x="378" y="78" width="176" height="26" rx="2" fill="#2d3142"/>
+    <text x="466" y="95" text-anchor="middle" fill="#f5f5f5">daemon 投影器</text>
+    <rect x="578" y="78" width="150" height="26" rx="2" fill="#ececec"/>
+    <text x="653" y="95" text-anchor="middle" fill="#2d3142">SSE · 前端</text>
+    <rect x="752" y="78" width="178" height="26" rx="2" fill="#ececec"/>
+    <text x="841" y="95" text-anchor="middle" fill="#2d3142">CanvasSurface</text>
+  </g>
+
+  <g stroke="rgba(45,49,66,0.22)" stroke-width="1" stroke-dasharray="2 3">
+    <line x1="105" y1="104" x2="105" y2="466"/>
+    <line x1="279" y1="104" x2="279" y2="466"/>
+    <line x1="466" y1="104" x2="466" y2="466"/>
+    <line x1="653" y1="104" x2="653" y2="466"/>
+    <line x1="841" y1="104" x2="841" y2="466"/>
+  </g>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">
+    <text x="10" y="135">01</text>
+    <text x="10" y="180">02</text>
+    <text x="10" y="225">03</text>
+    <text x="10" y="270">04</text>
+    <text x="10" y="315">05</text>
+    <text x="10" y="360">06</text>
+    <text x="10" y="405">07</text>
+  </g>
+
+  <g stroke="#2d3142" stroke-width="1.1" fill="none" marker-end="url(#a16)">
+    <line x1="105" y1="132" x2="273" y2="132"/>
+    <line x1="279" y1="177" x2="460" y2="177"/>
+    <line x1="466" y1="222" x2="647" y2="222"/>
+    <line x1="653" y1="267" x2="473" y2="267"/>
+    <line x1="466" y1="312" x2="647" y2="312"/>
+  </g>
+  <g stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#a16acc)">
+    <line x1="653" y1="357" x2="832" y2="357"/>
+    <path d="M841,392 C 902,392 902,436 845,436"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">
+    <text x="189" y="124" text-anchor="middle">Write index.html</text>
+    <text x="369" y="169" text-anchor="middle">chokidar → file-changed</text>
+    <text x="556" y="214" text-anchor="middle">canvas-changed { projectId, nodeIds }</text>
+    <text x="563" y="259" text-anchor="middle">GET /api/projects/:id/canvas</text>
+    <text x="556" y="304" text-anchor="middle">返回 nodes + viewport + rev</text>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">
+    <text x="742" y="349" text-anchor="middle">差量渲染 · 视口判定</text>
+    <text x="872" y="386" text-anchor="middle">挂载或换海报</text>
+  </g>
+
+  <rect x="40" y="442" width="880" height="0.8" fill="rgba(45,49,66,0.12)"/>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="36" y="470">步骤 02 与 03 之间是现有链路：边车补齐只补本轮 mtime 的 HTML，投影器读到的永远是"入口 + 边车"这一对。</text>
+    <text x="36" y="490">步骤 04 之后全部是新增：信号只带 id，前端重拉；断线重连同样重拉，不做 Last-Event-ID 回放。</text>
+    <text x="36" y="510">视口跟随三个条件全真才动：用户空闲 800ms、没手动平移过、新节点在视口外。动一次之后本轮不再动。</text>
+    <text x="36" y="534" font-size="8.5" fill="#5a6580">同屏 iframe 上限 24；zoom 低于 0.35 换静态海报；两者都是渲染预算，不影响数据。</text>
+  </g>
+</svg>
