@@ -4,6 +4,7 @@
 先 `hugo --minify` 生成 public，再跑：`python3 scripts/tests/test_notes.py`。
 """
 
+import json
 import socket
 import subprocess
 import sys
@@ -651,6 +652,27 @@ def test_save_stays_quiet_when_nothing_triggers(page, base):
     assert page.locator(".nt-pop").count() == 0, "保存后气泡应当关闭"
 
 
+def test_home_uploads_local_notes_in_one_batch(page, base):
+    """首页补传本地笔记只能发一次批量请求，不能每篇一次（那会把刷新拖慢）。"""
+    requests = []
+    local = {
+        slug: [{"id": f"n{n}abcde", "q": "收敛", "pre": "", "post": "", "block": 0,
+                "t": 1_700_000_000_000 + n, "thread": [{"author": "我", "text": "本地旧笔记", "t": 1_700_000_000_000}]}]
+        for n, slug in enumerate(["dsh-recall", "dsh-compaction", "agent-reflection"], start=1)
+    }
+    page.add_init_script(f"localStorage.setItem('{KEY}', {json.dumps(json.dumps(local))})")
+    page.route("**/api/notes*", lambda route: (
+        requests.append(route.request.url),
+        route.fulfill(status=200, content_type="application/json", body='{"items": {}}'),
+    )[-1])
+    page.goto(base + "/")
+    page.wait_for_timeout(1200)
+    single = [u for u in requests if "/api/notes/" in u]
+    bulk = [u for u in requests if "/api/notes?slugs=" in u]
+    assert not single, f"不该逐篇拉取：{single[:3]}"
+    assert len(bulk) == 1, f"三篇本地笔记应当合成一次批量请求：{bulk}"
+
+
 CASES = [
     (test_save_shows_ai_is_answering_when_a_question_triggers_it, False, DESKTOP),
     (test_save_stays_quiet_when_nothing_triggers, False, DESKTOP),
@@ -681,6 +703,7 @@ CASES = [
     (test_note_list_moves_to_the_right_rail_on_wide_screen, False, DESKTOP),
     (test_note_list_stays_below_the_article_when_narrow, False, DESKTOP),
     (test_bubble_still_follows_the_mark_on_wide_screen, False, DESKTOP),
+    (test_home_uploads_local_notes_in_one_batch, False, DESKTOP),
 ]
 
 
