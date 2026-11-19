@@ -223,16 +223,19 @@ export function openNoteStream(slug, onEvent) {
 }
 
 // summary 只拉一次：阅读进度和笔记都会用到它，没必要各发一遍。
-let summaryPromise = null;
-let summaryAt = 0;
+// 注意：hugo 把每个入口单独打包，sync.js 会在两个 bundle 里各有一份实例，
+// 所以缓存挂在 window 上，跨实例共享。
+const summaryCache = (globalThis.__notesSummary ||= { promise: null, at: 0 });
 export const pullSummary = (maxAgeMs = 30000) => {
-  if (summaryPromise && Date.now() - summaryAt < maxAgeMs) return summaryPromise;
-  summaryAt = Date.now();
-  summaryPromise = getJSON("summary").catch((err) => {
-    summaryPromise = null;
+  if (summaryCache.promise && Date.now() - summaryCache.at < maxAgeMs) {
+    return summaryCache.promise;
+  }
+  summaryCache.at = Date.now();
+  summaryCache.promise = getJSON("summary").catch((err) => {
+    summaryCache.promise = null;
     throw err;
   });
-  return summaryPromise;
+  return summaryCache.promise;
 };
 export const pullNotes = (slug) => getJSON(`notes/${slug}`);
 export const pullNotesBulk = (slugs) =>
