@@ -5,13 +5,13 @@ summary: "把前面几篇串成一条链：建项目、拼 prompt、子进程写
 tags: ["architecture", "agent"]
 slug: "open-design-walkthrough"
 series: "open-design"
-series_order: 4
+series_order: 5
 ---
 
 
 > 源码版本：`nexu-io/open-design` `0725880`（package.json 0.27.2）。本地 clone 后逐文件核对，行号都对这个 commit。仓库 14,308 个文件，`apps/daemon/src/server.ts` 一个文件 18,959 行。
 
-本系列 7 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [产物面](/posts/open-design-deliverables.html) · 下一篇 [与编码 Agent 的分岔](/posts/open-design-vs-coding-agent.html)
+本系列 8 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [画布与落点](/posts/open-design-canvas.html) · 下一篇 [与编码 Agent 的分岔](/posts/open-design-vs-coding-agent.html)
 
 ## 4. 走一遍：一句话到一份可交付的 deck
 

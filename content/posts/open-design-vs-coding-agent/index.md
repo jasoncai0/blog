@@ -5,13 +5,13 @@ summary: "完成判据、知识形态、评审定位、模态供给线，四个�
 tags: ["architecture", "agent"]
 slug: "open-design-vs-coding-agent"
 series: "open-design"
-series_order: 5
+series_order: 6
 ---
 
 
 > 源码版本：`nexu-io/open-design` `0725880`（package.json 0.27.2）。本地 clone 后逐文件核对，行号都对这个 commit。仓库 14,308 个文件，`apps/daemon/src/server.ts` 一个文件 18,959 行。
 
-本系列 7 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [端到端](/posts/open-design-walkthrough.html) · 下一篇 [生成面](/posts/open-design-media.html)
+本系列 8 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [端到端](/posts/open-design-walkthrough.html) · 下一篇 [生成面](/posts/open-design-media.html)
 
 ## 5. 与：设计 Agent 和编码 Agent 分岔在哪
 

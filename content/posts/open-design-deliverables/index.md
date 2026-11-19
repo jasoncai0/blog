@@ -11,7 +11,7 @@ series_order: 3
 
 > 源码版本：`nexu-io/open-design` `0725880`（package.json 0.27.2）。本地 clone 后逐文件核对，行号都对这个 commit。仓库 14,308 个文件，`apps/daemon/src/server.ts` 一个文件 18,959 行。
 
-本系列 7 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [上下文面](/posts/open-design-context.html) · 下一篇 [端到端](/posts/open-design-walkthrough.html)
+本系列 8 篇 · [总览](/posts/open-design-architecture.html) · 上一篇 [上下文面](/posts/open-design-context.html) · 下一篇 [画布与落点](/posts/open-design-canvas.html)
 
 ## 3.6 交付物：两条物理路径，加一条刷新路径
 
@@ -49,4 +49,4 @@ MCP 有两个角色。OD 自己是 stdio server（`mcp.ts`，3601 行，`od mcp`
 
 ---
 
-下一篇是[端到端](/posts/open-design-walkthrough.html)。回到[总览](/posts/open-design-architecture.html)，或者从[分册索引](/posts/open-design-architecture.html#分册索引)挑一个方向。
+下一篇是[画布与落点](/posts/open-design-canvas.html)。回到[总览](/posts/open-design-architecture.html)，或者从[分册索引](/posts/open-design-architecture.html#分册索引)挑一个方向。

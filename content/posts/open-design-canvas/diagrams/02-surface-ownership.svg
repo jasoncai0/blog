@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" width="960" height="380" role="img" aria-labelledby="t14 d14">
+  <title id="t14">画布的归属：三层</title>
+  <desc id="d14">第一层是产物内部自带的画布脚本，第二层是右侧标签工作区，第三层是团队看板占位。OD 核心不含画布引擎。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SURFACE OWNERSHIP · router.ts:158 · claude-design-import.ts · FileViewer.tsx</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">画布归产物，标签归工作区</text>
+  <text x="924" y="52" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">三处 pan/zoom：一处真的，一处没有，一处占位</text>
+
+  <rect x="36" y="76" width="888" height="76" rx="3" fill="#2d3142"/>
+  <text x="54" y="100" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#f5f5f5">真画布 · 在产物内部</text>
+  <text x="54" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#c9cedb">导入的 Claude Design HTML 自带 pan/zoom，OD 只在导入时把滚轮改成平移，缩放留给 Cmd+滚轮。</text>
+  <text x="54" y="137" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#c9cedb">画布脚本跑在沙箱 iframe 里，opaque origin，拿不到宿主存储。</text>
+  <text x="906" y="100" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8f97ad">claude-design-import.ts</text>
+
+  <rect x="36" y="168" width="888" height="76" rx="3" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="54" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">视图层 · 右侧标签工作区</text>
+  <text x="54" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">FileWorkspace 管标签与顺序，FileViewer 两种渲染模式：URL iframe（?v=mtime 重载）与 srcDoc（deck 桥）。</text>
+  <text x="54" y="229" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">预览地址由 daemon 现场铸 scope，一次一换，短时有效。</text>
+  <text x="906" y="192" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8f97ad">auto-open-file.ts</text>
+
+  <rect x="36" y="260" width="888" height="76" rx="3" fill="none" stroke="rgba(45,49,66,0.28)" stroke-dasharray="4 4"/>
+  <text x="54" y="284" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#4f5d75">团队看板 · /board 占位</text>
+  <text x="54" y="304" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">路由能匹配，渲染的是 TeamSlotPlaceholder（kanban 图标），中文文案「看板」。</text>
+  <text x="54" y="321" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">router.ts 注释把这类槽位归给 team-workspace，视图由别的 lane 提供。</text>
+  <text x="906" y="284" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8f97ad">EntryShell.tsx:2551</text>
+
+  <text x="36" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">所以「无限画布」在这个仓库里是一句设计系统形容词（miro DESIGN.md），不是功能；依赖里也没有任何画布引擎。</text>
+</svg>

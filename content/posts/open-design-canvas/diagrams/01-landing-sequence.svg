@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-labelledby="t13 d13">
+  <title id="t13">产物落点的时序</title>
+  <desc id="d13">五个责任方：CLI 子进程写盘，项目目录被 chokidar 监听，daemon 发出 file-changed 并补齐边车，前端决定开哪个标签，标签里的 iframe 按 mtime 重载。</desc>
+  <defs>
+    <marker id="a13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/>
+    </marker>
+    <marker id="a13acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">LANDING PATH · project-watchers.ts:113 · auto-open-file.ts · preview-url</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">产物怎么落到工作面</text>
+  <text x="924" y="52" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">5 个责任方 · 4 段链路</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5">
+    <rect x="36" y="76" width="156" height="26" rx="2" fill="#ececec"/>
+    <text x="114" y="93" text-anchor="middle" fill="#2d3142">CLI 子进程</text>
+    <rect x="216" y="76" width="156" height="26" rx="2" fill="#ececec"/>
+    <text x="294" y="93" text-anchor="middle" fill="#2d3142">项目目录</text>
+    <rect x="396" y="76" width="156" height="26" rx="2" fill="#2d3142"/>
+    <text x="474" y="93" text-anchor="middle" fill="#f5f5f5">daemon 监听</text>
+    <rect x="576" y="76" width="156" height="26" rx="2" fill="#ececec"/>
+    <text x="654" y="93" text-anchor="middle" fill="#2d3142">ProjectView</text>
+    <rect x="756" y="76" width="156" height="26" rx="2" fill="#ececec"/>
+    <text x="834" y="93" text-anchor="middle" fill="#2d3142">标签 + iframe</text>
+  </g>
+
+  <g stroke="rgba(45,49,66,0.22)" stroke-width="1" stroke-dasharray="2 3">
+    <line x1="114" y1="102" x2="114" y2="492"/>
+    <line x1="294" y1="102" x2="294" y2="492"/>
+    <line x1="474" y1="102" x2="474" y2="492"/>
+    <line x1="654" y1="102" x2="654" y2="492"/>
+    <line x1="834" y1="102" x2="834" y2="492"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="18" y="133">01</text>
+    <text x="18" y="168">02</text>
+    <text x="18" y="203">03</text>
+    <text x="18" y="238">04</text>
+    <text x="18" y="273">05</text>
+    <text x="18" y="308">06</text>
+    <text x="18" y="343">07</text>
+    <text x="18" y="378">08</text>
+    <text x="18" y="413">09</text>
+  </g>
+
+  <g stroke="#2d3142" stroke-width="1.1" fill="none" marker-end="url(#a13)">
+    <line x1="114" y1="130" x2="288" y2="130"/>
+    <line x1="294" y1="165" x2="468" y2="165"/>
+    <line x1="474" y1="200" x2="648" y2="200"/>
+    <line x1="654" y1="235" x2="828" y2="235"/>
+    <line x1="474" y1="340" x2="300" y2="340"/>
+    <line x1="654" y1="375" x2="480" y2="375"/>
+  </g>
+  <g stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#a13acc)">
+    <line x1="654" y1="270" x2="828" y2="270"/>
+    <line x1="654" y1="305" x2="828" y2="305"/>
+    <line x1="474" y1="410" x2="828" y2="410"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">
+    <text x="204" y="122" text-anchor="middle">Write 直接落盘，不经 daemon</text>
+    <text x="384" y="157" text-anchor="middle">add / change，200ms 稳定阈值</text>
+    <text x="564" y="192" text-anchor="middle">file-changed { path, kind }</text>
+    <text x="744" y="227" text-anchor="middle">?v=mtime 重载已开标签</text>
+    <text x="387" y="332" text-anchor="middle">收尾补边车 reconcileHtmlArtifactManifest</text>
+    <text x="567" y="367" text-anchor="middle">GET /preview-url 换 scope</text>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">
+    <text x="744" y="262" text-anchor="middle">tool_result 证明路径 → 立即开</text>
+    <text x="744" y="297" text-anchor="middle">turn 末全开主要产物（OPEND-2588）</text>
+    <text x="654" y="402" text-anchor="middle">scope 内返回文件，opaque origin</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="36" y="520">空 path 的 file-changed 表示整目录失效，前端按全量刷新处理，不要按单文件刷新。</text>
+    <text x="36" y="538">自动开签在用户点过别的标签后永久让位（userTookOverPreviewRef），本轮结束也不再抢焦点。</text>
+    <text x="36" y="556">预览 scope 短时有效，续期走 POST /api/projects/:id/preview/:scope/renew。</text>
+    <text x="36" y="578" font-size="8.5" fill="#5a6580">红的两步是唯一"主动"的两步：先证明文件在项目内，再按排序规则决定开哪个标签。</text>
+  </g>
+</svg>

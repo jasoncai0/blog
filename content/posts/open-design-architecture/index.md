@@ -83,13 +83,14 @@ RUNTIME_DATA_DIR = resolveDataDir(process.env.OD_DATA_DIR, PROJECT_ROOT, {
 
 ## 分册索引
 
-全书按"面"拆成六篇。编号沿用同一套，所以总览停在第 2 节、正文从第 3 节开始，代价与结论留在这一页。
+全书按"面"拆成七篇。编号沿用同一套，所以总览停在第 2 节、正文从第 3 节开始，代价与结论留在这一页。
 
 | 篇 | 内容 | 章节 | 图 |
 | --- | --- | --- | --- |
 | [执行面](/posts/open-design-runtime.html) | daemon 注册顺序、run 生命周期、adapter 数据规格 | §3.1–3.3 | 时序图、五状态图 |
 | [上下文面](/posts/open-design-context.html) | prompt 编译器、四类内容平面 | §3.4–3.5 | prompt 栈、内容平面 |
 | [产物面](/posts/open-design-deliverables.html) | 三条交付路径、持久化、外壳与协作 | §3.6–3.8 | 交付路径 |
+| [画布与落点](/posts/open-design-canvas.html) | 没有画布引擎的证据、产物落点链路、导入的画布 | §3.9–3.12 | 落点时序、三层归属 |
 | [端到端](/posts/open-design-walkthrough.html) | 一句话到一份 deck 的九步链路 | §4 | 十二步泳道、盘面结构 |
 | [与编码 Agent 的分岔](/posts/open-design-vs-coding-agent.html) | 完成判据、知识、评审、模态 | §5 | 对照表 |
 | [生成面](/posts/open-design-media.html) | 一条命令行加 run 级令牌、prompt 质量三道闸 | §6–7 | 派发结构、十一步时序、任务状态 |
