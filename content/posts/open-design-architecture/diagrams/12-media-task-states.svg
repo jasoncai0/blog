@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="m12t m12d">
+  <title id="m12t">媒体任务的五个状态，以及迟到文件怎么回到 run</title>
+  <desc id="m12d">媒体任务从 queued 进入 running，最终落到 done、failed 或 interrupted 三种终态。daemon 重启时把停在 queued 与 running 的任务改写成 interrupted。done 可能在 run 已经写完结案之后才发生，这时用 associateLateRunProducedFile 把文件补挂到那个 run；failed 则通过 noteMediaTaskFailure 反向把 run 判为失败。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="28" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">MEDIA TASK · media/tasks.ts:120-300 · routes/media.ts:310 · noteMediaTaskFailure</text>
+  <text x="28" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">五个状态，两种"事后才落地"</text>
+  <text x="932" y="34" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">task 比 run 活得久</text>
+
+  <defs>
+    <marker id="m12a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#2d3142"/>
+    </marker>
+    <marker id="m12acc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <!-- states -->
+  <rect x="60" y="118" width="112" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="116" y="146" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142">queued</text>
+
+  <rect x="252" y="118" width="112" height="44" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="308" y="146" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142">running</text>
+
+  <rect x="476" y="62" width="120" height="44" fill="#2d3142"/>
+  <text x="536" y="90" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#ffffff">done</text>
+
+  <rect x="476" y="130" width="120" height="44" fill="#2d3142"/>
+  <text x="536" y="158" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#ffffff">failed</text>
+
+  <rect x="476" y="198" width="120" height="44" fill="#ffffff" stroke="#bf4520"/>
+  <text x="536" y="226" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#bf4520">interrupted</text>
+
+  <!-- transitions -->
+  <line x1="172" y1="140" x2="248" y2="140" stroke="#2d3142" stroke-width="1" marker-end="url(#m12a)"/>
+  <text x="178" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">worker 取到</text>
+
+  <line x1="364" y1="132" x2="472" y2="92" stroke="#2d3142" stroke-width="1" marker-end="url(#m12a)"/>
+  <text x="368" y="86" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">字节落盘 + 边车</text>
+  <text x="368" y="72" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">25 秒内返回 file</text>
+
+  <line x1="364" y1="144" x2="472" y2="152" stroke="#2d3142" stroke-width="1" marker-end="url(#m12a)"/>
+  <text x="372" y="138" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">error 带 nextStep</text>
+
+  <line x1="364" y1="156" x2="472" y2="216" stroke="#2d3142" stroke-width="1" marker-end="url(#m12a)"/>
+  <text x="348" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">daemon 关停 / 撤销</text>
+
+  <!-- restart path -->
+  <rect x="60" y="252" width="150" height="52" fill="#ffffff" stroke="rgba(45,49,66,0.12)" stroke-dasharray="4 3"/>
+  <text x="135" y="272" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">daemon 重启</text>
+  <text x="135" y="290" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580">reconcileMediaTasksOnBoot</text>
+  <line x1="212" y1="278" x2="472" y2="232" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#m12acc)"/>
+  <text x="232" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">停在 queued / running 的一律改写</text>
+
+  <!-- post-hoc paths -->
+  <rect x="650" y="62" width="282" height="44" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="662" y="80" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">迟到文件：associateLateRunProducedFile</text>
+  <text x="662" y="96" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">run 已终态才补挂，run 还活着就不抢</text>
+  <line x1="596" y1="84" x2="646" y2="84" stroke="#2d3142" stroke-width="1" marker-end="url(#m12a)"/>
+
+  <rect x="650" y="130" width="282" height="44" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="662" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">noteMediaTaskFailure 反向改判 run</text>
+  <text x="662" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">否则 agent 道歉、exit 0，界面一片绿</text>
+  <line x1="596" y1="152" x2="646" y2="152" stroke="#bf4520" stroke-width="1" marker-end="url(#m12acc)"/>
+
+  <!-- notes -->
+  <text x="28" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">done 的判定要等字节真的写进项目目录、边车写完、文件挂到 run；failed 必须带 nextStep，UI 与 agent 都只按这个字段分支，不猜 code、status 或措辞。</text>
+  <text x="28" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">interrupted 是唯一"不是供应商的错"的终态：重启后没人能接上那条 provider 连接，只能如实标注，让用户重发。</text>
+  <text x="28" y="376" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">这张图解释了为什么媒体 run 的成败不能只看 exit code：终态是两条时间线（run 的、task 的）对账出来的。</text>
+  <text x="28" y="406" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a8">media_tasks 列：id · projectId · sequence · runId · status · surface · model · progress · file · error · startedAt · endedAt · createdAt · updatedAt</text>
+</svg>

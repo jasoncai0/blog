@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" role="img" aria-labelledby="m11t m11d">
+  <title id="m11t">一次图片生成的完整时序：从一句话到一张落盘的文件</title>
+  <desc id="m11d">六条泳道分别是用户对话、CLI agent、od CLI、daemon、供应商、项目目录。agent 用 shell 调 od media generate，od 带令牌请求本机 daemon，daemon 校验令牌与媒体策略后建任务并派发给供应商；供应商返回字节或 taskId，daemon 落盘并回写 run，agent 最后只说一句本地化结论。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="28" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">SEQUENCE · tool-tokens.ts · media/tasks.ts · prompts/media-contract.ts:1-120</text>
+  <text x="28" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次图片生成：一句话、一条命令、一张通行证</text>
+  <text x="932" y="34" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">超过 25 秒就换 taskId 交接</text>
+
+  <defs>
+    <marker id="m11a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#2d3142"/>
+    </marker>
+    <marker id="m11acc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <!-- lifelines -->
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">
+    <rect x="44" y="84" width="132" height="28" fill="#2d3142"/>
+    <text x="110" y="102" text-anchor="middle" fill="#ffffff">用户 · 对话</text>
+    <rect x="196" y="84" width="128" height="28" fill="#2d3142"/>
+    <text x="260" y="102" text-anchor="middle" fill="#ffffff">CLI agent</text>
+    <rect x="352" y="84" width="132" height="28" fill="#2d3142"/>
+    <text x="418" y="102" text-anchor="middle" fill="#ffffff">od CLI</text>
+    <rect x="512" y="84" width="132" height="28" fill="#2d3142"/>
+    <text x="578" y="102" text-anchor="middle" fill="#ffffff">daemon</text>
+    <rect x="668" y="84" width="128" height="28" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+    <text x="732" y="102" text-anchor="middle">供应商</text>
+    <rect x="820" y="84" width="112" height="28" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+    <text x="876" y="102" text-anchor="middle">项目目录</text>
+  </g>
+  <g stroke="rgba(45,49,66,0.16)" stroke-width="1" stroke-dasharray="3 4">
+    <line x1="110" y1="112" x2="110" y2="540"/>
+    <line x1="260" y1="112" x2="260" y2="540"/>
+    <line x1="418" y1="112" x2="418" y2="540"/>
+    <line x1="578" y1="112" x2="578" y2="540"/>
+    <line x1="732" y1="112" x2="732" y2="540"/>
+    <line x1="876" y1="112" x2="876" y2="540"/>
+  </g>
+
+  <!-- step 1 -->
+  <line x1="110" y1="140" x2="254" y2="140" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="118" y="134" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">01 「给这页配一张 3D 石阶演进图」+ 元数据 imageModel / aspect</text>
+
+  <!-- step 2 -->
+  <rect x="196" y="156" width="364" height="26" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="204" y="173" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">02 系统提示末尾压着媒体契约：目录、唯一命令行、失败分诊、回复格式</text>
+
+  <!-- step 3 -->
+  <line x1="260" y1="204" x2="412" y2="204" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="266" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">03 od media generate --surface image --model … --output assets/stairs.png</text>
+
+  <!-- step 4 -->
+  <line x1="418" y1="232" x2="572" y2="232" stroke="#bf4520" stroke-width="1" marker-end="url(#m11acc)"/>
+  <text x="424" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">04 POST /api/tools/media/generate · Authorization: Bearer odtt_…</text>
+
+  <!-- step 5 -->
+  <rect x="512" y="248" width="356" height="40" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="520" y="264" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">05 令牌校验 endpoint + operation → 媒体策略 → 模型目录</text>
+  <text x="520" y="279" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">建 media_tasks(queued)，记 runId；同刻打一行 queued 诊断日志</text>
+
+  <!-- step 6 -->
+  <line x1="578" y1="308" x2="726" y2="308" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="584" y="302" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">06 经出口代理派发，key 只在 daemon</text>
+
+  <!-- step 7 -->
+  <line x1="732" y1="340" x2="584" y2="340" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="600" y="334" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">07 字节，或一个还要等 60–180 秒的 taskId</text>
+
+  <!-- step 8 -->
+  <line x1="578" y1="372" x2="870" y2="372" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="586" y="366" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">08 落盘 + 边车，updateMediaTask(done)，把文件挂到 run</text>
+
+  <!-- step 9 -->
+  <line x1="578" y1="404" x2="424" y2="404" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="432" y="398" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75">09 {"file":{"path":"assets/stairs.png",…}} · exit 0</text>
+
+  <!-- step 10 -->
+  <line x1="418" y1="436" x2="266" y2="436" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="274" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">10 stdout 只有 JSON，进度在 stderr，agent 不回读二进制</text>
+
+  <!-- step 11 -->
+  <line x1="260" y1="468" x2="116" y2="468" stroke="#2d3142" stroke-width="1" marker-end="url(#m11a)"/>
+  <text x="122" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">11 一句「图片已生成」，不出现模型名、taskId、路径、stderr</text>
+
+  <!-- failure branch -->
+  <rect x="44" y="490" width="888" height="44" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="56" y="507" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">失败分支：error.nextStep 九值之一（revise-request / switch-model / open-settings / sign-in / add-credit / retry-later / update-app / unsupported / contact-support）</text>
+  <text x="56" y="523" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">只有 switch-model 与 retry-later 允许自动重派一次；同时 noteMediaTaskFailure 把 run 判成失败，不让 exit 0 蒙过去</text>
+
+  <text x="28" y="566" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">第 4 步的令牌按 run 发：endpoint 17 条、operation 16 条，15 分钟过期，run 结束即撤销。agent 拿不到 provider key，也不许直连供应商。</text>
+  <text x="28" y="586" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">第 7 步之后是长尾：flux-pro-ultra 60–180 秒，sora-2 / veo-3-fal 更久，所以 od media wait 用 120 秒长轮询 + exit 2 表示"还在跑"。</text>
+  <text x="28" y="606" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a8">wait 退出码：0 done · 2 running · 5 failed · 1–4 客户端或 daemon 错误</text>
+</svg>

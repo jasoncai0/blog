@@ -1,7 +1,7 @@
 ---
 title: "OpenDesign 架构解剖：不拥有 agent 的设计工作台"
 date: 2026-11-18T22:22:00+08:00
-summary: "OpenDesign 把 agent loop 外包给用户机器上的编码 CLI，自己只做装配。本文按总-分拆开它的三层进程、run 生命周期、adapter 数据规格、prompt 编译器、四类内容平面和三条交付物路径，并列出七处结构性代价。"
+summary: "OpenDesign 把 agent loop 外包给用户机器上的编码 CLI，自己只做装配。本文按总-分拆开它的三层进程、run 生命周期、adapter 数据规格、prompt 编译器、四类内容平面和三条交付物路径；后半部分专门对比设计 Agent 与编码 Agent 的分岔，拆解它怎么用一条命令行加一张 run 级令牌调生成模型，以及生成 prompt 的三道质量闸。"
 tags: ["architecture", "agent"]
 slug: "open-design-architecture"
 ---
@@ -16,15 +16,17 @@ slug: "open-design-architecture"
 
 **P0 · prompt 由 daemon 拼装，且存在两套并行实现**（§3.4）。判断错的代价见 #7568：deck 协议只落到 legacy 分支，两套测试全绿，修补的第二个 PR 体量接近第一个的两倍。
 
+**P0 · 生成能力是"一条命令行 + 按 run 发的令牌"，不是工具定义**（§6.1、§6.2）。27 个 CLI 只共享 shell，所以 `od media generate` 是唯一入口，daemon 只为这一轮发一张 15 分钟的工具令牌。判断错的代价：你会去找图片工具的 schema，或者想给 provider 加一个 SDK 适配层，而仓库里这两样都不存在。
+
 **P1 · 交付物有两条物理路径，由 streamFormat 一处分流**（§3.6）。`plain` 走文本 artifact 协议，其余走文件系统。判断错的代价：给支持工具的 CLI 发"请输出 artifact 块"，产物会被当成普通消息丢掉。
 
 **P1 · run 没有 `interrupted` 状态**（§3.2）。重启把在跑的 run 改写成 `canceled` 加 `errorCode: DAEMON_RESTARTED`。判断错的代价：前端按 `interrupted` 写的分支永远不触发。
 
 **P1 · 协作层的同步单位是版本化快照**（§3.8）。冲突靠发布顺序与版本身份裁定。判断错的代价：按协同编辑器的思路去改，会破坏 content-first / pointer-last 的发布顺序。
 
-**P2 · 单数据根、单写者、无跨进程锁**（§3.1、§5）。两个 daemon 指向同一个 `OD_DATA_DIR` 会同时写 SQLite。判断错的代价：想在本机开两个实例做对比测试，数据互相踩。
+**P2 · 单数据根、单写者、无跨进程锁**（§3.1、§8）。两个 daemon 指向同一个 `OD_DATA_DIR` 会同时写 SQLite。判断错的代价：想在本机开两个实例做对比测试，数据互相踩。
 
-**P2 · 扩展性的落地形式是"往目录里放文件夹"**（§3.5）。skills、design-systems、templates 都是磁盘目录，每次列表请求重扫。判断错的代价：加数据库表或文件 watcher，和 shadow 规则打架。
+**P2 · 生成 prompt 的质量来自语料与重写，不来自编译器**（§7.1）。106 个模板只是"结构与风格参考"，daemon 从不解析占位符、不拼最终 prompt，最终那段文字由 agent 写。判断错的代价：去 `prompt-templates/` 找模板引擎，或者以为模板里的 aspect 会被严格遵守（Volcengine 上 2:3 会被改成 16:9）。
 
 ## 1. 定位：三个不变量
 
@@ -241,7 +243,184 @@ MCP 有两个角色。OD 自己是 stdio server（`mcp.ts`，3601 行，`od mcp`
 
 这条链每一段都能单独换：换 CLI 加一个 def 文件，换 skill 换一个目录，换品牌换一个 DS 包。硬契约只有两处，SSE 帧格式（`packages/contracts/src/api/chat.ts`）与 artifact manifest（`version` 必须是 1）。
 
-## 5. 代价
+## 5. 与：设计 Agent 和编码 Agent 分岔在哪
+
+OD 复用编码 CLI 的全部推理能力，却没有把验收标准一起外包。分岔落在四处：做完了怎么算、知识以什么形态进 prompt、谁给好坏打分、非文本产物走哪条供给线。
+
+### 5.1 完成判据：入口文件有没有被这一轮碰过
+
+编码 agent 的完成信号来自外部：测试绿、构建通过、diff 被人看过。OD 用不了这套，它的产物是一份可以被再次渲染、再次导出的具名文件，不是仓库状态。
+
+判据写在 `run-deliverable-validation.ts`。一轮结束时，声明的入口文件必须出现在本轮 `touchedPaths` 里（`:318-331`，否则报 `entry_not_touched`），文件类型要匹配 `kind`（`:58-68`，deck 只认 html/presentation/pdf），manifest 要存在且 `version` 为 1。失败原因是封闭枚举：`not_succeeded`、`no_artifact`、`project_missing`、`entry_missing`、`entry_not_touched`、`type_mismatch`。
+
+这套判据判不了"好不好"，但它不需要跑构建就能机械校验。代价与收益都在这一句里。
+
+| 轴 | 编码 Agent | OpenDesign | 代码 |
+| --- | --- | --- | --- |
+| 交付 | 仓库里变了的文件 | manifest 声明的具名产物 | `manifest.ts:22-49` |
+| 验收 | 测试、构建、人看 diff | 入口被本轮触碰且类型匹配 | `run-deliverable-validation.ts:318-331` |
+| 预览 | 用户自己的 dev server | daemon 预览源加宿主桥 | `file-viewer-render-mode.ts:104-137` |
+| 知识 | 仓库约定 | DESIGN.md 加 tokens.css 逐字 | `system.ts:1276-1331` |
+| 评审 | 另一个人或另一个会话 | 同会话五个 panelist 打分 | `critique-theater.md:54-74` |
+| 工具 | 文件、shell、测试、git | 只有 shell，其余走 `od` 包装 | `tools/` 仅 `connectors.ts` |
+
+第三行那个"只有 shell"值得展开。`apps/daemon/src/tools/` 整个目录只有一个 `connectors.ts`，137 行。没有 test runner，没有 git 提交、分支、重构工具。它跟 git 的唯一接触是只读摘要 `git.summary`，作为 live artifact 的刷新数据源（`live-artifacts/refresh.ts:10-11`）。这是单元边界决定的：OD 的单元是一个产物，不是一堆代码。
+
+### 5.2 知识：让违反变得可见
+
+编码 agent 的固定前缀是约定：命名风格、目录结构、提交格式。这类知识天然是软的，模型违反它不会产生结构性错误，只会让人皱眉。
+
+OD 的设计知识分三层，第二层是硬的。
+
+1. `DESIGN.md` 用散文写清颜色、字体、间距、组件规则，要求"不要发明这套调色板以外的 token"（`system.ts:1276-1285`）。
+2. `tokens.css` 是同一份契约的机器可读形式，指令是整段 `:root` 原样粘进第一个 `<style>`（`system.ts:1294-1305`）。
+3. craft 那 13 份规则品牌无关，只管可用性、动效纪律、排版层级这类通用要求，插在 DESIGN.md 与 skill 正文之间；冲突时品牌 token 优先（`system.ts:1325-1331`）。
+
+第二层的价值在于可校验：粘错一个变量名，产物里立刻看得见。把审美约定翻译成可以 diff 的字符串，是这套 prompt 架构里最实用的一招。
+
+四类内容平面也是同一个思路的延伸。skills、design-templates、design-systems、plugins 都是磁盘目录，加一个文件夹就多一种能力，不需要建表、不需要 watcher、不需要重启（`skills.ts:284`、`cwd-aliases.ts:108`）。
+
+### 5.3 反馈：评审判好坏，但拦不住导出
+
+Design Jury 容易被误读成 CI，它更像一轮结构化的自我复看。
+
+五个固定评委：designer 权重 0、critic 0.4、brand 0.2、accessibility 0.2、copy 0.2；阈值 8.0/10；最多三轮；兜底策略 `ship_best`（`docs/critique-theater.md:54-74`）。评委不是五个进程，是同一个 CLI 会话里被 `<PANELIST role="...">` 分隔的五个 turn，所以它不增加一次模型调用之外的成本。
+
+开关有四层优先级：skill 的 `od.critique.policy` > 项目 `metadata.critiqueTheaterEnabled` > `OD_CRITIQUE_ENABLED` > rollout 档位。默认关。
+
+分数不通过不会阻止导出。它产出的是"要不要再改一轮"的判断，附一份可回放的 ndjson 记录。想把它变成门禁，得自己接，比如把导出挂在评审之后。
+
+### 5.4 多模态是另一条供给线
+
+图片、视频、音频三种 surface 走的是完全不同的 prompt 栈，这一点在源码里是显式的。
+
+设计系统的注入被 `if (!isMediaSurfaceEarly && !isAskMode)` 门控（`system.ts:1134`、`:1275`），也就是说图像与视频的 run 拿不到 DESIGN.md、拿不到 tokens.css、拿不到 craft。它们拿到的是：skill 正文、媒体契约（压在系统提示最后）、项目元数据里的模型与画幅。
+
+原因不难推：图像模型不吃 token 名。它吃"镜头、材质、光线、时间"这类描述，`#bf4520` 这种值写进 prompt 只是噪声。品牌一致性在媒体面上靠参考图加文字描述，靠不住 token 契约。
+
+这个门控是设计决定，也是能力边界：同一个项目里，HTML 产物受品牌 token 强约束，配图只受文字描述弱约束。
+
+## 6. 怎么调用生成类 Agent
+
+OD 调生成模型的方式，是把"调模型"降级成"跑一条命令"。
+
+### 6.1 只给一条命令行
+
+27 个 CLI 的共同能力只有 shell，`media-contract.ts` 开头就把这个理由写明了：
+
+> The contract is intentionally tool-name-agnostic: it works on any code-agent CLI that has shell access (Claude Code's Bash, Codex's shell, Gemini's exec, OpenCode, Cursor Agent, Qwen — all of them). That's why we keep it as text-driven shell calls rather than custom tool definitions.
+
+于是生成能力的接口是一行 shell，不是一个工具 schema：
+
+```bash
+"$OD_NODE_BIN" "$OD_BIN" media generate --project "$OD_PROJECT_ID" \
+  --surface image --model vela/gpt-image-2 --aspect 1:1 \
+  --output assets/stairs.png --prompt "<full prompt>"
+```
+
+OD 自己的 MCP server 有 22 个工具，里面没有生成工具，最接近的是 `start_run`（它只是再开一轮对话）。生成永远走 CLI 与 HTTP 这条车道。
+
+{{< fig "diagrams/10-media-dispatch.svg" "媒体派发的五列结构。凭证不出 daemon，agent 拿到的是一张按 run 发的令牌；HyperFrames 的渲染也在 daemon 进程里，因为 agent 的 Bash 被 sandbox 包住，puppeteer 抓帧会卡住。" >}}
+
+### 6.2 通行证：按 run 发的一次性令牌
+
+agent 要访问 daemon，用的不是 `OD_API_TOKEN`，是一张为这一轮铸的令牌。
+
+- 形态：`odtt_` 前缀加 32 字节随机数的 base64url，daemon 只存 sha256（`tool-tokens.ts:121-127`）。
+- 有效期：`max(15 分钟, 本轮不活跃超时 + 15 分钟)`，agent 每有活动就续期（`server.ts:12015`、`tool-tokens.ts:237-262`）。
+- 权限：endpoint 白名单 17 条、operation 白名单 16 条，逐条字符串匹配（`tool-tokens.ts:18-63`，校验在 `:226-232`）。
+- 撤销：run 结束的 finalize 钩子里 `revokeToolToken('run_finalized')`（`server.ts:12068`），另有 `child_exit`、`sse_end`、`ttl_expired`、`manual` 四种原因。
+- 隔离：`createAgentRuntimeEnv` 会把子进程环境里所有 `OD_API_TOKEN` 键删掉（`server.ts:1883-1885`），注释原话是 agent children 只拿 run 级能力，不拿那个大凭据。
+
+为什么值得这么麻烦：agent 是外部进程，一段 prompt 注入就能让它执行任意 shell。给它大令牌等于把整个 `/api` 交出去；给它一张只覆盖本轮、只覆盖 17 条路径、15 分钟过期的令牌，最坏情况被限定在一次 run 的范围内。
+
+### 6.3 派发：从 surface 到 provider
+
+媒体目录 95 个模型条目，23 个 provider（18 个已接）：50 个图像、31 个视频、14 个音频（4 音乐 / 8 语音 / 2 音效），默认项标在 `vela/gpt-image-2`（`media/models.ts`）。`fal-ai/*` 这类带前缀的 id 直接直通，不进目录。
+
+一次请求的校验顺序固定：项目不存在 404 → surface 不是 image/video/audio 就 400 → 没有 model 就 400 → 媒体策略拒绝 403（`media:generate` 被默认允许，但 `enabled: false` 或 `allowedSurfaces` 不含该面时拒绝）→ 建 `media_tasks` 行 → 派发。
+
+路由永远回 202 加 taskId，代码里没有"同步返回字节"这条路。CLI 侧替 agent 扛掉前 25 秒：等到就当场把 `{"file":{...}}` 打给 stdout，等不到就把 taskId 交出去，agent 进 `media wait <taskId> --since <n>` 的 120 秒长轮询，退出码 0 完成、2 还在跑、5 失败、4 daemon 出错。`flux-pro-ultra` 通常 60–180 秒，`sora-2` 与 `veo-3-fal` 更久。
+
+数值参数一律钳制，不报错：视频时长按 `[3,5,8,10,15,30]` 取最近档，音频按 `[5,10,15,30,60,120]`，画幅收敛到 `1:1 / 16:9 / 9:16 / 4:3 / 3:4`（`media/index.ts:270-300`）。未知模型 id 才直接抛错；`fal-ai/*` 与 `aihubmix-*` 这类带前缀的 id 在运行时现场合成定义。
+
+provider 返回的资源 URL 还要过一遍 `assertAndFetchExternalAsset`：先 DNS 解析，拒掉回环、RFC1918、链路本地、CGNAT、组播与云元数据地址，`redirect` 设为 `error`，连接时把解析出的 IP 钉死（`connectionTest.ts:357-400`）。生成服务经常把结果放在第三方 CDN 上，这一步防的是"模型服务被诱导返回一个内网 URL"。
+
+{{< fig "diagrams/11-media-sequence.svg" "一次图片生成的十一步时序，六条泳道。红色两步是骨架：令牌随 Authorization 头进 daemon，可见性却只在 daemon 的 queued 诊断行里。" >}}
+
+### 6.4 两件"事后才落地"的事
+
+媒体任务比 run 活得久，于是有两种反常时序必须显式处理。
+
+第一种是迟到文件。run 早已写出终态，provider 那边才把字节送回来。`associateLateRunProducedFile` 负责把文件补挂到那个已经结束的 run 上，前提是 run 真的已经终态，还活着就不抢。
+
+第二种是失败回写。这条链上曾经有一个真实的 bug：agent 在正文里道歉、`exit 0`，run 被判成 succeeded，界面上绿灯、产物栏空白，而 daemon 自己的日志 55 秒前就记了唯一交付物生成失败。修法是在派发侧留一条反向通道 `noteMediaTaskFailure(runId, {...})`，让任务失败能把 run 改判成失败。
+
+启动期的对账也是同一类工作：停在 `queued` 与 `running` 的行一律改写成 `interrupted`，带 `code: "DAEMON_RESTART"` 与 `status: 5`（`media/tasks.ts:290-310`）；终态行保留一小时供前端补读，之后清掉（`task-store.ts:50`）。
+
+失败到 `nextStep` 的映射是张固定表：429/503 与超时给 `retry-later`，内容安全拒绝给 `revise-request`，没配 key 给 `open-settings`，重启打断给 `retry-later`，策略拒绝给 `unsupported` 或 `switch-model`，磁盘写不进去这类归 `contact-support`。agent 不需要理解原因，只需要照表说话。
+
+{{< fig "diagrams/12-media-task-states.svg" "媒体任务的五个状态。done 与 failed 都可能发生在 run 结案之后，所以成败是两条时间线对账出来的，不是 exit code 一个人说了算。" >}}
+
+### 6.5 本地渲染路径：HyperFrames
+
+有一条生成路径完全不联网：`hyperframes-html`。agent 写一份 HTML 加 GSAP 时间轴，daemon 用 Chromium 逐帧抓图，再用 FFmpeg 编码成 MP4。
+
+这条路存在的直接原因是沙箱。Claude Code 的 Bash 在 macOS 上被 `sandbox-exec` 包住，puppeteer 起自己的 Chrome 会卡在抓帧，所以渲染必须在 daemon 进程里做。agent 只负责写 composition：`hyperframes.json`、`meta.json`、`index.html` 三个文件，用 `media scaffold` 生成骨架，目录必须落在 `.hyperframes-cache` 或 `motion-source` 下，不能是符号链接，不能预先存在。
+
+可复现性靠四件事：固定的 `hyperframes` 0.8.1 与 `@ffmpeg-installer/ffmpeg` 版本；`-start_number 0 -framerate <fps>` 的帧序列；`libx264 / yuv420p / faststart` 的编码参数；渲染前注入的帧桥把 `<audio>` 换成隐藏 span，让音频时钟归 FFmpeg 管。输出先落在 `mkdtemp` 目录里的 `render.mp4`，读进内存后删掉，再走那条所有 provider 共用的写文件路径。
+
+这条路没有 stub 回退，渲染失败就是任务失败，跟 `vela/*` 一样。
+
+## 7. 生成 prompt 的质量靠什么
+
+三道闸：给例子、把硬参数挪出 prompt 文本、失败只说一句。没有第四道。
+
+### 7.1 第一道闸：语料加改写
+
+`prompt-templates/` 里 106 个模板，48 张图、58 段视频，只覆盖四个模型：`gpt-image-2` 46 个、`seedream-5-pro` 2 个、`seedance-2.0` 40 个、`hyperframes-html` 18 个。每条都带来源与许可：awesome-seedance-2-prompts 36 条、awesome-gpt-image-2 36 条、HyperFrames 18 条、仓库自建 12 条；许可以 CC-BY-4.0 为主（72 条），Apache-2.0 31 条，MIT 1 条。
+
+模板进 prompt 的方式不是填空。系统提示里的原话是：
+
+> The user picked this template as inspiration. Treat it as a structural and stylistic reference: borrow composition, palette cues, lighting language, lens/motion direction, and the level of detail. Adapt the wording to the user's actual subject and brief — do NOT generate the template subject verbatim.
+
+新建面板里模板正文是可编辑的文本框，用户改过的版本成为权威，最终那段 `--prompt` 由 agent 写。daemon 从不编译模板，也不替换占位符：`{argument name="..." default="..."}` 这种写法在仓库里没有任何解析器，它是上游语料库的约定，agent 只能从 `default=` 推断该怎么填。
+
+加载校验只有六条：是对象、`id` 非空、`surface` 与所在目录一致、`title` 非空、`prompt` 至少 20 字符、`source` 里有 `repo` 与 `license`（`media/prompt-templates.ts:93-143`）。没有 schema 库，没有去重，没有 aspect 白名单，也没有许可白名单。
+
+质量在这里靠的是语料的密度：36 条同类范例里能看出这个模型喜欢什么样的句式与信息密度，比任何"prompt 最佳实践"清单都具体。
+
+### 7.2 第二道闸：硬参数走命令行
+
+契约里最有用的一类规则，是把"不该写进 prompt 的东西"明确挪出去。
+
+尺寸与档位属于用户。原话是：用户说的"2K"、"高质量"就是那个要求，要映射到 `--resolution` 或 `--quality`；把它复述进 prompt 文本传不到 provider。画幅有启发式：电影感与横屏 16:9、竖屏社媒 9:16、没有线索时 1:1；provider 侧还会再纠一次，火山引擎上非枚举值一律落到 16:9。
+
+音色必须是 provider 的 voice_id，自然语言描述不被接受。音效 prompt 硬上限 450 字符，目标 180–320，因为超长会在 provider 校验阶段白白浪费一次生成。图生视频用 `--image` 传项目相对路径，越界路径直接拒。
+
+还有两条防呆：不要 `Read` 生成的二进制回上下文（会把下一次请求撑爆），不要手工"编辑"生成出来的字节（重新生成，让用户挑版本）。
+
+### 7.3 第三道闸：失败只说一句
+
+每个失败都带 `error.nextStep`，九值封闭集合：`revise-request`、`switch-model`、`open-settings`、`sign-in`、`add-credit`、`retry-later`、`update-app`、`unsupported`、`contact-support`。
+
+契约要求 agent 只按这个字段分支，不猜 code、status 或措辞。只有 `switch-model` 与 `retry-later` 允许自动重派一次，理由写在注释里：第二次调用改变不了结果，还可能再计一次费。
+
+给用户的话是一句本地化文案，不出现模型名、provider 名、taskId、路径、stderr、退出码。重试只调时间不调 prompt：只对 429 与 503 重试，最多一次，延迟上限 60 秒。
+
+### 7.4 缺口
+
+四处明确的空缺，读代码能确认：
+
+1. 没有 negative prompt 参数。任何 provider 调用里都不存在这个字段。
+2. daemon 不做内容审核。所谓"提示词没通过审核"是 provider 返回后按状态码分类的结果。
+3. 模板里的 aspect 只是建议。2:3 的模板在火山引擎上会被改成 16:9，代码里没有告警。
+4. 产物没有自动 QA。`motion-compare` 会算 SSIM 并拼对比图，但它是量具不是门禁：注释原话是让 agent 自己看帧对，分数只说明先看哪个时间点。
+5. 请求链路里没有 `seed` 参数。同一个 prompt 重跑会得到不同结果，所谓可复现只体现在"字节被 sha256 冻结、绑在 runId 与 taskId 上"，不体现在生成过程。
+
+要补第四道闸，位置在这里：把 `motion-compare` 与人工抽查接成导出前的可选检查。
+
+## 8. 代价
 
 | 代价 | 位置 | 后果 |
 | --- | --- | --- |
@@ -255,7 +434,7 @@ MCP 有两个角色。OD 自己是 stdio server（`mcp.ts`，3601 行，`od mcp`
 
 前两条是结构性的，后五条是局部可修的。如果要给这个仓库提第一个 PR，我会挑背压那一条：两处实现对同一件事有两种处理，这种不一致迟早会咬人。
 
-## 6. 如果要抄，抄这五条
+## 9. 如果要抄，抄这五条
 
 1. **把"多运行时"做成数据规格**。`RuntimeAgentDef` 加一个通用引擎，27 个 CLI 的成本是 27 个 def 文件，合计 3,327 行。
 2. **先建流再启动**。`routes/runs.ts:2867` 与 `:2900` 的先后顺序，是这套 run 生命周期里最便宜也最容易做错的一处正确性。
@@ -263,7 +442,7 @@ MCP 有两个角色。OD 自己是 stdio server（`mcp.ts`，3601 行，`od mcp`
 4. **内容注册表用目录加 frontmatter**。没有数据库表、没有 watcher、没有安装步骤，用户目录遮蔽内置目录的规则只有一行。
 5. **MCP 工具层只做 HTTP 转发**。22 个工具全是 `fetch`，MCP 侧没有状态，也就没有第二套真相。
 
-## 7. 参考
+## 10. 参考
 
 - 仓库：`nexu-io/open-design`，commit `0725880`，Apache-2.0。
 - 架构与规范：`docs/architecture.md`、`docs/agent-adapters.md`、`docs/skills-protocol.md`、`docs/prompt-composition.md`、`docs/critique-theater.md`、`docs/atoms.md`、`docs/spec.md`（Archived Draft）。

@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-labelledby="m10t m10d">
+  <title id="m10t">媒体派发：agent 只拿到令牌，凭证和出口都在 daemon</title>
+  <desc id="m10d">五列结构：对话与项目元数据、CLI agent、od CLI 包装、daemon 派发面、生成供应商。agent 通过 shell 调 od media，od 用一次性工具令牌访问本机 daemon；daemon 校验令牌与媒体策略后按 surface 与 model 派发到供应商，取回字节写进项目目录。供应商 key 从不进入 agent 环境。</desc>
+
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="28" y="34" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">MEDIA DISPATCH · apps/daemon/src/routes/media.ts:310 · prompts/media-contract.ts</text>
+  <text x="28" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">agent 只拿到令牌，凭证与出口都在 daemon</text>
+  <text x="932" y="34" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580">27 个 CLI 都能用，因为有 shell 就够</text>
+
+  <!-- column 1: chat + project metadata -->
+  <rect x="28" y="96" width="168" height="196" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="40" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">对话 + 项目元数据</text>
+  <text x="40" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">新建时选的模型、画幅、时长、音色</text>
+  <text x="40" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">写进 project metadata</text>
+  <text x="40" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">聊天里的一句需求</text>
+  <text x="40" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">作为权威默认值注入 prompt</text>
+  <text x="40" y="216" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">agent 只在用户明说时才覆盖</text>
+  <text x="40" y="244" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">图片 / 视频 / 音频三种 surface</text>
+  <text x="40" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">各自一套默认模型目录</text>
+
+  <!-- column 2: CLI agent -->
+  <rect x="228" y="96" width="160" height="196" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="240" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">CLI agent</text>
+  <text x="240" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">Claude Code / Codex / …</text>
+  <text x="240" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">只被赋予 shell 能力</text>
+  <text x="240" y="178" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不 import 模型 SDK</text>
+  <text x="240" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">不读 provider key</text>
+  <text x="240" y="222" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">od media generate</text>
+  <text x="240" y="238" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">od media wait</text>
+  <text x="240" y="254" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">od media models</text>
+  <text x="240" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">字面量文本，不是自定义工具</text>
+
+  <!-- column 3: od CLI -->
+  <rect x="420" y="96" width="140" height="196" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="432" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">od CLI 包装</text>
+  <text x="432" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">读环境里的</text>
+  <text x="432" y="156" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">OD_TOOL_TOKEN</text>
+  <text x="432" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">打本机 127.0.0.1</text>
+  <text x="432" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">把 JSON 打回 stdout</text>
+  <text x="432" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">把进度打到 stderr</text>
+  <text x="432" y="232" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">令牌是 odtt_ 前缀的</text>
+  <text x="432" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">不透明串，不含 key</text>
+  <text x="432" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">15 分钟 TTL，随 run 撤销</text>
+
+  <!-- column 4: daemon dispatcher -->
+  <rect x="588" y="96" width="196" height="196" fill="#2d3142"/>
+  <text x="600" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#ffffff">daemon 派发面</text>
+  <text x="600" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">① 令牌校验：endpoint + operation</text>
+  <text x="600" y="155" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">② 媒体策略：enabled / 允许的 surface</text>
+  <text x="600" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">③ 目录派发：surface × model</text>
+  <text x="600" y="185" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">④ 任务表 media_tasks</text>
+  <text x="600" y="200" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">⑤ 出口代理 egress-proxy</text>
+  <text x="600" y="215" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">⑥ 落盘：项目文件 + 边车</text>
+  <text x="600" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#ffffff">HyperFrames 渲染也在这里</text>
+  <text x="600" y="256" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">agent 的 Bash 被 sandbox 包住</text>
+  <text x="600" y="271" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">puppeteer 的 Chrome 会卡在抓帧</text>
+
+  <!-- column 5: providers -->
+  <rect x="812" y="96" width="120" height="196" fill="#ffffff" stroke="rgba(45,49,66,0.12)"/>
+  <text x="824" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">生成供应方</text>
+  <text x="824" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">vela 云</text>
+  <text x="824" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">OpenAI</text>
+  <text x="824" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">火山 Seedance</text>
+  <text x="824" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">fal · grok</text>
+  <text x="824" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">MiniMax · ElevenLabs</text>
+  <text x="824" y="220" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">FishAudio</text>
+  <text x="824" y="236" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">HyperFrames</text>
+  <text x="824" y="262" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">95 个模型条目</text>
+  <text x="824" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">23 个 provider · 18 个已接</text>
+
+  <!-- arrows -->
+  <defs>
+    <marker id="m10a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#2d3142"/>
+    </marker>
+    <marker id="m10acc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <line x1="196" y1="194" x2="222" y2="194" stroke="#2d3142" stroke-width="1" marker-end="url(#m10a)"/>
+  <line x1="388" y1="194" x2="414" y2="194" stroke="#2d3142" stroke-width="1" marker-end="url(#m10a)"/>
+  <line x1="560" y1="194" x2="582" y2="194" stroke="#2d3142" stroke-width="1" marker-end="url(#m10a)"/>
+  <line x1="784" y1="194" x2="806" y2="194" stroke="#bf4520" stroke-width="1" marker-end="url(#m10acc)"/>
+  <text x="561" y="186" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">bearer</text>
+  <text x="795" y="186" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">bytes</text>
+
+  <!-- output row -->
+  <rect x="28" y="316" width="904" height="62" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="44" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#5a6580">OUTPUT</text>
+  <text x="44" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">文件写进项目目录 → FileViewer 自动出现 → run 的产物栏拿到它；失败也要回写 run（noteMediaTaskFailure），否则 agent 用散文道歉、run 却判 succeeded。</text>
+
+  <!-- footnotes -->
+  <text x="28" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">三条与"调用生成类 Agent"直接相关的约束：凭证不出 daemon；一次派发只允许一条路径（禁止 curl、禁止直接 import 模块）；生成超 25 秒就转成 taskId 交接。</text>
+  <text x="28" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">换句话说，OD 没有把"调模型"塞进 prompt 让 agent 自由发挥，它给的是一条唯一的命令行，加一张按 run 发的通行证。</text>
+  <text x="28" y="450" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a8">注入的环境变量：OD_NODE_BIN · OD_BIN · OD_TOOL_TOKEN · OD_PROJECT_ID · OD_PROJECT_DIR · OD_DAEMON_URL · OD_HYPERFRAMES_BIN</text>
+</svg>
