@@ -83,5 +83,5 @@
   <text x="722" y="462" font-size="8.5" fill="#5a6580">改过的文件顺带成为上下文</text>
 
   <text x="36" y="504" font-size="9" fill="#5a6580">run 的 state.json 与 events.jsonl 不在这里，在数据根 &lt;data&gt;/runs/&lt;runId&gt;/。</text>
-  <text x="36" y="520" font-size="9" fill="#5a6580">文件版本没有保留策略，live 快照只增不减，产物也没有 GC——这是 §5 里那条"存储只进不出"。</text>
+  <text x="36" y="520" font-size="9" fill="#5a6580">文件版本没有保留策略，live 快照只增不减，产物也没有 GC，这是 §8 里那条「存储只进不出」。</text>
 </svg>
