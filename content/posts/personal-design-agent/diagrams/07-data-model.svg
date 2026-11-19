@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-labelledby="kt kd">
+  <title id="kt">一条事件流，六张投影表</title>
+  <desc id="kd">事件表是唯一写入点，其余六张表都从事件重放。原件按 sha256 去重，删除写 tombstone 不物理删。</desc>
+  <defs>
+    <marker id="ka" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="kacc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">DATA MODEL · event 只追加 · 6 张投影</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">一条事件流，六张投影表</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">payload 只写不查，查询走投影</text>
+  <rect x="36" y="104" width="270" height="112" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="50" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142" font-weight="600">project</text>
+  <line x1="36" y1="134" x2="306" y2="134" stroke="rgba(45,49,66,0.12)"/>
+  <text x="50" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">id</text>
+  <text x="50" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">name</text>
+  <text x="50" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">brand_ref</text>
+  <text x="50" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">status</text>
+  <rect x="345" y="104" width="270" height="130" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="359" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142" font-weight="600">deliverable</text>
+  <line x1="345" y1="134" x2="615" y2="134" stroke="rgba(45,49,66,0.12)"/>
+  <text x="359" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">id</text>
+  <text x="359" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">project_id →</text>
+  <text x="359" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">spec_json</text>
+  <text x="359" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">rev</text>
+  <text x="359" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">status</text>
+  <rect x="654" y="104" width="270" height="130" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="668" y="126" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142" font-weight="600">run</text>
+  <line x1="654" y1="134" x2="924" y2="134" stroke="rgba(45,49,66,0.12)"/>
+  <text x="668" y="152" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">id</text>
+  <text x="668" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">deliverable_id →</text>
+  <text x="668" y="188" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">adapter</text>
+  <text x="668" y="206" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">cost</text>
+  <text x="668" y="224" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">status</text>
+  <rect x="36" y="250" width="270" height="130" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="50" y="272" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142" font-weight="600">artifact</text>
+  <line x1="36" y1="280" x2="306" y2="280" stroke="rgba(45,49,66,0.12)"/>
+  <text x="50" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">id</text>
+  <text x="50" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">run_id →</text>
+  <text x="50" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">sha256 ▸ 唯一</text>
+  <text x="50" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">path 原件</text>
+  <text x="50" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">w · h</text>
+  <rect x="345" y="250" width="270" height="130" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="359" y="272" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142" font-weight="600">verdict</text>
+  <line x1="345" y1="280" x2="615" y2="280" stroke="rgba(45,49,66,0.12)"/>
+  <text x="359" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">id</text>
+  <text x="359" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">artifact_id →</text>
+  <text x="359" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">layer</text>
+  <text x="359" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">pass</text>
+  <text x="359" y="370" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">reasons[]</text>
+  <rect x="654" y="250" width="270" height="112" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="668" y="272" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#2d3142" font-weight="600">asset</text>
+  <line x1="654" y1="280" x2="924" y2="280" stroke="rgba(45,49,66,0.12)"/>
+  <text x="668" y="298" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">id</text>
+  <text x="668" y="316" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">kind</text>
+  <text x="668" y="334" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">source · license</text>
+  <text x="668" y="352" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#4f5d75">used_in[]</text>
+  <rect x="36" y="386" width="888" height="84" fill="#2d3142" stroke="#2d3142"/>
+  <text x="52" y="410" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="11" fill="#ffffff" font-weight="600">event</text>
+  <text x="108" y="410" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#d8dbe4">id · ts · actor · type · ref · payload(JSON 只写不查) · prev_hash</text>
+  <text x="52" y="434" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#d8dbe4">type: spec.frozen | run.started | artifact.added | verdict.recorded | artifact.edited | delivered</text>
+  <text x="52" y="456" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#ffffff">重放：deliverable / run / verdict / 版本树 / 能力排行 / 风格指纹，全部可重建</text>
+  
+  <text x="36" y="494" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">artifact.sha256 加唯一索引解决重复存；删除写 tombstone 保证可回滚；投影坏了能重建，事件丢了就真丢了。</text>
+  </svg>

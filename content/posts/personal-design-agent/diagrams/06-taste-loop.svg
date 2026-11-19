@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 548" role="img" aria-labelledby="ht hd">
+  <title id="ht">从编辑动作到 rubric 版本</title>
+  <desc id="hd">每天凌晨跑一次：拉事件、配对、算特征、训练、回放、过闸、写记录。不过闸就丢弃并记原因。</desc>
+  <defs>
+    <marker id="ha" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="hacc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">OFFLINE LOOP · 每日 02:00 · 七步</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">从编辑动作到 rubric 版本</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">n=1 时不训练大模型，只学排序</text>
+  <rect x="40.0" y="72" width="140" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="110" y="91" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle">账本</text>
+  <rect x="230.0" y="72" width="140" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="300" y="91" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle">抽取器</text>
+  <rect x="410.0" y="72" width="140" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="480" y="91" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle">偏好集</text>
+  <rect x="590.0" y="72" width="140" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="660" y="91" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle">排序模型</text>
+  <rect x="770.0" y="72" width="140" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="840" y="91" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle">闸门</text>
+  <line x1="110" y1="102" x2="110" y2="428" stroke="rgba(45,49,66,0.20)" stroke-dasharray="3 3"/>
+  <line x1="300" y1="102" x2="300" y2="428" stroke="rgba(45,49,66,0.20)" stroke-dasharray="3 3"/>
+  <line x1="480" y1="102" x2="480" y2="428" stroke="rgba(45,49,66,0.20)" stroke-dasharray="3 3"/>
+  <line x1="660" y1="102" x2="660" y2="428" stroke="rgba(45,49,66,0.20)" stroke-dasharray="3 3"/>
+  <line x1="840" y1="102" x2="840" y2="428" stroke="rgba(45,49,66,0.20)" stroke-dasharray="3 3"/>
+  <line x1="110" y1="128" x2="296" y2="128" stroke="#4f5d75" stroke-width="1" marker-end="url(#ha)"/>
+  <text x="118" y="121" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">前一日 edit / verdict / delivered 三类事件</text>
+  <line x1="300" y1="168" x2="476" y2="168" stroke="#4f5d75" stroke-width="1" marker-end="url(#ha)"/>
+  <text x="308" y="161" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">同 spec 配对：(弃用版, 接受版)</text>
+  <line x1="300" y1="208" x2="476" y2="208" stroke="#4f5d75" stroke-width="1" marker-end="url(#ha)"/>
+  <text x="308" y="201" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">12 维特征</text>
+  <line x1="480" y1="248" x2="656" y2="248" stroke="#4f5d75" stroke-width="1" marker-end="url(#ha)"/>
+  <text x="488" y="241" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">pairwise logistic · 样本 &lt; 200 加 L2</text>
+  <line x1="660" y1="288" x2="836" y2="288" stroke="#4f5d75" stroke-width="1" marker-end="url(#ha)"/>
+  <text x="668" y="281" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">候选权重</text>
+  <line x1="840" y1="328" x2="664" y2="328" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#ha)"/>
+  <text x="832" y="321" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75" text-anchor="end">回放 50 个任务：通过率 / 误杀率</text>
+  <line x1="840" y1="368" x2="114" y2="368" stroke="#bf4520" stroke-width="1.2" marker-end="url(#hacc)"/>
+  <text x="118" y="361" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">通过 → 换 rubric 版本，进策略仓</text>
+  <line x1="840" y1="408" x2="114" y2="408" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#hacc)"/>
+  <text x="118" y="401" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">不过 → 丢弃并记原因，不许静默重试</text>
+  <rect x="36" y="440" width="888" height="54" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+  <text x="52" y="462" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">闸门判据：通过率涨 5 个百分点以上，且误杀率不上升。两条缺一不可。</text>
+  <text x="52" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">只满足第一条，说明模型学会的是多拒，不是选对。</text>
+  
+  <text x="36" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">不上 RLHF 的三个理由：样本量不够、成本不划算、结论不可解释。第三条最要紧，你得知道它为什么觉得这张更好。</text>
+  </svg>

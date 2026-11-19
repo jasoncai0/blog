@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-labelledby="ct cd">
+  <title id="ct">样本量、资产来源、时间跨度</title>
+  <desc id="cd">左边是产品级设计 Agent 的数据假设，右边是个人助手。翻转的是机制，不是结论。</desc>
+  <defs>
+    <marker id="ca" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="cacc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">CONSTRAINT FLIP · 百万用户 → n=1</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">三个约束变了，三个机制要重写</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">前两条决定评审，后一条决定账本</text>
+  <text x="36" y="90" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">产品级设计 Agent</text>
+  <text x="616" y="90" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">个人助手（n = 1）</text>
+  <text x="480" y="90" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" text-anchor="middle" letter-spacing="1.1">机制翻转</text>
+  <rect x="36" y="102" width="300" height="76" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="48" y="122" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">样本量</text>
+  <text x="48" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">百万用户 · 一次通过率是统计量</text>
+  <text x="48" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">A/B 跑得出显著性</text>
+  <rect x="616" y="102" width="308" height="76" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="628" y="144" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">一周十个任务 · 等不到显著性</text>
+  <text x="628" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">靠同 spec 的编辑 diff 配对</text>
+  <text x="480" y="146" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520" text-anchor="middle" font-weight="600">统计 → 配对</text>
+  <line x1="340" y1="140" x2="372" y2="140" stroke="#bf4520" stroke-width="1" marker-end="url(#cacc)"/>
+  <line x1="580" y1="140" x2="612" y2="140" stroke="#bf4520" stroke-width="1" marker-end="url(#cacc)"/>
+  <rect x="36" y="206" width="300" height="76" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="48" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">资产</text>
+  <text x="48" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">注册时导入 Brand Kit，导入即完整</text>
+  <text x="48" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">靠人工整理维持</text>
+  <rect x="616" y="206" width="308" height="76" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="628" y="248" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">第一次做请柬不会建资产树</text>
+  <text x="628" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">交付时自动挂载，靠召回复用</text>
+  <text x="480" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520" text-anchor="middle" font-weight="600">导入 → 沉淀</text>
+  <line x1="340" y1="244" x2="372" y2="244" stroke="#bf4520" stroke-width="1" marker-end="url(#cacc)"/>
+  <line x1="580" y1="244" x2="612" y2="244" stroke="#bf4520" stroke-width="1" marker-end="url(#cacc)"/>
+  <rect x="36" y="310" width="300" height="76" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="48" y="330" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">时间</text>
+  <text x="48" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">一次会话一个任务，结束即归档</text>
+  <text x="48" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">任务之间没有依赖</text>
+  <rect x="616" y="310" width="308" height="76" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="628" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">一个项目三周，海报派生方图</text>
+  <text x="628" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">派生 spec 只改渠道和尺寸</text>
+  <text x="480" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#bf4520" text-anchor="middle" font-weight="600">会话 → 项目</text>
+  <line x1="340" y1="348" x2="372" y2="348" stroke="#bf4520" stroke-width="1" marker-end="url(#cacc)"/>
+  <line x1="580" y1="348" x2="612" y2="348" stroke="#bf4520" stroke-width="1" marker-end="url(#cacc)"/>
+  
+  <text x="36" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">左边三条都能靠量解决；右边三条只能靠配对、沉淀和继承解决。</text>
+  </svg>
