@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-labelledby="at ad">
+  <title id="at">分界线在用户离开之后</title>
+  <desc id="ad">聊天助手会话结束就停，任务型 agent 任务结束才停，常驻主体一直在跑。</desc>
+  <defs>
+    <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="aacc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">GENERATIONS · 2023 → 2026</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">三代，三条分界线</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">关掉 App 之后发生什么</text>
+<line x1="120" y1="88" x2="900" y2="88" stroke="rgba(45,49,66,0.28)" stroke-width="1" marker-end="url(#aa)"/>
+<circle cx="248.0" cy="88" r="3.5" fill="#4f5d75"/>
+<circle cx="492.0" cy="88" r="3.5" fill="#4f5d75"/>
+<circle cx="736.0" cy="88" r="3.5" fill="#bf4520"/>
+<rect x="136" y="108" width="224" height="132" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="150" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">2023 – 2024</text>
+<text x="150" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">聊天助手</text>
+<text x="150" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">会话是中心，工具是插件</text>
+<text x="150" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">记忆靠用户手动贴</text>
+<line x1="150" y1="206" x2="346" y2="206" stroke="rgba(45,49,66,0.18)"/>
+<text x="150" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520">关掉窗口，一切归零</text>
+<rect x="380" y="108" width="224" height="132" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="394" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">2025</text>
+<text x="394" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">任务型 agent</text>
+<text x="394" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">接一个目标，云端跑完</text>
+<text x="394" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">产出文件再通知你</text>
+<line x1="394" y1="206" x2="590" y2="206" stroke="rgba(45,49,66,0.18)"/>
+<text x="394" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520">任务结束就停</text>
+<rect x="624" y="108" width="224" height="132" fill="#ececec" stroke="rgba(45,49,66,0.18)"/>
+<text x="638" y="128" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">2026</text>
+<text x="638" y="152" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">常驻主体</text>
+<text x="638" y="176" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">一台机器，七种循环</text>
+<text x="638" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">关掉 App 还在跑</text>
+<line x1="638" y1="206" x2="834" y2="206" stroke="rgba(45,49,66,0.18)"/>
+<text x="638" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#bf4520">一直在跑</text>
+<line x1="36" y1="272" x2="900" y2="272" stroke="rgba(45,49,66,0.18)"/>
+<text x="36" y="286" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" letter-spacing="1.1">用户离开后</text>
+<text x="136" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">一切停止</text>
+<text x="380" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">任务完成即停</text>
+<text x="624" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">继续运行</text>
+<line x1="36" y1="306" x2="900" y2="306" stroke="rgba(45,49,66,0.18)"/>
+<text x="36" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" letter-spacing="1.1">身份</text>
+<text x="136" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">你的账号</text>
+<text x="380" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">你的账号</text>
+<text x="624" y="320" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">你的账号 或 agent 自己</text>
+<line x1="36" y1="340" x2="900" y2="340" stroke="rgba(45,49,66,0.18)"/>
+<text x="36" y="354" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" letter-spacing="1.1">触发</text>
+<text x="136" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">你发言</text>
+<text x="380" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">你下任务、定时</text>
+<text x="624" y="354" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">对话、定时、事件、循环</text>
+<line x1="36" y1="374" x2="900" y2="374" stroke="rgba(45,49,66,0.18)"/>
+<text x="36" y="388" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#4f5d75" letter-spacing="1.1">审批</text>
+<text x="136" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">几乎没有</text>
+<text x="380" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">看结果</text>
+<text x="624" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#4f5d75">逐次批准</text>
+
+  <text x="36" y="444" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">三代共同的前提没变：模型负责理解与生成。变的是一台机器替你留着现场，还是每次从零开始。</text>
+  </svg>

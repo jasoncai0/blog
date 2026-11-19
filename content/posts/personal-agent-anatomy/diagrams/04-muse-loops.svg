@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="dt dd">
+  <title id="dt">七种循环，只有两种在写内容</title>
+  <desc id="dd">小时级做维护，日间出提案，夜间做反思。整理的成本远大于生成。</desc>
+  <defs>
+    <marker id="da" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="dacc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">CADENCE · 每小时 → 每天 → 每晚</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">一天里它自己干了什么</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">静默清扫一天最多几次</text>
+<line x1="176" y1="96" x2="900" y2="96" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<line x1="176.0" y1="92" x2="176.0" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="170.0" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">00</text>
+<line x1="266.5" y1="92" x2="266.5" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="260.5" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">03</text>
+<line x1="357.0" y1="92" x2="357.0" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="351.0" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">06</text>
+<line x1="447.5" y1="92" x2="447.5" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="441.5" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">09</text>
+<line x1="538.0" y1="92" x2="538.0" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="532.0" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">12</text>
+<line x1="628.5" y1="92" x2="628.5" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="622.5" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">15</text>
+<line x1="719.0" y1="92" x2="719.0" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="713.0" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">18</text>
+<line x1="809.5" y1="92" x2="809.5" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="803.5" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">21</text>
+<line x1="900.0" y1="92" x2="900.0" y2="100" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="894.0" y="84" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">24</text>
+<line x1="36" y1="142" x2="900" y2="142" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">记忆整理</text>
+<text x="36" y="146" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">有新信号时每小时</text>
+<rect x="175.0" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="205.16666666666666" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="235.33333333333334" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="265.5" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="295.6666666666667" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="325.83333333333337" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="356.0" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="386.16666666666663" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="416.33333333333337" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="446.5" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="476.6666666666667" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="506.8333333333333" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="537.0" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="567.1666666666667" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="597.3333333333333" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="627.5" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="657.6666666666667" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="687.8333333333334" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="718.0" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="748.1666666666666" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="778.3333333333334" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="808.5" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="838.6666666666666" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="868.8333333333334" y="132" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<line x1="36" y1="182" x2="900" y2="182" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="172" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">关系维护</text>
+<text x="36" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">每小时</text>
+<rect x="175.0" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="205.16666666666666" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="235.33333333333334" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="265.5" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="295.6666666666667" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="325.83333333333337" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="356.0" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="386.16666666666663" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="416.33333333333337" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="446.5" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="476.6666666666667" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="506.8333333333333" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="537.0" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="567.1666666666667" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="597.3333333333333" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="627.5" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="657.6666666666667" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="687.8333333333334" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="718.0" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="748.1666666666666" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="778.3333333333334" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="808.5" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="838.6666666666666" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<rect x="868.8333333333334" y="172" width="2" height="20" fill="#4f5d75" opacity="0.45"/>
+<line x1="36" y1="222" x2="900" y2="222" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="212" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">Ideas 生成</text>
+<text x="36" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">每天 06:00</text>
+<rect x="355.0" y="212" width="4" height="20" fill="#bf4520" opacity="0.9"/>
+<line x1="36" y1="262" x2="900" y2="262" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="252" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">目标简报</text>
+<text x="36" y="266" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">夜间</text>
+<rect x="264.5" y="252" width="4" height="20" fill="#bf4520" opacity="0.9"/>
+<line x1="36" y1="302" x2="900" y2="302" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="292" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">反思</text>
+<text x="36" y="306" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">每晚 02:00</text>
+<rect x="234.33333333333334" y="292" width="4" height="20" fill="#bf4520" opacity="0.9"/>
+<line x1="36" y1="342" x2="900" y2="342" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="332" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">技能评审</text>
+<text x="36" y="346" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">每天 04:00</text>
+<rect x="294.6666666666667" y="332" width="4" height="20" fill="#bf4520" opacity="0.9"/>
+<line x1="36" y1="382" x2="900" y2="382" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="372" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142">静默清扫</text>
+<text x="36" y="386" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">长对话后，最多几次</text>
+<rect x="475.6666666666667" y="372" width="4" height="20" fill="#bf4520" opacity="0.9"/>
+<rect x="626.5" y="372" width="4" height="20" fill="#bf4520" opacity="0.9"/>
+<rect x="777.3333333333334" y="372" width="4" height="20" fill="#bf4520" opacity="0.9"/>
+<text x="36" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">细杆是每小时轮询一次，粗杆是每天一次。两根 hourly 的细杆最密，它们不产出内容，只保证第二天的上下文还在。</text>
+  </svg>

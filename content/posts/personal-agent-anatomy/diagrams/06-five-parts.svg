@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="ft fd">
+  <title id="ft">五个部件，三道闸</title>
+  <desc id="fd">底座趋同：机器、循环、记忆、调度、账本。分岔在身份与门禁。</desc>
+  <defs>
+    <marker id="fa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="facc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">COMMON PARTS · muse / manus / openclaw / chatgpt agent</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">五个部件，三道闸</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">四家都在这五格里</text>
+<rect x="36" y="92" width="160" height="56" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="50" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">主体</text>
+<text x="50" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">机器 + 目录 + 凭据</text>
+<rect x="212" y="92" width="160" height="56" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="226" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">循环</text>
+<text x="226" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">拆步 · 调用 · 检查</text>
+<rect x="388" y="92" width="160" height="56" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="402" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">记忆</text>
+<text x="402" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">工作集 · 长期 · 合并</text>
+<rect x="564" y="92" width="160" height="56" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="578" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">调度</text>
+<text x="578" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">定时 · 事件 · 重试</text>
+<rect x="740" y="92" width="160" height="56" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="754" y="118" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">账本</text>
+<text x="754" y="136" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">谁 · 何时 · 为何</text>
+<line x1="198" y1="120" x2="208" y2="120" stroke="rgba(45,49,66,0.28)" stroke-width="1" marker-end="url(#fa)"/>
+<line x1="374" y1="120" x2="384" y2="120" stroke="rgba(45,49,66,0.28)" stroke-width="1" marker-end="url(#fa)"/>
+<line x1="550" y1="120" x2="560" y2="120" stroke="rgba(45,49,66,0.28)" stroke-width="1" marker-end="url(#fa)"/>
+<line x1="726" y1="120" x2="736" y2="120" stroke="rgba(45,49,66,0.28)" stroke-width="1" marker-end="url(#fa)"/>
+<rect x="36" y="226" width="278" height="74" fill="#ececec" stroke="rgba(45,49,66,0.18)"/>
+<text x="50" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142" font-weight="600">编译期闸</text>
+<text x="50" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">防模型不知道</text>
+<text x="50" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">约束进上下文，预算内裁切</text>
+<rect x="330" y="226" width="278" height="74" fill="#ececec" stroke="rgba(45,49,66,0.18)"/>
+<text x="344" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142" font-weight="600">产物侧闸</text>
+<text x="344" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">防知道但没照做</text>
+<text x="344" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">确定性规则校验，毫秒级</text>
+<rect x="624" y="226" width="278" height="74" fill="#ececec" stroke="rgba(45,49,66,0.18)"/>
+<text x="638" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" fill="#2d3142" font-weight="600">外发侧闸</text>
+<text x="638" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#bf4520">防做对发错地方</text>
+<text x="638" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">出机器前，停下来问一次</text>
+<line x1="480" y1="152" x2="480" y2="204" stroke="rgba(45,49,66,0.28)" stroke-width="1" marker-end="url(#fa)"/>
+<line x1="175" y1="212" x2="763" y2="212" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<line x1="175" y1="212" x2="175" y2="222" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<line x1="469" y1="212" x2="469" y2="222" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<line x1="763" y1="212" x2="763" y2="222" stroke="rgba(45,49,66,0.28)" stroke-width="1"/>
+<text x="466" y="198" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" text-anchor="end" letter-spacing="1.1">同一份动作，三个检查点</text>
+<text x="36" y="336" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142">前两道闸决定产物质量，第三道决定你敢不敢用。</text>
+<text x="36" y="356" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">大多数个人项目只做了前两道，然后在第一次发错渠道之后补第三道。</text>
+
+  <text x="36" y="420" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">五个部件里，主体和调度最容易被省略，因为它们不产生任何肉眼可见的输出。</text>
+  </svg>

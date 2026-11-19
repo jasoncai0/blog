@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="bt bd">
+  <title id="bt">输入框只是六分之一</title>
+  <desc id="bd">Chat、Feed、Ideas、Goals、Library、Spaces，按作者分成三类：你、主 agent、后台进程。</desc>
+  <defs>
+    <marker id="ba" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="bacc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+<text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">SURFACES · chat / feed / ideas / goals / library / spaces</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">六个面，三种作者</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">后台写的面有两个</text>
+<rect x="36" y="96" width="280" height="108" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="50" y="116" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">你 + 主 agent</text>
+<text x="50" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">Chat</text>
+<text x="50" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">对话与任务，唯一能打断的地方</text>
+<text x="50" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">提问 · 打断 · 批准</text>
+<rect x="340" y="96" width="280" height="108" fill="#ececec" stroke="rgba(45,49,66,0.18)"/>
+<text x="354" y="116" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">后台进程</text>
+<text x="354" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">Feed</text>
+<text x="354" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">按 brief 写的短文，排好版给你读</text>
+<text x="354" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">读 · 标记 · 讨论</text>
+<rect x="644" y="96" width="280" height="108" fill="#ececec" stroke="rgba(45,49,66,0.18)"/>
+<text x="658" y="116" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">后台进程</text>
+<text x="658" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">Ideas</text>
+<text x="658" y="162" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">每天刷新的建议卡，点一下就开工</text>
+<text x="658" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">开始做 · 长按忽略</text>
+<rect x="36" y="222" width="280" height="108" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="50" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">你 + 主 agent</text>
+<text x="50" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">Goals</text>
+<text x="50" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">长期目标、子目标、进度简报</text>
+<text x="50" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">加子目标 · 看简报</text>
+<rect x="340" y="222" width="280" height="108" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="354" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">主 agent</text>
+<text x="354" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">Library</text>
+<text x="354" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">文档、页面、应用和文件都收集在这</text>
+<text x="354" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">下载 · 分享 · 删除</text>
+<rect x="644" y="222" width="280" height="108" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+<text x="658" y="242" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">主 agent</text>
+<text x="658" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" fill="#2d3142" font-weight="600">Spaces</text>
+<text x="658" y="288" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">页面和小应用，可以被发布到公网</text>
+<text x="658" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">放进侧边栏 · 发布</text>
+<line x1="36" y1="350" x2="900" y2="350" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+<text x="36" y="370" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#5a6580">输入框在六个面里只占一个。Feed 和 Ideas 不需要你先开口，这是「常驻」在界面上的样子。</text>
+  </svg>
