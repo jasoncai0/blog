@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+from session_digest import digest_for
 import re
 import subprocess
 import sys
@@ -206,7 +207,13 @@ def answer(job: dict, cwd: str, runner=run_session, runner_new=run_new) -> str:
     sid = state.get(slug)
     if not sid:
         seed = article_text(slug)
-        first = ("下面是这篇文章的正文，读完只回「明白了」。\n\n" + seed) if seed else "只回「明白了」。"
+        if seed:
+            digest = digest_for(slug, job.get("session_id") or "")
+            if digest:
+                seed = digest + "\n\n下面是这篇文章的正文。\n\n" + seed
+            first = "下面是这篇文章的写作背景和正文，读完只回「明白了」。\n\n" + seed
+        else:
+            first = "只回「明白了」。"
         _, sid = runner_new(first, cwd=cwd)
         state[slug] = sid
         _save_state(state)
