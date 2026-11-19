@@ -34,14 +34,14 @@ series_order: 5
 
 {{< fig "diagrams/01-canvas-architecture.svg" "功能架构。三个新增点（空间模型、落点投影、视口状态）分别落在数据层、服务层与视图层，其余全部复用现有链路。" >}}
 
-改造落在三层，表里列出每层新增什么、复用仓库里的哪一块：
+改动按 ① ② ③ 分三处，落在数据层、服务层与视图层。表里列每处新增什么、复用仓库里的哪一块：
 
-| 层 | 新增 | 复用 |
+| 改造点 | 新增 | 复用 |
 | --- | --- | --- |
-| 数据层 | `canvas_nodes` 表、`tabs_state.state_json` 里加一个 `canvas` 字段 | `tabs` / `tabs_state` 已有的 JSON 状态位（`db.ts:333`、`:342`） |
-| 契约层 | `packages/contracts/src/api/canvas.ts`：DTO 与纯函数（`layoutNodes`、`clampViewport`、`nodeAtPoint`） | `contracts` 只放类型与纯函数的老规矩 |
-| 服务层 | `apps/daemon/src/canvas/{store.ts,project.ts,routes.ts}` | `project-watchers.ts` 的 `file-changed`、`reconcileHtmlArtifactManifest`、`emitProjectEvent` |
-| 视图层 | `CanvasSurface`、`NodeFrame`、`ViewportController` | `FileWorkspace` 的标签集合、`FileViewer` 的 iframe 与沙箱配置、`preview-url` 的 scope |
+| ① 空间模型 | `canvas_nodes` 表；`tabs_state.state_json` 里加 `canvas` 字段 | `tabs` / `tabs_state` 已有的 JSON 状态位（`db.ts:333`、`:342`） |
+| ② 落点投影 | `apps/daemon/src/canvas/{store.ts,project.ts,routes.ts}` | `project-watchers.ts` 的 `file-changed`、`reconcileHtmlArtifactManifest`、`emitProjectEvent` |
+| ② 的契约 | `packages/contracts/src/api/canvas.ts`：DTO 与纯函数（`layoutNodes`、`clampViewport`、`nodeAtPoint`） | `contracts` 只放类型与纯函数的老规矩 |
+| ③ 视口状态 | `CanvasSurface`、`NodeFrame`、`ViewportController` | `FileWorkspace` 的标签集合、`FileViewer` 的 iframe 与沙箱配置、`preview-url` 的 scope |
 | 工具面 | `canvas.place` 操作、MCP 一个工具 | `tool-tokens.ts` 的 17 条 endpoint / 16 条 operation 白名单机制 |
 
 三条边界值得先写死，否则实现时会互相打架：
