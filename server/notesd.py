@@ -704,10 +704,8 @@ class Handler(BaseHTTPRequestHandler):
                 if not SLUG_RE.match(slug) or not ID_RE.match(note_id):
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad path"})
                     return
+                # 没绑会话也照答：bridge 会用文章正文自建一条会话，只是少了历史上下文。
                 session = self.store.session_for(slug)
-                if not session:
-                    self.send_json(HTTPStatus.CONFLICT, {"error": "no session"})
-                    return
                 if self.store.active_job(note_id):
                     self.send_json(HTTPStatus.CONFLICT, {"error": "already queued"})
                     return
@@ -722,7 +720,11 @@ class Handler(BaseHTTPRequestHandler):
                     self.send_json(HTTPStatus.OK, {"ok": True, "triggered": False, "job": None})
                     return
                 job = self.store.create_job(
-                    slug, note_id, session["session_id"], prompt, "auto" if body.get("auto") else "manual"
+                    slug,
+                    note_id,
+                    (session["session_id"] if session else ""),
+                    prompt,
+                    "auto" if body.get("auto") else "manual",
                 )
                 self.send_json(HTTPStatus.OK, {"ok": True, "triggered": True, "job": job})
                 return
@@ -761,7 +763,9 @@ class Handler(BaseHTTPRequestHandler):
                 ):
                     thread = (note or {}).get("thread") or []
                     prompt = (thread[0].get("text") if thread else "") or reply["text"]
-                    job = self.store.create_job(slug, note_id, session["session_id"], prompt, "auto")
+                    job = self.store.create_job(
+                        slug, note_id, (session["session_id"] if session else ""), prompt, "auto"
+                    )
                 self.send_json(HTTPStatus.OK, {"ok": True, "note": note, "triggered": job is not None, "job": job})
                 return
 

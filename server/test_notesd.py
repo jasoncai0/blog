@@ -328,9 +328,12 @@ class NotesdTest(unittest.TestCase):
         self.assertTrue(body["triggered"])
         self.assertEqual(body["job"]["note_id"], "job-0012")
 
-    def test_ask_without_session_returns_409(self):
-        self.call("PUT", "/api/notes/jobs-none/job-0004", self.note("job-0004"))
-        self.assertEqual(self.call("POST", "/api/notes/jobs-none/job-0004/ask", {})[0], 409)
+    def test_ask_without_session_still_queues(self):
+        self.call("PUT", "/api/notes/asked-nosess/n9abcde", self.note("n9abcde", q="为什么"))
+        status, body = self.call("POST", "/api/notes/asked-nosess/n9abcde/ask", {})
+        self.assertEqual(status, 200)
+        self.assertTrue(body["triggered"])
+        self.assertEqual(body["job"]["session_id"] or "", "")
 
     def test_job_claim_done_and_retry_budget(self):
         slug = "jobs-life"

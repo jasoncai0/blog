@@ -4,12 +4,41 @@
     python3 server/test_notes_bridge.py
 """
 
+import os
+import tempfile
 import unittest
 
-import notes_bridge
+_tmp = tempfile.mkdtemp(prefix="bridge-test-")
+os.environ["BRIDGE_STATE"] = os.path.join(_tmp, "state.json")
+
+import notes_bridge  # noqa: E402  （必须在设置 BRIDGE_STATE 之后导入）
 
 
 class BridgeTest(unittest.TestCase):
+    def test_job_without_session_uses_a_fresh_article_session(self):
+        calls = []
+        fresh = []
+
+        def runner(prompt, sid, cwd=None):
+            calls.append((prompt, sid))
+            return "回答"
+
+        def runner_new(first, cwd=None):
+            fresh.append(first)
+            return "明白了", "session-new-1234"
+
+        job = {
+            "slug": "personal-agent-anatomy",
+            "session_id": "",
+            "note": {"q": "收敛是必要条件", "thread": [{"author": "我", "text": "为什么"}]},
+            "prompt": "为什么",
+        }
+        self.assertEqual(notes_bridge.answer(job, cwd="/tmp", runner=runner, runner_new=runner_new), "回答")
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][1], "session-new-1234")
+        self.assertIn("明白了", fresh[0])
+        self.assertNotEqual(notes_bridge._load_state().get("personal-agent-anatomy"), "")
+
     def test_build_prompt_carries_quote_question_and_limits(self):
         job = {
             "slug": "ot-crdt-lww",

@@ -222,6 +222,10 @@ def answer(job: dict, cwd: str, runner=run_session, runner_new=run_new) -> str:
         _save_state(state)
         return new_sid
 
+    # 没绑来源会话：直接用文章正文起一条，别把「没绑定」当成失败。
+    if not job.get("session_id"):
+        return runner(prompt, fresh_session(), cwd=cwd)
+
     try:
         return runner(prompt, job["session_id"], cwd=cwd)
     except RuntimeError as exc:
