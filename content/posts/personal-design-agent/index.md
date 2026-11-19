@@ -414,7 +414,7 @@ create table event (
 
 三件事两周能做完，做完之后你会得到一个不好看但可靠的助手。品味模型、多候选、自演进都建在这三件事上，顺序反了就得返工。
 
-站内还有三篇讲这套结构里更深的地方：尺子怎么定看[设计 Agent 的评测系统](/posts/design-agent-eval-system/)，记忆怎么分层看[设计 Agent 的记忆系统](/posts/design-agent-memory/)，Personal Agent 的通用骨架看[五个部件与三道闸](/posts/personal-agent-anatomy.html)。这篇讲的是把它们装进一个人的工作台。
+站内还有三篇讲这套结构里更深的地方：尺子怎么定看[设计 Agent 的评测系统](/posts/design-agent-eval-system.html)，记忆怎么分层看[设计 Agent 的记忆系统](/posts/design-agent-memory.html)，Personal Agent 的通用骨架看[五个部件与三道闸](/posts/personal-agent-anatomy.html)。这篇讲的是把它们装进一个人的工作台。
 
 ## 修订说明
 

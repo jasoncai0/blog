@@ -405,5 +405,5 @@ W4 的验收标准值得单独说：故意提交一个把品牌色改错的 PR�
 
 - [《Agent 评测白皮书》系列 01：Agent 评测全览](https://mp.weixin.qq.com/s/hBSIPQnsBeWwX9UZLjWYFA)，美团技术团队
 - [Demystifying evals for AI agents](https://www.anthropic.com/research/demystifying-evals-for-ai-agents)，Anthropic
-- [设计 Agent 的记忆系统](/posts/design-agent-memory/)
-- [设计 Agent 的自调优闭环](/posts/design-agent-self-tuning/)
+- [设计 Agent 的记忆系统](/posts/design-agent-memory.html)
+- [设计 Agent 的自调优闭环](/posts/design-agent-self-tuning.html)
