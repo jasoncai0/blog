@@ -918,13 +918,13 @@
   "table": 0
  },
  "open-design-media": {
-  "figure": 3,
+  "figure": 4,
   "h1": 1,
   "h2": 2,
-  "h3": 9,
+  "h3": 10,
   "hr": 1,
   "pre": 1,
-  "table": 0
+  "table": 1
  },
  "open-design-runtime": {
   "figure": 2,

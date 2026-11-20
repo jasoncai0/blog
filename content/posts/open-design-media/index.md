@@ -1,7 +1,7 @@
 ---
 title: "OpenDesign 生成面：怎么调生成模型，怎么保 prompt 质量"
 date: 2026-11-19T19:05:00+08:00
-summary: "一条命令行加一张 run 级令牌的调用链、95 个模型的派发与钳制、HyperFrames 的本地渲染，以及生成 prompt 的三道闸与五处缺口。"
+summary: "一条命令行加一张 run 级令牌的调用链、95 个模型的派发与钳制、HyperFrames 的本地渲染；再追一句话的五个落点：改写只发生在 agent 那一轮，前后两端都只是搬运，附三道闸与五处缺口。"
 tags: ["architecture", "agent"]
 slug: "open-design-media"
 series: "open-design"
@@ -87,9 +87,43 @@ provider 返回的资源 URL 还要过一遍 `assertAndFetchExternalAsset`：先
 
 ## 7. 生成 prompt 的质量靠什么
 
-三道闸：给例子、把硬参数挪出 prompt 文本、失败只说一句。没有第四道。
+用户打的是"给我做张咖啡店海报"，provider 收到的是"Warm minimal coffee-shop poster, overhead flat white on walnut counter, morning window light, 50mm…"。中间有五段，只有第三段动笔。
 
-### 7.1 第一道闸：语料加改写
+### 7.1 改写在第三段，前后两端都只是搬运
+
+{{< fig "diagrams/04-prompt-transform.svg" "一句话的五个落点。面板存句子、系统提示加规矩、agent 改写、daemon 校验并 clamp 参数、provider 逐字段收下。文本只在第三段变样。" >}}
+
+| 段 | 谁在动 | 输入到输出 | 文本改写 | 证据 |
+| --- | --- | --- | --- | --- |
+| ① 新建面板 | `web` | 一句话 + 面板选择 → `pendingPrompt` 加 `metadata` | 无 | `NewProjectPanel.tsx:739`，字段 `imageModel` / `imageAspect` / `videoLength` / `voice` / `promptTemplate` |
+| ② 系统提示 | `daemon` | 元数据 + 契约 + 可选模板 → 一整段 system prompt | 无，只加规矩 | `system.ts:1763` 起是 `## Project metadata`，`:1878`/`:1902`/`:1931` 分 image/video/audio；媒体契约钉在最后（`:1426`） |
+| ③ agent 推理 | 用户装的 CLI | 口语句 + 元数据 + 契约 + 模板 → `--prompt "…"` | **有，唯一一次** | 契约里的 `--prompt "<full prompt>"`（`media-contract.ts:256`）由 agent 填 |
+| ④ CLI → daemon | `od media generate` | argv → 校验、clamp、任务行 | 无 | `routes/media.ts:310` `handleGenerate`；火山视频追加 flag（`media/index.ts:1477-1484`）；SFX 450 字符硬上限（`:2607`） |
+| ⑤ provider | 各供应商 | 参数 → HTTP body | 无 | `prompt: ctx.prompt \|\| 'A high-quality reference image.'`（`media/index.ts:972` 等 20 余处同一写法） |
+
+第 ① 段只做"存"。面板把"做什么"拆成结构化字段，句子本身一个字不改地存进 `pendingPrompt`，等首轮挂载时由前端自动发出去（`App.tsx:3862` 的注释写明是"发出去"而不是"预填输入框"）。
+
+第 ② 段只做"教"。每轮 spawn 前重拼 system prompt，把面板选的东西作为权威默认值写进去，再把 618 行的媒体契约钉在最后一个区块。契约里没有一句写好的 prompt，全是"怎么写"和"什么时候别问"。
+
+第 ③ 段才动笔。agent 在自己的上下文里把口语句展开成结构化描述：主体、材质、光位、机位、景深、留白、不要什么。它同时遵守三条约束：元数据里的模型与画幅是权威默认值，用户明说才覆盖；模板只借结构不抄主体；音效按"声源/动作/材料/强度/空间/时间/尾巴"六要素写。
+
+第 ④ 段只做"验"。校验顺序是 project 存在、surface 合法、model 必填、策略允许，然后建 `media_tasks` 行派发。文本原样往下走，只有两个例外：火山引擎的视频接口把画幅、时长、分辨率当内联 flag，daemon 在文本尾部补 `--ratio/--duration/--resolution`（已有就不补）；ElevenLabs 音效超过 450 字符直接抛错，不截断。
+
+第 ⑤ 段只做"交"。除了空 prompt 时的固定兜底句，没有任何拼装。
+
+为什么把唯一一次改写放在第 ③ 段，理由三条：
+
+1. 换 CLI 不用改 OD。27 个 adapter 共享同一份契约文本，改写由每个 CLI 自己的模型完成。OD 要是自己调一个模型做改写，就等于给每个 adapter 再加一层模型依赖，BYOK 的账也算不清。
+2. 契约是数据不是代码。618 行 Markdown，改规则不碰类型、不碰测试，`pnpm typecheck` 也不会有意见。
+3. 模板是 few-shot，不是编译器。`{argument name="…" default="…"}` 在全仓没有解析器，模板正文原样进 system prompt（超过 4000 字符截断，三反引号转义），由 agent 自己判断怎么借。
+
+代价同样明确：改写质量 = 用户那个 CLI 的模型能力 × 契约给的规矩 × 模板给的密度。三个乘数里 OD 只能动后两个，第一个在用户机器上，它既测不了也保证不了。同一句话换个 CLI，出来的 prompt 可能差一个档。
+
+一个具体的时间点：改写发生在子进程起来之后、第一次 `od media generate` 之前，也就是那次 tool call 之前的一轮推理里。同一 run 内可以重写多次，写法是再调一次 `media generate` 换一个 `--output` 名，旧文件留着让用户挑（契约第 4 条）。
+
+把这句话送出去之后，还有三道闸决定它落在 provider 上是什么样：给例子、把硬参数挪出文本、失败只说一句。
+
+### 7.2 第一道闸：语料加密度
 
 `prompt-templates/` 里 106 个模板，48 张图、58 段视频，只覆盖四个模型：`gpt-image-2` 46 个、`seedream-5-pro` 2 个、`seedance-2.0` 40 个、`hyperframes-html` 18 个。每条都带来源与许可：awesome-seedance-2-prompts 36 条、awesome-gpt-image-2 36 条、HyperFrames 18 条、仓库自建 12 条；许可以 CC-BY-4.0 为主（72 条），Apache-2.0 31 条，MIT 1 条。
 
@@ -103,7 +137,7 @@ provider 返回的资源 URL 还要过一遍 `assertAndFetchExternalAsset`：先
 
 质量在这里靠的是语料的密度：36 条同类范例里能看出这个模型喜欢什么样的句式与信息密度，比任何"prompt 最佳实践"清单都具体。
 
-### 7.2 第二道闸：硬参数走命令行
+### 7.3 第二道闸：硬参数走命令行
 
 契约里最有用的一类规则，是把"不该写进 prompt 的东西"明确挪出去。
 
@@ -113,7 +147,7 @@ provider 返回的资源 URL 还要过一遍 `assertAndFetchExternalAsset`：先
 
 还有两条防呆：不要 `Read` 生成的二进制回上下文（会把下一次请求撑爆），不要手工"编辑"生成出来的字节（重新生成，让用户挑版本）。
 
-### 7.3 第三道闸：失败只说一句
+### 7.4 第三道闸：失败只说一句
 
 每个失败都带 `error.nextStep`，九值封闭集合：`revise-request`、`switch-model`、`open-settings`、`sign-in`、`add-credit`、`retry-later`、`update-app`、`unsupported`、`contact-support`。
 
@@ -121,7 +155,7 @@ provider 返回的资源 URL 还要过一遍 `assertAndFetchExternalAsset`：先
 
 给用户的话是一句本地化文案，不出现模型名、provider 名、taskId、路径、stderr、退出码。重试只调时间不调 prompt：只对 429 与 503 重试，最多一次，延迟上限 60 秒。
 
-### 7.4 缺口
+### 7.5 缺口
 
 四处明确的空缺，读代码能确认：
 

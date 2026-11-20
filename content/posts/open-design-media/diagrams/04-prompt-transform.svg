@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520" role="img" aria-labelledby="t18 d18">
+  <title id="t18">一句话的五个落点</title>
+  <desc id="d18">用户的口语从新建面板进入，经系统提示约束、agent 改写、od CLI 校验、provider 落参。文本只在第三段被改写，前后两端都原样传递。</desc>
+  <defs>
+    <marker id="a18" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">PROMPT JOURNEY · NewProjectPanel.tsx · system.ts:1426 · media-contract.ts · routes/media.ts:310</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">一句话的五个落点：改写在第三段</text>
+  <text x="924" y="52" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">只有一处动笔</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+    <!-- headers -->
+    <g font-size="10" font-weight="600" fill="#2d3142">
+      <text x="36" y="92">① 新建面板</text>
+      <text x="222" y="92">② 系统提示</text>
+      <text x="408" y="92">③ agent 改写</text>
+      <text x="594" y="92">④ od CLI + daemon</text>
+      <text x="780" y="92">⑤ provider</text>
+    </g>
+    <g font-size="8" fill="#8f97ad" font-family="'Geist Mono','SF Mono',ui-monospace,monospace">
+      <text x="36" y="105">web · 选 surface 与参数</text>
+      <text x="222" y="105">daemon · 每轮重拼</text>
+      <text x="408" y="105">用户装的 CLI · 一次推理</text>
+      <text x="594" y="105">校验 · clamp · 映射</text>
+      <text x="780" y="105">wire 参数</text>
+    </g>
+
+    <!-- quote panels -->
+    <rect x="30" y="116" width="168" height="196" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <rect x="216" y="116" width="168" height="196" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <rect x="402" y="116" width="168" height="196" rx="2" fill="#2d3142"/>
+    <rect x="588" y="116" width="168" height="196" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+    <rect x="774" y="116" width="150" height="196" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.16)"/>
+
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+      <text x="42" y="136">pendingPrompt:</text>
+      <text x="42" y="156">"给我做张咖啡店海报"</text>
+      <text x="42" y="180" fill="#4f5d75">metadata:</text>
+      <text x="42" y="196" fill="#4f5d75">imageModel gpt-image-2</text>
+      <text x="42" y="210" fill="#4f5d75">aspect 1:1</text>
+      <text x="42" y="224" fill="#4f5d75">template 3d-…(可选)</text>
+      <text x="42" y="252" fill="#8f97ad">句子还没被理解，只是存下</text>
+      <text x="42" y="266" fill="#8f97ad">来，等首轮发给 agent</text>
+    </g>
+
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+      <text x="228" y="136">## Project metadata</text>
+      <text x="228" y="152" fill="#4f5d75">- imageModel: gpt-image-2</text>
+      <text x="228" y="166" fill="#4f5d75">- aspectRatio: 1:1</text>
+      <text x="228" y="186" fill="#bf4520">## Media generation</text>
+      <text x="228" y="200" fill="#bf4520">  contract（最后一个区块）</text>
+      <text x="228" y="222" fill="#4f5d75">规则：结构、默认值、</text>
+      <text x="228" y="236" fill="#4f5d75">画幅启发式、字数上限</text>
+      <text x="228" y="262" fill="#8f97ad">加的是"怎么写"的规矩，</text>
+      <text x="228" y="276" fill="#8f97ad">不是改写好的句子</text>
+    </g>
+
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#f5f5f5">
+      <text x="414" y="136">--prompt "Warm minimal</text>
+      <text x="414" y="150">coffee-shop poster,</text>
+      <text x="414" y="164">overhead flat white on</text>
+      <text x="414" y="178">walnut counter, morning</text>
+      <text x="414" y="192">window light, 50mm,</text>
+      <text x="414" y="206">shallow DOF, generous</text>
+      <text x="414" y="220">top space for headline,</text>
+      <text x="414" y="234">no text"</text>
+      <text x="414" y="266" fill="#f0b39c">唯一一次"改写"</text>
+      <text x="414" y="282" fill="#f0b39c">由 agent 完成</text>
+    </g>
+
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+      <text x="600" y="136">校验</text>
+      <text x="600" y="152" fill="#4f5d75">surface ∈ {image,…}</text>
+      <text x="600" y="166" fill="#4f5d75">model 必填</text>
+      <text x="600" y="180" fill="#4f5d75">策略 / 权限 / 令牌</text>
+      <text x="600" y="200">clamp</text>
+      <text x="600" y="216" fill="#4f5d75">aspect → provider 枚举</text>
+      <text x="600" y="230" fill="#4f5d75">SFX ≤ 450 字符</text>
+      <text x="600" y="256" fill="#8f97ad">文本原样下发</text>
+      <text x="600" y="270" fill="#8f97ad">例外：火山视频追加</text>
+      <text x="600" y="284" fill="#8f97ad">--ratio/--duration flag</text>
+    </g>
+
+    <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#2d3142">
+      <text x="786" y="136">prompt: "Warm minimal</text>
+      <text x="786" y="150">coffee-shop poster, …"</text>
+      <text x="786" y="174" fill="#4f5d75">size: 1024x1024</text>
+      <text x="786" y="188" fill="#4f5d75">n: 1</text>
+      <text x="786" y="214" fill="#8f97ad">逐字段进 body，</text>
+      <text x="786" y="228" fill="#8f97ad">不再拼字符串</text>
+      <text x="786" y="262" fill="#8f97ad">空 prompt 时用</text>
+      <text x="786" y="276" fill="#8f97ad">固定兜底句</text>
+    </g>
+  </g>
+
+  <g stroke="#5a6580" stroke-width="1" fill="none" marker-end="url(#a18)">
+    <line x1="200" y1="214" x2="212" y2="214"/>
+    <line x1="386" y1="214" x2="398" y2="214"/>
+    <line x1="572" y1="214" x2="584" y2="214"/>
+    <line x1="758" y1="214" x2="770" y2="214"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9">
+    <rect x="30" y="326" width="168" height="28" rx="2" fill="#ececec"/>
+    <text x="114" y="344" text-anchor="middle" fill="#4f5d75">文本：原样</text>
+    <rect x="216" y="326" width="168" height="28" rx="2" fill="#ececec"/>
+    <text x="300" y="344" text-anchor="middle" fill="#4f5d75">文本：原样（加规则）</text>
+    <rect x="402" y="326" width="168" height="28" rx="2" fill="#bf4520"/>
+    <text x="486" y="344" text-anchor="middle" fill="#ffffff">文本：改写</text>
+    <rect x="588" y="326" width="168" height="28" rx="2" fill="#ececec"/>
+    <text x="672" y="344" text-anchor="middle" fill="#4f5d75">文本：原样（参数 clamp）</text>
+    <rect x="774" y="326" width="150" height="28" rx="2" fill="#ececec"/>
+    <text x="849" y="344" text-anchor="middle" fill="#4f5d75">文本：原样</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="36" y="382">daemon 里没有第二个模型：全仓搜不到"把口语句扩写成 prompt"的函数，只有一份 618 行的写作规范（media-contract.ts）。</text>
+    <text x="36" y="400">所以改写质量 = 用户那个 CLI 的模型能力 × 契约给的规矩 × 模板给的密度。三者里 OD 能改的只有后两个，第一个在用户机器上。</text>
+    <text x="36" y="424" fill="#5a6580">一次 run 内可以改写多次：不满意就再调一次 od media generate，换个 --output 名，旧文件留着让用户挑。</text>
+    <text x="36" y="442" fill="#5a6580">模板正文被用户改过就按改过的算（system.ts:2049 起的注释），daemon 只做 4000 字符截断和三反引号转义。</text>
+    <text x="36" y="472" fill="#8f97ad">刻度：第 0 段是"存"，第 1 段是"教"，第 2 段是"写"，第 3 段是"验"，第 4 段是"交"。质量在这一条线上只可能从第 1、2 段进来。</text>
+  </g>
+</svg>

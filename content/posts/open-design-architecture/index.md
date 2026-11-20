@@ -28,7 +28,7 @@ series_order: 0
 
 **P2 · 单数据根、单写者、无跨进程锁**（§2、§8）。两个 daemon 指向同一个 `OD_DATA_DIR` 会同时写 SQLite。判断错的代价：想在本机开两个实例做对比测试，数据互相踩。
 
-**P2 · 生成 prompt 的质量来自语料与重写，不来自编译器**（[§7.1](/posts/open-design-media.html)）。106 个模板只是"结构与风格参考"，daemon 从不解析占位符、不拼最终 prompt，最终那段文字由 agent 写。判断错的代价：去 `prompt-templates/` 找模板引擎，或者以为模板里的 aspect 会被严格遵守（Volcengine 上 2:3 会被改成 16:9）。
+**P2 · 改写只发生一次，在 agent 那一轮**（[§7.1](/posts/open-design-media.html)）。面板只存句子、系统提示只给规矩、daemon 只校验参数，最终那段 `--prompt` 由用户装的 CLI 写出来；106 个模板是"结构与风格参考"，全仓没有占位符解析器。判断错的代价：去 `prompt-templates/` 找模板引擎，或者以为模板里的 aspect 会被严格遵守（Volcengine 上 2:3 会被改成 16:9）。
 
 ## 1. 定位：三个不变量
 
