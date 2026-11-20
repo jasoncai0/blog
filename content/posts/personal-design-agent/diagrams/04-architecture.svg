@@ -11,7 +11,7 @@
   <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="1.1">同步路径只读，写入全部异步</text>
 <rect x="331" y="66" width="160" height="28" fill="#2d3142" stroke="#2d3142"/>
 <text x="411" y="85" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">你</text>
-<rect x="36" y="112" width="750" height="54" fill="#f2ece2" stroke="rgba(45,49,66,0.12)"/><rect x="36" y="112" width="4" height="54" fill="#a8752a"/>
+<rect x="36" y="112" width="750" height="54" fill="#ececec" stroke="rgba(45,49,66,0.18)"/>
 <text x="50" y="130" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">L0</text>
 <text x="50" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">主体层</text>
 <rect x="130" y="124" width="44" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.10)"/>
@@ -24,7 +24,7 @@
 <text x="356" y="143" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">提案队列</text>
 <rect x="402" y="124" width="36" height="30" fill="#ffffff" stroke="rgba(45,49,66,0.10)"/>
 <text x="408" y="143" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">技能库</text>
-<rect x="36" y="182" width="750" height="54" fill="#e9eff6" stroke="rgba(45,49,66,0.12)"/><rect x="36" y="182" width="4" height="54" fill="#3d5a80"/>
+<rect x="36" y="182" width="750" height="54" fill="rgba(255,255,255,0.75)" stroke="rgba(45,49,66,0.18)"/>
 <text x="50" y="200" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">L1</text>
 <text x="50" y="218" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">入口层</text>
 <rect x="130" y="194" width="28" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
@@ -35,7 +35,7 @@
 <text x="248" y="213" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">外链</text>
 <rect x="278" y="194" width="68" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
 <text x="284" y="213" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">→ 任务卡草稿</text>
-<rect x="36" y="250" width="750" height="62" fill="#f7efe4" stroke="rgba(45,49,66,0.12)"/><rect x="36" y="250" width="4" height="62" fill="#bf6a3a"/>
+<rect x="36" y="250" width="750" height="62" fill="rgba(255,255,255,0.75)" stroke="rgba(45,49,66,0.18)"/>
 <text x="50" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">L2</text>
 <text x="50" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">决策层</text>
 <rect x="130" y="262" width="28" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
@@ -46,7 +46,7 @@
 <text x="216" y="281" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">评审编排</text>
 <rect x="262" y="262" width="52" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
 <text x="268" y="281" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">主动性级别</text>
-<rect x="36" y="326" width="750" height="54" fill="#e9f2ed" stroke="rgba(45,49,66,0.12)"/><rect x="36" y="326" width="4" height="54" fill="#2f6f5e"/>
+<rect x="36" y="326" width="750" height="54" fill="rgba(255,255,255,0.75)" stroke="rgba(45,49,66,0.18)"/>
 <text x="50" y="344" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">L3</text>
 <text x="50" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">上下文层</text>
 <rect x="130" y="338" width="92" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
@@ -59,7 +59,7 @@
 <text x="372" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">先例 2 条</text>
 <rect x="434" y="338" width="84" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
 <text x="440" y="357" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">p95 120ms</text>
-<rect x="36" y="394" width="750" height="70" fill="#efeaf6" stroke="rgba(45,49,66,0.12)"/><rect x="36" y="394" width="4" height="70" fill="#5b4b8a"/>
+<rect x="36" y="394" width="750" height="70" fill="rgba(255,255,255,0.75)" stroke="rgba(45,49,66,0.18)"/>
 <text x="50" y="412" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">L4</text>
 <text x="50" y="430" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">执行层</text>
 <rect x="130" y="406" width="52" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
@@ -70,7 +70,7 @@
 <text x="256" y="425" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">适配器 C</text>
 <rect x="310" y="406" width="92" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
 <text x="316" y="425" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">产物归一化 + 哈希</text>
-<rect x="36" y="478" width="750" height="62" fill="#f7f1e0" stroke="rgba(45,49,66,0.12)"/><rect x="36" y="478" width="4" height="62" fill="#8a6a1f"/>
+<rect x="36" y="478" width="750" height="62" fill="rgba(255,255,255,0.75)" stroke="rgba(45,49,66,0.18)"/>
 <text x="50" y="496" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">L5</text>
 <text x="50" y="514" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">账本层</text>
 <rect x="130" y="490" width="84" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
@@ -83,7 +83,7 @@
 <text x="380" y="509" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">向量索引</text>
 <rect x="426" y="490" width="84" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
 <text x="432" y="509" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">run trace</text>
-<rect x="36" y="554" width="750" height="54" fill="#f8eae8" stroke="rgba(45,49,66,0.12)"/><rect x="36" y="554" width="4" height="54" fill="#9b4b52"/>
+<rect x="36" y="554" width="750" height="54" fill="rgba(255,255,255,0.75)" stroke="rgba(45,49,66,0.18)"/>
 <text x="50" y="572" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="1.1">L6</text>
 <text x="50" y="590" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" fill="#2d3142" font-weight="600">交付层</text>
 <rect x="130" y="566" width="44" height="30" fill="#ececec" stroke="rgba(45,49,66,0.10)"/>
