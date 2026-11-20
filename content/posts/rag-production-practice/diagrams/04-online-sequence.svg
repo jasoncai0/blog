@@ -48,6 +48,6 @@
 <line x1="900" y1="512" x2="60" y2="512" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#m-grey)"/>
 <text x="480" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">⑧ stream</text>
 <rect x="420" y="272" width="460" height="124" rx="6" fill="none" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
-<text x="424" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#8a93a6">任一路超时 120 ms</text>
+<text x="424" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#8a93a6">任一路超时 90 ms</text>
 <text x="40" y="584" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">超时只降级当前阶段：单路超时用另一路，精排超时用 RRF 顺序，两路都超时返回缓存或明确失败。</text>
 </svg>
