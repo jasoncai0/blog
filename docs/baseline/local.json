@@ -71,6 +71,15 @@
   "pre": 1,
   "table": 5
  },
+ "canvas-preference-extraction": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 15,
+  "h3": 0,
+  "hr": 0,
+  "pre": 7,
+  "table": 10
+ },
  "claude-code-harness-layers": {
   "figure": 10,
   "h1": 1,
@@ -1114,6 +1123,15 @@
   "hr": 0,
   "pre": 6,
   "table": 3
+ },
+ "rag-production-practice": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 10,
+  "h3": 20,
+  "hr": 0,
+  "pre": 4,
+  "table": 8
  },
  "rsi-self-improvement": {
   "figure": 6,

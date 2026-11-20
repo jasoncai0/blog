@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="f4t f4d">
+<title id="f4t">一次查询：八个阶段，各自超时</title>
+<desc id="f4d">缓存 → 改写 → 并行召回 → 融合 → 精排 → 组装 → 生成；失败只降级当前阶段</desc>
+<defs><marker id="m-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker><marker id="m-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b4b8a"/></marker><marker id="m-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker><marker id="m-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9b4b52"/></marker><marker id="m-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker><marker id="m-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a8752a"/></marker></defs>
+<rect width="960" height="620" fill="#f5f5f5"/>
+<text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" letter-spacing="0.14em">RAG / QUERY SEQUENCE</text><text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次查询：八个阶段，各自超时</text><text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">缓存 → 改写 → 并行召回 → 融合 → 精排 → 组装 → 生成；失败只降级当前阶段</text>
+
+<rect x="10" y="108" width="100" height="32" rx="4" fill="#e9eff6"/>
+<text x="60" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">客户端</text>
+<line x1="60" y1="140" x2="60" y2="560" stroke="#3d5a80" stroke-width="0.8" stroke-dasharray="3 4"/>
+<rect x="130" y="108" width="100" height="32" rx="4" fill="#e9eff6"/>
+<text x="180" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">网关</text>
+<line x1="180" y1="140" x2="180" y2="560" stroke="#3d5a80" stroke-width="0.8" stroke-dasharray="3 4"/>
+<rect x="250" y="108" width="100" height="32" rx="4" fill="#efeaf6"/>
+<text x="300" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">缓存</text>
+<line x1="300" y1="140" x2="300" y2="560" stroke="#5b4b8a" stroke-width="0.8" stroke-dasharray="3 4"/>
+<rect x="370" y="108" width="100" height="32" rx="4" fill="#efeaf6"/>
+<text x="420" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">改写</text>
+<line x1="420" y1="140" x2="420" y2="560" stroke="#5b4b8a" stroke-width="0.8" stroke-dasharray="3 4"/>
+<rect x="490" y="108" width="100" height="32" rx="4" fill="#e9f2ed"/>
+<text x="540" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">ES 倒排</text>
+<line x1="540" y1="140" x2="540" y2="560" stroke="#2f6f5e" stroke-width="0.8" stroke-dasharray="3 4"/>
+<rect x="610" y="108" width="100" height="32" rx="4" fill="#e9f2ed"/>
+<text x="660" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">向量库</text>
+<line x1="660" y1="140" x2="660" y2="560" stroke="#2f6f5e" stroke-width="0.8" stroke-dasharray="3 4"/>
+<rect x="730" y="108" width="100" height="32" rx="4" fill="#efeaf6"/>
+<text x="780" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">融合 / 精排</text>
+<line x1="780" y1="140" x2="780" y2="560" stroke="#5b4b8a" stroke-width="0.8" stroke-dasharray="3 4"/>
+<rect x="850" y="108" width="100" height="32" rx="4" fill="#e9eff6"/>
+<text x="900" y="128" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142" text-anchor="middle">LLM</text>
+<line x1="900" y1="140" x2="900" y2="560" stroke="#3d5a80" stroke-width="0.8" stroke-dasharray="3 4"/>
+<line x1="60" y1="172" x2="180" y2="172" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#m-grey)"/><text x="120.0" y="167" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">① query</text>
+<line x1="180" y1="200" x2="300" y2="200" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#m-grey)"/><text x="240.0" y="195" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">② 查缓存</text>
+<line x1="300" y1="228" x2="180" y2="228" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#m-grey)"/>
+<text x="240" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">② miss</text>
+<line x1="180" y1="256" x2="420" y2="256" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#m-grey)"/><text x="300.0" y="251" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">③ 归一化</text>
+<line x1="420" y1="292" x2="540" y2="292" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#m-grey)"/><text x="480.0" y="287" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">④ BM25 top-50</text>
+<line x1="420" y1="320" x2="660" y2="320" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#m-grey)"/><text x="540.0" y="315" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">④ ANN top-50</text>
+<line x1="540" y1="352" x2="780" y2="352" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#m-grey)"/>
+<text x="610" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">④ 50 条</text>
+<line x1="660" y1="380" x2="780" y2="380" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#m-grey)"/>
+<text x="690" y="374" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">④ 50 条</text>
+<path d="M 780 400 L 812 400 L 812 416 L 782 416" fill="none" stroke="#5b4b8a" stroke-width="1.2" marker-end="url(#m-purple)"/>
+<text x="786" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">⑤ 融合 + ⑥ 精排 30</text>
+<line x1="780" y1="452" x2="180" y2="452" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#m-grey)"/>
+<text x="480" y="446" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">⑦ top-6 + 引用</text>
+<line x1="180" y1="484" x2="900" y2="484" stroke="#8a93a6" stroke-width="1.2" marker-end="url(#m-grey)"/><text x="540.0" y="479" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">⑧ prompt</text>
+<line x1="900" y1="512" x2="60" y2="512" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#m-grey)"/>
+<text x="480" y="506" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75" text-anchor="middle">⑧ stream</text>
+<rect x="420" y="272" width="460" height="124" rx="6" fill="none" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="424" y="266" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" font-weight="600" fill="#8a93a6">任一路超时 120 ms</text>
+<text x="40" y="584" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">超时只降级当前阶段：单路超时用另一路，精排超时用 RRF 顺序，两路都超时返回缓存或明确失败。</text>
+</svg>
