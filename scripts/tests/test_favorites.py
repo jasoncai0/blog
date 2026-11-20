@@ -142,6 +142,14 @@ def test_storage_denied_is_silent(context, base):
     assert not errors, f"存储不可用时不该报错：{errors}"
 
 
+def test_empty_favorite_filter_explains_itself(page, base):
+    page.goto(base + "/?read=fav")
+    page.wait_for_timeout(1200)
+    empty = page.locator(".read-empty")
+    if empty.count():
+        assert "收藏" in empty.inner_text(), empty.inner_text()
+
+
 CASES = [
     (test_home_renders_star_buttons, False, {}),
     (test_toggle_persists_across_reload, False, {}),

@@ -80,6 +80,22 @@ function renderFilter() {
   for (const btn of document.querySelectorAll(".read-filter button[data-read]")) {
     btn.setAttribute("aria-pressed", btn.dataset.read === homeMode ? "true" : "false");
   }
+  // 筛完一条不剩时给一句解释，否则读者看到的是空白。
+  const list = document.querySelector("ul.posts");
+  if (!list) return;
+  let empty = list.parentElement.querySelector(".read-empty");
+  const left = list.querySelectorAll("li[data-progress-post]:not([hidden])").length;
+  if (left) {
+    empty?.remove();
+    return;
+  }
+  if (!empty) {
+    empty = document.createElement("p");
+    empty.className = "read-empty";
+    list.after(empty);
+  }
+  empty.textContent =
+    homeMode === "fav" ? "还没有收藏的篇目。在列表里点 ☆ 收藏 就能收起来。" : "这个筛选下暂时没有文章。";
 }
 
 function updateCounts() {
