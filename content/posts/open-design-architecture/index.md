@@ -51,31 +51,38 @@ README 自称 "The 1st Collaborative AI Design Agent Workspace"。真正决定�
 
 agent 的推理过程全部落在等式右边之外。这条等式解释了目录形状：`apps/web` 只有一个 App Router 页面、路由手写在 `apps/web/src/router.ts`；`apps/daemon` 里塞着 18,959 行的 `server.ts` 和 47 个路由文件。前端薄、后端厚，因为后端要替一个"看不见内部"的子进程承担所有确定性职责。
 
-### 1.1 谁在谁的上面：宿主、运行时、模型服务
+### 1.1 四层：外观、编排、执行、供给
 
-"不拥有 agent loop"容易被读成"和 agent 无关"。实际关系是宿主与运行时：OD 是宿主，CLI 是它按每个 run 拉起的子进程。
+按职责切四层，比"前端 + 后端"更能解释这个仓库，也比"OD 是 CLI 的插件"更接近代码。
 
-{{< fig "diagrams/03-host-runtime.svg" "三层与两条旁路。中间两层之间只交换 argv、stdin 和 stdout；CLI 与模型之间用用户自己的凭据走 HTTPS。图右侧的 BYOK 直连绕过 CLI，左侧的 MCP 让 OD 反过来被装进 CLI。" >}}
+{{< fig "diagrams/03-host-runtime.svg" "四层与两条通往供给层的线。① 只认 contracts 的 DTO；② 与 ③ 之间只交换 argv、stdin、stdout；④ 被两条互不共用凭据的线调用。" >}}
 
-**边界一：子进程。** daemon 起 CLI，把 prompt 从 stdin 递进去，环境变量里放 `OD_TOOL_TOKEN`、`OD_PROJECT_DIR`、`OD_BIN`、`OD_NODE_BIN`、`OD_DAEMON_URL`。回传只有 stdout，按 `streamFormat` 解析成 `text_delta`、`tool_use`、`usage` 这些事件。CLI 崩了 OD 还在；OD 重启也不需要谁批准。
+**① 外观层。** `apps/web`（以及 Electron 外壳）只做交互与渲染：对话、标签、面板、iframe 预览、导出入口。它不 import `apps/daemon/src`，只认 `packages/contracts` 的 DTO，走同源 HTTP 与 SSE。
 
-**边界二：HTTPS。** CLI 用用户自己的凭据调供应商的模型服务，凭据可能在订阅登录态里，也可能是环境变量里的 API key。OD 既不下发也不保存。`defs/claude.ts:30-31` 的 `authProbe: { args: ['auth', 'status'] }` 是 OD 能问到的极限，它只知道"登录了没有"。
+**② 编排层。** daemon 持数据根、SQLite、项目目录，负责提示拼装、run 生命周期、产物协议、媒体派发。所有确定性职责都在这里，所有不确定性（推理）都不在这里。
 
-**旁路一：BYOK 直连。** `plain` 执行配置加 API key 的 run 没有 CLI，daemon 直接把请求代理到 `POST /api/proxy/{anthropic,openai,azure,google,ollama,senseaudio}/stream`。代价是没有工具循环，产物只能是一个 `<artifact>` 文本块（text_artifact 配置）。这条路径证明模型能力有两条供给线，能出图的那条必须有 CLI。
+**③ 执行层。** 用户装的 CLI 子进程，跑 agent loop、工具、沙箱、transcript。整个系统里只有它跟 LLM 打交道。
 
-**旁路二：MCP 反向。** `od mcp install <agent>` 把 OD 注册进 CLI 的配置，让终端里的 CLI 直接调 OD 的工具（`apps/daemon/src/mcp.ts` 里 22 个，从 `collect_brief` 到 `list_agents`）。这 22 个工具里没有媒体生成，所以"在终端里让 CLI 出图"走不通，媒体必须走 OD 里的 run。
+**④ 供给层。** 供应商的推理服务与生成模型。有两条线进来：执行层用用户凭据调 LLM，编排层用供应商 key 调图像、视频、音频。
 
-| 谁提供 | OD | CLI agent |
+| 层 | 职责 | 边界与凭据 |
 | --- | --- | --- |
-| 界面、预览、导出 | ✓ | |
-| 项目目录与产物协议 | ✓ | |
-| 媒体派发与供应商密钥 | ✓ | |
-| 模型推理 | 仅 BYOK 直连时 | ✓（默认） |
-| 工具循环、沙箱、transcript | | ✓ |
-| 提示拼装 | ✓ | |
-| 反向扩展 | 作为 MCP server 装进 CLI | 作为 MCP client 调用 |
+| ① 外观 | 意图、交互、预览、导出 | 同源 HTTP + SSE，不持凭据 |
+| ② 编排 | 状态、提示、产物、派发 | 持数据根与生成模型 key |
+| ③ 执行 | 推理、工具循环、transcript | 持模型账号，独立子进程 |
+| ④ 供给 | 算力与生成模型 | 两条线各自结算 |
 
-所以两个常见说法都只对一半：OD 不是 CLI 的插件（它是独立进程、独立端口 7456、独立数据根），也没有"依赖 CLI 的模型能力"（BYOK 那条路根本没有 CLI）。它依赖的是**一个能跑工具循环的进程**，模型是那个进程的内部实现。
+把第 ③ 层并进第 ② 层会立刻出三个问题：token 计费混进 daemon 的账，模型账号与供应商 key 挤到同一处，CLI 崩了会把编排层一起带下去。三条隔离各自对应一个开关，这才是四层分开的实际收益。
+
+**边界一：同源。** web 只通过 `/api/*` 说话，SSE 走事件流；`packages/contracts` 是唯一的共同语言，薄到可以整体读一遍。
+
+**边界二：子进程。** daemon 起 CLI，prompt 从 stdin 递进去，环境变量里放 `OD_TOOL_TOKEN`、`OD_PROJECT_DIR`、`OD_BIN`、`OD_NODE_BIN`、`OD_DAEMON_URL`。回传只有 stdout，按 `streamFormat` 解析成事件。CLI 崩了 OD 还在，OD 重启也不需要谁批准。
+
+**边界三与旁路：两条通往供给层的线。** 生成模型那条完全属于 daemon：key 在 daemon 环境里，agent 只拿到一张 `odtt_` 令牌，只能调 `POST /api/tools/media/generate`。LLM 那条属于 CLI：凭据在订阅登录态或环境变量里，`defs/claude.ts:30-31` 的 `authProbe: { args: ['auth', 'status'] }` 是 OD 能问到的极限。唯一的交叉是 BYOK 直连：`plain` 配置加 API key 的 run 没有 CLI，daemon 直接把请求代理到 `POST /api/proxy/{anthropic,openai,azure,google,ollama,senseaudio}/stream`，代价是没有工具循环，产物只能是一个 `<artifact>` 文本块。
+
+还有一条反向胶水：`od mcp install <agent>` 把 OD 注册进 CLI 的配置，让终端里的 CLI 直接调 OD 的工具（`apps/daemon/src/mcp.ts` 里 22 个）。这 22 个里没有媒体生成，所以"在终端里让 CLI 出图"走不通。
+
+所以两个常见说法都只对一半：OD 不是 CLI 的插件（独立进程、端口 7456、独立数据根），也没有"依赖 CLI 的模型能力"（BYOK 那条路根本没有 CLI）。它依赖的是**一个能跑工具循环的进程**，也就是第 ③ 层，模型是那一层的内部实现。
 
 ## 2. 总览：三层进程，一个数据根
 
