@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="960" height="580" role="img" aria-labelledby="t20 d20">
+  <title id="t20">宿主、运行时、模型服务：两层边界与两条旁路</title>
+  <desc id="d20">OD 是宿主，按 run 拉起 CLI 子进程，只递 stdin 读 stdout；CLI 再用用户凭据调供应商的模型服务。旁路一：BYOK 直连让 daemon 跳过 CLI。旁路二：MCP 让 OD 反过来被装进 CLI。</desc>
+  <defs>
+    <marker id="a20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+    <marker id="a20acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">HOST / RUNTIME / MODEL · spawn · stdio · HTTPS · MCP</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">宿主、运行时、模型服务：两层边界，两条旁路</text>
+  <text x="924" y="52" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#5a6580">模型与凭据都不在 OD 里</text>
+
+  <!-- Band A: OD host -->
+  <rect x="36" y="84" width="584" height="88" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="50" y="108" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">OD 宿主</text>
+  <text x="112" y="108" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8f97ad">apps/web + apps/daemon · 127.0.0.1:7456</text>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">
+    <rect x="50" y="120" width="132" height="36" rx="2" fill="#ececec"/>
+    <text x="116" y="134" text-anchor="middle">界面与预览</text>
+    <text x="116" y="147" text-anchor="middle" font-size="7.5" fill="#8f97ad">标签 / iframe / 导出</text>
+    <rect x="190" y="120" width="132" height="36" rx="2" fill="#ececec"/>
+    <text x="256" y="134" text-anchor="middle">项目目录 + 数据库</text>
+    <text x="256" y="147" text-anchor="middle" font-size="7.5" fill="#8f97ad">文件是唯一真相</text>
+    <rect x="330" y="120" width="132" height="36" rx="2" fill="#ececec"/>
+    <text x="396" y="134" text-anchor="middle">提示拼装</text>
+    <text x="396" y="147" text-anchor="middle" font-size="7.5" fill="#8f97ad">元数据 / 契约 / 模板</text>
+    <rect x="470" y="120" width="132" height="36" rx="2" fill="#ececec"/>
+    <text x="536" y="134" text-anchor="middle">媒体派发</text>
+    <text x="536" y="147" text-anchor="middle" font-size="7.5" fill="#8f97ad">供应商 key 留在这里</text>
+  </g>
+
+  <!-- Band B: CLI agent -->
+  <rect x="36" y="244" width="584" height="88" rx="2" fill="#2d3142"/>
+  <text x="50" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#f5f5f5">CLI agent</text>
+  <text x="112" y="268" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8f97ad">用户机器上那个进程 · 27 个 adapter 只描述怎么叫它</text>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#c9cedb">
+    <rect x="50" y="280" width="170" height="36" rx="2" fill="#3a4152"/>
+    <text x="135" y="294" text-anchor="middle" fill="#f5f5f5">agent loop</text>
+    <text x="135" y="307" text-anchor="middle" font-size="7.5" fill="#a9b1c4">调模型 → 执行工具 → 回填</text>
+    <rect x="228" y="280" width="170" height="36" rx="2" fill="#3a4152"/>
+    <text x="313" y="294" text-anchor="middle" fill="#f5f5f5">工具与沙箱</text>
+    <text x="313" y="307" text-anchor="middle" font-size="7.5" fill="#a9b1c4">Bash / 读写 / 权限</text>
+    <rect x="406" y="280" width="196" height="36" rx="2" fill="#3a4152"/>
+    <text x="504" y="294" text-anchor="middle" fill="#f5f5f5">会话与 transcript</text>
+    <text x="504" y="307" text-anchor="middle" font-size="7.5" fill="#a9b1c4">上下文、压缩、resume</text>
+  </g>
+
+  <!-- Band C: model service -->
+  <rect x="36" y="404" width="584" height="84" rx="2" fill="#ffffff" stroke="rgba(45,49,66,0.28)"/>
+  <text x="50" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">模型服务</text>
+  <text x="112" y="428" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8f97ad">供应商机房 · 权重与算力都在这边</text>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#4f5d75">
+    <rect x="50" y="440" width="170" height="34" rx="2" fill="#ececec"/>
+    <text x="135" y="461" text-anchor="middle">token 级推理</text>
+    <rect x="228" y="440" width="170" height="34" rx="2" fill="#ececec"/>
+    <text x="313" y="461" text-anchor="middle">鉴权与计费</text>
+    <rect x="406" y="440" width="196" height="34" rx="2" fill="#ececec"/>
+    <text x="504" y="461" text-anchor="middle">流式返回与并发调度</text>
+  </g>
+
+  <!-- Boundary 1 -->
+  <g stroke="#5a6580" stroke-width="1.2" fill="none" marker-end="url(#a20)">
+    <line x1="120" y1="176" x2="120" y2="238"/>
+    <line x1="520" y1="240" x2="520" y2="178"/>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5">
+    <text x="130" y="192" fill="#2d3142">spawn · argv + stdin</text>
+    <text x="510" y="192" fill="#2d3142" text-anchor="end">stdout 流</text>
+    <text x="320" y="220" fill="#4f5d75" font-size="8.5" text-anchor="middle">子进程边界：env 只递令牌与路径，回传只有 stdout 流</text>
+  </g>
+
+  <!-- Boundary 2 -->
+  <g stroke="#5a6580" stroke-width="1.2" fill="none" marker-end="url(#a20)">
+    <line x1="120" y1="336" x2="120" y2="398"/>
+    <line x1="520" y1="400" x2="520" y2="338"/>
+  </g>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5">
+    <text x="130" y="352" fill="#2d3142">HTTPS · 用户凭据</text>
+    <text x="510" y="352" fill="#2d3142" text-anchor="end">tokens · 按量计费</text>
+    <text x="320" y="380" fill="#4f5d75" font-size="8.5" text-anchor="middle">网络边界：凭据在 CLI 的环境里，OD 不下发也不保存</text>
+  </g>
+
+  <!-- Bypass 1: BYOK -->
+  <path d="M624,150 H672 V446 H622" stroke="#bf4520" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#a20acc)"/>
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5">
+    <text x="680" y="146" fill="#bf4520">旁路一 · BYOK 直连</text>
+    <text x="680" y="162" fill="#8f97ad" font-size="7.5">daemon 打 /api/proxy/*/stream</text>
+    <text x="680" y="176" fill="#8f97ad" font-size="7.5">没有 CLI，没有工具</text>
+    <text x="680" y="440" fill="#8f97ad" font-size="7.5">产物只能是一个 artifact 文本块</text>
+    <text x="680" y="454" fill="#8f97ad" font-size="7.5">（text_artifact 配置）</text>
+  </g>
+
+  <!-- Bypass 2: MCP -->
+  <path d="M36,300 H14 V120 H34" stroke="#5a6580" stroke-width="1.1" fill="none" stroke-dasharray="4 3" marker-end="url(#a20)"/>
+  <text x="11" y="214" transform="rotate(-90 11 214)" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5a6580">MCP</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="36" y="516">主关系是宿主与运行时：OD 起子进程、递 stdin、只读 stdout。CLI 崩了 OD 还在，OD 重启也不用 CLI 同意。</text>
+    <text x="36" y="534">旁路一是 BYOK：daemon 绕过 CLI 直连供应商，代价是没有工具，产物只能是文本块；所以能出图的那条路必须有 CLI。</text>
+    <text x="36" y="552">旁路二是 MCP：od mcp install 把 OD 的 22 个工具注册进 CLI，反过来让终端里的 CLI 操作 OD。这 22 个工具里没有媒体生成。</text>
+    <text x="36" y="570" fill="#8f97ad" font-size="8.5">所以两个说法都只对一半：OD 不是 CLI 的插件，也不靠 CLI 才拿到模型；它把 CLI 当成带工具的执行引擎。</text>
+  </g>
+</svg>

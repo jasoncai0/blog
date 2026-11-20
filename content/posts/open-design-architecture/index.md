@@ -51,6 +51,32 @@ README 自称 "The 1st Collaborative AI Design Agent Workspace"。真正决定�
 
 agent 的推理过程全部落在等式右边之外。这条等式解释了目录形状：`apps/web` 只有一个 App Router 页面、路由手写在 `apps/web/src/router.ts`；`apps/daemon` 里塞着 18,959 行的 `server.ts` 和 47 个路由文件。前端薄、后端厚，因为后端要替一个"看不见内部"的子进程承担所有确定性职责。
 
+### 1.1 谁在谁的上面：宿主、运行时、模型服务
+
+"不拥有 agent loop"容易被读成"和 agent 无关"。实际关系是宿主与运行时：OD 是宿主，CLI 是它按每个 run 拉起的子进程。
+
+{{< fig "diagrams/03-host-runtime.svg" "三层与两条旁路。中间两层之间只交换 argv、stdin 和 stdout；CLI 与模型之间用用户自己的凭据走 HTTPS。图右侧的 BYOK 直连绕过 CLI，左侧的 MCP 让 OD 反过来被装进 CLI。" >}}
+
+**边界一：子进程。** daemon 起 CLI，把 prompt 从 stdin 递进去，环境变量里放 `OD_TOOL_TOKEN`、`OD_PROJECT_DIR`、`OD_BIN`、`OD_NODE_BIN`、`OD_DAEMON_URL`。回传只有 stdout，按 `streamFormat` 解析成 `text_delta`、`tool_use`、`usage` 这些事件。CLI 崩了 OD 还在；OD 重启也不需要谁批准。
+
+**边界二：HTTPS。** CLI 用用户自己的凭据调供应商的模型服务，凭据可能在订阅登录态里，也可能是环境变量里的 API key。OD 既不下发也不保存。`defs/claude.ts:30-31` 的 `authProbe: { args: ['auth', 'status'] }` 是 OD 能问到的极限，它只知道"登录了没有"。
+
+**旁路一：BYOK 直连。** `plain` 执行配置加 API key 的 run 没有 CLI，daemon 直接把请求代理到 `POST /api/proxy/{anthropic,openai,azure,google,ollama,senseaudio}/stream`。代价是没有工具循环，产物只能是一个 `<artifact>` 文本块（text_artifact 配置）。这条路径证明模型能力有两条供给线，能出图的那条必须有 CLI。
+
+**旁路二：MCP 反向。** `od mcp install <agent>` 把 OD 注册进 CLI 的配置，让终端里的 CLI 直接调 OD 的工具（`apps/daemon/src/mcp.ts` 里 22 个，从 `collect_brief` 到 `list_agents`）。这 22 个工具里没有媒体生成，所以"在终端里让 CLI 出图"走不通，媒体必须走 OD 里的 run。
+
+| 谁提供 | OD | CLI agent |
+| --- | --- | --- |
+| 界面、预览、导出 | ✓ | |
+| 项目目录与产物协议 | ✓ | |
+| 媒体派发与供应商密钥 | ✓ | |
+| 模型推理 | 仅 BYOK 直连时 | ✓（默认） |
+| 工具循环、沙箱、transcript | | ✓ |
+| 提示拼装 | ✓ | |
+| 反向扩展 | 作为 MCP server 装进 CLI | 作为 MCP client 调用 |
+
+所以两个常见说法都只对一半：OD 不是 CLI 的插件（它是独立进程、独立端口 7456、独立数据根），也没有"依赖 CLI 的模型能力"（BYOK 那条路根本没有 CLI）。它依赖的是**一个能跑工具循环的进程**，模型是那个进程的内部实现。
+
 ## 2. 总览：三层进程，一个数据根
 
 {{< fig "diagrams/01-topology.svg" "三层进程与单一数据根。CLI 子进程绕过 daemon 直接写项目文件，daemon 只通过文件监听感知变化。" >}}
