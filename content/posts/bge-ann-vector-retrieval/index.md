@@ -9,7 +9,59 @@ slug: "bge-ann-vector-retrieval"
 
 **这篇文档在做什么：** 把 RAG 检索链路拆成三段——BGE 负责“把语义压进一个向量”，ANN 负责“在海量向量里把候选捞出来”，reranker 负责“在候选里排准”——然后回答四个问题：BGE 的向量是怎么训练出来的，IVF/PQ/HNSW 到底在省什么、又在哪里丢召回，cross-encoder 为什么更准却不能做召回，以及线上真正会踩的坑和面试里最容易被追问的点。它不是 API 手册，也不是 benchmark 复读；重点是把公式、参数和工程后果对上。
 
-如果你只做过“调一个向量库、塞进去、搜 top-k”，这篇会补上中间那层：为什么同样的 embedding，换索引后 recall 会掉；为什么加了过滤条件，HNSW 会突然变慢；为什么 `recall@10` 看起来很高，答案还是错；以及每一层为什么必须付一笔代价——BM25 的零语义、BGE 的算力与信息瓶颈、ANN 的召回损失、HNSW 的内存与删除，都不是实现缺陷，是结构决定的。
+如果你只做过“调一个向量库、塞进去、搜 top-k”，这篇会补上中间那层：为什么同样的 embedding，换索引后 recall 会掉；为什么加了过滤条件，HNSW 会突然变慢；为什么 `recall@10` 看起来很高，答案还是错；以及每一层为什么必须付一笔代价——BM25 的零语义、BGE 的算力与信息瓶颈、ANN 的召回损失、HNSW 的内存与删除，都不是实现缺陷，是结构决定的。不熟的名词，先查下面的术语表。
+
+## 术语表
+
+正文按“检索信号 → 表示模型 → 索引结构”三层推进，名词先在这里对齐。第一次读不用记，卡住再回来查。
+
+### 检索与相关性
+
+| 名词 | 一句话 |
+| --- | --- |
+| 稀疏检索（sparse） | 用词项和权重表示文档，靠倒排索引匹配；BM25 是代表，不理解同义，但精确串可靠。 |
+| 稠密检索（dense） | 用神经网络把文本压成一个定长向量，按向量距离算相关性。 |
+| 混合检索（hybrid） | 稀疏与稠密两路召回后融合，常用 RRF；融合的是排名，不是分数。 |
+| 倒排索引（inverted index） | 词项 → 文档列表的映射，BM25 的存储结构；查询只碰命中的 posting。 |
+| 分词器（analyzer） | 把文本切成 term 的规则集合：切词、小写、词干、停用词。BM25 全部“语义”来自它。 |
+| IDF | 逆文档频率，衡量一个词有多稀有；稀有度不等于相关性。 |
+| 词袋（bag of words） | 丢掉词序和句法的表示，BM25 打分的前提。 |
+| RAG | 检索增强生成：先检索证据，再让 LLM 基于证据回答。 |
+| chunk | 摄入时切出的文本块，检索与精排的基本单位；召回和精排的块大小要一致。 |
+| RRF | Reciprocal Rank Fusion，按 `1/(k+rank)` 融合多路排名，k 常取 60。 |
+
+### 表示与模型
+
+| 名词 | 一句话 |
+| --- | --- |
+| embedding | 文本 → 定长浮点向量；两个向量距离近，表示语义近。 |
+| 双塔（bi-encoder） | query 和文档各自独立编码，最后做一次内积；文档向量可预计算、可建索引。 |
+| 交叉编码器（cross-encoder） | 把 query 与文档拼成一个序列一起过模型，输出相关性分数；更准，但不能预计算。 |
+| reranker | 用交叉编码器对召回候选重排的模型，例如 bge-reranker。 |
+| CLS | 序列首位的特殊 token；BGE 取它的隐状态当整段表示，再做 L2 归一化。 |
+| 对比学习 | 拉近正例、推远负例的训练目标；BGE 的第二阶段，负例来自同一 batch。 |
+| 难负样本 | 被召回、但实际不相关的样本；reranker 训练效果主要靠它。 |
+| 指令（instruction） | 加在 query 前的任务描述，让同一个模型适配不同检索意图；BGE v1.5 起只加 query 侧。 |
+| late interaction | 文档保留每个 token 的向量，查询时逐 token 取最大相似度再求和（MaxSim）；ColBERT 与 BGE-M3 的 multi-vector 都走这条路。 |
+| 余弦 / 内积 | 向量先除以模长，内积就等于余弦；索引的 metric 必须和训练时一致。 |
+
+### 索引与指标
+
+| 名词 | 一句话 |
+| --- | --- |
+| ANN | 近似最近邻：允许漏掉少量真近邻，换数量级的速度和内存。 |
+| kNN / Flat | 精确最近邻，必须比较全部 N 条；召回 100%，成本 `O(Nd)`。 |
+| recall@k | 返回的 top-k 里命中真 top-k 的比例；基准要用精确检索算，不能拿 ANN 测 ANN。 |
+| QPS / p99 | 吞吐与尾延迟；调 `nprobe`、`efSearch` 就是在召回和这两个数之间选点。 |
+| IVF（nlist / nprobe） | 倒排文件：先聚类，查询只扫最近的 nprobe 个簇；nlist 是簇数。 |
+| PQ（码本 / ADC） | 乘积量化：向量切 M 段，每段用 1 字节编号代替；ADC 是查距离表求和，不做逐维乘加。 |
+| HNSW（M / efConstruction / efSearch） | 分层可导航小世界图；M 是每层邻居上限，efConstruction 是建图束宽，efSearch 是查询束宽。 |
+| 束宽（beam） | 搜索时保留的候选集合大小；efSearch 和 efConstruction 都是束宽，只是分别用在查询和建图上。 |
+| 墓碑（tombstone） | 逻辑删除标记；节点和边还在图里，查询跳过，内存不释放。 |
+| compaction | 后台重写：清掉墓碑、重建索引，内存和召回才恢复。 |
+| filtered search | 带过滤条件的 ANN；过滤率很低时，图会被走断。 |
+| pre-filter / post-filter | 先过滤再搜 / 先搜再过滤；后者在低命中率下 `k/hit_rate` 会爆炸。 |
+| DiskANN | 图放 SSD、内存放压缩向量的方案，用磁盘 IO 换内存。 |
 
 ## 一、先看全局：两条流水线，一个召回上限
 
@@ -246,6 +298,8 @@ IVF（inverted file）的思路是“先粗排，再细扫”。它先用 k-mean
 
 IVF 的召回损失有一个很直观的来源：**query 落在簇边界附近时，真近邻可能在相邻簇里，而 `nprobe` 没覆盖到**。提高 `nprobe` 能缓解，但扫描量近似按 `nprobe/nlist` 增长；当 `nprobe` 接近 `nlist`，IVF 就退化成 Flat 了。
 
+{{< fig "diagrams/05-ivf-boundary.svg" "IVF 的边界漏召回：query 最近的质心属于 A 桶，真近邻却落在 B 桶；nprobe=1 时它从一开始就不在候选里。" >}}
+
 IVF 本身只省“扫描范围”，不省“单向量存储”。要省内存，还要叠加 PQ。
 
 ### 3.3 PQ：把残差切成 M 段，每段只留 1 字节
@@ -281,7 +335,7 @@ PQ 的误差来自“每段只保留一个质心编号”。段内方差越大�
 
 HNSW（hierarchical navigable small world）是目前低延迟场景最常用的图索引。它把向量组织成多层图：上层节点少、边长，负责“跳远”；下层节点多、边短，负责“精搜”。查询从最高层的入口点开始，贪心地向离 query 更近的邻居走，走不动了就下一层，直到第 0 层用 `efSearch` 的束宽做局部搜索。
 
-{{< fig "diagrams/05-hnsw.svg" "HNSW 的多层结构、贪心下降与第 0 层束搜索。上层负责导航，第 0 层决定最终召回。" >}}
+{{< fig "diagrams/06-hnsw.svg" "HNSW 的多层结构、贪心下降与第 0 层束搜索。上层负责导航，第 0 层决定最终召回。" >}}
 
 节点的层数是随机采样的，服从指数衰减：大部分节点只在第 0 层，少数节点出现在更高层。一个常见的采样公式是：
 
@@ -300,6 +354,8 @@ level = floor(-ln(U) × mL),  mL = 1 / ln(M)
 | `efSearch` | 查询时的候选束宽，决定搜索广度 | 召回↑、延迟↑ |
 
 `efSearch` 不能小于 `k`。如果 `k=10`、`efSearch=10`，束里只有 10 个候选，基本没有回旋余地；通常从 `efSearch=64` 或 `128` 开始，用真实 query 测 recall-latency 曲线，再选工作点。`efConstruction` 的判断方法是：建完图后，用 `ef=efConstruction` 跑一遍 recall；如果低于 0.9，说明图的质量还不够，应该加大 `efConstruction` 重建。
+
+{{< fig "diagrams/07-hnsw-insert.svg" "HNSW 的建图过程：新节点按指数分布采样层数，逐层贪心下降，在每层用 efConstruction 个候选挑 M 个邻居并双向连边。" >}}
 
 HNSW 的内存可以粗略估成：
 
@@ -328,6 +384,8 @@ HNSW 的删除难点不在“定位节点”，而在“拆掉节点之后，图
 - 后台 compaction/rebuild 时，才把墓碑节点真正清掉，重新建图。
 
 hnswlib 还提供 `replace_deleted`，让新元素复用被删元素的位置；它解决的是内存复用，不是“删除变成免费”。Faiss 的 HNSW 更直接：不支持 `remove_ids`，要删只能重建，或者在外层做逻辑过滤。
+
+{{< fig "diagrams/08-hnsw-delete.svg" "删除一条 HNSW 记录：硬删会切断 A、B 两簇的导航路径，墓碑保留边但不再返回结果，compaction 重建后才真正清掉。" >}}
 
 不同操作的代价可以放在一张表里：
 
@@ -614,7 +672,7 @@ ColBERT 是这条路的代表，BGE-M3 的 multi-vector 头也是同一思路（
 
 现实里的检索几乎从来不是“在全部向量里找最近邻”，而是“在满足条件的向量里找最近邻”：租户隔离、权限、时间范围、文档类型、状态、语言。过滤条件一加，前面所有索引的假设都变了。
 
-{{< fig "diagrams/06-filtering.svg" "post-filter、pre-filter、filtered graph 三种策略。命中率一变，成本会反转；低命中率下最容易被忽略的是图被切断。" >}}
+{{< fig "diagrams/09-filtering.svg" "post-filter、pre-filter、filtered graph 三种策略。命中率一变，成本会反转；低命中率下最容易被忽略的是图被切断。" >}}
 
 先定义清楚“命中率”（filter pass rate）：
 

@@ -54,13 +54,13 @@
   "table": 13
  },
  "bge-ann-vector-retrieval": {
-  "figure": 6,
+  "figure": 9,
   "h1": 1,
-  "h2": 11,
-  "h3": 55,
+  "h2": 12,
+  "h3": 58,
   "hr": 0,
   "pre": 27,
-  "table": 16
+  "table": 19
  },
  "blog-agent-bridge": {
   "figure": 3,
@@ -673,6 +673,15 @@
   "hr": 0,
   "pre": 8,
   "table": 7
+ },
+ "dsh-tool-mcp-skill": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 6,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 2
  },
  "dsh-tool-pipeline": {
   "figure": 4,
