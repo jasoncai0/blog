@@ -96,7 +96,7 @@ def api(path, method="GET", body=None, base=None, headers=None):
 def reset_db(db):
     """每个用例从空库开始，避免上一条用例的笔记干扰断言。"""
     conn = sqlite3.connect(db, timeout=10)
-    conn.executescript("DELETE FROM notes; DELETE FROM note_rev; DELETE FROM progress;")
+    conn.executescript("DELETE FROM notes; DELETE FROM note_rev; DELETE FROM progress; DELETE FROM favorites;")
     conn.commit()
     conn.close()
 
@@ -407,6 +407,47 @@ def test_progress_arriving_after_load_still_resumes(page, base):
         proxy.server_close()
 
 
+def test_favorite_from_one_browser_shows_in_another(page, base):
+    page.goto(base + "/")
+    page.wait_for_selector('.fav-btn[data-slug="hello"]', state="attached")
+    page.locator('.fav-btn[data-slug="hello"]').click()
+    wait_until(lambda: "hello" in api("/favorites").get("favorites", {}), timeout=8.0, interval=0.2)
+    other = page.context.browser.new_context(**DESKTOP)
+    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    try:
+        fresh = other.new_page()
+        fresh.goto(base + "/")
+        wait_until(
+            lambda: fresh.eval_on_selector(
+                '.fav-btn[data-slug="hello"]', "e => e.getAttribute('aria-pressed')"
+            ) == "true",
+            timeout=8.0,
+            interval=0.2,
+        )
+    finally:
+        other.close()
+
+
+def test_unfavorite_propagates_to_other_browser(page, base):
+    api("/favorites/hello", "PUT", {"t": int(time.time() * 1000)})
+    page.goto(base + "/")
+    page.wait_for_selector('.fav-btn[data-slug="hello"]', state="attached")
+    wait_until(
+        lambda: page.eval_on_selector('.fav-btn[data-slug="hello"]', "e => e.getAttribute('aria-pressed')") == "true",
+        timeout=8.0,
+        interval=0.2,
+    )
+    page.locator('.fav-btn[data-slug="hello"]').click()
+    wait_until(lambda: "hello" not in api("/favorites").get("favorites", {}), timeout=8.0, interval=0.2)
+    page.reload()
+    page.wait_for_selector('.fav-btn[data-slug="hello"]', state="attached")
+    wait_until(
+        lambda: page.eval_on_selector('.fav-btn[data-slug="hello"]', "e => e.getAttribute('aria-pressed')") == "false",
+        timeout=8.0,
+        interval=0.2,
+    )
+
+
 CASES = [
     (test_note_written_in_one_browser_shows_up_in_another, False, DESKTOP),
     (test_deleted_note_does_not_come_back, False, DESKTOP),
@@ -416,6 +457,8 @@ CASES = [
     (test_offline_write_is_queued_and_flushed_later, False, DESKTOP),
     (test_progress_arriving_after_load_still_resumes, False, DESKTOP),
     (test_all_local_notes_upload_from_any_page, True, DESKTOP),
+    (test_favorite_from_one_browser_shows_in_another, False, DESKTOP),
+    (test_unfavorite_propagates_to_other_browser, False, DESKTOP),
     (test_reply_creates_a_floor, False, DESKTOP),
     (test_ai_reply_is_marked_as_ai, False, DESKTOP),
     (test_write_without_key_prompts_and_then_succeeds, True, DESKTOP),

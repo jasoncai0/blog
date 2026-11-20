@@ -135,6 +135,43 @@ class NotesdTest(unittest.TestCase):
         self.assertTrue(after["d"])
         self.assertEqual(after["p"], 60)
 
+    def test_put_cannot_drop_appended_floors(self):
+        self.call("PUT", "/api/notes/floor-keep/floorabc", self.note("floorabc"))
+        self.call("POST", "/api/notes/floor-keep/floorabc/replies", {"author": "AI", "text": "AI 的回答"})
+        stale = self.note("floorabc")
+        self.assertEqual(self.call("PUT", "/api/notes/floor-keep/floorabc", stale)[0], 200)
+        _, body = self.call("GET", "/api/notes/floor-keep")
+        note = next(n for n in body["notes"] if n["id"] == "floorabc")
+        self.assertEqual(len(note["thread"]), 2, "旧的整条 PUT 不能抹掉已经追加的楼层")
+        self.assertEqual(note["thread"][1]["author"], "AI")
+
+    def test_favorites_roundtrip(self):
+        self.assertEqual(self.call("PUT", "/api/favorites/ot-crdt-lww", {"t": 111})[0], 200)
+        self.assertEqual(self.call("PUT", "/api/favorites/hello", {})[0], 200)
+        _, body = self.call("GET", "/api/favorites")
+        self.assertEqual(set(body["favorites"]), {"ot-crdt-lww", "hello"})
+        self.assertIsInstance(body["favorites"]["hello"], int)
+        self.assertEqual(self.call("DELETE", "/api/favorites/hello")[0], 200)
+        _, body = self.call("GET", "/api/favorites")
+        self.assertEqual(set(body["favorites"]), {"ot-crdt-lww"})
+
+    def test_summary_includes_favorites(self):
+        self.call("PUT", "/api/favorites/summary-check", {"t": 222})
+        _, body = self.call("GET", "/api/summary")
+        self.assertEqual(body["favorites"].get("summary-check"), 222)
+
+    def test_favorites_write_needs_no_edit_key(self):
+        notesd.Handler.edit_key = "secret-key"
+        code, body = self.call("PUT", "/api/favorites/anonymous-ok", {"t": 333})
+        self.assertEqual(code, 200, "访客也要能收藏，不能要求口令")
+        code, _ = self.call("PUT", "/api/notes/anonymous-ok/n0abcde", self.note("n0abcde"))
+        self.assertEqual(code, 401, "笔记写入仍然要口令")
+        notesd.Handler.edit_key = ""
+
+    def test_favorites_bad_slug(self):
+        code, body = self.call("PUT", "/api/favorites/Bad_Slug", {"t": 1})
+        self.assertEqual(code, 400)
+
     def test_session_accepts_absolute_workspace(self):
         code, body = self.call(
             "PUT",

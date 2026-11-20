@@ -19,6 +19,8 @@
 {{- if or .IsHome .IsPage }}
 {{- $js := resources.Get "js/reading-progress.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $js.RelPermalink }}"></script>
+{{- $fav := resources.Get "js/favorites.js" | js.Build (dict "minify" true) | fingerprint }}
+<script type="module" src="{{ $fav.RelPermalink }}"></script>
 {{- end }}
 {{- if or .IsHome .IsPage }}
 {{- $nav := resources.Get "js/site-nav.js" | js.Build (dict "minify" true) | fingerprint }}

@@ -57,7 +57,7 @@ function markHome(store = parseStore(safeGet() || "")) {
 }
 
 
-const HOME_MODES = new Set(["all", "done", "reading", "unread"]);
+const HOME_MODES = new Set(["all", "done", "reading", "unread", "fav"]);
 let homeStore = {};
 let homeMode = "all";
 
@@ -67,10 +67,15 @@ function readState(entry) {
   return entry.p > 0 ? "reading" : "unread";
 }
 
+function isFav(item) {
+  return typeof window.__favIs === "function" && !!window.__favIs(item.dataset.progressPost);
+}
+
 function renderFilter() {
   for (const li of document.querySelectorAll("ul.posts > li[data-progress-post]")) {
     const state = readState(readEntry(homeStore, li.dataset.progressPost));
-    li.hidden = homeMode !== "all" && state !== homeMode;
+    if (homeMode === "fav") li.hidden = !isFav(li);
+    else li.hidden = homeMode !== "all" && state !== homeMode;
   }
   for (const btn of document.querySelectorAll(".read-filter button[data-read]")) {
     btn.setAttribute("aria-pressed", btn.dataset.read === homeMode ? "true" : "false");
@@ -78,10 +83,11 @@ function renderFilter() {
 }
 
 function updateCounts() {
-  const counts = { all: 0, done: 0, reading: 0, unread: 0 };
+  const counts = { all: 0, done: 0, reading: 0, unread: 0, fav: 0 };
   for (const li of document.querySelectorAll("ul.posts > li[data-progress-post]")) {
     counts.all += 1;
     counts[readState(readEntry(homeStore, li.dataset.progressPost))] += 1;
+    if (isFav(li)) counts.fav += 1;
   }
   for (const btn of document.querySelectorAll(".read-filter button[data-read]")) {
     const n = counts[btn.dataset.read];
@@ -96,7 +102,13 @@ function refreshHome() {
   renderFilter();
 }
 
-// 首页过滤：默认「全部」，状态写进 ?read=done|reading|unread，刷新和分享都保持。
+// 收藏状态变化（favorites.js 点完星）后重算筛选与计数。
+window.__refreshHomeFilter = () => {
+  updateCounts();
+  renderFilter();
+};
+
+// 首页过滤：默认「全部」，状态写进 ?read=done|reading|unread|fav，刷新和分享都保持。
 function initHomeFilter() {
   const bar = document.querySelector(".read-filter");
   if (!bar) return;

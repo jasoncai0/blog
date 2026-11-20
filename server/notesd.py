@@ -74,6 +74,11 @@ CREATE TABLE IF NOT EXISTS progress (
   t    INTEGER NOT NULL,
   d    INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS favorites (
+  slug TEXT PRIMARY KEY,
+  t    INTEGER NOT NULL,
+  updated INTEGER NOT NULL DEFAULT 0
+);
 CREATE TABLE IF NOT EXISTS jobs (
   id         TEXT PRIMARY KEY,
   slug       TEXT NOT NULL,
@@ -159,6 +164,17 @@ class Store:
 
     def put_note(self, slug: str, payload: dict) -> None:
         with self._lock:
+            # 楼层只增不减：别人（或 AI）追加的 2 楼以后，旧的整条 PUT 不能把它们抹掉。
+            # 客户端只会改 1 楼，所以比现有短的 thread 一律补回尾巴。
+            row = self.conn.execute(
+                "SELECT thread FROM notes WHERE id = ?", (payload["id"],)
+            ).fetchone()
+            thread = list(payload["thread"])
+            if row is not None:
+                old = json.loads(row["thread"])
+                if len(old) > len(thread):
+                    thread = thread + old[len(thread):]
+                    payload = {**payload, "thread": thread}
             self.conn.execute(
                 """INSERT INTO notes (id, slug, q, pre, post, block, t, thread, deleted, updated)
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
@@ -174,7 +190,7 @@ class Store:
                     payload["post"],
                     payload["block"],
                     payload["t"],
-                    json.dumps(payload["thread"], ensure_ascii=False),
+                    json.dumps(thread, ensure_ascii=False),
                     now(),
                 ),
             )
@@ -253,6 +269,26 @@ class Store:
             self.conn.commit()
             return {"p": best_p, "t": best_t, "d": bool(best_d)}
 
+
+    # ---- favorites ----
+    def favorites(self) -> dict[str, int]:
+        return {row["slug"]: row["t"] for row in self.conn.execute("SELECT slug, t FROM favorites")}
+
+    def put_favorite(self, slug: str, t: int) -> dict:
+        with self._lock:
+            self.conn.execute(
+                """INSERT INTO favorites (slug, t, updated) VALUES (?, ?, ?)
+                   ON CONFLICT(slug) DO UPDATE SET t = excluded.t, updated = excluded.updated""",
+                (slug, t, now()),
+            )
+            self.conn.commit()
+            return {"slug": slug, "t": t}
+
+    def delete_favorite(self, slug: str) -> bool:
+        with self._lock:
+            cur = self.conn.execute("DELETE FROM favorites WHERE slug = ?", (slug,))
+            self.conn.commit()
+            return bool(cur.rowcount)
 
     # ---- events ----
     def subscribe(self, channel: str) -> queue.Queue:
@@ -556,8 +592,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(HTTPStatus.OK, {"ok": True, "time": now()})
             return
 
-        # 阅读进度是匿名的（每个访客都会写），不收口令；笔记与任务要口令。
-        anonymous = parts[0] == "progress"
+        # 阅读进度与收藏是匿名的（每个访客都会写），不收口令；笔记与任务要口令。
+        anonymous = parts[0] in ("progress", "favorites")
         if write and not anonymous and not self.write_allowed():
             self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "edit key required"})
             return
@@ -565,7 +601,12 @@ class Handler(BaseHTTPRequestHandler):
         if parts[0] == "summary" and self.command == "GET":
             self.send_json(
                 HTTPStatus.OK,
-                {"notes": self.store.counts(), "progress": self.store.progress(), "updated": now()},
+                {
+                    "notes": self.store.counts(),
+                    "progress": self.store.progress(),
+                    "favorites": self.store.favorites(),
+                    "updated": now(),
+                },
             )
             return
 
@@ -591,6 +632,28 @@ class Handler(BaseHTTPRequestHandler):
                 result = self.store.put_progress(slug, p, int(t), bool(body.get("d")))
                 self.send_json(HTTPStatus.OK, {"ok": True, **result})
                 return
+            self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
+            return
+
+        if parts[0] == "favorites":
+            if self.command == "GET" and len(parts) == 1:
+                self.send_json(HTTPStatus.OK, {"favorites": self.store.favorites()})
+                return
+            if len(parts) == 2:
+                slug = parts[1]
+                if not SLUG_RE.match(slug):
+                    self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
+                    return
+                if self.command == "PUT":
+                    body = self.read_json() or {}
+                    t = body.get("t")
+                    if not isinstance(t, (int, float)):
+                        t = now()
+                    self.send_json(HTTPStatus.OK, {"ok": True, **self.store.put_favorite(slug, int(t))})
+                    return
+                if self.command == "DELETE":
+                    self.send_json(HTTPStatus.OK, {"ok": True, "deleted": self.store.delete_favorite(slug)})
+                    return
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
             return
 

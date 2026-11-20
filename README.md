@@ -111,8 +111,9 @@ rsync -a --delete ~/backups/blog-<时间戳>/ ubuntu@62.234.122.22:/var/www/blog
 
 ```bash
 python3 server/notesd.py --port 8099 --db /tmp/notes.db   # 起服务
-python3 server/test_notesd.py                             # 接口测试（7 例）
-python3 scripts/tests/test_notes_sync.py                  # 跨浏览器同步（5 例，自带 notesd）
+python3 server/test_notesd.py                             # 接口测试（37 例）
+python3 scripts/tests/test_notes_sync.py                  # 跨浏览器同步（13 例，自带 notesd）
+python3 scripts/tests/test_favorites.py                   # 收藏（8 例，自带 notesd）
 ```
 
 部署见 `~/.dsh/hosts/blog-jasoncai.site.md` §14（systemd + nginx 两段）。
@@ -125,6 +126,15 @@ python3 server/import_notes.py notes-<slug>.json --dry-run                # 先�
 ```
 
 文件格式就是导出按钮产出的 `{slug: [notes]}`；同 id 重复导入是幂等的，会覆盖成文件里的版本。
+
+## 收藏
+
+首页每篇的 tag 行前有一个 `☆ 收藏` 按钮，文章页在标题下方也有一份，点一下变 `★ 已收藏`。
+
+- 首页顶部的过滤条多了一个「收藏」档（`?read=fav`）：只列已经收藏的篇目，刷新和分享都保持；计数跟着变，取消收藏时列表立刻少一条。
+- 收藏存在浏览器 `jasoncai:fav:v1`（`{slug: t}`），同时同步到 `server/notesd.py` 的 `favorites` 表（`/api/favorites`）。换浏览器、清缓存都能恢复；不要求口令，和阅读进度一样是匿名集合。
+- 断网时操作进队列 `jasoncai:fav-queue:v1`，恢复后补发；服务端连不上也不影响本机先看到星标。
+- 没有 JS 时按钮不注入，列表保持完整。
 
 ## 阅读进度
 

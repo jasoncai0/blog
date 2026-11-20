@@ -449,6 +449,13 @@ function initNotes() {
       uploadLocalOnly(slug, local, adopted);
       paintAll();
       renderList();
+      // 合并可能带来新楼层：气泡正开着就原地换新，否则读者会停在旧的一层上。
+      const open = pop && pop.dataset.note;
+      const fresh = open && merged.find((n) => n.id === open);
+      if (fresh) {
+        const focused = document.activeElement?.closest(".nt-pop");
+        openPopById(open, { focus: !!focused });
+      }
       pushLocalSlugs(slug);
     })
     .catch(() => {});

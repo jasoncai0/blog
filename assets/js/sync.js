@@ -146,7 +146,8 @@ export async function flush() {
 }
 
 export function enqueue(op) {
-  const ops = readQueue();
+  // 同一条笔记的旧 PUT 会被后来的覆盖：留着先发出去的旧版本，会在服务端把新楼层抹掉。
+  const ops = readQueue().filter((item) => !(item.method === op.method && item.path === op.path));
   ops.push({ ...op, at: Date.now(), qid: `${Date.now()}-${++queueSeq}` });
   writeQueue(ops);
   if (navigator.onLine !== false) flush();
