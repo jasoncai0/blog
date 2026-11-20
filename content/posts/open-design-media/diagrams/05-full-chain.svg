@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" width="960" height="730" role="img" aria-labelledby="t19 d19">
+  <title id="t19">一条口令走完的完整链路</title>
+  <desc id="d19">面板建项目、daemon 拼提示并 spawn CLI、CLI 与模型多轮工具调用、od media generate 打到 daemon、daemon 出图落盘，最后回到 CLI 与前端。改写发生在第一轮推理的响应里。</desc>
+  <defs>
+    <marker id="a19" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6580"/>
+    </marker>
+    <marker id="a19acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="36" y="26" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">FULL CHAIN · panel → daemon → CLI → LLM → od → provider → disk</text>
+  <text x="36" y="52" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">一条口令走完的完整链路</text>
+  <text x="924" y="52" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#bf4520">改写就在第 04 步</text>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" font-weight="600">
+    <rect x="30" y="96" width="132" height="28" fill="#ffffff" stroke="rgba(45,49,66,0.3)"/>
+    <text x="96" y="114" text-anchor="middle" fill="#2d3142">用户 · 前端</text>
+    <rect x="182" y="96" width="132" height="28" fill="#ffffff" stroke="rgba(45,49,66,0.3)"/>
+    <text x="248" y="114" text-anchor="middle" fill="#2d3142">daemon</text>
+    <rect x="334" y="96" width="152" height="28" fill="#2d3142"/>
+    <text x="410" y="114" text-anchor="middle" fill="#f5f5f5">CLI agent（用户装的）</text>
+    <rect x="506" y="96" width="132" height="28" fill="#ffffff" stroke="rgba(45,49,66,0.3)"/>
+    <text x="572" y="114" text-anchor="middle" fill="#2d3142">LLM 服务</text>
+    <rect x="658" y="96" width="132" height="28" fill="#ffffff" stroke="rgba(45,49,66,0.3)"/>
+    <text x="724" y="114" text-anchor="middle" fill="#2d3142">媒体供应商</text>
+    <rect x="810" y="96" width="120" height="28" fill="#ffffff" stroke="rgba(45,49,66,0.3)"/>
+    <text x="870" y="114" text-anchor="middle" fill="#2d3142">项目目录</text>
+  </g>
+
+  <g stroke="#c9cedb" stroke-width="1" stroke-dasharray="3 4">
+    <line x1="96" y1="124" x2="96" y2="640"/>
+    <line x1="248" y1="124" x2="248" y2="640"/>
+    <line x1="410" y1="124" x2="410" y2="640"/>
+    <line x1="572" y1="124" x2="572" y2="640"/>
+    <line x1="724" y1="124" x2="724" y2="640"/>
+    <line x1="870" y1="124" x2="870" y2="640"/>
+  </g>
+
+  <rect x="330" y="236" width="474" height="340" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <text x="336" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" letter-spacing="0.08em" fill="#bf4520">AGENT LOOP · 一轮一轮重复到模型不再要工具</text>
+
+  <g font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8f97ad">
+    <text x="30" y="150">01</text><text x="30" y="184">02</text><text x="30" y="218">03</text>
+    <text x="30" y="252">04</text><text x="30" y="286">05</text><text x="30" y="322">06</text>
+    <text x="30" y="354">07</text><text x="30" y="388">08</text><text x="30" y="422">09</text>
+    <text x="30" y="456">10</text><text x="30" y="490">11</text><text x="30" y="524">12</text>
+    <text x="30" y="562">13</text><text x="30" y="600">14</text>
+  </g>
+
+  <g stroke="#5a6580" stroke-width="1.1" fill="none" marker-end="url(#a19)">
+    <line x1="100" y1="152" x2="242" y2="152"/>
+    <line x1="252" y1="186" x2="862" y2="186"/>
+    <line x1="252" y1="220" x2="402" y2="220"/>
+    <line x1="568" y1="288" x2="414" y2="288"/>
+    <line x1="406" y1="354" x2="256" y2="354"/>
+    <line x1="256" y1="388" x2="718" y2="388"/>
+    <line x1="720" y1="422" x2="260" y2="422"/>
+    <line x1="252" y1="456" x2="862" y2="456"/>
+    <line x1="256" y1="490" x2="402" y2="490"/>
+    <line x1="568" y1="524" x2="414" y2="524"/>
+    <line x1="568" y1="562" x2="414" y2="562"/>
+    <line x1="406" y1="600" x2="102" y2="600"/>
+  </g>
+  <g stroke="#bf4520" stroke-width="1.2" fill="none" marker-end="url(#a19acc)">
+    <line x1="406" y1="254" x2="564" y2="254"/>
+    <path d="M414,304 C 478,304 478,338 418,338"/>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5">
+    <text x="170" y="146" fill="#4f5d75" text-anchor="middle">POST /api/projects</text>
+    <text x="560" y="180" fill="#4f5d75" text-anchor="middle">建项目目录 + 写 projects 行</text>
+    <text x="328" y="214" fill="#4f5d75" text-anchor="middle">spawn CLI · argv + stdin</text>
+
+    <text x="486" y="248" fill="#bf4520" text-anchor="middle">第一轮推理（改写出在这里）</text>
+
+    <text x="490" y="282" fill="#2d3142" text-anchor="middle">tool_call：od media generate --prompt "…"</text>
+
+    <text x="474" y="316" fill="#2d3142">执行 Bash 子进程，argv 就是上一步的字符串</text>
+    <text x="474" y="330" fill="#8f97ad" font-size="8">一次 turn 可以有多个 tool_call，并行或串行由 CLI 决定</text>
+
+    <text x="330" y="348" fill="#4f5d75" text-anchor="middle">POST /api/tools/media/generate</text>
+    <text x="330" y="370" fill="#8f97ad" text-anchor="middle" font-size="8">Bearer odtt_… · 15 分钟过期</text>
+
+    <text x="490" y="382" fill="#4f5d75" text-anchor="middle">HTTPS 出图（供应商 key 只在 daemon 里）</text>
+    <text x="486" y="416" fill="#4f5d75" text-anchor="middle">bytes</text>
+    <text x="560" y="450" fill="#4f5d75" text-anchor="middle">落盘 + media_tasks done + 边车</text>
+    <text x="330" y="484" fill="#4f5d75" text-anchor="middle">stdout：{"file":{…}}</text>
+    <text x="490" y="518" fill="#2d3142" text-anchor="middle">tool_result 回填（第二轮）</text>
+    <text x="490" y="556" fill="#2d3142" text-anchor="middle">「图片已生成」</text>
+    <text x="250" y="594" fill="#4f5d75" text-anchor="middle">stdout 流 → SSE → 右侧开标签</text>
+  </g>
+
+  <g font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">
+    <text x="36" y="662">04 是唯一一次改写：模型把"给我做张咖啡店海报"写成结构化英文 prompt，同时按契约挑模型和画幅，而不是把画幅塞进句子里。</text>
+    <text x="36" y="680">04 到 13 是 agent loop。工具返回值回到 CLI 的上下文，再由 CLI 发起下一次模型请求，所以 token 花费随轮数线性长。</text>
+    <text x="36" y="698" fill="#5a6580">daemon 只做两件事：拼提示（03 之前）和派发（08）。它既不知道模型说了什么，也不参与模型推理。</text>
+    <text x="36" y="716" fill="#8f97ad" font-size="8.5">刻度：01–02 是存，03 是接，04 是写，05–13 是干活，14 是交。</text>
+  </g>
+</svg>
