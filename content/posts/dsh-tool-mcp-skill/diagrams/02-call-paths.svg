@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="f02-t f02-d">
+  <title id="f02-t">一次调用，三条路径</title>
+  <desc id="f02-d">时序对比：进程内工具在 harness 里直接调 handler；MCP 工具多一跳 JSON-RPC 到外部 server，结果被抹平成普通工具结果；技能只是一次读文件，正文回到上下文后由模型自己继续调工具。</desc>
+  <defs>
+    <marker id="f02-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2d3142"/></marker>
+    <marker id="f02-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b4b8a"/></marker>
+    <marker id="f02-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/></marker>
+    <marker id="f02-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f6f5e"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="#f5f5f5"/>
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#8a93a6">SEQUENCE / 02</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一次调用，三条路径</text>
+  <text x="40" y="84" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#4f5d75">同一张工具表，dispatch 之后去的地方不同</text>
+
+  <rect x="50" y="112" width="120" height="36" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="110" y="135" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="middle">模型</text>
+  <rect x="330" y="112" width="140" height="36" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="400" y="135" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="middle">harness 工具流水线</text>
+  <rect x="580" y="112" width="140" height="36" fill="#ffffff" stroke="#d8d8d8" stroke-width="1"/>
+  <text x="650" y="135" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142" text-anchor="middle">进程内 handler</text>
+  <rect x="820" y="112" width="140" height="36" fill="#e9eff6" stroke="#3d5a80" stroke-width="1"/>
+  <text x="890" y="135" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#3d5a80" text-anchor="middle">外部 MCP server</text>
+
+  <line x1="110" y1="148" x2="110" y2="512" stroke="#c3c9d4" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="400" y1="148" x2="400" y2="512" stroke="#c3c9d4" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="650" y1="148" x2="650" y2="512" stroke="#c3c9d4" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="890" y1="148" x2="890" y2="512" stroke="#c3c9d4" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="770" y1="148" x2="770" y2="512" stroke="#d8d8d8" stroke-width="1" stroke-dasharray="2 4"/>
+  <text x="776" y="164" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">进程边界</text>
+
+  <line x1="40" y1="176" x2="920" y2="176" stroke="#e2e5ea" stroke-width="1"/>
+  <text x="40" y="170" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.08em" fill="#5b4b8a">PATH 1 · 进程内工具</text>
+
+  <text x="255" y="194" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75" text-anchor="middle">1　tool_call bash{cmd}</text>
+  <line x1="110" y1="200" x2="400" y2="200" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f02-k)"/>
+  <text x="525" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5b4b8a" text-anchor="middle">2　dispatch：一次函数调用</text>
+  <line x1="400" y1="228" x2="650" y2="228" stroke="#5b4b8a" stroke-width="1.2" marker-end="url(#f02-p)"/>
+  <text x="525" y="250" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6" text-anchor="middle">3　value</text>
+  <line x1="650" y1="256" x2="400" y2="256" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-k)"/>
+  <text x="255" y="274" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75" text-anchor="middle">4　tool/result</text>
+  <line x1="400" y1="280" x2="110" y2="280" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f02-k)"/>
+
+  <line x1="40" y1="306" x2="920" y2="306" stroke="#e2e5ea" stroke-width="1"/>
+  <text x="40" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.08em" fill="#3d5a80">PATH 2 · MCP 工具</text>
+
+  <text x="255" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75" text-anchor="middle">5　tool_call mcp__github__x</text>
+  <line x1="110" y1="330" x2="400" y2="330" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f02-k)"/>
+  <text x="645" y="352" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#3d5a80" text-anchor="middle">6　tools/call · JSON-RPC</text>
+  <line x1="400" y1="358" x2="890" y2="358" stroke="#3d5a80" stroke-width="1.2" marker-end="url(#f02-b)"/>
+  <text x="645" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#8a93a6" text-anchor="middle">7　content[]</text>
+  <line x1="890" y1="386" x2="400" y2="386" stroke="#8a93a6" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#f02-k)"/>
+  <text x="255" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75" text-anchor="middle">8　tool/result（已抹平）</text>
+  <line x1="400" y1="410" x2="110" y2="410" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f02-k)"/>
+
+  <line x1="40" y1="430" x2="920" y2="430" stroke="#e2e5ea" stroke-width="1"/>
+  <text x="40" y="424" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.08em" fill="#2f6f5e">PATH 3 · 技能</text>
+
+  <text x="255" y="448" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75" text-anchor="middle">9　tool_call skill{name}</text>
+  <line x1="110" y1="454" x2="400" y2="454" stroke="#2d3142" stroke-width="1.2" marker-end="url(#f02-k)"/>
+  <rect x="412" y="440" width="150" height="26" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1"/>
+  <text x="487" y="457" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#2f6f5e" text-anchor="middle">读 SKILL.md，无执行体</text>
+  <text x="255" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75" text-anchor="middle">10　正文作为 tool/result</text>
+  <line x1="400" y1="488" x2="110" y2="488" stroke="#2f6f5e" stroke-width="1.2" marker-end="url(#f02-g)"/>
+
+  <text x="40" y="524" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">技能加载完，控制权回到模型；下一步调谁、按什么顺序，由正文决定。</text>
+</svg>
