@@ -44,6 +44,15 @@
   "pre": 0,
   "table": 3
  },
+ "asset-llm-wiki": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 12,
+  "h3": 0,
+  "hr": 0,
+  "pre": 1,
+  "table": 5
+ },
  "asset-tree-progressive-retrieval": {
   "figure": 2,
   "h1": 1,
@@ -455,7 +464,7 @@
   "h2": 12,
   "h3": 0,
   "hr": 0,
-  "pre": 2,
+  "pre": 3,
   "table": 6
  },
  "dsh-ptc-runtime": {
@@ -791,6 +800,15 @@
   "pre": 0,
   "table": 2
  },
+ "github-trending-2026-w48": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 7,
+  "h3": 4,
+  "hr": 0,
+  "pre": 0,
+  "table": 2
+ },
  "grill-resume-agent-arch": {
   "figure": 0,
   "h1": 1,
@@ -853,6 +871,15 @@
   "hr": 0,
   "pre": 0,
   "table": 4
+ },
+ "llm-wiki": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 9,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 1
  },
  "loop-budget-dsh-opencode": {
   "figure": 4,

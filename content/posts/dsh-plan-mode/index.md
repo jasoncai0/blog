@@ -7,7 +7,7 @@ tags: ["planning","harness","architecture"]
 slug: "dsh-plan-mode"
 ---
 
-> 依据：DeepSeek Harness 0.2.2-rc.1（commit fcc0ad46）。源码以 `packages/plan/plan-mode/src/index.ts`、`packages/core/system-prompt/src/index.ts` 与 `docs/subsystems/plan.zh.md` 为准；未做真实评审交互的端到端实验，涉及 UI 行为的部分标了推断。
+> 依据：DeepSeek Harness 0.2.2-rc.1（commit fcc0ad46）。源码以 `packages/plan/plan-mode/src/index.ts`、`packages/core/system-prompt/src/index.ts` 与 `docs/subsystems/plan.zh.md` 为准；默认 `section` 文本与 `exit_plan_mode` 的入参 schema 在桌面版内置包里核对过；未做真实评审交互的端到端实验，涉及 UI 行为的部分标了推断。
 
 计划模式常被当成一个「禁止改文件」的开关。DSH 的实现比这轻：它只做三件事，往系统提示词里加一段部署自定的文本、让一个退出工具在特定会话里可用、把选择写进会话日志。
 
@@ -75,6 +75,24 @@ interface PlanModeConfig {
 
 段落是一个惰性函数：组装时读 `selectedActive(session)`，激活返回配置文本，未激活返回空串。空串段落在渲染时被过滤，所以未激活的会话不会多出一个空段。
 
+部署默认配置里的这一段，就是模型实际读到的全部内容：
+
+> You are in plan mode. Stay in plan mode until the user approves your plan through exit_plan_mode or switches the session mode. Imperative language to implement changes means plan the implementation, not execute it. A user's conversational agreement — including an answer confirming something you asked — approves nothing and does not end plan mode; fold the confirmed decision into the plan and submit it through exit_plan_mode.
+>
+> The tool catalog stays the same across modes for request-cache stability. These plan-mode rules override any later tool description or guidance that suggests using mutation tools; those tools remain listed only to keep the request shape stable. Do not use todo_write to track this planning phase: it tracks implementation after an approved plan, while the plan itself belongs in exit_plan_mode.
+>
+> When ready, call exit_plan_mode with the complete plan markdown, starting with a # title. Make exit_plan_mode the only and final tool call in that assistant response: it presents the plan for approval, and implementation begins only in a later step after approval. Do not paste the final plan as a plain reply or ask "should I proceed?" through prose or ask_user_question. If review rejects it, incorporate the feedback and present again. If the review channel is unavailable or aborted, stay in plan mode and ask the user to switch modes manually; do not proceed with implementation.
+
+其余三段要求先做只读探索、自己查事实别问用户、把计划写到决策完整：目标与验收标准、按子系统分组、公开 API 与数据流、边界与失败模式。
+
+这段文本在请求里没有任何结构标记。组装时 section 的名字被丢掉，只留文本；非空 section 用空行拼成一整串系统提示词。模型收到的是普通散文，没有段落标签、没有单独的 role 消息、没有 plan 字段。
+
+顺序 500 说明它压在哪：前面是 `DEPLOYMENT_PERSONA_PREFIX`（0），后面是 `TEAM_POLICY`（600）和全部工具指引（`TOOL_BASH` 1000 起）。它排在每条工具描述之前，所以那段文本有资格写「override any later tool description」。
+
+模型侧没有按模式的特殊处理：没有 `tool_choice` 强制、没有 logit bias、没有专用采样参数。真正起作用的只有三点：它位于 system 消息里、措辞是命令式、同一请求的工具表多了 `exit_plan_mode`。模型有没有照做，DSH 不检查，也不重试；兜底在沙箱与审批，见第 8 节。
+
+一个副作用是缓存：切换模式会改系统提示词前缀，切换后第一次请求的提示词前缀缓存失效。这是推断，代码没有按模式分片缓存。
+
 因为它在系统提示词里，压缩永远碰不到它。压缩只替换 surface 上的消息节点，节点 0 是系统提示词，折叠器拒绝覆盖节点 0 的替换。
 
 这里也是「软约束」的来源：它只改变模型读到的指令。模型仍然能调用写文件的工具，工具也不会因为 `active` 而失败。拦写入靠沙箱与审批，这段文本做不到。
@@ -103,6 +121,16 @@ when: ({ agent }) => this.selectedActive(agent.session) || this.planState(agent.
 ## 5. 退出要过一个人
 
 调用要求一份完整的 markdown 计划，且以 `#` 标题开头。校验只看首行：`/^#\s+\S/`，空计划或没有标题都直接失败。
+
+入参只有一个必填字符串字段 `plan`，`additionalProperties: false`。计划是自由文本，没有步骤数组、没有依赖边、没有并发标记。提示词还要求它必须是该响应里唯一且最后一个工具调用，所以提交计划这一步不会和别的调用并发；想表达「第 2、3 步可以并行」，只能在 markdown 里写给人看。
+
+模型返回的是一次普通 assistant 响应，里面一个标准 tool call：
+
+```
+exit_plan_mode({"plan": "# 重构登录重试\n## 目标..."})
+```
+
+没有 plan 类型的消息，也没有单独的 plan 字段。计划本身不产生事件：日志只追加 `plan/mode`，计划原文留在 tool call 的参数和 tool result 里，恢复与 fork 靠 transcript 回放带回来。
 
 通过校验后，它走用户交互 seam（`ctx.get('userQuestions')`）：
 
@@ -167,17 +195,20 @@ when: ({ agent }) => this.selectedActive(agent.session) || this.planState(agent.
 | 事件 | `plan/mode`，`{ active }` | `todo/write`，整张列表 |
 | 投影 | `plan`，五个字段，对外 `{active,pending}` | `todos`，`turn/start` 清空 |
 | 是否进提示词 | 激活时注入 `plan:policy`（order 500） | 不进；模型只看到工具结果 |
-| 是否改工具面 | 是，`exit_plan_mode` 条件准入 | 否，常驻工具 |
+| 是否改工具面 | 只加不减：首次进入时加入 `exit_plan_mode`，之后常驻；写工具不因模式消失 | 否，常驻工具 |
+| 数据形状 | `plan` 一个 markdown 字符串 | `todos` 扁平数组，每项 `{content, status}` |
+| 依赖与并发 | 无，DAG 只写在文字里 | 无，`allowParallelInProgress` 只管几个 `in_progress` |
 | 谁触发 | 用户 `/plan`，或模型提交计划后经人批准 | 模型自己 |
 | 生命周期 | 跨轮持续，直到退出 | 下一轮清空投影，列表随写覆盖 |
 | 强制力 | 软约束，不拦工具 | 无，纯记账 |
 | 失败模式 | 忘记退出、把提交当批准 | 只写不更新、清单与进度漂移 |
 
-三点展开：
+四点展开：
 
 1. 上下文位置不同。plan mode 的文本进系统提示词，参与每一轮组装；todo 的内容只以工具结果形式出现在历史里。前者改变模型怎么想，后者记录模型做了什么。
 2. 状态机不同。plan mode 有挂起态、有准入、有评审；todo 只有「写」与「清空」。这也是为什么 plan mode 的代码要处理 open turn，而 todo 不需要。
 3. 责任不同。两者都不负责验收。plan mode 保证范围先被同意，todo 保证进度可见；交付是否正确仍看测试、产物与评审。
+4. 数据形状不同。计划是一个字符串参数，清单是扁平数组，两边都没有依赖边。要真正的并发编排，用 workflow 或 subagent，这两个工具都不做调度。
 
 判断方法：缺「该不该现在动手」用 plan mode；缺「拆没拆清楚、做到哪」用 `todo_write`。两个都缺就都用，它们不互斥。
 
@@ -185,7 +216,7 @@ when: ({ agent }) => this.selectedActive(agent.session) || this.planState(agent.
 
 ## 10. 踩坑点
 
-1. 把 plan mode 当权限控制。它只改提示词，限制在沙箱与审批。
+1. 把 plan mode 当权限控制。它只改提示词，限制在沙箱与审批；进入后写工具仍在 schema 里，提示词只是要求别用。
 2. 在轮内切换后立刻期待模型按新模式行动。挂起要等下一个被接受的 pre-step。
 3. 用 `agent.status` 判断有没有打开的 turn。收尾阶段 status 仍是 running，但不会再跑 pre-step。
 4. 把「提交了计划」当成「计划已批准」。批准只发生在评审返回 `{approved:true}` 之后。
