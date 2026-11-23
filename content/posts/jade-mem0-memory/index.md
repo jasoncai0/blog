@@ -243,7 +243,11 @@ memory.recall.completed  hit=true  topScore=0.6718  latencyMs=310
 memory.injected          count=1   globalCount=1    tokens=89
 ```
 
-Jade 生成 4 空格缩进的 Java 文件，编译运行输出 `bge-memory-e2e-2`。写入任务也在 Mem0 中留下项目级记忆：
+Jade 生成 4 空格缩进的 Java 文件，编译运行输出 `bge-memory-e2e-2`。
+
+随后在 BGE sidecar 完整恢复后做了一次最终 smoke：`hit=true`、`topScore=0.7988`、`latencyMs=227`、注入 1 条 / 89 tokens，输出 `memory-bge-ok`。这条链路已经完全在 500ms 超时内完成。
+
+写入任务也在 Mem0 中留下项目级记忆：
 
 ```text
 项目默认使用四个空格
