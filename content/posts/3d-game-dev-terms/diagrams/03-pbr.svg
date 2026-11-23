@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="f3t f3d">
+  <title id="f3t">PBR 材质的五张贴图</title>
+  <desc id="f3d">五张图并排：基础色是砖墙的颜色，法线是紫蓝色底的凹凸方向，粗糙度是灰度噪声，金属度是黑底白块，AO 是白底暗边。下方说明着色器每帧把这些图和灯光合成最终颜色。</desc>
+  <defs>
+    <marker id="f3a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <text x="48" y="38" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" letter-spacing="0.16em" fill="#5a6580">PBR MATERIAL · 5 MAPS</text>
+  <text x="48" y="66" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">一张材质是五张图，光照留给引擎算</text>
+  <text x="48" y="88" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">五层数据铺在同一套 UV 上；通道打包后，UE 用一张 ORM 就能装下 AO、粗糙度和金属度</text>
+
+  <!-- 01 basecolor -->
+  <g>
+    <rect x="40" y="140" width="150" height="150" fill="#c9b79c" stroke="#2d3142"/>
+    <g stroke="#a5906f" stroke-width="3">
+      <line x1="40" y1="172" x2="190" y2="172"/>
+      <line x1="40" y1="202" x2="190" y2="202"/>
+      <line x1="40" y1="232" x2="190" y2="232"/>
+      <line x1="40" y1="262" x2="190" y2="262"/>
+      <line x1="90" y1="140" x2="90" y2="172"/>
+      <line x1="140" y1="172" x2="140" y2="202"/>
+      <line x1="65" y1="202" x2="65" y2="232"/>
+      <line x1="120" y1="232" x2="120" y2="262"/>
+      <line x1="85" y1="262" x2="85" y2="290"/>
+    </g>
+  </g>
+
+  <!-- 02 normal -->
+  <g>
+    <rect x="222" y="140" width="150" height="150" fill="#8080ff" stroke="#2d3142"/>
+    <g stroke-width="2">
+      <line x1="222" y1="171" x2="372" y2="171" stroke="#a8a8ff"/>
+      <line x1="222" y1="173" x2="372" y2="173" stroke="#5a5ad0"/>
+      <line x1="222" y1="201" x2="372" y2="201" stroke="#a8a8ff"/>
+      <line x1="222" y1="203" x2="372" y2="203" stroke="#5a5ad0"/>
+      <line x1="222" y1="231" x2="372" y2="231" stroke="#a8a8ff"/>
+      <line x1="222" y1="233" x2="372" y2="233" stroke="#5a5ad0"/>
+      <line x1="222" y1="261" x2="372" y2="261" stroke="#a8a8ff"/>
+      <line x1="222" y1="263" x2="372" y2="263" stroke="#5a5ad0"/>
+      <line x1="272" y1="140" x2="272" y2="172" stroke="#a8a8ff"/>
+      <line x1="274" y1="140" x2="274" y2="172" stroke="#5a5ad0"/>
+      <line x1="322" y1="172" x2="322" y2="202" stroke="#a8a8ff"/>
+      <line x1="324" y1="172" x2="324" y2="202" stroke="#5a5ad0"/>
+      <line x1="247" y1="202" x2="247" y2="232" stroke="#a8a8ff"/>
+      <line x1="249" y1="202" x2="249" y2="232" stroke="#5a5ad0"/>
+    </g>
+  </g>
+
+  <!-- 03 roughness -->
+  <g>
+    <rect x="404" y="140" width="150" height="150" fill="#cfcfcf" stroke="#2d3142"/>
+    <ellipse cx="450" cy="188" rx="38" ry="22" fill="#aaaaaa"/>
+    <rect x="470" y="232" width="70" height="36" fill="#eeeeee"/>
+    <circle cx="520" cy="168" r="10" fill="#9a9a9a"/>
+  </g>
+
+  <!-- 04 metallic -->
+  <g>
+    <rect x="586" y="140" width="150" height="150" fill="#1f1f1f" stroke="#2d3142"/>
+    <rect x="598" y="155" width="50" height="50" fill="#e6e6e6"/>
+    <rect x="610" y="250" width="90" height="25" fill="#dcdcdc"/>
+    <circle cx="690" cy="222" r="16" fill="#e6e6e6"/>
+  </g>
+
+  <!-- 05 ao -->
+  <g>
+    <rect x="768" y="140" width="150" height="150" fill="#ffffff" stroke="#2d3142"/>
+    <rect x="772" y="144" width="142" height="8" fill="#dcdcdc"/>
+    <rect x="772" y="278" width="142" height="8" fill="#dcdcdc"/>
+    <rect x="772" y="144" width="8" height="142" fill="#dcdcdc"/>
+    <rect x="906" y="144" width="8" height="142" fill="#dcdcdc"/>
+    <rect x="838" y="144" width="6" height="142" fill="#e8e8e8"/>
+  </g>
+
+  <text x="40" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">BaseColor</text>
+  <text x="40" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">表面颜色，不含阴影</text>
+
+  <text x="222" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">Normal</text>
+  <text x="222" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">表面朝向，紫蓝底</text>
+
+  <text x="404" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">Roughness</text>
+  <text x="404" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">越白越粗糙</text>
+
+  <text x="586" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">Metallic</text>
+  <text x="586" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">白块是金属</text>
+
+  <text x="768" y="312" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10.5" font-weight="600" fill="#2d3142">AO</text>
+  <text x="768" y="328" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">缝隙的间接光衰减</text>
+
+  <line x1="40" y1="345" x2="918" y2="345" stroke="#4f5d75" stroke-width="1.2"/>
+  <line x1="480" y1="345" x2="480" y2="359" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#f3a)"/>
+
+  <rect x="40" y="362" width="880" height="108" rx="8" fill="#ffffff" stroke="rgba(45,49,66,0.18)"/>
+  <text x="56" y="388" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">着色器每帧读这五张图，和灯光一起算最终颜色</text>
+  <text x="56" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">法线只改光照方向，不改模型轮廓；粗糙度决定高光大小，金属度决定反射有没有颜色。</text>
+  <text x="56" y="428" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">BaseColor 里画阴影会双重变暗，这是 PBR 最常见的错误；光照信息归引擎，贴图只描述表面本身。</text>
+</svg>
