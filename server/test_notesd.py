@@ -24,7 +24,9 @@ class NotesdTest(unittest.TestCase):
         db = os.path.join(cls.tmp.name, "notes.db")
         notesd.Handler.store = notesd.Store(db)
         notesd.Handler.limiter = notesd.Limiter()
+        notesd.Handler.login_limiter = notesd.Limiter()
         notesd.Handler.edit_key = ""
+        notesd.Handler.store.create_user("Root", "root-pass-1", "admin")
         cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), notesd.Handler)
         cls.base = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True)
@@ -48,6 +50,57 @@ class NotesdTest(unittest.TestCase):
                 return resp.status, json.loads(resp.read() or b"{}")
         except urllib.error.HTTPError as err:
             return err.code, json.loads(err.read() or b"{}")
+
+    def setUp(self):
+        # 限速按进程共享计数，每个用例从干净配额开始，避免顺序依赖。
+        notesd.Handler.login_limiter = notesd.Limiter()
+        notesd.Handler.limiter = notesd.Limiter()
+
+    def seed_user(self, username, password, role="user"):
+        return notesd.Handler.store.create_user(username, password, role)
+
+    def token_for(self, username, password):
+        _, body = self.call("POST", "/api/login", {"username": username, "password": password})
+        return body["token"]
+
+    def admin_token(self):
+        return self.token_for("Root", "root-pass-1")
+
+    def auth(self, token):
+        return {"Authorization": f"Bearer {token}"}
+
+    def test_login_and_me(self):
+        _, body = self.call("POST", "/api/login", {"username": "root", "password": "root-pass-1"})
+        self.assertEqual(body["user"]["role"], "admin")
+        status, me = self.call("GET", "/api/me", headers=self.auth(body["token"]))
+        self.assertEqual((status, me["user"]["username"]), (200, "Root"))
+
+    def test_login_rejects_bad_password(self):
+        status, body = self.call("POST", "/api/login", {"username": "Root", "password": "nope"})
+        self.assertEqual((status, body["error"]), (401, "bad credentials"))
+
+    def test_login_is_rate_limited(self):
+        for _ in range(10):
+            self.call("POST", "/api/login", {"username": "x", "password": "y"})
+        self.assertEqual(self.call("POST", "/api/login", {"username": "x", "password": "y"})[0], 429)
+
+    def test_admin_can_create_user_and_duplicate_is_409(self):
+        token = self.admin_token()
+        self.assertEqual(self.call("POST", "/api/users", {"username": "Alice", "password": "alice-pass"},
+                                   self.auth(token))[0], 200)
+        self.assertEqual(self.call("POST", "/api/users", {"username": "alice", "password": "alice-pass-2"},
+                                   self.auth(token))[0], 409)
+
+    def test_non_admin_cannot_create_user(self):
+        self.seed_user("Alice", "alice-pass", "user")
+        token = self.token_for("Alice", "alice-pass")
+        self.assertEqual(self.call("POST", "/api/users", {"username": "Bob", "password": "bob-pass"},
+                                   self.auth(token))[0], 403)
+
+    def test_logout_revokes_token(self):
+        token = self.admin_token()
+        self.assertEqual(self.call("POST", "/api/logout", {}, self.auth(token))[0], 204)
+        self.assertEqual(self.call("GET", "/api/me", headers=self.auth(token))[0], 401)
 
     def note(self, note_id, q="收敛是必要条件", block=4):
         return {

@@ -21,9 +21,12 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import hmac
 import json
 import os
 import re
+import secrets
 import queue
 import sqlite3
 import threading
@@ -33,6 +36,10 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, unquote, urlparse
 
+SCHEMA_VERSION = 2
+PBKDF2_ROUNDS = 120_000
+TOKEN_TTL = 180 * 24 * 3600
+USERNAME_RE = re.compile(r"^[A-Za-z0-9_-]{3,24}$")
 MAX_BODY = 64 * 1024
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,79}$")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{5,63}$")
@@ -104,7 +111,42 @@ CREATE TABLE IF NOT EXISTS sessions (
   title      TEXT NOT NULL DEFAULT '',
   updated    INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS users (
+  id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  username       TEXT NOT NULL,
+  username_lower TEXT NOT NULL UNIQUE,
+  pass_hash      TEXT NOT NULL,
+  role           TEXT NOT NULL DEFAULT 'user',
+  created        INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS auth_tokens (
+  token_hash TEXT PRIMARY KEY,
+  user_id    INTEGER NOT NULL,
+  created    INTEGER NOT NULL DEFAULT 0,
+  expires    INTEGER NOT NULL DEFAULT 0,
+  name       TEXT NOT NULL DEFAULT 'browser'
+);
+CREATE INDEX IF NOT EXISTS auth_user ON auth_tokens(user_id);
 """
+
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, PBKDF2_ROUNDS)
+    return f"pbkdf2${PBKDF2_ROUNDS}${salt.hex()}${digest.hex()}"
+
+
+def verify_password(password: str, stored: str) -> bool:
+    try:
+        _, rounds, salt_hex, hash_hex = stored.split("$")
+        digest = hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt_hex), int(rounds))
+    except (ValueError, TypeError):
+        return False
+    return hmac.compare_digest(digest.hex(), hash_hex)
+
+
+def token_hash(token: str) -> str:
+    return hashlib.sha256(token.encode()).hexdigest()
 
 
 def job_summary(job: dict) -> dict:
@@ -130,10 +172,71 @@ class Store:
         self._subs_lock = threading.Lock()
         self.conn.executescript(SCHEMA)
         self.conn.execute("PRAGMA journal_mode=WAL")
+        self.conn.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
         self.conn.commit()
 
     def close(self) -> None:
         self.conn.close()
+
+    # ---- users & tokens ----
+    def create_user(self, username: str, password: str, role: str = "user") -> dict | None:
+        if not USERNAME_RE.match(username or ""):
+            return None
+        row = {
+            "username": username,
+            "username_lower": username.lower(),
+            "pass_hash": hash_password(password),
+            "role": role if role in ("user", "admin") else "user",
+            "created": now(),
+        }
+        with self._lock:
+            try:
+                cur = self.conn.execute(
+                    "INSERT INTO users (username, username_lower, pass_hash, role, created)"
+                    " VALUES (?, ?, ?, ?, ?)",
+                    (row["username"], row["username_lower"], row["pass_hash"], row["role"], row["created"]),
+                )
+            except sqlite3.IntegrityError:
+                return None
+            self.conn.commit()
+        return {"id": cur.lastrowid, "username": username, "role": row["role"]}
+
+    def user_by_name(self, username: str) -> sqlite3.Row | None:
+        return self.conn.execute(
+            "SELECT * FROM users WHERE username_lower = ?", ((username or "").lower(),)
+        ).fetchone()
+
+    def user_by_id(self, user_id: int) -> dict | None:
+        row = self.conn.execute("SELECT id, username, role FROM users WHERE id = ?", (user_id,)).fetchone()
+        return dict(row) if row else None
+
+    def create_token(self, user_id: int, name: str = "browser", expires: int = 0) -> str:
+        token = secrets.token_urlsafe(32)
+        ttl = expires if expires > 0 else now() // 1000 + TOKEN_TTL
+        with self._lock:
+            self.conn.execute(
+                "INSERT INTO auth_tokens (token_hash, user_id, created, expires, name) VALUES (?, ?, ?, ?, ?)",
+                (token_hash(token), user_id, now(), ttl, name),
+            )
+            self.conn.commit()
+        return token
+
+    def user_for_token(self, token: str) -> dict | None:
+        row = self.conn.execute(
+            "SELECT u.id, u.username, u.role, a.expires FROM auth_tokens a"
+            " JOIN users u ON u.id = a.user_id WHERE a.token_hash = ?",
+            (token_hash(token),),
+        ).fetchone()
+        if row is None:
+            return None
+        if row["expires"] and row["expires"] <= now() // 1000:
+            return None
+        return {"id": row["id"], "username": row["username"], "role": row["role"]}
+
+    def drop_token(self, token: str) -> None:
+        with self._lock:
+            self.conn.execute("DELETE FROM auth_tokens WHERE token_hash = ?", (token_hash(token),))
+            self.conn.commit()
 
     # ---- notes ----
     def note(self, slug: str, note_id: str) -> sqlite3.Row | None:
@@ -410,7 +513,12 @@ class Limiter:
         self.lock = threading.Lock()
 
     def allow(self, ip: str, write: bool) -> bool:
-        limit = 120 if write else 600
+        return self.allow_n(ip, 120 if write else 600)
+
+    def allow_login(self, ip: str) -> bool:
+        return self.allow_n(ip, 10)
+
+    def allow_n(self, ip: str, limit: int) -> bool:
         cutoff = time.time() - 60
         with self.lock:
             q = self.hits[ip]
@@ -468,6 +576,7 @@ def validate_note(raw: dict) -> dict | None:
 class Handler(BaseHTTPRequestHandler):
     store: Store
     limiter: Limiter
+    login_limiter: Limiter
     edit_key: str = ""
 
     server_version = "notesd/1.0"
@@ -484,7 +593,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key, Authorization")
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(body)
@@ -506,6 +615,16 @@ class Handler(BaseHTTPRequestHandler):
             return True
         return self.headers.get("X-Edit-Key", "") == self.edit_key
 
+    def bearer(self) -> str:
+        header = self.headers.get("Authorization", "")
+        if not header.startswith("Bearer "):
+            return ""
+        return header[7:].strip()
+
+    def current_user(self) -> dict | None:
+        token = self.bearer()
+        return self.store.user_for_token(token) if token else None
+
     def client_ip(self) -> str:
         return (self.headers.get("X-Forwarded-For") or self.client_address[0]).split(",")[0].strip()
 
@@ -517,7 +636,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(HTTPStatus.NO_CONTENT)
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key, Authorization")
         self.send_header("Access-Control-Max-Age", "86400")
         self.end_headers()
 
@@ -590,6 +709,61 @@ class Handler(BaseHTTPRequestHandler):
 
         if parts[0] == "healthz":
             self.send_json(HTTPStatus.OK, {"ok": True, "time": now()})
+            return
+
+        if parts[0] == "login" and self.command == "POST":
+            if not self.login_limiter.allow_login(self.client_ip()):
+                self.send_json(HTTPStatus.TOO_MANY_REQUESTS, {"error": "rate limited"})
+                return
+            body = self.read_json() or {}
+            user = self.store.user_by_name(str(body.get("username") or ""))
+            if user is None or not verify_password(str(body.get("password") or ""), user["pass_hash"]):
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "bad credentials"})
+                return
+            token = self.store.create_token(user["id"], "browser")
+            self.send_json(HTTPStatus.OK, {
+                "token": token,
+                "user": {"id": user["id"], "username": user["username"], "role": user["role"]},
+            })
+            return
+
+        if parts[0] == "logout" and self.command == "POST":
+            token = self.bearer()
+            if token:
+                self.store.drop_token(token)
+            self.send_json(HTTPStatus.NO_CONTENT, {})
+            return
+
+        if parts[0] == "me" and self.command == "GET":
+            user = self.current_user()
+            if user is None:
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "login required"})
+                return
+            self.send_json(HTTPStatus.OK, {"user": user})
+            return
+
+        if parts[0] == "users" and self.command == "POST":
+            user = self.current_user()
+            if user is None:
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "login required"})
+                return
+            if user["role"] != "admin":
+                self.send_json(HTTPStatus.FORBIDDEN, {"error": "admin only"})
+                return
+            body = self.read_json() or {}
+            username = str(body.get("username") or "").strip()
+            password = str(body.get("password") or "")
+            if not USERNAME_RE.match(username):
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad username"})
+                return
+            if len(password) < 8:
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "password too short"})
+                return
+            created = self.store.create_user(username, password, "user")
+            if created is None:
+                self.send_json(HTTPStatus.CONFLICT, {"error": "username taken"})
+                return
+            self.send_json(HTTPStatus.OK, {"user": created})
             return
 
         # 阅读进度与收藏是匿名的（每个访客都会写），不收口令；笔记与任务要口令。
@@ -872,6 +1046,7 @@ def main() -> None:
     os.makedirs(os.path.dirname(os.path.abspath(args.db)), exist_ok=True)
     Handler.store = Store(args.db)
     Handler.limiter = Limiter()
+    Handler.login_limiter = Limiter()
     Handler.edit_key = os.environ.get("NOTES_EDIT_KEY", "").strip()
     Handler.bridge_token = os.environ.get("BRIDGE_TOKEN", "").strip()
 
