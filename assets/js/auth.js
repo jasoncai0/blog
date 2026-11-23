@@ -23,6 +23,23 @@ export const current = () => {
 
 export const isAdmin = () => current()?.role === "admin";
 
+// 第一次登录这个账号时，把访客期（:guest）攒下的进度/笔记/收藏搬过来，
+// 免得登录一瞬间本地数据看起来「没了」。服务端有的会随后覆盖。
+const GUEST_KEYS = ["jasoncai:read:v2", "jasoncai:notes:v2", "jasoncai:fav:v2"];
+
+function adoptGuestData(id) {
+  for (const base of GUEST_KEYS) {
+    try {
+      const target = `${base}:u${id}`;
+      if (localStorage.getItem(target)) continue;
+      const guest = localStorage.getItem(`${base}:guest`);
+      if (guest) localStorage.setItem(target, guest);
+    } catch {
+      /* 存不了就算了，不影响登录 */
+    }
+  }
+}
+
 export async function login(username, password) {
   const res = await fetch(`${window.__NOTES_API__ || "/api"}/login`, {
     method: "POST",
@@ -38,6 +55,7 @@ export async function login(username, password) {
     AUTH_KEY,
     JSON.stringify({ token: data.token, id: data.user.id, username: data.user.username, role: data.user.role }),
   );
+  adoptGuestData(data.user.id);
   location.reload();
 }
 
