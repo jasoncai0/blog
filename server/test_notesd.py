@@ -39,12 +39,13 @@ class NotesdTest(unittest.TestCase):
         notesd.Handler.store.close()
         cls.tmp.cleanup()
 
-    def call(self, method, path, body=None, headers=None):
+    def call(self, method, path, body=None, headers=None, noauth=False):
         data = json.dumps(body).encode() if body is not None else None
-        req = urllib.request.Request(
-            self.base + path, data=data, method=method,
-            headers={"Content-Type": "application/json", **(headers or {})},
-        )
+        hdrs = {"Content-Type": "application/json", **(headers or {})}
+        # 登录之后 /api 都要 Bearer；用例默认带 Root，专门的未登录用例传 noauth=True。
+        if not noauth and "Authorization" not in hdrs and path.startswith("/api") and not path.startswith("/api/login"):
+            hdrs["Authorization"] = f"Bearer {self.admin_token()}"
+        req = urllib.request.Request(self.base + path, data=data, method=method, headers=hdrs)
         try:
             with urllib.request.urlopen(req) as resp:
                 return resp.status, json.loads(resp.read() or b"{}")
@@ -55,6 +56,7 @@ class NotesdTest(unittest.TestCase):
         # 限速按进程共享计数，每个用例从干净配额开始，避免顺序依赖。
         notesd.Handler.login_limiter = notesd.Limiter()
         notesd.Handler.limiter = notesd.Limiter()
+        self._admin = None
 
     def seed_user(self, username, password, role="user"):
         return notesd.Handler.store.create_user(username, password, role)
@@ -64,7 +66,10 @@ class NotesdTest(unittest.TestCase):
         return body["token"]
 
     def admin_token(self):
-        return self.token_for("Root", "root-pass-1")
+        # 每个用例只登录一次：登录接口每分钟限 10 次，逐次取 token 会把自己限掉。
+        if not self._admin:
+            self._admin = self.token_for("Root", "root-pass-1")
+        return self._admin
 
     def auth(self, token):
         return {"Authorization": f"Bearer {token}"}
@@ -208,6 +213,36 @@ class NotesdTest(unittest.TestCase):
         _, body = self.call("GET", "/api/favorites")
         self.assertEqual(set(body["favorites"]), {"ot-crdt-lww"})
 
+    def test_two_users_have_separate_notes(self):
+        self.seed_user("Alice", "alice-pass")
+        self.seed_user("Bob", "bob-pass")
+        ta = self.token_for("Alice", "alice-pass")
+        tb = self.token_for("Bob", "bob-pass")
+        self.call("PUT", "/api/notes/user-scope/a1note", self.note("a1note"), self.auth(ta))
+        self.assertEqual(self.call("GET", "/api/notes/user-scope", headers=self.auth(tb))[1]["notes"], [])
+        self.assertEqual(len(self.call("GET", "/api/notes/user-scope", headers=self.auth(ta))[1]["notes"]), 1)
+
+    def test_put_cannot_overwrite_another_users_note(self):
+        self.seed_user("Alice", "alice-pass")
+        self.seed_user("Bob", "bob-pass")
+        ta = self.token_for("Alice", "alice-pass")
+        tb = self.token_for("Bob", "bob-pass")
+        self.call("PUT", "/api/notes/user-scope/a1note", self.note("a1note"), self.auth(ta))
+        stolen = self.note("a1note", q="别人的笔记")
+        self.assertEqual(self.call("PUT", "/api/notes/user-scope/a1note", stolen, self.auth(tb))[0], 404)
+
+    def test_progress_and_favorites_are_per_user(self):
+        self.seed_user("Alice", "alice-pass")
+        self.seed_user("Bob", "bob-pass")
+        ta = self.token_for("Alice", "alice-pass")
+        tb = self.token_for("Bob", "bob-pass")
+        self.call("PUT", "/api/progress/user-scope", {"p": 100, "t": 1, "d": True}, self.auth(ta))
+        self.call("PUT", "/api/favorites/user-scope", {}, self.auth(ta))
+        _, a = self.call("GET", "/api/summary", headers=self.auth(ta))
+        _, b = self.call("GET", "/api/summary", headers=self.auth(tb))
+        self.assertEqual((a["progress"]["user-scope"]["p"], len(a["favorites"])), (100, 1))
+        self.assertEqual((b["progress"], b["favorites"]), ({}, {}))
+
     def test_summary_includes_favorites(self):
         self.call("PUT", "/api/favorites/summary-check", {"t": 222})
         _, body = self.call("GET", "/api/summary")
@@ -273,7 +308,10 @@ class NotesdTest(unittest.TestCase):
 
     def stream(self, path, headers=None, timeout=3):
         conn = http.client.HTTPConnection("127.0.0.1", self.httpd.server_address[1], timeout=timeout)
-        conn.request("GET", path, headers=headers or {})
+        hdrs = dict(headers or {})
+        if "Authorization" not in hdrs:
+            hdrs["Authorization"] = f"Bearer {self.admin_token()}"
+        conn.request("GET", path, headers=hdrs)
         return conn, conn.getresponse()
 
     def first_event(self, resp, timeout=3):

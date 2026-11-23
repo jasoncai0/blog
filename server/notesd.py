@@ -56,6 +56,7 @@ MAX_CONTEXT = 80
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS notes (
   id      TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL DEFAULT 0,
   slug    TEXT NOT NULL,
   q       TEXT NOT NULL,
   pre     TEXT NOT NULL DEFAULT '',
@@ -66,7 +67,7 @@ CREATE TABLE IF NOT EXISTS notes (
   deleted INTEGER NOT NULL DEFAULT 0,
   updated INTEGER NOT NULL DEFAULT 0
 );
-CREATE INDEX IF NOT EXISTS notes_slug ON notes(slug, deleted);
+CREATE INDEX IF NOT EXISTS notes_user_slug ON notes(user_id, slug, deleted);
 CREATE TABLE IF NOT EXISTS note_rev (
   seq     INTEGER PRIMARY KEY AUTOINCREMENT,
   note_id TEXT NOT NULL,
@@ -76,15 +77,19 @@ CREATE TABLE IF NOT EXISTS note_rev (
   at      INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS progress (
-  slug TEXT PRIMARY KEY,
-  p    INTEGER NOT NULL,
-  t    INTEGER NOT NULL,
-  d    INTEGER NOT NULL
+  user_id INTEGER NOT NULL DEFAULT 0,
+  slug    TEXT NOT NULL,
+  p       INTEGER NOT NULL,
+  t       INTEGER NOT NULL,
+  d       INTEGER NOT NULL,
+  PRIMARY KEY (user_id, slug)
 );
 CREATE TABLE IF NOT EXISTS favorites (
-  slug TEXT PRIMARY KEY,
-  t    INTEGER NOT NULL,
-  updated INTEGER NOT NULL DEFAULT 0
+  user_id INTEGER NOT NULL DEFAULT 0,
+  slug    TEXT NOT NULL,
+  t       INTEGER NOT NULL,
+  updated INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, slug)
 );
 CREATE TABLE IF NOT EXISTS jobs (
   id         TEXT PRIMARY KEY,
@@ -239,39 +244,44 @@ class Store:
             self.conn.commit()
 
     # ---- notes ----
-    def note(self, slug: str, note_id: str) -> sqlite3.Row | None:
+    def note(self, user_id: int, slug: str, note_id: str) -> sqlite3.Row | None:
         return self.conn.execute(
-            "SELECT * FROM notes WHERE slug = ? AND id = ?", (slug, note_id)
+            "SELECT * FROM notes WHERE user_id = ? AND slug = ? AND id = ?", (user_id, slug, note_id)
         ).fetchone()
 
-    def notes_for(self, slug: str) -> list[sqlite3.Row]:
+    def notes_for(self, user_id: int, slug: str) -> list[sqlite3.Row]:
         return self.conn.execute(
-            "SELECT * FROM notes WHERE slug = ? AND deleted = 0 ORDER BY t ASC", (slug,)
+            "SELECT * FROM notes WHERE user_id = ? AND slug = ? AND deleted = 0 ORDER BY t ASC",
+            (user_id, slug),
         ).fetchall()
 
-    def deleted_ids(self, slug: str) -> list[str]:
+    def deleted_ids(self, user_id: int, slug: str) -> list[str]:
         return [
             row["id"]
             for row in self.conn.execute(
-                "SELECT id FROM notes WHERE slug = ? AND deleted = 1", (slug,)
+                "SELECT id FROM notes WHERE user_id = ? AND slug = ? AND deleted = 1", (user_id, slug)
             )
         ]
 
-    def counts(self) -> dict[str, int]:
+    def counts(self, user_id: int) -> dict[str, int]:
         return {
             row["slug"]: row["n"]
             for row in self.conn.execute(
-                "SELECT slug, COUNT(*) AS n FROM notes WHERE deleted = 0 GROUP BY slug"
+                "SELECT slug, COUNT(*) AS n FROM notes WHERE user_id = ? AND deleted = 0 GROUP BY slug",
+                (user_id,),
             )
         }
 
-    def put_note(self, slug: str, payload: dict) -> None:
+    def put_note(self, user_id: int, slug: str, payload: dict) -> bool:
         with self._lock:
             # 楼层只增不减：别人（或 AI）追加的 2 楼以后，旧的整条 PUT 不能把它们抹掉。
             # 客户端只会改 1 楼，所以比现有短的 thread 一律补回尾巴。
-            row = self.conn.execute(
-                "SELECT thread FROM notes WHERE id = ?", (payload["id"],)
+            owned = self.conn.execute(
+                "SELECT user_id, thread FROM notes WHERE id = ?", (payload["id"],)
             ).fetchone()
+            if owned is not None and owned["user_id"] != user_id:
+                return False
+            row = owned
             thread = list(payload["thread"])
             if row is not None:
                 old = json.loads(row["thread"])
@@ -279,14 +289,15 @@ class Store:
                     thread = thread + old[len(thread):]
                     payload = {**payload, "thread": thread}
             self.conn.execute(
-                """INSERT INTO notes (id, slug, q, pre, post, block, t, thread, deleted, updated)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+                """INSERT INTO notes (id, user_id, slug, q, pre, post, block, t, thread, deleted, updated)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
                    ON CONFLICT(id) DO UPDATE SET
                      slug = excluded.slug, q = excluded.q, pre = excluded.pre, post = excluded.post,
                      block = excluded.block, t = excluded.t, thread = excluded.thread,
                      deleted = 0, updated = excluded.updated""",
                 (
                     payload["id"],
+                    user_id,
                     slug,
                     payload["q"],
                     payload["pre"],
@@ -299,12 +310,14 @@ class Store:
             )
             self.rev(payload["id"], slug, "put", payload)
             self.conn.commit()
+            return True
 
-    def add_reply(self, slug: str, note_id: str, reply: dict) -> tuple[str, dict | None]:
+    def add_reply(self, user_id: int, slug: str, note_id: str, reply: dict) -> tuple[str, dict | None]:
         """把一条回复追加到楼层末尾。返回 (状态, 笔记)。"""
         with self._lock:
             row = self.conn.execute(
-                "SELECT * FROM notes WHERE slug = ? AND id = ? AND deleted = 0", (slug, note_id)
+                "SELECT * FROM notes WHERE user_id = ? AND slug = ? AND id = ? AND deleted = 0",
+                (user_id, slug, note_id),
             ).fetchone()
             if row is None:
                 return "missing", None
@@ -314,8 +327,8 @@ class Store:
             thread.append(reply)
             updated = now()
             self.conn.execute(
-                "UPDATE notes SET thread = ?, updated = ? WHERE slug = ? AND id = ?",
-                (json.dumps(thread, ensure_ascii=False), updated, slug, note_id),
+                "UPDATE notes SET thread = ?, updated = ? WHERE user_id = ? AND slug = ? AND id = ?",
+                (json.dumps(thread, ensure_ascii=False), updated, user_id, slug, note_id),
             )
             self.rev(note_id, slug, "reply", reply)
             self.conn.commit()
@@ -329,14 +342,14 @@ class Store:
                 "thread": thread,
                 "updated": updated,
             }
-        self.publish(f"note:{slug}", "note.updated", {"note": note})
+        self.publish(f"note:{user_id}:{slug}", "note.updated", {"note": note})
         return "ok", note
 
-    def delete_note(self, slug: str, note_id: str) -> bool:
+    def delete_note(self, user_id: int, slug: str, note_id: str) -> bool:
         with self._lock:
             cur = self.conn.execute(
-                "UPDATE notes SET deleted = 1, updated = ? WHERE slug = ? AND id = ? AND deleted = 0",
-                (now(), slug, note_id),
+                "UPDATE notes SET deleted = 1, updated = ? WHERE user_id = ? AND slug = ? AND id = ? AND deleted = 0",
+                (now(), user_id, slug, note_id),
             )
             if cur.rowcount:
                 self.rev(note_id, slug, "delete", {"id": note_id})
@@ -350,46 +363,49 @@ class Store:
         )
 
     # ---- progress ----
-    def progress(self) -> dict[str, dict]:
+    def progress(self, user_id: int) -> dict[str, dict]:
         return {
             row["slug"]: {"p": row["p"], "t": row["t"], "d": bool(row["d"])}
-            for row in self.conn.execute("SELECT * FROM progress")
+            for row in self.conn.execute("SELECT * FROM progress WHERE user_id = ?", (user_id,))
         }
 
-    def put_progress(self, slug: str, p: int, t: int, d: bool) -> dict:
+    def put_progress(self, user_id: int, slug: str, p: int, t: int, d: bool) -> dict:
         with self._lock:
             row = self.conn.execute(
-                "SELECT p, t, d FROM progress WHERE slug = ?", (slug,)
+                "SELECT p, t, d FROM progress WHERE user_id = ? AND slug = ?", (user_id, slug)
             ).fetchone()
             best_p = max(p, row["p"]) if row else p
             best_t = max(t, row["t"]) if row else t
             best_d = int(bool(d) or bool(row["d"]) if row else bool(d))
             self.conn.execute(
-                """INSERT INTO progress (slug, p, t, d) VALUES (?, ?, ?, ?)
-                   ON CONFLICT(slug) DO UPDATE SET p = excluded.p, t = excluded.t, d = excluded.d""",
-                (slug, best_p, best_t, best_d),
+                """INSERT INTO progress (user_id, slug, p, t, d) VALUES (?, ?, ?, ?, ?)
+                   ON CONFLICT(user_id, slug) DO UPDATE SET p = excluded.p, t = excluded.t, d = excluded.d""",
+                (user_id, slug, best_p, best_t, best_d),
             )
             self.conn.commit()
             return {"p": best_p, "t": best_t, "d": bool(best_d)}
 
 
     # ---- favorites ----
-    def favorites(self) -> dict[str, int]:
-        return {row["slug"]: row["t"] for row in self.conn.execute("SELECT slug, t FROM favorites")}
+    def favorites(self, user_id: int) -> dict[str, int]:
+        return {
+            row["slug"]: row["t"]
+            for row in self.conn.execute("SELECT slug, t FROM favorites WHERE user_id = ?", (user_id,))
+        }
 
-    def put_favorite(self, slug: str, t: int) -> dict:
+    def put_favorite(self, user_id: int, slug: str, t: int) -> dict:
         with self._lock:
             self.conn.execute(
-                """INSERT INTO favorites (slug, t, updated) VALUES (?, ?, ?)
-                   ON CONFLICT(slug) DO UPDATE SET t = excluded.t, updated = excluded.updated""",
-                (slug, t, now()),
+                """INSERT INTO favorites (user_id, slug, t, updated) VALUES (?, ?, ?, ?)
+                   ON CONFLICT(user_id, slug) DO UPDATE SET t = excluded.t, updated = excluded.updated""",
+                (user_id, slug, t, now()),
             )
             self.conn.commit()
             return {"slug": slug, "t": t}
 
-    def delete_favorite(self, slug: str) -> bool:
+    def delete_favorite(self, user_id: int, slug: str) -> bool:
         with self._lock:
-            cur = self.conn.execute("DELETE FROM favorites WHERE slug = ?", (slug,))
+            cur = self.conn.execute("DELETE FROM favorites WHERE user_id = ? AND slug = ?", (user_id, slug))
             self.conn.commit()
             return bool(cur.rowcount)
 
@@ -415,7 +431,7 @@ class Store:
                 pass
 
     # ---- jobs ----
-    def create_job(self, slug: str, note_id: str, session_id: str, prompt: str, kind: str) -> dict:
+    def create_job(self, slug: str, note_id: str, session_id: str, prompt: str, kind: str, user_id: int = 0) -> dict:
         job_id = "job-" + os.urandom(6).hex()
         ts = now()
         with self._lock, self.conn:
@@ -426,7 +442,7 @@ class Store:
             )
         job = self.job(job_id) or {}
         self.publish("jobs", "job.created", job)
-        self.publish(f"note:{slug}", "job.updated", {"note_id": note_id, "job": job_summary(job)})
+        self.publish(f"note:{user_id}:{slug}", "job.updated", {"note_id": note_id, "job": job_summary(job)})
         return job
 
     def job(self, job_id: str) -> dict | None:
@@ -625,6 +641,12 @@ class Handler(BaseHTTPRequestHandler):
         token = self.bearer()
         return self.store.user_for_token(token) if token else None
 
+    def require_user(self) -> dict | None:
+        user = self.current_user()
+        if user is None:
+            self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "login required"})
+        return user
+
     def client_ip(self) -> str:
         return (self.headers.get("X-Forwarded-For") or self.client_address[0]).split(",")[0].strip()
 
@@ -679,7 +701,7 @@ class Handler(BaseHTTPRequestHandler):
         finally:
             self.store.unsubscribe(channel, q)
 
-    def note_bundle(self, slug: str) -> dict:
+    def note_bundle(self, user_id: int, slug: str) -> dict:
         notes = [
             {
                 "id": row["id"],
@@ -692,9 +714,9 @@ class Handler(BaseHTTPRequestHandler):
                 "updated": row["updated"],
                 "job": job_summary(latest) if (latest := self.store.latest_job(row["id"])) else None,
             }
-            for row in self.store.notes_for(slug)
+            for row in self.store.notes_for(user_id, slug)
         ]
-        return {"notes": notes, "deleted": self.store.deleted_ids(slug)}
+        return {"notes": notes, "deleted": self.store.deleted_ids(user_id, slug)}
 
     def route(self, write: bool) -> None:
         if not self.limiter.allow(self.client_ip(), write):
@@ -773,20 +795,26 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parts[0] == "summary" and self.command == "GET":
+            user = self.require_user()
+            if user is None:
+                return
             self.send_json(
                 HTTPStatus.OK,
                 {
-                    "notes": self.store.counts(),
-                    "progress": self.store.progress(),
-                    "favorites": self.store.favorites(),
+                    "notes": self.store.counts(user["id"]),
+                    "progress": self.store.progress(user["id"]),
+                    "favorites": self.store.favorites(user["id"]),
                     "updated": now(),
                 },
             )
             return
 
         if parts[0] == "progress":
+            user = self.require_user()
+            if user is None:
+                return
             if self.command == "GET" and len(parts) == 1:
-                self.send_json(HTTPStatus.OK, {"progress": self.store.progress()})
+                self.send_json(HTTPStatus.OK, {"progress": self.store.progress(user["id"])})
                 return
             if self.command == "PUT" and len(parts) == 2:
                 slug = parts[1]
@@ -803,15 +831,18 @@ class Handler(BaseHTTPRequestHandler):
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad values"})
                     return
                 p = max(0, min(100, int(p)))
-                result = self.store.put_progress(slug, p, int(t), bool(body.get("d")))
+                result = self.store.put_progress(user["id"], slug, p, int(t), bool(body.get("d")))
                 self.send_json(HTTPStatus.OK, {"ok": True, **result})
                 return
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
             return
 
         if parts[0] == "favorites":
+            user = self.require_user()
+            if user is None:
+                return
             if self.command == "GET" and len(parts) == 1:
-                self.send_json(HTTPStatus.OK, {"favorites": self.store.favorites()})
+                self.send_json(HTTPStatus.OK, {"favorites": self.store.favorites(user["id"])})
                 return
             if len(parts) == 2:
                 slug = parts[1]
@@ -823,10 +854,14 @@ class Handler(BaseHTTPRequestHandler):
                     t = body.get("t")
                     if not isinstance(t, (int, float)):
                         t = now()
-                    self.send_json(HTTPStatus.OK, {"ok": True, **self.store.put_favorite(slug, int(t))})
+                    self.send_json(
+                        HTTPStatus.OK, {"ok": True, **self.store.put_favorite(user["id"], slug, int(t))}
+                    )
                     return
                 if self.command == "DELETE":
-                    self.send_json(HTTPStatus.OK, {"ok": True, "deleted": self.store.delete_favorite(slug)})
+                    self.send_json(
+                        HTTPStatus.OK, {"ok": True, "deleted": self.store.delete_favorite(user["id"], slug)}
+                    )
                     return
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
             return
@@ -905,6 +940,9 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parts[0] == "notes":
+            user = self.require_user()
+            if user is None:
+                return
             if len(parts) == 1 and self.command == "GET":
                 query = parse_qs(urlparse(self.path).query)
                 raw = (query.get("slugs") or [""])[0]
@@ -916,17 +954,17 @@ class Handler(BaseHTTPRequestHandler):
                         return
                     self.send_json(
                         HTTPStatus.OK,
-                        {"items": {slug: self.note_bundle(slug) for slug in slugs}},
+                        {"items": {slug: self.note_bundle(user["id"], slug) for slug in slugs}},
                     )
                     return
-                self.send_json(HTTPStatus.OK, {"notes": self.store.counts()})
+                self.send_json(HTTPStatus.OK, {"notes": self.store.counts(user["id"])})
                 return
             if len(parts) == 3 and parts[2] == "stream" and self.command == "GET":
                 slug = parts[1]
                 if not SLUG_RE.match(slug):
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
                     return
-                self.stream(f"note:{slug}")
+                self.stream(f"note:{user['id']}:{slug}")
                 return
 
             if len(parts) == 2 and self.command == "GET":
@@ -934,7 +972,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not SLUG_RE.match(slug):
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
                     return
-                self.send_json(HTTPStatus.OK, self.note_bundle(slug))
+                self.send_json(HTTPStatus.OK, self.note_bundle(user["id"], slug))
                 return
             if len(parts) == 4 and parts[3] == "ask" and self.command == "POST":
                 slug, note_id = parts[1], parts[2]
@@ -946,7 +984,7 @@ class Handler(BaseHTTPRequestHandler):
                 if self.store.active_job(note_id):
                     self.send_json(HTTPStatus.CONFLICT, {"error": "already queued"})
                     return
-                row = self.store.note(slug, note_id)
+                row = self.store.note(user["id"], slug, note_id)
                 if row is None:
                     self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
                     return
@@ -962,6 +1000,7 @@ class Handler(BaseHTTPRequestHandler):
                     (session["session_id"] if session else ""),
                     prompt,
                     "auto" if body.get("auto") else "manual",
+                    user["id"],
                 )
                 self.send_json(HTTPStatus.OK, {"ok": True, "triggered": True, "job": job})
                 return
@@ -984,7 +1023,7 @@ class Handler(BaseHTTPRequestHandler):
                     "text": text,
                     "t": int(body.get("t") or now()),
                 }
-                status, note = self.store.add_reply(slug, note_id, reply)
+                status, note = self.store.add_reply(user["id"], slug, note_id, reply)
                 if status == "missing":
                     self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
                     return
@@ -1001,7 +1040,7 @@ class Handler(BaseHTTPRequestHandler):
                     thread = (note or {}).get("thread") or []
                     prompt = (thread[0].get("text") if thread else "") or reply["text"]
                     job = self.store.create_job(
-                        slug, note_id, (session["session_id"] if session else ""), prompt, "auto"
+                        slug, note_id, (session["session_id"] if session else ""), prompt, "auto", user["id"]
                     )
                 self.send_json(HTTPStatus.OK, {"ok": True, "note": note, "triggered": job is not None, "job": job})
                 return
@@ -1020,7 +1059,9 @@ class Handler(BaseHTTPRequestHandler):
                 if note is None:
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "invalid note"})
                     return
-                self.store.put_note(slug, note)
+                if not self.store.put_note(user["id"], slug, note):
+                    self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
+                    return
                 self.send_json(HTTPStatus.OK, {"ok": True, "note": note})
                 return
             if len(parts) == 3 and self.command == "DELETE":
@@ -1028,7 +1069,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not SLUG_RE.match(slug) or not ID_RE.match(note_id):
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad path"})
                     return
-                self.send_json(HTTPStatus.OK, {"ok": self.store.delete_note(slug, note_id)})
+                self.send_json(HTTPStatus.OK, {"ok": self.store.delete_note(user["id"], slug, note_id)})
                 return
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
             return
