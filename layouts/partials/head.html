@@ -21,6 +21,8 @@
 <script type="module" src="{{ $js.RelPermalink }}"></script>
 {{- $fav := resources.Get "js/favorites.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ $fav.RelPermalink }}"></script>
+{{- $auth := resources.Get "js/auth.js" | js.Build (dict "minify" true) | fingerprint }}
+<script type="module" src="{{ $auth.RelPermalink }}"></script>
 {{- end }}
 {{- if or .IsHome .IsPage }}
 {{- $nav := resources.Get "js/site-nav.js" | js.Build (dict "minify" true) | fingerprint }}

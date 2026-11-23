@@ -5,6 +5,7 @@
 </head>
 <body>
 <main class="page">
+{{ partial "account.html" . }}
 {{ block "main" . }}{{ end }}
 <footer class="site-footer">
 <p><a href="{{ "/" | relURL }}">{{ .Site.Title }}</a> · <a href="{{ .Site.Params.github }}">GitHub</a> · <a href="{{ "/rss.xml" | relURL }}">RSS</a></p>
