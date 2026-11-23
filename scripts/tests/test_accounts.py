@@ -103,12 +103,32 @@ def test_guest_does_not_call_server_state(page, base):
     assert not [u for u in seen if any(p in u for p in ("/api/notes", "/api/progress", "/api/favorites"))], seen
 
 
+def test_change_password_from_account_bar(page, base):
+    login_as(page, base, "Alice", "alice-pass")
+    page.click(".account-password")
+    page.wait_for_selector(".auth-dialog input[name=old_password]")
+    page.fill(".auth-dialog input[name=old_password]", "wrong-pass")
+    page.fill(".auth-dialog input[name=new_password]", "alice-pass-2")
+    page.fill(".auth-dialog input[name=confirm]", "alice-pass-2")
+    page.click(".auth-dialog button[type=submit]")
+    page.wait_for_selector(".auth-dialog .auth-error:not([hidden])")
+    assert "当前密码不对" in page.locator(".auth-dialog .auth-error").inner_text()
+    page.fill(".auth-dialog input[name=old_password]", "alice-pass")
+    page.click(".auth-dialog button[type=submit]")
+    page.wait_for_selector(".auth-dialog .auth-error.is-ok", timeout=8000)
+    page.click(".account-logout")
+    page.wait_for_timeout(800)
+    login_as(page, base, "Alice", "alice-pass-2")
+    assert "Alice" in page.locator(".account-name").inner_text()
+
+
 CASES = [
     (test_login_and_logout, False),
     (test_bad_password_shows_message_without_crash, False),
     (test_state_is_scoped_per_account, False),
     (test_non_admin_cannot_ask_ai, False),
     (test_guest_does_not_call_server_state, False),
+    (test_change_password_from_account_bar, False),
 ]
 
 

@@ -238,6 +238,21 @@ class Store:
             return None
         return {"id": row["id"], "username": row["username"], "role": row["role"]}
 
+    def set_password(self, user_id: int, password: str) -> None:
+        with self._lock:
+            self.conn.execute(
+                "UPDATE users SET pass_hash = ? WHERE id = ?", (hash_password(password), user_id)
+            )
+            self.conn.commit()
+
+    def drop_other_tokens(self, user_id: int, keep_hash: str) -> None:
+        """改密码后把别的设备踢下线，当前这台保留。"""
+        with self._lock:
+            self.conn.execute(
+                "DELETE FROM auth_tokens WHERE user_id = ? AND token_hash != ?", (user_id, keep_hash)
+            )
+            self.conn.commit()
+
     def drop_token(self, token: str) -> None:
         with self._lock:
             self.conn.execute("DELETE FROM auth_tokens WHERE token_hash = ?", (token_hash(token),))
@@ -790,6 +805,31 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(HTTPStatus.CONFLICT, {"error": "username taken"})
                 return
             self.send_json(HTTPStatus.OK, {"user": created})
+            return
+
+        if parts[0] == "password" and self.command == "POST":
+            user = self.current_user()
+            if user is None:
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "login required"})
+                return
+            body = self.read_json() or {}
+            old_password = str(body.get("old_password") or "")
+            new_password = str(body.get("new_password") or "")
+            row = self.store.user_by_name(user["username"])
+            if row is None or not verify_password(old_password, row["pass_hash"]):
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "wrong password"})
+                return
+            if len(new_password) < 8:
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "password too short"})
+                return
+            if new_password == old_password:
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "password unchanged"})
+                return
+            self.store.set_password(user["id"], new_password)
+            token = self.bearer()
+            if token:
+                self.store.drop_other_tokens(user["id"], token_hash(token))
+            self.send_json(HTTPStatus.NO_CONTENT, {})
             return
 
         if parts[0] == "summary" and self.command == "GET":

@@ -733,6 +733,7 @@ ul.posts .fav-btn { margin-left: 2px; }
   color: var(--muted);
 }
 .account-btn,
+.account-password,
 .account-logout {
   font: inherit;
   padding: 3px 10px;
@@ -743,8 +744,11 @@ ul.posts .fav-btn { margin-left: 2px; }
   cursor: pointer;
 }
 .account-btn:hover,
+.account-password:hover,
 .account-logout:hover { border-color: var(--accent); color: var(--accent); }
 .account-name { color: var(--ink); }
+.auth-hint { margin: 10px 0 0; font-size: 11px; color: var(--soft); }
+.auth-error.is-ok { color: #2f6f5e; }
 .auth-dialog {
   position: fixed;
   inset: 0;

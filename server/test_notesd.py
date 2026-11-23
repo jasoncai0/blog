@@ -102,6 +102,36 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual(self.call("POST", "/api/users", {"username": "Bob", "password": "bob-pass"},
                                    self.auth(token))[0], 403)
 
+    def test_change_password_updates_login(self):
+        self.seed_user("BobPw", "bobpw-pass-1")
+        token = self.token_for("BobPw", "bobpw-pass-1")
+        status, _ = self.call("POST", "/api/password", {"old_password": "bobpw-pass-1", "new_password": "bobpw-pass-2"}, self.auth(token))
+        self.assertEqual(status, 204)
+        self.assertEqual(self.token_for("BobPw", "bobpw-pass-2") is not None, True)
+        status, body = self.call("POST", "/api/login", {"username": "BobPw", "password": "bobpw-pass-1"})
+        self.assertEqual(status, 401)
+
+    def test_change_password_checks_old_and_length(self):
+        self.seed_user("Cara", "cara-pass-1")
+        token = self.token_for("Cara", "cara-pass-1")
+        status, body = self.call("POST", "/api/password", {"old_password": "nope", "new_password": "cara-pass-2"}, self.auth(token))
+        self.assertEqual((status, body["error"]), (400, "wrong password"))
+        status, body = self.call("POST", "/api/password", {"old_password": "cara-pass-1", "new_password": "short"}, self.auth(token))
+        self.assertEqual((status, body["error"]), (400, "password too short"))
+        status, _ = self.call(
+            "POST", "/api/password", {"old_password": "cara-pass-1", "new_password": "cara-pass-2"}, noauth=True
+        )
+        self.assertEqual(status, 401)
+
+    def test_change_password_signs_out_other_devices(self):
+        self.seed_user("Dana", "dana-pass-1")
+        phone = self.token_for("Dana", "dana-pass-1")
+        laptop = self.token_for("Dana", "dana-pass-1")
+        status, _ = self.call("POST", "/api/password", {"old_password": "dana-pass-1", "new_password": "dana-pass-2"}, self.auth(laptop))
+        self.assertEqual(status, 204)
+        self.assertEqual(self.call("GET", "/api/me", headers=self.auth(laptop))[0], 200)
+        self.assertEqual(self.call("GET", "/api/me", headers=self.auth(phone))[0], 401)
+
     def test_logout_revokes_token(self):
         token = self.admin_token()
         self.assertEqual(self.call("POST", "/api/logout", {}, self.auth(token))[0], 204)
