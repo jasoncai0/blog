@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 630" role="img" aria-labelledby="ct cd">
+  <title id="ct">四条线的角色分工</title>
+  <desc id="cd">人上传与裁决，Agent 检索生成回写，编译 worker 写扩散，权限服务双点校验，巡检产工单</desc>
+  <rect x="0" y="0" width="960" height="630" fill="#f5f5f5" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">SWIMLANE · 四条线谁负责</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">权限在入库和检索各出现一次</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="0.6">巡检不碰正文，只开工单</text>
+  <text x="252.0" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle" font-weight="600">入库编译</text>
+  <text x="444.0" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle" font-weight="600">设计生成</text>
+  <text x="636.0" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle" font-weight="600">回写</text>
+  <text x="828.0" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" text-anchor="middle" font-weight="600">巡检</text>
+  <line x1="36" y1="132" x2="924" y2="132" stroke="rgba(45,49,66,0.18)"/>
+  <rect x="36" y="140" width="120" height="88" fill="#f2ece2" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="140" width="4" height="88" fill="#a8752a"/>
+  <text x="52" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">人</text>
+  <line x1="36" y1="228" x2="924" y2="228" stroke="rgba(45,49,66,0.18)"/>
+  <rect x="36" y="228" width="120" height="88" fill="#efeaf6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="228" width="4" height="88" fill="#5b4b8a"/>
+  <text x="52" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">设计 Agent</text>
+  <line x1="36" y1="316" x2="924" y2="316" stroke="rgba(45,49,66,0.18)"/>
+  <rect x="36" y="316" width="120" height="88" fill="#e9eff6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="316" width="4" height="88" fill="#3d5a80"/>
+  <text x="52" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">编译 worker</text>
+  <line x1="36" y1="404" x2="924" y2="404" stroke="rgba(45,49,66,0.18)"/>
+  <rect x="36" y="404" width="120" height="88" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="404" width="4" height="88" fill="#a8752a"/>
+  <text x="52" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">权限服务</text>
+  <line x1="36" y1="492" x2="924" y2="492" stroke="rgba(45,49,66,0.18)"/>
+  <rect x="36" y="492" width="120" height="88" fill="#f8eae8" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="492" width="4" height="88" fill="#9b4b52"/>
+  <text x="52" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">巡检 Agent</text>
+  <line x1="36" y1="580" x2="924" y2="580" stroke="rgba(45,49,66,0.18)"/>
+  <line x1="348" y1="132" x2="348" y2="580" stroke="rgba(45,49,66,0.18)"/>
+  <line x1="540" y1="132" x2="540" y2="580" stroke="rgba(45,49,66,0.18)"/>
+  <line x1="732" y1="132" x2="732" y2="580" stroke="rgba(45,49,66,0.18)"/>
+  <line x1="156" y1="132" x2="156" y2="580" stroke="rgba(45,49,66,0.18)"/>
+  <circle cx="176" cy="166" r="7" fill="#a8752a"/>
+  <text x="176" y="168.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="192" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">上传 / 标注</text>
+  <text x="192" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">决定值不值得编译</text>
+  <circle cx="176" cy="342" r="7" fill="#3d5a80"/>
+  <text x="176" y="344.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="192" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">解析 · 规划 · 写扩散</text>
+  <text x="192" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">≤15 页，超了拆批</text>
+  <circle cx="176" cy="430" r="7" fill="#a8752a"/>
+  <text x="176" y="432.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="192" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">编译时校验 ACL</text>
+  <text x="192" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">越权素材不进页面</text>
+  <circle cx="368" cy="254" r="7" fill="#5b4b8a"/>
+  <text x="368" y="256.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="384" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">目录 → 页面 → 原件</text>
+  <text x="384" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">三档，逐级展开</text>
+  <circle cx="368" cy="430" r="7" fill="#a8752a"/>
+  <text x="368" y="432.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">5</text>
+  <text x="384" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">检索时再校验</text>
+  <text x="384" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">租户 / 资源树 / 权限树</text>
+  <circle cx="560" cy="254" r="7" fill="#5b4b8a"/>
+  <text x="560" y="256.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">6</text>
+  <text x="576" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">产物落画布 + 回写</text>
+  <text x="576" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">发 artifact.created</text>
+  <circle cx="560" cy="342" r="7" fill="#3d5a80"/>
+  <text x="560" y="344.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">7</text>
+  <text x="576" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">增量编译</text>
+  <text x="576" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只改受影响页</text>
+  <circle cx="560" cy="430" r="7" fill="#a8752a"/>
+  <text x="560" y="432.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">8</text>
+  <text x="576" y="434" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">新产物继承 ACL</text>
+  <text x="576" y="452" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">继承失败则拒绝回写</text>
+  <circle cx="752" cy="518" r="7" fill="#9b4b52"/>
+  <text x="752" y="520.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">9</text>
+  <text x="768" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">扫 7 类问题</text>
+  <text x="768" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">孤儿/断链/缺页/过期/冲突</text>
+  <circle cx="752" cy="166" r="7" fill="#a8752a"/>
+  <text x="752" y="168.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">10</text>
+  <text x="768" y="170" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">裁决冲突</text>
+  <text x="768" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">人选一个，记日期</text>
+  <circle cx="560" cy="518" r="7" fill="#9b4b52"/>
+  <text x="560" y="520.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">11</text>
+  <text x="576" y="522" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">权限漂移 → 降级</text>
+  <text x="576" y="540" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">页面退回 draft 待复核</text>
+  <circle cx="752" cy="342" r="7" fill="#3d5a80"/>
+  <text x="752" y="344.6" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#ffffff" text-anchor="middle">12</text>
+  <text x="768" y="346" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142" font-weight="600">修复工单</text>
+  <text x="768" y="364" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">按一次小摄入来写</text>
+  <text x="36" y="606" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">顺序 1→12 按一次完整生命周期展开；回写与巡检都走异步，不阻塞设计任务。</text>
+  <text x="36" y="624" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">权限服务在入库和检索各出现一次，这是资产 Wiki 相对个人 wiki 最实质的差别。</text>
+  <defs>
+    <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+  </defs>
+</svg>

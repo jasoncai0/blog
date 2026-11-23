@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="ct cd">
+  <title id="ct">三层结构与两个导航文件</title>
+  <desc id="cd">raw 只读，wiki 由 agent 维护，schema 约束写法，index 与 log 支撑查询和审计</desc>
+  <rect x="0" y="0" width="960" height="600" fill="#f5f5f5" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">ARCHITECTURE · 三层 + 两个导航文件</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">原件只读，wiki 可写，schema 控制写法</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="0.6">agent 是编译进程</text>
+  <rect x="36" y="96" width="150" height="64" fill="#f2ece2" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="96" width="4" height="64" fill="#a8752a"/>
+  <text x="50" y="114" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#a8752a" letter-spacing="0.8">人 · HUMAN</text>
+  <text x="50" y="132" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">选源 · 提问 · 读页面</text>
+  <text x="50" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">判断值不值得编译</text>
+  <rect x="226" y="88" width="330" height="80" fill="#efeaf6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="226" y="88" width="4" height="80" fill="#5b4b8a"/>
+  <text x="242" y="106" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5b4b8a" letter-spacing="0.8">AGENT · 编译进程</text>
+  <text x="242" y="124" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">读 schema → 读 index → 读 raw</text>
+  <text x="242" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">规划页面 → 写扩散 10–15 页 → 记账</text>
+  <text x="242" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">一次摄入一个 commit</text>
+  <rect x="600" y="88" width="324" height="80" fill="#f7efe4" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="600" y="88" width="4" height="80" fill="#bf4520"/>
+  <text x="616" y="106" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520" letter-spacing="0.8">SCHEMA · AGENTS.md</text>
+  <text x="616" y="124" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">目录结构 · front matter · wikilink</text>
+  <text x="616" y="140" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">矛盾标记 · ingest 工作流 · 日志格式</text>
+  <text x="616" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">schema 越含糊，页面越不一致</text>
+  <line x1="184" y1="128" x2="222" y2="128" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="203" y="147" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">选源</text>
+  <line x1="598" y1="128" x2="560" y2="128" stroke="#bf4520" stroke-width="1.1" marker-end="url(#aro)"/>
+  <text x="579" y="147" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">约束</text>
+  <rect x="36" y="210" width="330" height="150" fill="#e9eff6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="210" width="4" height="150" fill="#3d5a80"/>
+  <text x="50" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#3d5a80" letter-spacing="1.1">RAW · 原始层（不可变）</text>
+  <text x="50" y="245" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">只读挂载；wiki 写坏可整层重建</text>
+  <rect x="50" y="254" width="300" height="26" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="62" y="271" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">文章 / 论文 / PDF</text>
+  <text x="338" y="271" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="end">原样存放，不改写</text>
+  <rect x="50" y="284" width="300" height="26" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="62" y="301" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">网页剪藏 / 会议记录</text>
+  <text x="338" y="301" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="end">保留抓取时间</text>
+  <rect x="50" y="314" width="300" height="26" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="62" y="331" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">图片 / 数据文件</text>
+  <text x="338" y="331" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="end">按来源命名</text>
+  <rect x="36" y="376" width="330" height="54" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="50" y="394" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e" letter-spacing="0.8">GIT · 整个目录一个仓库</text>
+  <text x="50" y="412" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">每次摄入一个 commit，diff 就是知识变更</text>
+  <rect x="36" y="444" width="330" height="54" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="50" y="462" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#3d5a80" letter-spacing="0.8">可选 · qmd 混合检索</text>
+  <text x="50" y="480" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2d3142">BM25 + 向量 + 重排，只在 index 读不动时加</text>
+  <rect x="390" y="210" width="534" height="312" fill="#efeaf6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="390" y="210" width="4" height="312" fill="#5b4b8a"/>
+  <text x="404" y="230" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5b4b8a" letter-spacing="1.1">WIKI · 派生层（agent 全权维护）</text>
+  <text x="404" y="245" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">markdown + wikilink，按页面类型分目录；人读、不手写</text>
+  <rect x="402" y="252" width="246" height="46" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="412" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">sources/ 来源摘要页</text>
+  <text x="412" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">每源一页，事实带引用</text>
+  <rect x="660" y="252" width="246" height="46" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="670" y="270" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">entities/ 实体页</text>
+  <text x="670" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">人、公司、产品、项目</text>
+  <rect x="402" y="306" width="246" height="46" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="412" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">concepts/ 概念页</text>
+  <text x="412" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">定义、边界、易混淆点</text>
+  <rect x="660" y="306" width="246" height="46" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="670" y="324" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">comparisons/ 对比页</text>
+  <text x="670" y="340" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">两个方案的差异</text>
+  <rect x="402" y="360" width="246" height="46" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="412" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">overview.md 总览</text>
+  <text x="412" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">当前结论与格局</text>
+  <rect x="660" y="360" width="246" height="46" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="670" y="378" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">+ 回填页</text>
+  <text x="670" y="394" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">查询产出的新结构</text>
+  <text x="402" y="414" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e" letter-spacing="0.6">每次摄入同步更新 ↓</text>
+  <rect x="402" y="424" width="246" height="82" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="402" y="424" width="4" height="82" fill="#2f6f5e"/>
+  <text x="414" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e" letter-spacing="0.8">INDEX</text>
+  <text x="414" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">index.md · 内容目录</text>
+  <text x="414" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">按主题分组，每条一句摘要</text>
+  <text x="414" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">查询第一跳：读它选候选页</text>
+  <rect x="660" y="424" width="246" height="82" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="660" y="424" width="4" height="82" fill="#2f6f5e"/>
+  <text x="672" y="440" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e" letter-spacing="0.8">LOG</text>
+  <text x="672" y="458" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">log.md · 构建日志</text>
+  <text x="672" y="474" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">只追加，前缀 ## [日期] action |</text>
+  <text x="672" y="490" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">grep 最近 5 条就知道发生了什么</text>
+  <line x1="290" y1="168" x2="290" y2="206" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="296" y="191" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">读</text>
+  <line x1="470" y1="168" x2="470" y2="206" stroke="#5b4b8a" stroke-width="1.1" marker-end="url(#apu)"/>
+  <text x="476" y="191" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5b4b8a">写扩散 ≤15 页</text>
+  <line x1="366" y1="330" x2="386" y2="330" stroke="#3d5a80" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#abl)"/>
+  <text x="376" y="322" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">编译</text>
+  <line x1="36" y1="540" x2="924" y2="540" stroke="rgba(45,49,66,0.18)"/>
+  <text x="36" y="558" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">查询路径：index.md（读目录）→ 3–5 个候选页 → 页面里的引用 → raw 原文。</text>
+  <text x="36" y="576" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">回填：分析产出了新结构就落成新页并更新 index；纯聊天不回填。</text>
+  <defs>
+    <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="aro" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+    <marker id="apu" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#5b4b8a"/></marker>
+    <marker id="abl" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#3d5a80"/></marker>
+  </defs>
+</svg>

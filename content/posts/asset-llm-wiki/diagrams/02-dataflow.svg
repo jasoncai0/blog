@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-labelledby="ct cd">
+  <title id="ct">素材入库的编译数据流</title>
+  <desc id="cd">上传、理解、实体链接、页面规划、写扩散、裁决、权限血缘、目录索引，最终产出可注入的页面</desc>
+  <rect x="0" y="0" width="960" height="520" fill="#f5f5f5" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">DATAFLOW · 一次素材入库</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">八步把一张图编译成可检索的资产页</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="0.6">规则先裁，模型只提议</text>
+  <text x="36" y="112" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#3d5a80" letter-spacing="1.1">INGEST · 编译队列消费一次事件</text>
+  <rect x="36" y="128" width="200" height="70" fill="#e9eff6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="128" width="4" height="70" fill="#3d5a80"/>
+  <text x="48" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">上传资产</text>
+  <text x="48" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">原件 + sha256 + 归属</text>
+  <text x="48" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">ACL 随节点继承</text>
+  <rect x="262" y="128" width="190" height="70" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="262" y="128" width="4" height="70" fill="#3d5a80"/>
+  <text x="274" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">内容理解</text>
+  <text x="274" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">caption / 色板 / 字体</text>
+  <text x="274" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">人物、产品、场景</text>
+  <rect x="478" y="128" width="190" height="70" fill="#f2ece2" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="478" y="128" width="4" height="70" fill="#a8752a"/>
+  <text x="490" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">实体链接</text>
+  <text x="490" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">命中已有品牌/产品页</text>
+  <text x="490" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">不确定的挂待审</text>
+  <rect x="694" y="128" width="230" height="70" fill="#f7efe4" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="694" y="128" width="4" height="70" fill="#bf4520"/>
+  <text x="706" y="148" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">页面规划</text>
+  <text x="706" y="166" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">create / update / merge</text>
+  <text x="706" y="182" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">≤ 15 页，超了拆批</text>
+  <text x="36" y="234" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5b4b8a" letter-spacing="1.1">WRITE FAN-OUT · 写扩散与裁决</text>
+  <rect x="694" y="240" width="230" height="70" fill="#efeaf6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="694" y="240" width="4" height="70" fill="#5b4b8a"/>
+  <text x="706" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">写扩散</text>
+  <text x="706" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">品牌/风格/项目/素材/对比</text>
+  <text x="706" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">每页带 source_hashes</text>
+  <rect x="478" y="240" width="190" height="70" fill="#f8eae8" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="478" y="240" width="4" height="70" fill="#9b4b52"/>
+  <text x="490" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">矛盾裁决</text>
+  <text x="490" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">规则引擎优先</text>
+  <text x="490" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">判不了 → review 挂起</text>
+  <rect x="262" y="240" width="190" height="70" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="262" y="240" width="4" height="70" fill="#a8752a"/>
+  <text x="274" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">权限与血缘</text>
+  <text x="274" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">ACL 取交集，空则拆页</text>
+  <text x="274" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">边：derived/references</text>
+  <rect x="36" y="240" width="200" height="70" fill="#e9f2ed" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="240" width="4" height="70" fill="#2f6f5e"/>
+  <text x="48" y="260" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">目录与索引</text>
+  <text x="48" y="278" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">index 分层 · oplog 追加</text>
+  <text x="48" y="294" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5a6580">embedding 只做候选</text>
+  <line x1="236" y1="163" x2="258" y2="163" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="247" y="155" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">读</text>
+  <line x1="452" y1="163" x2="474" y2="163" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="463" y="155" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">链</text>
+  <line x1="668" y1="163" x2="690" y2="163" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="679" y="155" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">规</text>
+  <path d="M809 198 v38" fill="none" stroke="#bf4520" stroke-width="1.1" marker-end="url(#aro)"/>
+  <text x="816" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580">落地</text>
+  <line x1="690" y1="275" x2="672" y2="275" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="681" y="267" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">写</text>
+  <line x1="474" y1="275" x2="456" y2="275" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="465" y="267" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">裁</text>
+  <line x1="258" y1="275" x2="240" y2="275" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="249" y="267" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">权</text>
+  <line x1="36" y1="336" x2="924" y2="336" stroke="rgba(45,49,66,0.18)"/>
+  <text x="36" y="356" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e" letter-spacing="1.1">OUTCOME · 可被注入器命中</text>
+  <rect x="36" y="370" width="430" height="64" fill="#e9f2ed" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="36" y="370" width="4" height="64" fill="#2f6f5e"/>
+  <text x="52" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">页面 active，目录出现一条摘要</text>
+  <text x="52" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">设计 Agent 第一跳就能看到；细节等 Activation 再取</text>
+  <rect x="494" y="370" width="430" height="64" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="510" y="392" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.5" fill="#2d3142" font-weight="600">失败路径</text>
+  <text x="510" y="410" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">幂等键 (asset_hash, page_id, version)；重试 3 次进死信，不阻塞队列</text>
+  <text x="36" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">编译一个资产约 10–20k token，成本集中在写扩散；热度高的资产先编，冷的等被检索时再编。</text>
+  <text x="36" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">冲突不能自动收敛：品牌色、字体、禁用词的裁决权在规则引擎和品牌负责人，模型只给候选。</text>
+  <defs>
+    <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="aro" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+</svg>

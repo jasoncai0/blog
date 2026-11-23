@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-labelledby="ct cd">
+  <title id="ct">页面生命周期</title>
+  <desc id="cd">新建页补入链、lint 校验、冲突标记、被新页取代，最终归档；lint 工单驱动修复与建页</desc>
+  <rect x="0" y="0" width="960" height="520" fill="#f5f5f5" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <text x="36" y="28" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="1.1">LIFECYCLE · 页面状态</text>
+  <text x="36" y="54" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" fill="#2d3142" font-weight="600">新页必须被入链，才可能被查询到</text>
+  <text x="924" y="54" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="9" fill="#5a6580" text-anchor="end" letter-spacing="0.6">lint 把页面推向终态</text>
+  <rect x="80" y="170" width="160" height="56" fill="#e9eff6" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="80" y="170" width="4" height="56" fill="#3d5a80"/>
+  <text x="94" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600">新建页</text>
+  <text x="94" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">draft，尚未入链</text>
+  <rect x="300" y="170" width="150" height="56" fill="#e9f2ed" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="300" y="170" width="4" height="56" fill="#2f6f5e"/>
+  <text x="314" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600">已入链</text>
+  <text x="314" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">linked，index 已收录</text>
+  <rect x="520" y="170" width="150" height="56" fill="#e9f2ed" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="520" y="170" width="4" height="56" fill="#2f6f5e"/>
+  <text x="534" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600">有效</text>
+  <text x="534" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">verified，lint 通过</text>
+  <rect x="710" y="170" width="180" height="56" fill="#f8eae8" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="710" y="170" width="4" height="56" fill="#9b4b52"/>
+  <text x="724" y="192" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600">陈旧</text>
+  <text x="724" y="210" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">stale，与新来源冲突</text>
+  <rect x="300" y="340" width="180" height="56" fill="#ffffff" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="300" y="340" width="4" height="56" fill="#9b4b52"/>
+  <text x="314" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600">lint 工单</text>
+  <text x="314" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">孤儿 / 断链 / 缺页</text>
+  <rect x="520" y="340" width="150" height="56" fill="#f7efe4" stroke="rgba(45,49,66,0.18)" stroke-width="1"/>
+  <rect x="520" y="340" width="4" height="56" fill="#bf4520"/>
+  <text x="534" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600">被取代</text>
+  <text x="534" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">superseded，新页声明</text>
+  <rect x="710" y="340" width="180" height="56" fill="#eef0f4" stroke="rgba(45,49,66,0.18)" stroke-width="1" stroke-dasharray="5 4"/>
+  <rect x="710" y="340" width="4" height="56" fill="#5a6580"/>
+  <text x="724" y="362" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" fill="#2d3142" font-weight="600">归档</text>
+  <text x="724" y="380" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">archived，移出检索</text>
+  <line x1="240" y1="196" x2="296" y2="196" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="250" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">补 1 条入链</text>
+  <line x1="450" y1="196" x2="516" y2="196" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="460" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#5a6580">lint 通过 / 人读一遍</text>
+  <line x1="670" y1="196" x2="706" y2="196" stroke="#bf4520" stroke-width="1.1" marker-end="url(#aro)"/>
+  <text x="680" y="188" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#bf4520">冲突</text>
+  <path d="M706 212 h-60" fill="none" stroke="#4f5d75" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+  <text x="646" y="226" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">补引用后回有效</text>
+  <path d="M360 226 v110" fill="none" stroke="#9b4b52" stroke-width="1.1" marker-end="url(#aro)"/>
+  <text x="368" y="300" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#9b4b52">孤儿页 / 断链 → 工单</text>
+  <path d="M360 340 L200 228" fill="none" stroke="#9b4b52" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#aro)"/>
+  <text x="292" y="318" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#9b4b52" text-anchor="end">缺页 → 建页</text>
+  <path d="M800 226 v110" fill="none" stroke="#9b4b52" stroke-width="1.1" marker-end="url(#aro)"/>
+  <text x="808" y="282" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#9b4b52">新页声明取代</text>
+  <line x1="670" y1="368" x2="706" y2="368" stroke="#4f5d75" stroke-width="1.1" marker-end="url(#ar)"/>
+  <text x="676" y="360" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.5" fill="#5a6580" text-anchor="middle">保留历史</text>
+  <text x="36" y="448" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">「有效」是唯一会被查询优先命中的状态；陈旧页仍可读，但答案里必须带冲突提示。</text>
+  <text x="36" y="466" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">归档不动文件，只从 index 移除并打 archived 标记；git 里仍可 diff 与恢复。</text>
+  <text x="36" y="484" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">状态由 front matter 的 status 字段承载，lint 与摄入都只改这一个字段。</text>
+  <defs>
+    <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#4f5d75"/></marker>
+    <marker id="aro" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#bf4520"/></marker>
+  </defs>
+</svg>
