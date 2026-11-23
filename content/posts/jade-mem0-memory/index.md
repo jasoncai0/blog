@@ -40,6 +40,8 @@ Jade 进程里新增 `MemoryService` 和 `MemoryPolicy`。`MemoryService` 是接
 
 Mem0 OSS sidecar 用 Docker 跑，Postgres + pgvector 落盘。`local` profile 用 FastEmbed 做本地向量化，DeepSeek 做记忆抽取；`cloud` profile 是可选的 Mem0 Platform，必须在 UI 明确提示记忆正文会离开本机。
 
+这里有一个部署约束：Mem0 官方 REST 镜像目前只打包 OpenAI/Gemini 的 LLM 与 embedder。要用 FastEmbed + DeepSeek 的本地 profile，得在镜像里补 provider，或者加一层很薄的 Python 适配器。Phase 0 的 spike 就是为了验证这件事；如果验证失败，就退到 Mem0 Platform profile，不把外部依赖硬塞进 Jade。
+
 ## 3. 写入和召回是两条路径
 
 {{< fig "diagrams/02-memory-lifecycle.svg" "写入在用户纠正或 Checkpoint 后发生，先过滤再异步写；召回在 Context 阶段发生，检索后还要在 Jade 侧做项目和分数过滤。" >}}
