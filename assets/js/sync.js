@@ -193,23 +193,54 @@ export async function askAI(slug, noteId, { auto = false } = {}) {
 }
 
 export function openNoteStream(slug, onEvent) {
-  if (!authToken()) return null; // 未登录不订阅
-  const source = new EventSource(`${API}/notes/${slug}/stream`);
-  source.addEventListener("note.updated", (evt) => {
+  const token = authToken();
+  if (!token) return null; // 未登录不订阅
+  const controller = new AbortController();
+  let closed = false;
+  const handle = (chunk) => {
+    let event = "message";
+    const data = [];
+    for (const line of chunk.split("\n")) {
+      if (line.startsWith("event:")) event = line.slice(6).trim();
+      else if (line.startsWith("data:")) data.push(line.slice(5).trim());
+    }
+    if (!data.length) return;
     try {
-      onEvent("note.updated", JSON.parse(evt.data));
+      onEvent(event, JSON.parse(data.join("\n")));
     } catch {
       /* 坏事件直接丢 */
     }
-  });
-  source.addEventListener("job.updated", (evt) => {
-    try {
-      onEvent("job.updated", JSON.parse(evt.data));
-    } catch {
-      /* 同上 */
+  };
+  (async () => {
+    // EventSource 不能带 Authorization，这里用 fetch 读 SSE 流自己切帧。
+    const resp = await fetch(`${API}/notes/${encodeURIComponent(slug)}/stream`, {
+      headers: authHeaders(),
+      signal: controller.signal,
+    });
+    if (!resp.ok || !resp.body) return;
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    while (!closed) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let cut = buffer.indexOf("\n\n");
+      while (cut >= 0) {
+        handle(buffer.slice(0, cut));
+        buffer = buffer.slice(cut + 2);
+        cut = buffer.indexOf("\n\n");
+      }
     }
+  })().catch(() => {
+    /* 断线就等下次进页面，不做重连 */
   });
-  return source;
+  return {
+    close() {
+      closed = true;
+      controller.abort();
+    },
+  };
 }
 
 // summary 只拉一次：阅读进度和笔记都会用到它，没必要各发一遍。
