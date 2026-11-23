@@ -1,4 +1,13 @@
 {
+ "3d-game-dev-terms": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 4
+ },
  "agent-asset-lineage": {
   "figure": 5,
   "h1": 1,
@@ -142,6 +151,15 @@
   "hr": 0,
   "pre": 8,
   "table": 2
+ },
+ "context-compaction-vs-pruning": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 9,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 4
  },
  "design-agent-eval-system": {
   "figure": 8,
@@ -844,6 +862,15 @@
   "hr": 0,
   "pre": 1,
   "table": 0
+ },
+ "jade-mem0-memory": {
+  "figure": 2,
+  "h1": 1,
+  "h2": 7,
+  "h3": 0,
+  "hr": 0,
+  "pre": 2,
+  "table": 1
  },
  "jade-p0-context-parallel-plan": {
   "figure": 0,
