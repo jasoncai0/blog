@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="400" viewBox="0 0 960 400" role="img" aria-labelledby="f01-d1-title f01-d1-desc">
+  <title id="f01-d1-title">一段 38 条消息的会话，75% 的 token 在工具结果</title>
+  <desc id="f01-d1-desc">38 个小格按消息顺序排列，颜色区分系统、用户、助手与工具结果。上方两条括线标出可压缩区间与尾部保护窗口，下方按比例画出 52,000 token 的构成。</desc>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+  <defs>
+    <marker id="f01-d1-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <text x="40" y="32" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">CONTEXT BUDGET / 38 MESSAGES</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="18" fill="#2d3142">38 条消息，52,000 token，四分之三在工具结果</text>
+  <text x="40" y="82" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">上一排是消息顺序，下一排是 token 占比。两条括线标出两个可操作区域。</text>
+  <path d="M86,128 L86,136 L705,136 L705,128" fill="none" stroke="#bf4520" stroke-width="1.2"/>
+  <path d="M707,128 L707,136 L912,136 L912,128" fill="none" stroke="#2f6f5e" stroke-width="1.2"/>
+  <text x="86" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#bf4520">可压缩区间 m02 到 m28 · 37,000</text>
+  <text x="912" y="120" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#2f6f5e" text-anchor="end">保护窗口 m29 到 m37 · 12,000</text>
+  <rect x="40" y="150" width="21" height="60" rx="2" fill="#ececec" stroke="#b8b8b8" stroke-width="1"/>
+  <rect x="63" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="86" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="109" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="132" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="155" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="178" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="201" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="224" y="150" width="21" height="60" rx="2" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1"/>
+  <rect x="247" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="270" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="293" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="316" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="339" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="362" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="385" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="408" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="431" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="454" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="477" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="500" y="150" width="21" height="60" rx="2" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1"/>
+  <rect x="523" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="546" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="569" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="592" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="615" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="638" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="661" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="684" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="707" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="730" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="753" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="776" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="799" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="822" y="150" width="21" height="60" rx="2" fill="#f7efe4" stroke="#bf4520" stroke-width="1"/>
+  <rect x="845" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <rect x="868" y="150" width="21" height="60" rx="2" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1"/>
+  <rect x="891" y="150" width="21" height="60" rx="2" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1"/>
+  <text x="73" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" text-anchor="middle">m01</text>
+  <text x="96" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" text-anchor="middle">m02</text>
+  <text x="257" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" text-anchor="middle">m09</text>
+  <text x="694" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" text-anchor="middle">m28</text>
+  <text x="717" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" text-anchor="middle">m29</text>
+  <text x="878" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" text-anchor="middle">m36</text>
+  <text x="901" y="226" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#8a93a6" text-anchor="middle">m37</text>
+  <text x="40" y="268" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#2d3142">52,000 token 的构成</text>
+  <rect x="40" y="278" width="50" height="44" fill="#dcdcdc"/>
+  <rect x="90" y="278" width="12" height="44" fill="#2f6f5e"/>
+  <rect x="102" y="278" width="156" height="44" fill="#5b4b8a"/>
+  <text x="112" y="305" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#ffffff">助手 9,300</text>
+  <rect x="258" y="278" width="654" height="44" fill="#bf4520"/>
+  <text x="268" y="305" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#ffffff">工具结果 39,000 · 75%</text>
+  <rect x="40" y="344" width="10" height="10" rx="2" fill="#b8b8b8"/>
+  <text x="56" y="353" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">系统 1 条 · 3,000</text>
+  <rect x="260" y="344" width="10" height="10" rx="2" fill="#2f6f5e"/>
+  <text x="276" y="353" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">用户 4 条 · 700</text>
+  <rect x="480" y="344" width="10" height="10" rx="2" fill="#5b4b8a"/>
+  <text x="496" y="353" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">助手 18 条 · 9,300</text>
+  <rect x="700" y="344" width="10" height="10" rx="2" fill="#bf4520"/>
+  <text x="716" y="353" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">工具结果 15 条 · 39,000</text>
+</svg>
