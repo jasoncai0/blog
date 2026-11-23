@@ -127,6 +127,16 @@ python3 server/import_notes.py notes-<slug>.json --dry-run                # 先�
 
 文件格式就是导出按钮产出的 `{slug: [notes]}`；同 id 重复导入是幂等的，会覆盖成文件里的版本。
 
+## 账号
+
+站点有账号体系，但不开放注册。管理员 `Root` 用 `POST /api/users` 建号，登录用 `POST /api/login` 换一个 180 天有效的 Bearer token。
+
+- 有状态数据全部按用户隔离：笔记、阅读进度、收藏各存各的，换设备登录同一个账号就能看到自己的。
+- 笔记只对作者可见；只有管理员能让 AI 回答（非管理员看不到「让 AI 回答」按钮）。
+- 不再使用全局口令 `X-Edit-Key`：写请求带 `Authorization: Bearer <token>`。
+- 没登录也能读文章，收藏和进度只留在本机（`jasoncai:read:v2:guest` 这类键），不会上传。
+- 本地缓存按用户分命名空间：登录后是 `…:v2:u<id>`，退出即切换回 `:guest`，互不串数据。
+
 ## 收藏
 
 首页每篇的 tag 行前有一个 `☆ 收藏` 按钮，文章页在标题下方也有一份，点一下变 `★ 已收藏`。
