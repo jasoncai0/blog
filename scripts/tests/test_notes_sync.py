@@ -53,10 +53,22 @@ class SlowProxy(BaseHTTPRequestHandler):
     def log_message(self, *args):
         pass
 
+    def do_OPTIONS(self):  # noqa: N802
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
+        self.end_headers()
+
     def do_GET(self):  # noqa: N802
         time.sleep(self.delay)
         try:
-            with urllib.request.urlopen(self.target + self.path, timeout=5) as resp:
+            req = urllib.request.Request(self.target + self.path)
+            for key, value in self.headers.items():
+                if key.lower() in ("host", "connection"):
+                    continue
+                req.add_header(key, value)
+            with urllib.request.urlopen(req, timeout=5) as resp:
                 body = resp.read()
                 status = resp.status
         except Exception:  # noqa: BLE001
@@ -78,19 +90,32 @@ def free_port():
 API = ""
 
 
-def api(path, method="GET", body=None, base=None, headers=None):
+def api(path, method="GET", body=None, base=None, headers=None, noauth=False):
     data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(
-        (base or API) + path,
-        data=data,
-        method=method,
-        headers={"Content-Type": "application/json", **(headers or {})},
-    )
+    hdrs = {"Content-Type": "application/json", **(headers or {})}
+    if not noauth and AUTH["token"] and "Authorization" not in hdrs:
+        hdrs["Authorization"] = f"Bearer {AUTH['token']}"
+    req = urllib.request.Request((base or API) + path, data=data, method=method, headers=hdrs)
     try:
         with urllib.request.urlopen(req, timeout=3) as resp:
             return json.loads(resp.read() or b"{}")
     except urllib.error.HTTPError as err:
         return {"status": err.code, "body": err.read().decode()}
+
+
+AUTH = {"token": "", "id": 0}
+
+
+def apply_auth(ctx):
+    ctx.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    ctx.add_init_script(
+        f"localStorage.setItem('jasoncai:auth:v1', JSON.stringify({login_payload()}));"
+    )
+    return ctx
+
+
+def login_payload():
+    return json.dumps({"token": AUTH["token"], "id": AUTH["id"], "username": "Root", "role": "admin"})
 
 
 def reset_db(db):
@@ -143,8 +168,7 @@ def test_note_written_in_one_browser_shows_up_in_another(page, base):
     add_highlight(page, base)
     wait_until(lambda: api(f"/notes/{SLUG}")["notes"])
 
-    other = page.context.browser.new_context(**DESKTOP)
-    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    other = apply_auth(page.context.browser.new_context(**DESKTOP))
     try:
         fresh = other.new_page()
         fresh.goto(base + ARTICLE)
@@ -166,8 +190,7 @@ def test_deleted_note_does_not_come_back(page, base):
     page.wait_for_timeout(400)
     wait_until(lambda: not api(f"/notes/{SLUG}")["notes"])
 
-    other = page.context.browser.new_context(**DESKTOP)
-    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    other = apply_auth(page.context.browser.new_context(**DESKTOP))
     try:
         fresh = other.new_page()
         fresh.goto(base + ARTICLE)
@@ -179,8 +202,7 @@ def test_deleted_note_does_not_come_back(page, base):
 
 def test_progress_from_server_resumes_on_a_new_device(page, base):
     api(f"/progress/{SLUG}", "PUT", {"p": 62, "t": int(time.time() * 1000), "d": False})
-    other = page.context.browser.new_context(**DESKTOP)
-    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    other = apply_auth(page.context.browser.new_context(**DESKTOP))
     try:
         fresh = other.new_page()
         fresh.goto(base + ARTICLE)
@@ -208,8 +230,7 @@ def test_home_shows_server_side_marks(page, base):
         },
     )
     wait_until(lambda: api(f"/notes/{SLUG}")["notes"])
-    other = page.context.browser.new_context(**DESKTOP)
-    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    other = apply_auth(page.context.browser.new_context(**DESKTOP))
     try:
         fresh = other.new_page()
         fresh.goto(base + "/")
@@ -228,7 +249,7 @@ def test_local_only_progress_is_uploaded_from_home(context, base):
     assert slug not in before, "这个用例要求服务端一开始没有这篇的进度"
     context.add_init_script(
         f"window.__NOTES_API__ = {json.dumps(API)};"
-        "localStorage.setItem('jasoncai:read:v1', JSON.stringify({"
+        f"localStorage.setItem('jasoncai:read:v2:u{AUTH['id']}', JSON.stringify({{"
         f'"{slug}": {{"p": 77, "t": Date.now(), "d": false}}'
         "}));"
     )
@@ -267,8 +288,7 @@ def test_reply_creates_a_floor(page, base):
     assert "第二层：这是回复" in page.locator(".nt-thread").inner_text()
     assert "2 层" in page.locator(".nt-floors").inner_text()
     # 换一个浏览器看得到（服务端真的存了）
-    other = page.context.browser.new_context(**DESKTOP)
-    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    other = apply_auth(page.context.browser.new_context(**DESKTOP))
     try:
         fresh = other.new_page()
         fresh.goto(base + ARTICLE)
@@ -377,7 +397,7 @@ def test_all_local_notes_upload_from_any_page(context, base):
                              "t": stamp, "thread": [{"author": "我", "text": "旧批注 C", "t": stamp}]}],
     }
     context.add_init_script(
-        f"localStorage.setItem('jasoncai:notes:v1', {json.dumps(json.dumps(local))});"
+        f"localStorage.setItem('jasoncai:notes:v2:u{AUTH['id']}', {json.dumps(json.dumps(local))});"
     )
     page = context.new_page()
     page.goto(base + "/")
@@ -412,8 +432,7 @@ def test_favorite_from_one_browser_shows_in_another(page, base):
     page.wait_for_selector('.fav-btn[data-slug="hello"]', state="attached")
     page.locator('.fav-btn[data-slug="hello"]').click()
     wait_until(lambda: "hello" in api("/favorites").get("favorites", {}), timeout=8.0, interval=0.2)
-    other = page.context.browser.new_context(**DESKTOP)
-    other.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    other = apply_auth(page.context.browser.new_context(**DESKTOP))
     try:
         fresh = other.new_page()
         fresh.goto(base + "/")
@@ -461,8 +480,6 @@ CASES = [
     (test_unfavorite_propagates_to_other_browser, False, DESKTOP),
     (test_reply_creates_a_floor, False, DESKTOP),
     (test_ai_reply_is_marked_as_ai, False, DESKTOP),
-    (test_write_without_key_prompts_and_then_succeeds, True, DESKTOP),
-    (test_stale_key_does_not_pop_on_page_load, True, DESKTOP),
 ]
 
 
@@ -471,6 +488,9 @@ def run_case(browser, fn, base, needs_context, context_kwargs, db=None):
         reset_db(db)
     ctx = browser.new_context(**context_kwargs)
     ctx.add_init_script(f"window.__NOTES_API__ = {json.dumps(API)};")
+    ctx.add_init_script(
+        f"localStorage.setItem('jasoncai:auth:v1', JSON.stringify({login_payload()}));"
+    )
     try:
         if needs_context:
             fn(ctx, base)
@@ -511,6 +531,14 @@ def main():
     try:
         wait_for_server(base + "/")
         wait_for_server(API + "/healthz")
+        # 起一个 Root：新库没有账号，直接用 Store 建，再走登录拿 Bearer。
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "server"))
+        import notesd as notesd_mod
+
+        notesd_mod.Store(db).create_user("Root", "root-pass-1", "admin")
+        body = api("/login", "POST", {"username": "Root", "password": "root-pass-1"}, noauth=True)
+        AUTH["token"] = body["token"]
+        AUTH["id"] = body["user"]["id"]
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             for fn, needs_context, context_kwargs in CASES:

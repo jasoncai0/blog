@@ -14,7 +14,7 @@ import urllib.request
 
 from playwright.sync_api import sync_playwright
 
-KEY = "jasoncai:fav:v1"
+KEY = "jasoncai:fav:v2:guest"  # 未登录时 user-store 的命名空间
 
 
 def wait_for_server(url, timeout=15.0):

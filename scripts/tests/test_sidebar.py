@@ -153,7 +153,7 @@ def test_active_section_follows_scroll(page, base):
 def seed_progress(page, base, percent=62):
     page.goto(base + "/")
     page.evaluate(
-        """p => localStorage.setItem('jasoncai:read:v1',
+        """p => localStorage.setItem('jasoncai:read:v2:guest',
              JSON.stringify({'ot-crdt-lww': {p, t: Date.now(), d: false}}))""",
         percent,
     )

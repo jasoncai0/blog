@@ -16,7 +16,7 @@ from playwright.sync_api import sync_playwright
 
 ARTICLE = "/posts/ot-crdt-lww.html"
 SLUG = "ot-crdt-lww"
-KEY = "jasoncai:notes:v1"
+KEY = "jasoncai:notes:v2:guest"
 DESKTOP = {"viewport": {"width": 1200, "height": 900}}
 
 ANCHOR_JS = """(needle) => {
@@ -520,7 +520,7 @@ def test_seeded_note_inside_figure_does_not_break_the_svg(page, base):
       const at = blocks.findIndex((b) => b.querySelector('svg') && b.textContent.includes('基础状态'));
       const text = blocks[at].textContent;
       const i = text.indexOf('基础状态');
-      localStorage.setItem('jasoncai:notes:v1', JSON.stringify({'ot-crdt-lww': [{
+      localStorage.setItem('jasoncai:notes:v2:guest', JSON.stringify({'ot-crdt-lww': [{
         id: 'svgnote', q: '基础状态',
         pre: text.slice(Math.max(0, i - 32), i),
         post: text.slice(i + 4, i + 36),
@@ -591,7 +591,7 @@ def test_ask_saves_the_typed_annotation_first(page, base):
     page.click(".nt-pop .nt-ask")
     page.wait_for_timeout(500)
     stored = page.evaluate(
-        """() => JSON.parse(localStorage.getItem('jasoncai:notes:v1'))['ot-crdt-lww'][0]['thread'][0]['text']"""
+        """() => JSON.parse(localStorage.getItem('jasoncai:notes:v2:guest'))['ot-crdt-lww'][0]['thread'][0]['text']"""
     )
     assert stored == "为什么丢掉所有编辑也算收敛？", f"点 AI 之前应当先存批注：{stored}"
 
@@ -652,8 +652,8 @@ def test_save_stays_quiet_when_nothing_triggers(page, base):
     assert page.locator(".nt-pop").count() == 0, "保存后气泡应当关闭"
 
 
-def test_home_uploads_local_notes_in_one_batch(page, base):
-    """首页补传本地笔记只能发一次批量请求，不能每篇一次（那会把刷新拖慢）。"""
+def test_guest_keeps_local_notes_on_device(page, base):
+    """没登录时本地笔记不上传（账号体系下访客是纯本机模式）。"""
     requests = []
     local = {
         slug: [{"id": f"n{n}abcde", "q": "收敛", "pre": "", "post": "", "block": 0,
@@ -667,10 +667,8 @@ def test_home_uploads_local_notes_in_one_batch(page, base):
     )[-1])
     page.goto(base + "/")
     page.wait_for_timeout(1200)
-    single = [u for u in requests if "/api/notes/" in u]
-    bulk = [u for u in requests if "/api/notes?slugs=" in u]
-    assert not single, f"不该逐篇拉取：{single[:3]}"
-    assert len(bulk) == 1, f"三篇本地笔记应当合成一次批量请求：{bulk}"
+    # 未登录时状态只留本机：既不该逐篇拉取，也不该批量上传。
+    assert not requests, f"访客不该打 /api/notes：{requests[:3]}"
 
 
 CASES = [
@@ -703,7 +701,7 @@ CASES = [
     (test_note_list_moves_to_the_right_rail_on_wide_screen, False, DESKTOP),
     (test_note_list_stays_below_the_article_when_narrow, False, DESKTOP),
     (test_bubble_still_follows_the_mark_on_wide_screen, False, DESKTOP),
-    (test_home_uploads_local_notes_in_one_batch, False, DESKTOP),
+    (test_guest_keeps_local_notes_on_device, False, DESKTOP),
 ]
 
 

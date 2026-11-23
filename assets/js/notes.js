@@ -11,11 +11,14 @@ import {
   removeNote,
   serializeStore,
 } from "./notes-core.mjs";
+import { nsKey } from "./user-store.js";
+import { current, isAdmin } from "./auth.js";
+
+const userSuffix = () => nsKey("u").split(":")[1] || "guest";
 import {
   AuthError,
   askAI,
   openNoteStream,
-  getEditKey,
   postReply,
   pullNotes,
   pullNotesBulk,
@@ -24,7 +27,6 @@ import {
   syncNow,
   queueDelete,
   mergeNotes,
-  setEditKey,
   uploadLocalOnly,
 } from "./sync.js";
 
@@ -224,7 +226,7 @@ function safeStore() {
 function save(all) {
   const store = safeStore();
   if (!store) return all;
-  if (!writeNotes(store, all)) console.warn("笔记没存进去：本地存储已满或被禁用");
+  if (!writeNotes(store, all, nsKey(NOTES_KEY))) console.warn("笔记没存进去：本地存储已满或被禁用");
   return all;
 }
 
@@ -237,7 +239,7 @@ function currentSelection() {
 let serverCounts = {};
 
 export function markHome() {
-  const all = readNotes(safeStore());
+  const all = readNotes(safeStore(), nsKey(NOTES_KEY));
   for (const li of document.querySelectorAll("li[data-progress-post]")) {
     const slug = li.dataset.progressPost;
     const count = countFor(all, slug) || serverCounts[slug] || 0;
@@ -265,11 +267,11 @@ async function pushLocalSlugs(currentSlug) {
   if (pushedLocal) return;
   pushedLocal = true;
   try {
-    if (sessionStorage.getItem("jasoncai:notes:pushed") === "1") return;
+    if (sessionStorage.getItem(`jasoncai:notes:pushed:${userSuffix()}`) === "1") return;
   } catch {
     /* 存储被禁也不是致命问题 */
   }
-  let all = readNotes(safeStore());
+  let all = readNotes(safeStore(), nsKey(NOTES_KEY));
   const slugs = Object.keys(all)
     .filter((slug) => notesFor(all, slug).length)
     .filter((slug) => slug !== currentSlug);
@@ -279,7 +281,7 @@ async function pushLocalSlugs(currentSlug) {
     const chunk = slugs.slice(i, i + 25);
     try {
       const bundles = await pullNotesBulk(chunk);
-      all = readNotes(safeStore());
+      all = readNotes(safeStore(), nsKey(NOTES_KEY));
       for (const slug of chunk) {
         const local = notesFor(all, slug);
         if (!local.length) continue;
@@ -294,75 +296,33 @@ async function pushLocalSlugs(currentSlug) {
   }
   if (ok) {
     try {
-      sessionStorage.setItem("jasoncai:notes:pushed", "1");
+      sessionStorage.setItem(`jasoncai:notes:pushed:${userSuffix()}`, "1");
     } catch {
       /* ignore */
     }
   }
 }
 
-let keyDialog = null;
-
-// 写操作要口令：401 时弹一次，存本地后自动继续（队列里的操作也会跟着补发）。
+// 写操作现在跟账号走：没有登录态就提示登录，不再有单独的口令框。
 function promptForKey(retry) {
-  if (keyDialog) return;
-  const wrap = document.createElement("div");
-  wrap.className = "nt-key";
-  const card = document.createElement("div");
-  card.className = "nt-key-card";
-  const hasKey = Boolean(getEditKey());
-  const title = document.createElement("p");
-  title.className = "nt-key-title";
-  title.textContent = hasKey ? "口令不对，重新输入" : "写批注需要一个口令";
-  const hint = document.createElement("p");
-  hint.className = "nt-key-hint";
-  hint.textContent = "输入一次就永久存在这台浏览器里，之后不用再输。";
-  const input = document.createElement("input");
-  input.type = "password";
-  input.className = "nt-key-input";
-  input.autocomplete = "current-password";
-  input.placeholder = "口令";
-  const acts = document.createElement("div");
-  acts.className = "nt-key-acts";
-  const ok = document.createElement("button");
-  ok.type = "button";
-  ok.className = "nt-key-ok";
-  ok.textContent = "确定";
-  const cancel = document.createElement("button");
-  cancel.type = "button";
-  cancel.className = "nt-key-cancel";
-  cancel.textContent = "取消";
-  acts.append(ok, cancel);
-  card.append(title, hint, input, acts);
-  wrap.append(card);
-
-  const close = () => {
-    wrap.remove();
-    keyDialog = null;
-  };
-  const submit = () => {
-    const value = input.value.trim();
-    if (!value) {
-      input.focus();
-      return;
-    }
-    setEditKey(value);
-    close();
-    if (typeof retry === "function") retry();
-  };
-  ok.addEventListener("click", submit);
-  cancel.addEventListener("click", close);
-  input.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") submit();
-    if (event.key === "Escape") close();
-  });
-  wrap.addEventListener("click", (event) => {
-    if (event.target === wrap) close();
-  });
-
-  keyDialog = wrap;
-  document.body.append(wrap);
-  input.focus();
+  const button = document.querySelector(".account-bar .account-btn");
+  if (!button) {
+    console.warn("需要登录才能写批注");
+    return;
+  }
+  button.click();
+  const dialog = document.querySelector(".auth-dialog");
+  dialog?.addEventListener(
+    "click",
+    (event) => {
+      if (event.target.closest("button[type=submit]")) {
+        setTimeout(() => {
+          if (typeof retry === "function" && document.querySelector(".account-name")) retry();
+        }, 900);
+      }
+    },
+    { once: true },
+  );
 }
 
 function initNotes() {
@@ -386,7 +346,7 @@ function initNotes() {
   if (!body) return;
   const slug = body.dataset.progressPost;
 
-  let all = readNotes(safeStore());
+  let all = readNotes(safeStore(), nsKey(NOTES_KEY));
   // 定位不到的批注：列表里标出来，而不是悄悄消失。区分两种原因——
   // 「图内文字」是老笔记落在 SVG 里，本来就包不了 mark；「edited」是原文真的改了。
   let staleIds = new Map();
@@ -577,6 +537,8 @@ function initNotes() {
     askBtn.className = "nt-ask";
     askBtn.dataset.act = "ask";
     askBtn.textContent = "让 AI 回答";
+    // 只有 Root 能让 AI 回答：登录了但不是管理员就不渲染；访客点了会先要求登录。
+    if (current() && !isAdmin()) askBtn.hidden = true;
     const hasAI = note.thread.some((m) => m.author === "AI");
     paintJob(jobRow, jobText, askBtn, job || note.job, hasAI);
     // 点「让 AI 回答」时先落一次批注：用户常常写完问题直接点，不等「保存」。

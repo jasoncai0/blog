@@ -1,7 +1,7 @@
 // 阅读进度的纯逻辑：滚动换算、本地存储的读写与修剪。
 // 没有 DOM 依赖，浏览器里由 reading-progress.js 调用，Node 里由测试直接跑。
 
-export const STORAGE_KEY = "jasoncai:read:v1";
+export const STORAGE_KEY = "jasoncai:read:v2";
 export const DONE_THRESHOLD = 95;
 export const RESUME_MIN = 5;
 export const MAX_ENTRIES = 300;

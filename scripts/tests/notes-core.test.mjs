@@ -18,7 +18,7 @@ import {
 } from "../../assets/js/notes-core.mjs";
 
 test("常量固定：键名与锚点 padding", () => {
-  assert.equal(NOTES_KEY, "jasoncai:notes:v1");
+  assert.equal(NOTES_KEY, "jasoncai:notes:v2");
   assert.equal(ANCHOR_PAD, 32);
 });
 

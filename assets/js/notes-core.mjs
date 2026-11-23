@@ -2,7 +2,7 @@
 // 一条笔记 = 一段划线的锚点（q + 前后各 ANCHOR_PAD 字 + 段落下标）+ 一串批注。
 // thread[0] 永远是读者本人写的；将来 AI 的回答以 {author:"AI"} 往后追加。
 
-export const NOTES_KEY = "jasoncai:notes:v1";
+export const NOTES_KEY = "jasoncai:notes:v2";
 export const ANCHOR_PAD = 32;
 
 let seq = 0;
@@ -83,17 +83,17 @@ export function serializeStore(all) {
   return JSON.stringify(out);
 }
 
-export function readNotes(store) {
+export function readNotes(store, key = NOTES_KEY) {
   try {
-    return parseStore(store.getItem(NOTES_KEY));
+    return parseStore(store.getItem(key));
   } catch {
     return {};
   }
 }
 
-export function writeNotes(store, all) {
+export function writeNotes(store, all, key = NOTES_KEY) {
   try {
-    store.setItem(NOTES_KEY, serializeStore(all));
+    store.setItem(key, serializeStore(all));
     return true;
   } catch {
     return false;

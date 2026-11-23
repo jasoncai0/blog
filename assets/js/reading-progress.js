@@ -13,13 +13,14 @@ import {
   DONE_THRESHOLD,
 } from "./progress-core.mjs";
 import { pullSummary, queueProgress, mergeProgress } from "./sync.js";
+import { getItem, setItem } from "./user-store.js";
 
 const FLUSH_MS = 1000;
 const HINT_MS = 2500;
 
 function safeGet() {
   try {
-    return localStorage.getItem(STORAGE_KEY);
+    return getItem(STORAGE_KEY);
   } catch {
     return null; // 隐私模式 / 存储被禁用
   }
@@ -27,7 +28,7 @@ function safeGet() {
 
 function safeSet(text) {
   try {
-    localStorage.setItem(STORAGE_KEY, text);
+    setItem(STORAGE_KEY, text);
     return true;
   } catch {
     return false;
@@ -272,6 +273,8 @@ function boot() {
     }, HINT_MS);
   }
 
+  let resumedThisLoad = false;
+
   // 续读：只在「干净地打开这一页」时接手。锚点、后退/前进、浏览器已经恢复过
   // 滚动位置（scrollY !== 0）这三种情况都不抢——浏览器比我们知道得更多。
   function applyResume(entry) {
@@ -286,6 +289,7 @@ function boot() {
     window.scrollTo(0, target);
     root.style.scrollBehavior = previous;
     revealed = true;
+    resumedThisLoad = true; // 续读过了就不再画「上次读到这」
     if (target > 0) showHint(entry.p); // 没真跳（目标被 clamp 到 0）就别提示
     onScroll();
     return true;
@@ -354,7 +358,8 @@ function boot() {
       requestAnimationFrame(() => {
         metrics = measure(); // 图片加载完可能改变正文高度
         const jumped = maybeResume();
-        if (!jumped) placeMarker(readEntry(parseStore(safeGet() || ""), slug));
+        resumedThisLoad = resumedThisLoad || jumped;
+        if (!jumped && !resumedThisLoad) placeMarker(readEntry(parseStore(safeGet() || ""), slug));
         update();
       }),
     );
@@ -370,8 +375,11 @@ function boot() {
     if (!entry) return;
     // 用户还没动过页面（刚打开）才接手续读；已经自己滚了就别拽回去。
     if (window.scrollY === 0 && !location.hash && navType() !== "back_forward" && applyResume(entry)) {
+      resumedThisLoad = true;
       return;
     }
+    // 这次打开已经续读过了，就别再画「上次读到这」的虚线。
+    if (resumedThisLoad) return;
     paint(entry.p);
     document.querySelector(".rp-marker")?.remove();
     placeMarker(entry);

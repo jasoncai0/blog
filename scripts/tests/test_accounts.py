@@ -78,9 +78,37 @@ def test_bad_password_shows_message_without_crash(page, base):
     assert not errors, errors
 
 
+def test_state_is_scoped_per_account(page, base):
+    login_as(page, base)
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.click("button.fav-btn")
+    page.wait_for_function("() => document.querySelector('.fav-btn').getAttribute('aria-pressed') === 'true'")
+    page.evaluate("() => localStorage.removeItem('jasoncai:auth:v1')")
+    page.reload()
+    assert page.locator("button.fav-btn[aria-pressed=true]").count() == 0, "访客不该看到 Root 的收藏"
+
+
+def test_non_admin_cannot_ask_ai(page, base):
+    login_as(page, base, "Alice", "alice-pass")
+    page.goto(base + "/posts/ot-crdt-lww.html")
+    page.wait_for_timeout(1200)
+    assert page.locator(".nt-ask:not([hidden])").count() == 0, "非管理员不显示「让 AI 回答」"
+
+
+def test_guest_does_not_call_server_state(page, base):
+    seen = []
+    page.on("request", lambda r: seen.append(r.url) if "/api/" in r.url else None)
+    page.goto(base)
+    page.wait_for_timeout(1200)
+    assert not [u for u in seen if any(p in u for p in ("/api/notes", "/api/progress", "/api/favorites"))], seen
+
+
 CASES = [
     (test_login_and_logout, False),
     (test_bad_password_shows_message_without_crash, False),
+    (test_state_is_scoped_per_account, False),
+    (test_non_admin_cannot_ask_ai, False),
+    (test_guest_does_not_call_server_state, False),
 ]
 
 
@@ -123,7 +151,9 @@ def main():
     try:
         wait_for(base + "/")
         wait_for(API + "/healthz")
-        notesd.Store(db).create_user("Root", "root-pass-1", "admin")
+        store = notesd.Store(db)
+        store.create_user("Root", "root-pass-1", "admin")
+        store.create_user("Alice", "alice-pass", "user")
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             for fn, needs_context in CASES:

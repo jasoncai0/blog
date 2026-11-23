@@ -5,7 +5,7 @@
 export const API = window.__NOTES_API__ || "/api";
 
 const QUEUE_KEY = "jasoncai:sync-queue:v1";
-const KEY_STORE = "jasoncai:notes:key";
+const AUTH_KEY = "jasoncai:auth:v1";
 const MAX_QUEUE = 200;
 
 function readQueue() {
@@ -29,27 +29,20 @@ let flushing = null;
 let retryTimer = 0;
 let backoff = 4000;
 
-export function getEditKey() {
+// 读登录态。这里不 import auth.js：auth.js 反过来要 import flush，循环依赖容易踩坑。
+export function authToken() {
   try {
-    return localStorage.getItem(KEY_STORE) || "";
+    const me = JSON.parse(localStorage.getItem(AUTH_KEY) || "null");
+    return me && me.token ? me.token : "";
   } catch {
     return "";
   }
 }
 
-export function setEditKey(key) {
-  try {
-    if (key) localStorage.setItem(KEY_STORE, key);
-    else localStorage.removeItem(KEY_STORE);
-  } catch {
-    /* ignore */
-  }
-  if (key) {
-    clearTimeout(retryTimer);
-    backoff = 4000;
-    flush();
-  }
-}
+const authHeaders = () => {
+  const token = authToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 export class AuthError extends Error {}
 
@@ -88,13 +81,11 @@ export async function syncNow() {
 
 async function send(op) {
   const url = `${API}/${op.path}`;
-  const headers = { "Content-Type": "application/json" };
-  const key = getEditKey();
-  if (key) headers["X-Edit-Key"] = key;
+  const headers = { "Content-Type": "application/json", ...authHeaders() };
   const init = { method: op.method, headers };
   if (op.body !== undefined) init.body = JSON.stringify(op.body);
   const res = await fetch(url, init);
-  if (res.status === 401) throw new AuthError("edit key required");
+  if (res.status === 401) throw new AuthError("login required");
   if (res.status >= 500) throw new Error(`server ${res.status}`);
   if (!res.ok) {
     // 4xx 说明这条数据本身不被接受，再重试也没用，丢掉并留一行日志。
@@ -105,6 +96,7 @@ async function send(op) {
 let queueSeq = 0;
 
 export async function flush() {
+  if (!authToken()) return null; // 未登录：状态只留本机，不上行
   if (flushing) return flushing;
   if (!readQueue().length) return null;
   flushing = (async () => {
@@ -167,35 +159,31 @@ export const queueProgress = (slug, entry) =>
   });
 
 async function getJSON(path) {
-  const res = await fetch(`${API}/${path}`, { cache: "no-store" });
+  const res = await fetch(`${API}/${path}`, { cache: "no-store", headers: authHeaders() });
   if (!res.ok) throw new Error(`GET ${path} ${res.status}`);
   return res.json();
 }
 
 export async function postReply(slug, noteId, text, author = "我") {
-  const headers = { "Content-Type": "application/json" };
-  const key = getEditKey();
-  if (key) headers["X-Edit-Key"] = key;
+  const headers = { "Content-Type": "application/json", ...authHeaders() };
   const res = await fetch(`${API}/notes/${slug}/${noteId}/replies`, {
     method: "POST",
     headers,
     body: JSON.stringify({ author, text, t: Date.now() }),
   });
-  if (res.status === 401) throw new AuthError("edit key required");
+  if (res.status === 401) throw new AuthError("login required");
   if (!res.ok) throw new Error(`reply ${res.status}`);
   return res.json();
 }
 
 export async function askAI(slug, noteId, { auto = false } = {}) {
-  const headers = { "Content-Type": "application/json" };
-  const key = getEditKey();
-  if (key) headers["X-Edit-Key"] = key;
+  const headers = { "Content-Type": "application/json", ...authHeaders() };
   const res = await fetch(`${API}/notes/${slug}/${noteId}/ask`, {
     method: "POST",
     headers,
     body: JSON.stringify({ auto }),
   });
-  if (res.status === 401) throw new AuthError("edit key required");
+  if (res.status === 401) throw new AuthError("login required");
   if (res.status === 409) {
     const body = await res.json().catch(() => ({}));
     throw new Error(body.error === "no session" ? "这篇文章没有关联的会话" : "已经有一条在排队了");
@@ -205,6 +193,7 @@ export async function askAI(slug, noteId, { auto = false } = {}) {
 }
 
 export function openNoteStream(slug, onEvent) {
+  if (!authToken()) return null; // 未登录不订阅
   const source = new EventSource(`${API}/notes/${slug}/stream`);
   source.addEventListener("note.updated", (evt) => {
     try {
@@ -228,6 +217,7 @@ export function openNoteStream(slug, onEvent) {
 // 所以缓存挂在 window 上，跨实例共享。
 const summaryCache = (globalThis.__notesSummary ||= { promise: null, at: 0 });
 export const pullSummary = (maxAgeMs = 30000) => {
+  if (!authToken()) return Promise.resolve({ notes: {}, progress: {}, favorites: {} });
   if (summaryCache.promise && Date.now() - summaryCache.at < maxAgeMs) {
     return summaryCache.promise;
   }
@@ -238,9 +228,13 @@ export const pullSummary = (maxAgeMs = 30000) => {
   });
   return summaryCache.promise;
 };
-export const pullNotes = (slug) => getJSON(`notes/${slug}`);
+const EMPTY_BUNDLE = () => ({ notes: [], deleted: [] });
+export const pullNotes = (slug) =>
+  authToken() ? getJSON(`notes/${slug}`) : Promise.resolve(EMPTY_BUNDLE());
 export const pullNotesBulk = (slugs) =>
-  getJSON(`notes?slugs=${encodeURIComponent(slugs.join(","))}`).then((data) => data.items || {});
+  authToken()
+    ? getJSON(`notes?slugs=${encodeURIComponent(slugs.join(","))}`).then((data) => data.items || {})
+    : Promise.resolve({});
 
 // 本地与服务端的笔记合并：服务端更新时间不早于本地就采用服务端；墓碑直接删。
 export function mergeNotes(localList, serverNotes, deletedIds) {

@@ -1,12 +1,17 @@
 // 收藏：本机先落盘，再和服务器对账。收藏是匿名的（和阅读进度一样），
 // 访客不用口令就能点；所以换浏览器、清缓存之后还能从服务端取回来。
+import { getItem, setItem } from "./user-store.js";
+import { authToken } from "./sync.js";
+
+const authHeaders = () => (authToken() ? { Authorization: `Bearer ${authToken()}` } : {});
+
 const API = window.__NOTES_API__ || "/api";
-const KEY = "jasoncai:fav:v1";
-const QUEUE_KEY = "jasoncai:fav-queue:v1";
+const KEY = "jasoncai:fav:v2";
+const QUEUE_KEY = "jasoncai:fav-queue:v2";
 
 function readJSON(key, fallback) {
   try {
-    const raw = localStorage.getItem(key);
+    const raw = getItem(key);
     const value = raw ? JSON.parse(raw) : null;
     return value && typeof value === "object" ? value : fallback;
   } catch {
@@ -16,7 +21,7 @@ function readJSON(key, fallback) {
 
 function writeJSON(key, value) {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    setItem(key, JSON.stringify(value));
     return true;
   } catch {
     return false;
@@ -58,7 +63,10 @@ function enqueue(slug, on) {
 }
 
 function send(slug, on) {
-  const init = { method: on ? "PUT" : "DELETE", headers: { "Content-Type": "application/json" } };
+  const init = {
+    method: on ? "PUT" : "DELETE",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+  };
   if (on) init.body = JSON.stringify({ t: favorites[slug] || Date.now() });
   return fetch(`${API}/favorites/${encodeURIComponent(slug)}`, init).then((res) => {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -91,7 +99,8 @@ function push(slug, on) {
 // 服务端是收藏这一份清单的准绳：拉下来直接覆盖本地，取消收藏才能同步到别的设备。
 // 唯一例外是还没发出去的改动（离线时点的星），它们排在队列里、拉取后再盖回去。
 function pull() {
-  return fetch(`${API}/favorites`, { headers: { Accept: "application/json" } })
+  if (!authToken()) return Promise.resolve(); // 访客只存本机
+  return fetch(`${API}/favorites`, { headers: { Accept: "application/json", ...authHeaders() } })
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();

@@ -15,7 +15,7 @@ import urllib.request
 
 from playwright.sync_api import sync_playwright
 
-KEY = "jasoncai:read:v1"
+KEY = "jasoncai:read:v2:guest"
 
 
 def wait_for_server(url, timeout=15.0):
@@ -223,7 +223,7 @@ def test_home_marks_refresh_after_bfcache(context, base):
     mark = page.locator('li[data-progress-post="hello"] .read-mark')
     assert mark.inner_text().strip() == "62%"
     # 模拟从文章页后退、页面由 bfcache 恢复：存储里已经是 100
-    page.evaluate("localStorage.setItem('jasoncai:read:v1', JSON.stringify({hello:{p:100,t:Date.now(),d:true}}))")
+    page.evaluate("localStorage.setItem('jasoncai:read:v2:guest', JSON.stringify({hello:{p:100,t:Date.now(),d:true}}))")
     page.evaluate("window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}))")
     page.wait_for_timeout(100)
     assert mark.inner_text().strip() == "读完", "bfcache 恢复后标记应重算"
