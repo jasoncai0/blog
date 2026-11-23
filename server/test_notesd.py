@@ -243,18 +243,33 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual((a["progress"]["user-scope"]["p"], len(a["favorites"])), (100, 1))
         self.assertEqual((b["progress"], b["favorites"]), ({}, {}))
 
+    def test_jobs_require_admin(self):
+        self.seed_user("Alice", "alice-pass")
+        ta = self.token_for("Alice", "alice-pass")
+        self.assertEqual(self.call("GET", "/api/jobs?status=pending", noauth=True)[0], 401)
+        self.assertEqual(self.call("GET", "/api/jobs?status=pending", headers=self.auth(ta))[0], 403)
+        self.assertEqual(self.call("GET", "/api/jobs?status=pending")[0], 200)
+
+    def test_non_admin_reply_does_not_enqueue_ai(self):
+        root = self.admin_token()
+        self.call("PUT", "/api/sessions/ot-crdt-lww", {"session_id": "session-abcdefgh", "workspace": "ws"}, self.auth(root))
+        self.seed_user("Alice", "alice-pass")
+        ta = self.token_for("Alice", "alice-pass")
+        self.call("PUT", "/api/notes/ot-crdt-lww/a1note", self.note("a1note"), self.auth(ta))
+        _, body = self.call("POST", "/api/notes/ot-crdt-lww/a1note/replies",
+                            {"author": "我", "text": "为什么不加锁？"}, self.auth(ta))
+        self.assertIsNone(body.get("job"))
+
     def test_summary_includes_favorites(self):
         self.call("PUT", "/api/favorites/summary-check", {"t": 222})
         _, body = self.call("GET", "/api/summary")
         self.assertEqual(body["favorites"].get("summary-check"), 222)
 
-    def test_favorites_write_needs_no_edit_key(self):
-        notesd.Handler.edit_key = "secret-key"
-        code, body = self.call("PUT", "/api/favorites/anonymous-ok", {"t": 333})
-        self.assertEqual(code, 200, "访客也要能收藏，不能要求口令")
-        code, _ = self.call("PUT", "/api/notes/anonymous-ok/n0abcde", self.note("n0abcde"))
-        self.assertEqual(code, 401, "笔记写入仍然要口令")
-        notesd.Handler.edit_key = ""
+    def test_favorites_require_login(self):
+        self.assertEqual(self.call("PUT", "/api/favorites/anonymous-ok", {"t": 333}, noauth=True)[0], 401)
+        self.assertEqual(self.call("PUT", "/api/favorites/anonymous-ok", {"t": 333})[0], 200)
+        # 用独立 slug 测完就删，避免污染 test_favorites_roundtrip 的全集断言。
+        self.call("DELETE", "/api/favorites/anonymous-ok")
 
     def test_favorites_bad_slug(self):
         code, body = self.call("PUT", "/api/favorites/Bad_Slug", {"t": 1})
@@ -269,25 +284,14 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual(code, 200, body)
         self.assertEqual(body["session"]["workspace"], "/Users/x/Documents/ws")
 
-    def test_edit_key_guards_writes(self):
-        notesd.Handler.edit_key = "s3cret"
-        try:
-            self.assertEqual(
-                self.call("PUT", "/api/notes/hello/n8abcde", self.note("n8abcde"))[0], 401
-            )
-            status, _ = self.call(
-                "PUT", "/api/notes/hello/n8abcde", self.note("n8abcde"), {"X-Edit-Key": "s3cret"}
-            )
-            self.assertEqual(status, 200)
-            self.assertEqual(self.call("GET", "/api/notes/hello")[0], 200)
-            # 阅读进度是匿名的：访客都能写，不受口令影响。
-            self.assertEqual(
-                self.call("PUT", "/api/progress/anon-probe", {"p": 40, "t": 1700000000000, "d": False})[0],
-                200,
-            )
-        finally:
-            notesd.Handler.edit_key = ""
-
+    def test_notes_and_progress_require_login(self):
+        self.assertEqual(self.call("PUT", "/api/notes/hello/n8abcde", self.note("n8abcde"), noauth=True)[0], 401)
+        self.assertEqual(self.call("PUT", "/api/notes/hello/n8abcde", self.note("n8abcde"))[0], 200)
+        self.assertEqual(self.call("GET", "/api/notes/hello", noauth=True)[0], 401)
+        self.assertEqual(
+            self.call("PUT", "/api/progress/anon-probe", {"p": 40, "t": 1700000000000, "d": False}, noauth=True)[0],
+            401,
+        )
 
     def test_reply_appends_a_floor(self):
         slug = "thread-test"
@@ -329,39 +333,31 @@ class NotesdTest(unittest.TestCase):
                 return event, json.loads(data or "{}")
         return None, None
 
-    def test_bridge_stream_requires_token(self):
-        notesd.Handler.bridge_token = "btok"
-        try:
-            conn, resp = self.stream("/api/jobs/stream")
-            self.assertEqual(resp.status, 401)
-            conn.close()
-            conn, resp = self.stream("/api/jobs/stream", {"X-Bridge-Token": "wrong"})
-            self.assertEqual(resp.status, 401)
-            conn.close()
-        finally:
-            notesd.Handler.bridge_token = ""
+    def test_jobs_stream_requires_admin(self):
+        conn, resp = self.stream("/api/jobs/stream", {"Authorization": ""})
+        self.assertEqual(resp.status, 401)
+        conn.close()
+        self.seed_user("Alice", "alice-pass")
+        conn, resp = self.stream("/api/jobs/stream", {"Authorization": f"Bearer {self.token_for('Alice', 'alice-pass')}"})
+        self.assertEqual(resp.status, 403)
+        conn.close()
 
-    def test_bridge_stream_disabled_without_token(self):
-        notesd.Handler.bridge_token = ""
+    def test_jobs_stream_opens_for_admin(self):
         conn, resp = self.stream("/api/jobs/stream")
-        self.assertEqual(resp.status, 503)
+        self.assertEqual(resp.status, 200)
         conn.close()
 
     def test_bridge_stream_pushes_new_job(self):
-        notesd.Handler.bridge_token = "btok"
-        try:
-            slug = "stream-jobs"
-            self.register(slug)
-            self.call("PUT", f"/api/notes/{slug}/job-0006", self.note("job-0006"))
-            conn, resp = self.stream("/api/jobs/stream", {"X-Bridge-Token": "btok"})
-            self.assertEqual(resp.status, 200)
-            self.call("POST", f"/api/notes/{slug}/job-0006/ask", {})
-            event, data = self.first_event(resp)
-            self.assertEqual(event, "job.created")
-            self.assertEqual(data["slug"], slug)
-            conn.close()
-        finally:
-            notesd.Handler.bridge_token = ""
+        slug = "stream-jobs"
+        self.register(slug)
+        self.call("PUT", f"/api/notes/{slug}/job-0006", self.note("job-0006"))
+        conn, resp = self.stream("/api/jobs/stream")
+        self.assertEqual(resp.status, 200)
+        self.call("POST", f"/api/notes/{slug}/job-0006/ask", {})
+        event, data = self.first_event(resp)
+        self.assertEqual(event, "job.created")
+        self.assertEqual(data["slug"], slug)
+        conn.close()
 
     def test_note_stream_pushes_reply(self):
         slug = "stream-note"

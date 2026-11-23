@@ -11,8 +11,8 @@
     PUT    /api/progress/<slug>         更新一篇的进度
     GET    /healthz                     探活
 
-读公开；写默认也公开，但设置环境变量 NOTES_EDIT_KEY 后所有写操作要求
-`X-Edit-Key` 头与它一致（客户端会问一次并记住）。
+除 /healthz 与 /api/login 外，所有接口都要 `Authorization: Bearer <token>`；
+数据按登录用户隔离，AI 任务与会话管理只对 admin 开放。
 
 数据落在 --db 指定的 SQLite 文件里；每次写入都额外记一条 note_rev，
 误改或被人乱写时可以按时间回滚。
@@ -593,7 +593,6 @@ class Handler(BaseHTTPRequestHandler):
     store: Store
     limiter: Limiter
     login_limiter: Limiter
-    edit_key: str = ""
 
     server_version = "notesd/1.0"
 
@@ -609,7 +608,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key, Authorization")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(body)
@@ -626,11 +625,6 @@ class Handler(BaseHTTPRequestHandler):
         except (UnicodeDecodeError, json.JSONDecodeError):
             return None
 
-    def write_allowed(self) -> bool:
-        if not self.edit_key:
-            return True
-        return self.headers.get("X-Edit-Key", "") == self.edit_key
-
     def bearer(self) -> str:
         header = self.headers.get("Authorization", "")
         if not header.startswith("Bearer "):
@@ -640,6 +634,16 @@ class Handler(BaseHTTPRequestHandler):
     def current_user(self) -> dict | None:
         token = self.bearer()
         return self.store.user_for_token(token) if token else None
+
+    def require_admin(self) -> dict | None:
+        user = self.current_user()
+        if user is None:
+            self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "login required"})
+            return None
+        if user.get("role") != "admin":
+            self.send_json(HTTPStatus.FORBIDDEN, {"error": "admin only"})
+            return None
+        return user
 
     def require_user(self) -> dict | None:
         user = self.current_user()
@@ -658,7 +662,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(HTTPStatus.NO_CONTENT)
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Edit-Key, Authorization")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.send_header("Access-Control-Max-Age", "86400")
         self.end_headers()
 
@@ -788,12 +792,6 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(HTTPStatus.OK, {"user": created})
             return
 
-        # 阅读进度与收藏是匿名的（每个访客都会写），不收口令；笔记与任务要口令。
-        anonymous = parts[0] in ("progress", "favorites")
-        if write and not anonymous and not self.write_allowed():
-            self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "edit key required"})
-            return
-
         if parts[0] == "summary" and self.command == "GET":
             user = self.require_user()
             if user is None:
@@ -867,17 +865,14 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parts[0] == "jobs" and len(parts) == 2 and parts[1] == "stream" and self.command == "GET":
-            expected = type(self).bridge_token
-            if not expected:
-                self.send_json(HTTPStatus.SERVICE_UNAVAILABLE, {"error": "bridge token not configured"})
-                return
-            if self.headers.get("X-Bridge-Token", "") != expected:
-                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "bridge token required"})
+            if self.require_admin() is None:
                 return
             self.stream("jobs")
             return
 
         if parts[0] == "jobs":
+            if self.require_admin() is None:
+                return
             if len(parts) == 1 and self.command == "GET":
                 query = parse_qs(urlparse(self.path).query)
                 status = (query.get("status") or ["pending"])[0]
@@ -912,6 +907,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parts[0] == "sessions" and len(parts) == 2:
+            if self.require_admin() is None:
+                return
             slug = parts[1]
             if not SLUG_RE.match(slug):
                 self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad slug"})
@@ -975,6 +972,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(HTTPStatus.OK, self.note_bundle(user["id"], slug))
                 return
             if len(parts) == 4 and parts[3] == "ask" and self.command == "POST":
+                if self.require_admin() is None:
+                    return
                 slug, note_id = parts[1], parts[2]
                 if not SLUG_RE.match(slug) or not ID_RE.match(note_id):
                     self.send_json(HTTPStatus.BAD_REQUEST, {"error": "bad path"})
@@ -1023,6 +1022,9 @@ class Handler(BaseHTTPRequestHandler):
                     "text": text,
                     "t": int(body.get("t") or now()),
                 }
+                if self.store.note(user["id"], slug, note_id) is None:
+                    self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
+                    return
                 status, note = self.store.add_reply(user["id"], slug, note_id, reply)
                 if status == "missing":
                     self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
@@ -1033,7 +1035,8 @@ class Handler(BaseHTTPRequestHandler):
                 session = self.store.session_for(slug)
                 job = None
                 if (
-                    session
+                    user.get("role") == "admin"
+                    and session
                     and QUESTION_RE.search(reply["text"])
                     and not self.store.active_job(note_id)
                 ):
@@ -1088,8 +1091,7 @@ def main() -> None:
     Handler.store = Store(args.db)
     Handler.limiter = Limiter()
     Handler.login_limiter = Limiter()
-    Handler.edit_key = os.environ.get("NOTES_EDIT_KEY", "").strip()
-    Handler.bridge_token = os.environ.get("BRIDGE_TOKEN", "").strip()
+    # 写权限现在跟账号走，不再读 NOTES_EDIT_KEY / BRIDGE_TOKEN。
 
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)
     httpd.daemon_threads = True

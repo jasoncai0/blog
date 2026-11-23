@@ -7,10 +7,10 @@ API="${1:-http://127.0.0.1:8099}"
 WAIT="${2:-20}"
 SLUG="smoke-$(date +%s)"
 NOTE="smk-${SLUG##*-}"
-KEY="${NOTES_EDIT_KEY:-}"
+KEY="${NOTES_API_TOKEN:-}"
 
 h=(-H "Content-Type: application/json")
-[ -n "$KEY" ] && h+=(-H "X-Edit-Key: $KEY")
+[ -n "$KEY" ] && h+=(-H "Authorization: Bearer $KEY")
 
 curl -sf "${h[@]}" -X PUT "$API/api/sessions/$SLUG" \
   -d '{"session_id":"0f3a1c2d-1234-4abc-9def-001122334455","workspace":"default-workspace"}' >/dev/null

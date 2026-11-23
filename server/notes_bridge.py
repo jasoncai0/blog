@@ -9,7 +9,7 @@
 用法：
 
     NOTES_API=https://jasoncai.site/api \
-    BRIDGE_TOKEN=… NOTES_EDIT_KEY=… python3 notes_bridge.py
+    NOTES_API_TOKEN=… python3 notes_bridge.py
 
 只依赖标准库；DSH 的凭据由 `--profile headless` 自己读，bridge 不碰。
 """
@@ -44,8 +44,8 @@ def _load_env_file(path: str = "~/.dsh/notes-bridge.env") -> None:
 _load_env_file()
 
 API = os.environ.get("NOTES_API", "http://127.0.0.1:8099/api").rstrip("/")
-BRIDGE_TOKEN = os.environ.get("BRIDGE_TOKEN", "").strip()
-EDIT_KEY = os.environ.get("NOTES_EDIT_KEY", "").strip()
+# 旧的口令/桥接 token 都退役了：bridge 用 Root 的长期 token 走 Bearer。
+API_TOKEN = os.environ.get("NOTES_API_TOKEN", "").strip()
 DSH_BIN = os.environ.get("DSH_BIN", "dsh")
 DSH_PROFILE = os.environ.get("DSH_PROFILE", "headless")
 WORKER = os.environ.get("BRIDGE_WORKER", "bridge-" + os.uname().nodename)
@@ -248,10 +248,8 @@ def answer(job: dict, cwd: str, runner=run_session, runner_new=run_new) -> str:
 def _request(method: str, path: str, body: dict | None = None, timeout: int = 20) -> tuple[int, dict]:
     data = json.dumps(body).encode() if body is not None else None
     headers = {"Content-Type": "application/json"}
-    if BRIDGE_TOKEN:
-        headers["X-Bridge-Token"] = BRIDGE_TOKEN
-    if EDIT_KEY:
-        headers["X-Edit-Key"] = EDIT_KEY
+    if API_TOKEN:
+        headers["Authorization"] = f"Bearer {API_TOKEN}"
     req = urllib.request.Request(API + path, data=data, method=method, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -307,7 +305,7 @@ def subscribe() -> None:
     """SSE 只是「有新任务」的门铃，真正的任务列表仍走 HTTP 拉取。"""
     req = urllib.request.Request(
         API + "/jobs/stream",
-        headers={"X-Bridge-Token": BRIDGE_TOKEN, "Accept": "text/event-stream"},
+        headers={"Authorization": f"Bearer {API_TOKEN}", "Accept": "text/event-stream"},
     )
     while True:
         try:
@@ -322,8 +320,8 @@ def subscribe() -> None:
 
 
 def main() -> None:
-    if not BRIDGE_TOKEN:
-        print("BRIDGE_TOKEN is required", file=sys.stderr)
+    if not API_TOKEN:
+        print("NOTES_API_TOKEN is required", file=sys.stderr)
         return
     threading.Thread(target=subscribe, daemon=True).start()
     print(f"[bridge] {WORKER} watching {API}", flush=True)
