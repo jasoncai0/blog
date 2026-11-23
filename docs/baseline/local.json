@@ -866,11 +866,11 @@
  "jade-mem0-memory": {
   "figure": 2,
   "h1": 1,
-  "h2": 8,
-  "h3": 0,
+  "h2": 9,
+  "h3": 4,
   "hr": 0,
-  "pre": 2,
-  "table": 1
+  "pre": 3,
+  "table": 3
  },
  "jade-p0-context-parallel-plan": {
   "figure": 0,

@@ -113,7 +113,7 @@ Mem0 挂掉不能把 Jade 挂掉。读超时就不注入记忆；写失败就丢
 |---|---|---|
 | Phase 0 | Mem0 本地 spike：FastEmbed + DeepSeek，一条 add、一条 search | 0.5 天 |
 | Phase 1 | `MemoryService`、`Noop`、配置、健康检查、熔断 | 1 天 |
-| Phase 2 | Context 召回、记忆块注入、`memory.recalled` trace | 1 天 |
+| Phase 2 | Context 召回、记忆块注入、`memory.recall.completed` / `memory.injected` trace | 1 天 |
 | Phase 3 | Checkpoint 异步写入、`MemoryPolicy`、去重 | 1 天 |
 | Phase 4 | 管理 API/UI、集成测试、端到端验证 | 1 天 |
 
@@ -133,11 +133,72 @@ Mem0 挂掉不能把 Jade 挂掉。读超时就不注入记忆；写失败就丢
 
 成本也要算进去：召回多 50–300ms，prompt 多 300–800 token，embedding/抽取有本地 CPU 或云调用成本，错误记忆需要分数阈值、项目 scope 和删除入口兜底。一次性脚本通常不值得开。
 
-建议做 10 次同仓库会话的对照，记录重复说明次数、用户纠正次数、首次有效 `write_file` 耗时、`tool.end` 失败率、召回 precision@5、错误记忆率和 p95 延迟。门槛先定：precision@5 ≥ 70%，错误记忆率 < 5%，重复说明减少 ≥ 20%，失败率不上升。达不到就保留开关但默认关闭，先修写入策略。
+建议先做 2 天 shadow，再做 2 周同仓库 A/B 对照，记录重复说明次数、首次有效 `write_file` 耗时、完成轮数、`tool.end` 失败率、召回 precision@5、错误记忆率和 p95 延迟。门槛先定：precision@5 ≥ 70%，错误记忆率 < 5%，重复说明减少 ≥ 20%，失败率不上升。达不到就保留开关但默认关闭，先修写入策略。
 
-## 8. 已确认的决策
+## 8. 怎么量化收益
 
-1. 默认开启；`AGENT_MEMORY_ENABLED=false` 可关闭。sidecar 不可达时回退 Noop。
+“感觉更聪明”不能作为上线依据。这里把收益拆成可复算的四个量：时间、轮数、重复说明、失败返工，再减去记忆自身的开销。
+
+```text
+净收益 = 节省的重复劳动 + 减少的失败返工 - memory_cost
+```
+
+### 8.1 指标与数据源
+
+| 指标 | 定义 | 数据源 | 目标 |
+|---|---|---|---|
+| `time_to_first_edit` | run 开始到第一次有效 `write_file`/`edit_file` 的秒数 | `tool.end{ok=true}` 时间戳 | 同难度任务下降 ≥ 15% |
+| `turns_to_success` | 到 `SUCCEEDED` 的模型轮数 | `run.finished.snapshot.step` | 中位数下降 ≥ 10% |
+| `repeat_instruction_rate` | 用户重复说明已存偏好的消息占比 | 用户消息 + 人工标注 | 下降 ≥ 20% |
+| `tool_failure_rate` | `tool.end{ok=false}` / 全部 `tool.end` | Trace 事件 | 不上升 |
+| `task_success_rate` | `SUCCEEDED` 比例 | `run.finished` | 不下降 |
+| `precision@5` | 前 5 条召回中相关/正确的比例 | 50 次抽样，人工标注 | ≥ 70% |
+| `wrong_memory_rate` | 被标错、删除或被验证推翻的注入记忆比例 | `memory.feedback` + 人工 | < 5% |
+| `recall_p95` | 召回 p95 延迟 | `memory.recall.completed` | < 500ms |
+| `injection_tokens` | 每轮注入的记忆 token 中位数 | `memory.injected` | < 800 |
+
+`memory_cost` 包括 embedding/抽取成本、召回延迟和注入 token 的模型费用。本地 FastEmbed 主要是一次性模型下载和 CPU；换成云 embedding 时按实际账单记，不用估算值冒充实测。
+
+### 8.2 埋点事件
+
+复用现有 `RunEventLog` 和 MySQL `jade_events`，新增：
+
+| 事件 | 关键字段 | 用途 |
+|---|---|---|
+| `memory.recall.started` | runId, projectId, queryHash, queryChars, mode | 召回频率、shadow 标记 |
+| `memory.recall.completed` | candidateCount, selectedCount, latencyMs, topScore | 命中率、p95 |
+| `memory.injected` | runId, memoryIds, count, tokens, globalCount | 注入量、token 开销 |
+| `memory.write.queued` | runId, kind, source, infer, candidateChars | 写入策略分布 |
+| `memory.write.completed` | runId, memoryIds, latencyMs | 写入成功率 |
+| `memory.write.failed` | runId, reason, latencyMs | 失败分类 |
+| `memory.feedback` | runId, projectId, memoryId, action | 有用/错误/过时/删除 |
+
+埋点不写记忆正文、完整 query、文件内容或密钥；只记 id、hash、长度、计数、耗时和分数。事件写入失败不能影响 run。
+
+### 8.3 实验设计
+
+用 `AGENT_MEMORY_MODE` 做三组：
+
+- `off`：不读不写，作为 baseline；
+- `shadow`：只读、只记录候选和分数，不注入、不写入；用来先测 precision@5 和延迟，不影响任务；
+- `on`：召回 + 注入 + 写入，作为 treatment。
+
+先跑 2 天 shadow，确认不相关召回率可接受；再跑 2 周 A/B。每个项目至少 15 个可比任务，按任务模板和难度配对，奇偶 session 交替 on/off。分析用配对中位数和 bootstrap 95% 置信区间；样本不足 10 对时只报原始值，不宣称显著性。
+
+### 8.4 判定线
+
+第一期只验证四件事：
+
+1. `time_to_first_edit` 或 `turns_to_success` 有可重复的下降；
+2. 重复说明至少下降 20%；
+3. `task_success_rate` 不下降，`wrong_memory_rate < 5%`；
+4. 召回 p95 < 500ms，注入 token 中位数 < 800/轮。
+
+四项都达标，才把默认值保持为 `on`；只满足召回质量但收益不明显，保留 `on` 但减少写入；收益为负就默认 `off`，把记忆降级为显式管理工具。
+
+## 9. 已确认的决策
+
+1. 默认开启；`AGENT_MEMORY_MODE=off` 可关闭，`shadow` 用于只读评估。sidecar 不可达时回退 Noop。
 2. 本地 embedding 使用 `BAAI/bge-small-en-v1.5`，Phase 0 先测中英文混合和冷启动。
 3. 写入采用“用户原话 infer=true、系统结论 infer=false”的混合策略。
 4. 跨项目采用“项目隔离 + 显式全局偏好”；项目事实、决策、踩坑不跨项目。
