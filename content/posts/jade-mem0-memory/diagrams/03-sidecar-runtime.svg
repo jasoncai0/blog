@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="470" viewBox="0 0 980 470" role="img" aria-labelledby="t d">
+  <title id="t">Mem0 sidecar 运行结构</title>
+  <desc id="d">Jade 通过 8888 端口调用 Mem0 API；Mem0 使用 DeepSeek 抽取、BGE embedding sidecar 向量化，并持久化到 Qdrant 与 history volume。</desc>
+  <rect width="980" height="470" fill="#f5f5f5"/>
+  <text x="40" y="44" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="12" letter-spacing="2" fill="#777">JADE / MEMORY RUNTIME</text>
+  <text x="40" y="76" font-family="Songti SC, STSong, serif" font-size="26" fill="#222">sidecar 是独立进程，记忆不进入会话事件流</text>
+  <text x="40" y="99" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="12" fill="#777">Jade 只通过 HTTP 调用；sidecar 不可用即回退 Noop</text>
+
+  <rect x="40" y="135" width="190" height="105" rx="4" fill="#fff" stroke="#cfc8bf"/>
+  <text x="58" y="162" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#777">HOST / JADE</text>
+  <text x="58" y="184" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="14" fill="#222">AgentLoop</text>
+  <text x="58" y="204" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">Context: recall</text>
+  <text x="58" y="221" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">Checkpoint: write</text>
+
+  <rect x="280" y="62" width="660" height="360" rx="4" fill="none" stroke="#bdb6ad" stroke-dasharray="5 5"/>
+  <text x="720" y="84" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="10" fill="#888">DOCKER NETWORK · jade-mem0_default</text>
+
+  <rect x="300" y="110" width="230" height="112" rx="4" fill="#fff" stroke="#bf4520"/>
+  <text x="318" y="136" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#888">CONTAINER</text>
+  <text x="318" y="159" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="15" fill="#222">Mem0 API</text>
+  <text x="318" y="180" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">:8888 → :8000</text>
+  <text x="318" y="198" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">/memories · /search</text>
+
+  <rect x="300" y="278" width="230" height="102" rx="4" fill="#fff" stroke="#cfc8bf"/>
+  <text x="318" y="304" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#888">CONTAINER</text>
+  <text x="318" y="327" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="14" fill="#222">jade-embed</text>
+  <text x="318" y="347" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">:18092 /v1/embeddings</text>
+  <text x="318" y="365" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">FastEmbed · BGE-small</text>
+
+  <rect x="620" y="110" width="260" height="92" rx="4" fill="#fff" stroke="#cfc8bf"/>
+  <text x="638" y="136" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#888">VOLUME</text>
+  <text x="638" y="159" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="14" fill="#222">Qdrant local</text>
+  <text x="638" y="178" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">/app/qdrant · 384 dims</text>
+
+  <rect x="620" y="278" width="260" height="92" rx="4" fill="#fff" stroke="#cfc8bf"/>
+  <text x="638" y="304" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#888">VOLUME</text>
+  <text x="638" y="327" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="14" fill="#222">BGE model cache</text>
+  <text x="638" y="346" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">/models · offline</text>
+
+  <rect x="620" y="216" width="260" height="38" rx="4" fill="#f0e9df" stroke="#d6cabc"/>
+  <text x="638" y="240" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="11" fill="#555">DeepSeek · 抽取与去重</text>
+
+  <line x1="230" y1="187" x2="300" y2="165" stroke="#bf4520" stroke-width="1.4"/>
+  <polygon points="300,165 291,161 293,170" fill="#bf4520"/>
+  <text x="236" y="158" font-family="ui-monospace, SFMono-Regular, Menlo" font-size="10" fill="#bf4520">HTTP</text>
+
+  <line x1="530" y1="166" x2="620" y2="156" stroke="#9f978d" stroke-width="1.2"/>
+  <polygon points="620,156 611,152 613,161" fill="#9f978d"/>
+  <line x1="530" y1="330" x2="620" y2="324" stroke="#9f978d" stroke-width="1.2"/>
+  <polygon points="620,324 611,320 613,329" fill="#9f978d"/>
+  <line x1="530" y1="337" x2="620" y2="235" stroke="#9f978d" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <polygon points="620,235 611,234 615,242" fill="#9f978d"/>
+
+</svg>

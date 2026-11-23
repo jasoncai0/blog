@@ -864,13 +864,13 @@
   "table": 0
  },
  "jade-mem0-memory": {
-  "figure": 2,
+  "figure": 3,
   "h1": 1,
-  "h2": 9,
-  "h3": 4,
+  "h2": 10,
+  "h3": 7,
   "hr": 0,
-  "pre": 3,
-  "table": 3
+  "pre": 6,
+  "table": 4
  },
  "jade-p0-context-parallel-plan": {
   "figure": 0,

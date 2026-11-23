@@ -204,4 +204,57 @@ Mem0 挂掉不能把 Jade 挂掉。读超时就不注入记忆；写失败就丢
 4. 跨项目采用“项目隔离 + 显式全局偏好”；项目事实、决策、踩坑不跨项目。
 5. 管理面做 Web + API，CLI 只做 health。
 
-方案通过后再动代码。当前仓库没有 Mem0 依赖，也没有启动任何 Mem0 容器；这篇只负责把边界、收益和失败路径讲清楚。
+## 10. Sidecar 落地：从设计到可验收
+
+方案已经落到 `java-coding-agent/docker/mem0/`：
+
+- `Dockerfile`：官方 Mem0 API 镜像 + FastEmbed；
+- `patch_main.py`：把官方默认的 pgvector/Neo4j/OpenAI 配置替换成本地 Qdrant + OpenAI-compatible 配置；
+- `embed_server.py`：BGE-small 的 `/v1/embeddings` 服务，384 维；
+- `compose.yaml`：`mem0` 与 `jade-embed` 两个服务，Qdrant/history/model 三个 volume。
+
+{{< figure src="diagrams/03-sidecar-runtime.svg" caption="图 3 · Mem0 是独立进程；Jade 只通过 HTTP 召回和写入，sidecar 故障不会拖垮 run。" >}}
+
+### 10.1 为什么不能直接用官方默认配置
+
+官方镜像启动即失败：
+
+```text
+ImportError: Neither 'psycopg' nor 'psycopg2' library is available.
+```
+
+默认配置要求 pgvector + Neo4j + OpenAI；镜像没有 psycopg，也没有启动这些依赖。本地验收因此改为“官方 API 代码 + 本地 Qdrant + DeepSeek 抽取 + 独立 BGE embedding”。
+
+### 10.2 BGE 真正跑通
+
+BGE 模型是 `Qdrant/bge-small-en-v1.5-onnx-Q` 的 `model_optimized.onnx`，66,465,124 字节。HuggingFace 直连和镜像的普通下载都卡在约 740KB，最终用 8 段并行 Range 下载完成，放进 FastEmbed cache 后离线加载。
+
+实测：
+
+| 查询 | 记忆 | 分数 |
+|---|---|---:|
+| `indentation style for this project` | `Prefers using four spaces for this project` | 0.771 |
+| Jade 任务（含 four spaces） | 同上 | 0.672 / 0.719 |
+
+端到端：
+
+```text
+memory.recall.completed  hit=true  topScore=0.6718  latencyMs=310
+memory.injected          count=1   globalCount=1    tokens=89
+```
+
+Jade 生成 4 空格缩进的 Java 文件，编译运行输出 `bge-memory-e2e-2`。写入任务也在 Mem0 中留下项目级记忆：
+
+```text
+项目默认使用四个空格
+scope=project  kind=preference  project_id=project-3c33184f3cc2fd56
+```
+
+### 10.3 还没验收的部分
+
+- BGE 冷启动首次请求约 656ms，超过 Jade 500ms 召回超时；预热后 310–414ms，建议 sidecar 启动后先跑一次 warm-up query。
+- CLI 在 `run.finished` 后立即退出，异步写入的 `memory.write.completed` 事件可能来不及落日志；sidecar 侧已确认写入。
+- Docker Compose 在当前开发机的 8888/18092 端口代理上遇到 stale listener，冷启动需要换干净 Docker 环境或重启 Docker Desktop 后复验。
+- 规模化 `precision@5`、项目隔离矩阵、shadow/A-B 仍未跑完。
+
+设计稿到此变成可运行系统；但“可上线”还需要冷启动、批量质量和运维复验。
