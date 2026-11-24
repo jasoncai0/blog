@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" role="img" aria-labelledby="f4t f4d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f4t">四个问题选出工作流还是 agent</title>
+<desc id="f4d">依次问：单次调用够不够、步骤能否提前写死、子任务数量是否随输入变化、是否需要按环境反馈多轮改计划；四个出口分别指向单次调用、固定工作流、编排者-工作者和 agent。</desc>
+<defs>
+  <marker id="f4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+</defs>
+<rect width="960" height="640" fill="#f5f5f5"/>
+
+<text x="56" y="44" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">CHOOSING / FOUR QUESTIONS</text>
+<text x="56" y="70" font-size="16" font-weight="600" fill="#2d3142">先问四次，再决定要不要 agent</text>
+<text x="56" y="90" font-size="10.5" fill="#5a6580">按顺序问，第一个「是」就停；每个出口都比下一档便宜、好调</text>
+
+<!-- Q1 -->
+<rect x="130" y="116" width="340" height="52" fill="#ffffff" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="146" y="141" font-size="10.5" fill="#2d3142">① 单次调用 + 检索 + 示例够吗？</text>
+<text x="146" y="157" font-size="8.5" fill="#8a93a6">多数分类、抽取、改写、问答到这里就结束了</text>
+<line x1="470" y1="142" x2="652" y2="142" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="560" y="134" text-anchor="middle" font-size="9" fill="#4f5d75">够</text>
+
+<!-- E1 -->
+<rect x="660" y="116" width="240" height="52" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="674" y="141" font-size="10.5" font-weight="600" fill="#2d3142">停在单次调用</text>
+<text x="674" y="157" font-size="8.5" fill="#5a6580">加检索、加示例，先别加控制流</text>
+
+<!-- Q1 -> Q2 -->
+<line x1="300" y1="168" x2="300" y2="202" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="312" y="190" font-size="9" fill="#4f5d75">不够</text>
+
+<!-- Q2 -->
+<rect x="130" y="206" width="340" height="52" fill="#ffffff" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="146" y="231" font-size="10.5" fill="#2d3142">② 步骤能提前写死吗？</text>
+<text x="146" y="247" font-size="8.5" fill="#8a93a6">分支、顺序、每步的输入输出能否现在就列出来</text>
+
+<!-- Q2 -> Q3 -->
+<line x1="300" y1="258" x2="300" y2="292" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="312" y="280" font-size="9" fill="#4f5d75">能</text>
+
+<!-- Q2 no -> bypass left -->
+<path d="M130 232 H100 V456 H126" fill="none" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="86" y="344" font-size="9" fill="#4f5d75" transform="rotate(-90 86 344)" text-anchor="middle">不能：路径写不死</text>
+
+<!-- Q3 -->
+<rect x="130" y="296" width="340" height="52" fill="#ffffff" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="146" y="321" font-size="10.5" fill="#2d3142">③ 子任务数量随输入变化吗？</text>
+<text x="146" y="337" font-size="8.5" fill="#8a93a6">同一类任务，有时 3 步，有时 30 步</text>
+
+<!-- Q3 yes -> E3 -->
+<line x1="470" y1="322" x2="652" y2="322" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="560" y="314" text-anchor="middle" font-size="9" fill="#4f5d75">变</text>
+<rect x="660" y="296" width="240" height="52" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="674" y="321" font-size="10.5" font-weight="600" fill="#2d3142">编排者-工作者</text>
+<text x="674" y="337" font-size="8.5" fill="#5a6580">子任务由模型在运行时拆，再汇总</text>
+
+<!-- Q3 no -> E2 -->
+<path d="M300 348 V390 H652" fill="none" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="312" y="366" font-size="9" fill="#4f5d75">不变</text>
+<rect x="660" y="364" width="240" height="52" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="674" y="389" font-size="10.5" font-weight="600" fill="#2d3142">固定工作流</text>
+<text x="674" y="405" font-size="8.5" fill="#5a6580">链式 / 路由 / 并行 / 评估者-优化者</text>
+
+<!-- Q4 -->
+<rect x="130" y="430" width="340" height="52" fill="#ffffff" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="146" y="455" font-size="10.5" fill="#2d3142">④ 需要按环境反馈多轮改计划吗？</text>
+<text x="146" y="471" font-size="8.5" fill="#8a93a6">下一步做什么，取决于上一步的真实结果</text>
+
+<!-- Q4 yes -> E4 -->
+<line x1="470" y1="456" x2="652" y2="456" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="560" y="448" text-anchor="middle" font-size="9" fill="#4f5d75">是</text>
+<rect x="660" y="430" width="240" height="52" fill="#f8eae8" stroke="#9b4b52" stroke-width="1.2"/>
+<text x="674" y="455" font-size="10.5" font-weight="600" fill="#2d3142">Agent</text>
+<text x="674" y="471" font-size="8.5" fill="#5a6580">模型定步骤；必须配停止条件与沙箱</text>
+
+<!-- Q4 no -> E5 -->
+<path d="M300 482 V524 H652" fill="none" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="312" y="510" font-size="9" fill="#4f5d75">否</text>
+<rect x="660" y="498" width="240" height="52" fill="#ececec" stroke="#4f5d75" stroke-width="1.2"/>
+<text x="674" y="523" font-size="10.5" font-weight="600" fill="#2d3142">先别上 agent</text>
+<text x="674" y="539" font-size="8.5" fill="#5a6580">拆成更小的固定任务，回到 ②</text>
+
+<text x="56" y="596" font-size="10" fill="#5a6580">四问都在问同一件事：控制流能不能提前确定。能，就写在代码里；不能，才交给模型。</text>
+<text x="56" y="614" font-size="8.5" fill="#8a93a6">依据：Anthropic《Building effective agents》全文判据；决策树是本文归纳，原文没有这棵树。</text>
+</svg>

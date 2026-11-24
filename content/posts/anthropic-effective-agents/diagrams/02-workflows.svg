@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" width="960" height="700" role="img" aria-labelledby="f2t f2d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f2t">五种工作流的控制流</title>
+<desc id="f2d">提示链、路由、并行、编排者-工作者、评估者-优化者五种工作流的节点连接与汇合方式；共同点是路径由代码写死。</desc>
+<defs>
+  <marker id="f2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+  <marker id="f2s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#5b4b8a"/></marker>
+  <marker id="f2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#bf4520"/></marker>
+</defs>
+<rect width="960" height="700" fill="#f5f5f5"/>
+
+<text x="56" y="44" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">WORKFLOW PATTERNS / FIVE SHAPES</text>
+<text x="56" y="70" font-size="16" font-weight="600" fill="#2d3142">五种工作流：拆法不同，共同点是路径写死</text>
+<text x="56" y="90" font-size="10.5" fill="#5a6580">编号对应正文 4.1–4.5；菱形是代码里的判断，不是模型</text>
+
+<!-- ============ cell 1: chaining ============ -->
+<rect x="56" y="118" width="420" height="168" rx="4" fill="#ffffff" stroke="#d9dde6" stroke-width="1"/>
+<text x="72" y="142" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">01</text>
+<text x="92" y="143" font-size="12" font-weight="600" fill="#2d3142">提示链 Prompt chaining</text>
+
+<rect x="72" y="185" width="64" height="30" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="104" y="204" text-anchor="middle" font-size="9.5" fill="#2d3142">大纲</text>
+<rect x="150" y="185" width="64" height="30" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="182" y="204" text-anchor="middle" font-size="9.5" fill="#2d3142">正文</text>
+<path d="M250 174 L276 200 L250 226 L224 200 Z" fill="#f7efe4" stroke="#bf4520" stroke-width="1.2"/>
+<text x="250" y="204" text-anchor="middle" font-size="9" fill="#bf4520">gate</text>
+<rect x="292" y="185" width="64" height="30" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="324" y="204" text-anchor="middle" font-size="9.5" fill="#2d3142">终稿</text>
+
+<line x1="136" y1="200" x2="147" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<line x1="214" y1="200" x2="221" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<line x1="277" y1="200" x2="289" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="250" y="243" text-anchor="middle" font-size="8.5" fill="#bf4520">不通过则回退或终止</text>
+<text x="72" y="270" font-size="9" fill="#5f6b85">固定串行；每一步的输入是上一步的输出，gate 由代码判断</text>
+
+<!-- ============ cell 2: routing ============ -->
+<rect x="488" y="118" width="420" height="168" rx="4" fill="#ffffff" stroke="#d9dde6" stroke-width="1"/>
+<text x="504" y="142" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">02</text>
+<text x="524" y="143" font-size="12" font-weight="600" fill="#2d3142">路由 Routing</text>
+
+<rect x="504" y="186" width="54" height="28" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="531" y="204" text-anchor="middle" font-size="9.5" fill="#2d3142">输入</text>
+<path d="M610 172 L636 200 L610 228 L584 200 Z" fill="#f7efe4" stroke="#bf4520" stroke-width="1.2"/>
+<text x="610" y="204" text-anchor="middle" font-size="8.5" fill="#bf4520">分类</text>
+<rect x="684" y="152" width="104" height="24" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="736" y="168" text-anchor="middle" font-size="9" fill="#2d3142">退款流程</text>
+<rect x="684" y="188" width="104" height="24" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="736" y="204" text-anchor="middle" font-size="9" fill="#2d3142">技术支持</text>
+<rect x="684" y="224" width="104" height="24" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="736" y="240" text-anchor="middle" font-size="9" fill="#2d3142">一般咨询（兜底）</text>
+
+<line x1="558" y1="200" x2="581" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<path d="M636 200 H660 V164 H680" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<line x1="636" y1="200" x2="680" y2="200" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<path d="M636 200 H660 V236 H680" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="504" y="270" font-size="9" fill="#5f6b85">分类错则全错；每类可有自己的提示词、工具和模型</text>
+
+<!-- ============ cell 3: parallel ============ -->
+<rect x="56" y="302" width="420" height="168" rx="4" fill="#ffffff" stroke="#d9dde6" stroke-width="1"/>
+<text x="72" y="326" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">03</text>
+<text x="92" y="327" font-size="12" font-weight="600" fill="#2d3142">并行 Parallelization</text>
+
+<rect x="72" y="370" width="54" height="28" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="99" y="388" text-anchor="middle" font-size="9.5" fill="#2d3142">任务</text>
+<rect x="190" y="346" width="90" height="22" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="235" y="361" text-anchor="middle" font-size="9" fill="#2d3142">子任务 A</text>
+<rect x="190" y="374" width="90" height="22" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="235" y="389" text-anchor="middle" font-size="9" fill="#2d3142">子任务 B</text>
+<rect x="190" y="402" width="90" height="22" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="235" y="417" text-anchor="middle" font-size="9" fill="#2d3142">子任务 C</text>
+<rect x="330" y="370" width="56" height="28" fill="#ececec" stroke="#4f5d75" stroke-width="1.2"/>
+<text x="358" y="388" text-anchor="middle" font-size="9.5" fill="#2d3142">合并</text>
+
+<line x1="126" y1="384" x2="148" y2="384" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<path d="M150 384 H166 V357 H187" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<path d="M150 384 H187" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<path d="M150 384 H166 V413 H187" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<path d="M280 357 H310 V385 H327" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<line x1="280" y1="385" x2="327" y2="385" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<path d="M280 413 H310 V385" fill="none" stroke="#4f5d75" stroke-width="1.2"/>
+
+<text x="72" y="440" font-size="9" fill="#5f6b85">分段：子任务互不依赖才并行；另一种用法是投票，同一任务跑 N 次</text>
+<text x="72" y="456" font-size="9" fill="#5f6b85">合并在代码里做，合不好等于把一个问题变成三个</text>
+
+<!-- ============ cell 4: orchestrator ============ -->
+<rect x="488" y="302" width="420" height="168" rx="4" fill="#ffffff" stroke="#d9dde6" stroke-width="1"/>
+<text x="504" y="326" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">04</text>
+<text x="524" y="327" font-size="12" font-weight="600" fill="#2d3142">编排者-工作者 Orchestrator-workers</text>
+
+<rect x="516" y="350" width="104" height="66" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="568" y="376" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">编排者 LLM</text>
+<text x="568" y="394" text-anchor="middle" font-size="8.5" fill="#5a6580">拆解 · 派活 · 汇总</text>
+<rect x="716" y="344" width="92" height="24" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="762" y="360" text-anchor="middle" font-size="9" fill="#2d3142">worker 1</text>
+<rect x="716" y="376" width="92" height="24" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="762" y="392" text-anchor="middle" font-size="9" fill="#2d3142">worker 2</text>
+<rect x="716" y="408" width="92" height="24" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="762" y="424" text-anchor="middle" font-size="9" fill="#2d3142">worker 3</text>
+
+<path d="M624 366 H712" fill="none" stroke="#5b4b8a" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f2s)"/>
+<path d="M624 383 H712" fill="none" stroke="#5b4b8a" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f2s)"/>
+<path d="M624 410 H712" fill="none" stroke="#5b4b8a" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f2s)"/>
+
+<text x="504" y="440" font-size="9" fill="#5f6b85">和并行的区别不在形状，在子任务什么时候定；worker 之间不共享上下文</text>
+<text x="504" y="456" font-size="9" fill="#5f6b85">编排者会拆错、漏派、重复派，汇总时容易丢细节</text>
+
+<!-- ============ cell 5: evaluator ============ -->
+<rect x="56" y="486" width="420" height="168" rx="4" fill="#ffffff" stroke="#d9dde6" stroke-width="1"/>
+<text x="72" y="510" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#8a93a6">05</text>
+<text x="92" y="511" font-size="12" font-weight="600" fill="#2d3142">评估者-优化者 Evaluator-optimizer</text>
+
+<rect x="118" y="553" width="92" height="34" fill="#ffffff" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="164" y="574" text-anchor="middle" font-size="10" fill="#2d3142">生成</text>
+<rect x="298" y="553" width="92" height="34" fill="#ffffff" stroke="#bf4520" stroke-width="1.2"/>
+<text x="344" y="574" text-anchor="middle" font-size="10" fill="#2d3142">评估</text>
+<line x1="210" y1="570" x2="294" y2="570" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="252" y="562" text-anchor="middle" font-size="8.5" fill="#5a6580">草稿</text>
+<path d="M344 587 V612 H164 V590" fill="none" stroke="#bf4520" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f2r)"/>
+<text x="254" y="626" text-anchor="middle" font-size="8.5" fill="#bf4520">不通过：带意见重写</text>
+<line x1="390" y1="570" x2="424" y2="570" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="404" y="562" text-anchor="middle" font-size="8.5" fill="#4f5d75">通过</text>
+<text x="72" y="646" font-size="9" fill="#5f6b85">两个适合信号：人给反馈能变好，模型也能给出这种反馈；轮数上限必须设</text>
+
+<!-- ============ cell 6: reading notes ============ -->
+<rect x="488" y="486" width="420" height="168" rx="4" fill="#ffffff" stroke="#d9dde6" stroke-width="1"/>
+<text x="504" y="510" font-size="12" font-weight="600" fill="#2d3142">读图要点</text>
+<text x="504" y="538" font-size="9.5" fill="#2d3142"><tspan font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" fill="#5b4b8a">━━</tspan>  实线：一次调用或数据流</text>
+<text x="504" y="562" font-size="9.5" fill="#2d3142"><tspan font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" fill="#5b4b8a">┅┅</tspan>  虚线：动态决定或回退</text>
+<text x="504" y="586" font-size="9.5" fill="#2d3142"><tspan font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" fill="#bf4520">◇</tspan>  菱形：代码里的判断，不是模型输出</text>
+<text x="504" y="610" font-size="9.5" fill="#2d3142">五种的路径都在代码里；第 5 节把路径交给模型。</text>
+<text x="504" y="634" font-size="9.5" fill="#2d3142">03 内部：分段是拆任务，投票是同一任务多跑。</text>
+
+<text x="56" y="684" font-size="8.5" fill="#8a93a6">依据：Anthropic《Building effective agents》"Building blocks, workflows, and agents"；五张拓扑按原文重绘并并排对照。</text>
+</svg>
