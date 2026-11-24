@@ -184,6 +184,13 @@ Anthropic 那篇多 agent 研究系统的博客给过另一组数：多 agent �
 
 这套结构的适用面比它的名字窄：问题能拆成互补的搜索角度，结论能拆成可证伪的 claim，来源是公开网页。私有数据、强顺序推理、单一权威来源这三类问题，用这套结构不会更好，只会更贵。
 
+## 证据边界
+
+- 脚本行为、四个常量、五段 prompt、`normURL` 与清洗函数：本机 2.1.321 二进制里的原文，可逐行复核。
+- 运行时限制（默认并发 16、单次 1000 个 agent、5 分钟 prompt cache、schema 重试 5 次）：官方 workflows 文档。
+- 90.2% 提升、15 倍 token：Anthropic 工程博客的生产版 research 系统；这个 97 步脚本没有对应实测。
+- 设计动机（为什么 5 个角度、3 票、25 条 claim）：从代码和预算反推的解释，官方没有对应说明。
+
 ## 参考
 
 - 本机 Claude Code 2.1.321 的 `/deep-research` workflow 脚本（442 行，注册于 `initBundledWorkflows`）。
