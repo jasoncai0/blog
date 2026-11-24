@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="f01-cs-title f01-cs-desc">
+  <title id="f01-cs-title">turn 闭合的四层保证</title>
+  <desc id="f01-cs-desc">四层从左到右：进程内的 finally、磁盘上的完整前缀、恢复时的合成 closers、消费方的内存折叠。SIGKILL 切在第一层和第二层之间，finally 不执行，但已写入的前缀和恢复逻辑仍然工作。</desc>
+  <defs>
+    <marker id="f01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="960" height="560" fill="#f5f5f5"/>
+
+  <text x="40" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">CLOSURE STACK</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">闭合由四层拼起来，崩溃切在第一层和第二层之间</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">进程内、磁盘、恢复、消费方各保证一件事；没有任何一层单独保证「永不悬空」。</text>
+
+  <!-- layer 1 -->
+  <rect x="40" y="110" width="200" height="280" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="40" y="110" width="200" height="4" rx="2" fill="#3d5a80"/>
+  <text x="56" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" letter-spacing=".08em" fill="#3d5a80">01 · 进程内</text>
+  <text x="56" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">agent-loop</text>
+  <text x="56" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">turn() 的 try/finally</text>
+  <text x="56" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">所有出口都给 turnEnds 赋值</text>
+  <text x="56" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">finally 只 append 一次</text>
+  <text x="56" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">取消 / 异常 / 空轮次同路</text>
+  <text x="56" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">外层 kick() 兜底</text>
+  <text x="56" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">phase 回到 idle</text>
+  <rect x="56" y="344" width="168" height="26" rx="4" fill="#eef1f6"/>
+  <text x="66" y="361" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#3d5a80">reason 非空 · 恰好一次</text>
+
+  <!-- layer 2 -->
+  <rect x="264" y="110" width="200" height="280" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="264" y="110" width="200" height="4" rx="2" fill="#2f6f5e"/>
+  <text x="280" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" letter-spacing=".08em" fill="#2f6f5e">02 · 磁盘</text>
+  <text x="280" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">Session + JSONL</text>
+  <text x="280" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">append 同步改内存日志</text>
+  <text x="280" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">落盘异步，最多 200ms</text>
+  <text x="280" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">写入 = 完整、连续的前缀</text>
+  <text x="280" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">torn tail 下次打开截断</text>
+  <text x="280" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">checkpoint 先 flush</text>
+  <text x="280" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">再发模型 / 跑工具</text>
+  <rect x="280" y="344" width="168" height="26" rx="4" fill="#eaf2ef"/>
+  <text x="290" y="361" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#2f6f5e">seq 连续 · fsync</text>
+
+  <!-- layer 3 -->
+  <rect x="488" y="110" width="200" height="280" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="488" y="110" width="200" height="4" rx="2" fill="#5b4b8a"/>
+  <text x="504" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" letter-spacing=".08em" fill="#5b4b8a">03 · 恢复</text>
+  <text x="504" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">resume repair</text>
+  <text x="504" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">扫描 open turn / step / tool</text>
+  <text x="504" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">先补 tool/result</text>
+  <text x="504" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">再补 step/end</text>
+  <text x="504" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">最后 turn/end(interrupted)</text>
+  <text x="504" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">cause: interrupted / forked</text>
+  <text x="504" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">文案随 cause 变化</text>
+  <rect x="504" y="344" width="168" height="26" rx="4" fill="#f0edf6"/>
+  <text x="514" y="361" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#5b4b8a">幂等 · 持久化</text>
+
+  <!-- layer 4 -->
+  <rect x="712" y="110" width="200" height="280" rx="6" fill="#ffffff" stroke="#d8d8d8"/>
+  <rect x="712" y="110" width="200" height="4" rx="2" fill="#4f5d75"/>
+  <text x="728" y="136" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.4" letter-spacing=".08em" fill="#4f5d75">04 · 消费方</text>
+  <text x="728" y="160" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">query / UI</text>
+  <text x="728" y="186" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">只读也在内存补 closers</text>
+  <text x="728" y="204" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">折叠出的历史永远成对</text>
+  <text x="728" y="222" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">状态显示「已停止」</text>
+  <text x="728" y="240" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">文件本身保持原样</text>
+  <text x="728" y="258" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">「已停止」不带用时</text>
+  <text x="728" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#4f5d75">保留过程，不折叠</text>
+  <rect x="728" y="344" width="168" height="26" rx="4" fill="#eef0f3"/>
+  <text x="738" y="361" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#4f5d75">不写盘</text>
+
+  <!-- arrows -->
+  <line x1="240" y1="250" x2="260" y2="250" stroke="#8a93a6" stroke-width="1.1" marker-end="url(#f01-a)"/>
+  <text x="250" y="270" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">append</text>
+  <line x1="464" y1="250" x2="484" y2="250" stroke="#8a93a6" stroke-width="1.1" marker-end="url(#f01-a)"/>
+  <text x="474" y="270" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">前缀</text>
+  <line x1="688" y1="250" x2="708" y2="250" stroke="#8a93a6" stroke-width="1.1" marker-end="url(#f01-a)"/>
+  <text x="698" y="270" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="6.6" fill="#8a93a6">seed</text>
+
+  <!-- crash cut -->
+  <rect x="433" y="88" width="82" height="20" rx="10" fill="#9b4b52"/>
+  <text x="474" y="102" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" letter-spacing=".06em" fill="#ffffff">SIGKILL</text>
+  <line x1="474" y1="108" x2="474" y2="390" stroke="#9b4b52" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <text x="482" y="408" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#9b4b52">finally 不执行</text>
+
+  <!-- bottom note -->
+  <rect x="40" y="430" width="880" height="76" rx="6" fill="#2d3142"/>
+  <text x="60" y="454" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9.2" fill="#ffffff">崩溃只切断 01 的 finally。02 里已经写下的前缀、03 的扫描、04 的折叠都继续工作。</text>
+  <text x="60" y="476" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.2" fill="#9aa3b5">所以「闭合」是 01 + 02 + 03 的组合；04 让查看者也看到闭合，但不改变磁盘上的事实。</text>
+  <text x="60" y="494" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#6f7c95">run live → append → crash → reopen → scan → append closers → fold</text>
+</svg>

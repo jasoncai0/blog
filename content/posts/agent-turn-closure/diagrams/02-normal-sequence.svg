@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" role="img" aria-labelledby="f02-ns-title f02-ns-desc">
+  <title id="f02-ns-title">正常一轮的写入时序</title>
+  <desc id="f02-ns-desc">UI、agent-loop、Session、writer、磁盘五条泳道。turn/end 在 finally 里追加到内存日志；工具执行前有一次 flush 加 fsync；turn/end 之后到下一次 fsync 之间是崩溃窗口，磁盘上可能还没有结束事件。</desc>
+  <defs>
+    <marker id="f02-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3d5a80"/>
+    </marker>
+    <marker id="f02-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b4b8a"/>
+    </marker>
+  </defs>
+  <rect width="960" height="620" fill="#f5f5f5"/>
+
+  <text x="40" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.16em" fill="#5a6580">NORMAL PATH</text>
+  <text x="40" y="58" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="17" font-weight="600" fill="#2d3142">正常一轮：turn/end 在 finally 里，落盘在后面</text>
+  <text x="40" y="78" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8.5" fill="#5a6580">追加事件是同步的，写盘是异步的。两者之间有一段窗口，崩溃就发生在那里。</text>
+
+  <!-- buffer band -->
+  <rect x="640" y="300" width="300" height="188" fill="#9b4b52" fill-opacity="0.055" stroke="#9b4b52" stroke-dasharray="4 4"/>
+  <text x="654" y="318" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#9b4b52">BUFFERED · 上次 fsync 之后的尾巴</text>
+  <text x="654" y="336" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#9b4b52">tool/result · step/end · turn/end 同批</text>
+  <text x="654" y="482" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.2" fill="#9b4b52">崩溃落在这里 → 磁盘没有 end</text>
+
+  <!-- lifelines -->
+  <rect x="50" y="96" width="100" height="30" rx="5" fill="#ffffff" stroke="#a8752a"/>
+  <text x="100" y="115" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#a8752a">UI</text>
+  <line x1="100" y1="126" x2="100" y2="560" stroke="#c9ccd2" stroke-dasharray="3 4"/>
+
+  <rect x="250" y="96" width="100" height="30" rx="5" fill="#ffffff" stroke="#3d5a80"/>
+  <text x="300" y="115" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#3d5a80">agent-loop</text>
+  <line x1="300" y1="126" x2="300" y2="560" stroke="#c9ccd2" stroke-dasharray="3 4"/>
+
+  <rect x="470" y="96" width="100" height="30" rx="5" fill="#ffffff" stroke="#2f6f5e"/>
+  <text x="520" y="115" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">Session</text>
+  <line x1="520" y1="126" x2="520" y2="560" stroke="#c9ccd2" stroke-dasharray="3 4"/>
+  <rect x="514" y="182" width="12" height="248" fill="#2f6f5e" fill-opacity="0.1"/>
+
+  <rect x="650" y="96" width="100" height="30" rx="5" fill="#ffffff" stroke="#5b4b8a"/>
+  <text x="700" y="115" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5b4b8a">writer</text>
+  <line x1="700" y1="126" x2="700" y2="560" stroke="#c9ccd2" stroke-dasharray="3 4"/>
+
+  <rect x="810" y="96" width="100" height="30" rx="5" fill="#ffffff" stroke="#2d3142"/>
+  <text x="860" y="115" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2d3142">disk</text>
+  <line x1="860" y1="126" x2="860" y2="560" stroke="#c9ccd2" stroke-dasharray="3 4"/>
+
+  <!-- 1 send -->
+  <line x1="100" y1="162" x2="296" y2="162" stroke="#3d5a80" stroke-width="1.1" marker-end="url(#f02-a)"/>
+  <text x="108" y="156" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.8" fill="#4f5d75">send(message)</text>
+
+  <!-- 2 turn/start -->
+  <line x1="300" y1="192" x2="516" y2="192" stroke="#3d5a80" stroke-width="1.2" marker-end="url(#f02-a)"/>
+  <text x="308" y="186" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.6" fill="#3d5a80">append(turn/start)</text>
+
+  <!-- 3 step/start -->
+  <line x1="300" y1="224" x2="516" y2="224" stroke="#3d5a80" stroke-width="1.1" marker-end="url(#f02-a)"/>
+  <text x="308" y="218" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.6" fill="#4f5d75">append(step/start)</text>
+
+  <!-- 4 tool call -->
+  <line x1="300" y1="256" x2="516" y2="256" stroke="#3d5a80" stroke-width="1.1" marker-end="url(#f02-a)"/>
+  <text x="308" y="250" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.6" fill="#4f5d75">append(tool/call)</text>
+
+  <!-- 5 checkpoint -->
+  <line x1="300" y1="292" x2="856" y2="292" stroke="#3d5a80" stroke-width="1.4" marker-end="url(#f02-a)"/>
+  <text x="308" y="286" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.8" fill="#3d5a80">checkpoint：flush 到 writer，fsync 到 disk（工具执行前）</text>
+
+  <!-- 6 results -->
+  <line x1="300" y1="344" x2="516" y2="344" stroke="#3d5a80" stroke-width="1.1" marker-end="url(#f02-a)"/>
+  <text x="308" y="338" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.6" fill="#4f5d75">append(tool/result, step/end)</text>
+
+  <!-- 7 turn end -->
+  <line x1="300" y1="384" x2="516" y2="384" stroke="#3d5a80" stroke-width="1.8" marker-end="url(#f02-a)"/>
+  <rect x="306" y="392" width="92" height="18" rx="3" fill="#3d5a80"/>
+  <text x="352" y="404" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#ffffff">finally</text>
+  <text x="308" y="378" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.8" fill="#3d5a80">append(turn/end)  ← 内存闭合</text>
+
+  <!-- 8 route -->
+  <line x1="524" y1="430" x2="696" y2="430" stroke="#5b4b8a" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#f02-d)"/>
+  <text x="532" y="424" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#5b4b8a">route 到 writer，进缓冲</text>
+
+  <!-- buffer box -->
+  <rect x="646" y="442" width="108" height="38" rx="4" fill="#ffffff" stroke="#9b4b52"/>
+  <text x="700" y="458" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7" fill="#9b4b52">≤ 200ms</text>
+  <text x="700" y="471" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7" fill="#9b4b52">未 fsync</text>
+
+  <!-- 9 fsync later -->
+  <line x1="700" y1="506" x2="856" y2="506" stroke="#5b4b8a" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f02-d)"/>
+  <text x="708" y="500" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="7.6" fill="#5b4b8a">下一次 checkpoint 或 close</text>
+
+  <!-- note -->
+  <rect x="40" y="570" width="880" height="34" rx="5" fill="#ffffff" stroke="#d8d8d8"/>
+  <text x="56" y="591" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">turn/end 返回时只保证内存日志；磁盘上的闭合要等下一次 fsync。崩溃落在这段，恢复会把这一轮标成 interrupted。</text>
+</svg>
