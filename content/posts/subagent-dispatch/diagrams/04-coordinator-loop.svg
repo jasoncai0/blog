@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" role="img" aria-labelledby="f4t f4d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f4t">协调器的一轮循环</title>
+<desc id="f4d">协调器每轮重新组装上下文，模型在工具调用、委派、收尾三条路里选一条；工具结果与子会话回执都回到组装步骤。预算、深度与取消条件直接跳到收尾。</desc>
+<defs>
+  <marker id="f4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+  <marker id="f4r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#9b4b52"/></marker>
+</defs>
+<rect width="960" height="560" fill="#f5f5f5"/>
+
+<text x="48" y="40" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">COORDINATOR / ONE TURN</text>
+<text x="48" y="66" font-size="16" font-weight="600" fill="#2d3142">协调器没有计划表，只有每一轮的重新决策</text>
+<text x="48" y="88" font-size="10.5" fill="#5a6580">三种出口共用一份上下文：调工具、派子会话、收尾</text>
+
+<!-- 组装 -->
+<rect x="360" y="112" width="240" height="46" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="480" y="132" text-anchor="middle" font-size="10.5" font-weight="600" fill="#2d3142">组装上下文</text>
+<text x="480" y="147" text-anchor="middle" font-size="8.5" fill="#5a6580">目标 + 计划记录 + 已到的回执</text>
+
+<!-- 决策 -->
+<rect x="360" y="196" width="240" height="46" fill="#ffffff" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="480" y="216" text-anchor="middle" font-size="10.5" font-weight="600" fill="#2d3142">模型决策：下一步做什么</text>
+<text x="480" y="231" text-anchor="middle" font-size="8.5" fill="#5a6580">输出一个 tool_call，没有别的调度接口</text>
+
+<line x1="480" y1="162" x2="480" y2="192" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+
+<!-- 工具分支 -->
+<rect x="110" y="300" width="220" height="44" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="220" y="319" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">① 工具调用</text>
+<text x="220" y="334" text-anchor="middle" font-size="8.5" fill="#5a6580">同步执行，结果原文回填</text>
+<path d="M360 219 H320 V296" fill="none" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="326" y="262" font-size="8.5" fill="#5a6580">选工具</text>
+
+<path d="M220 296 V139 H356" fill="none" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="228" y="160" font-size="8.5" fill="#5a6580">结果原文</text>
+
+<!-- 委派分支 -->
+<rect x="630" y="300" width="220" height="44" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.2"/>
+<text x="740" y="319" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">② 委派 spawn</text>
+<text x="740" y="334" text-anchor="middle" font-size="8.5" fill="#5a6580">建会话，立即返回 id</text>
+
+<path d="M600 219 H650 V296" fill="none" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="606" y="262" font-size="8.5" fill="#5a6580">派活</text>
+
+<rect x="630" y="382" width="220" height="44" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="740" y="401" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">子会话：自己的循环</text>
+<text x="740" y="416" text-anchor="middle" font-size="8.5" fill="#5a6580">自己的上下文、工具集、预算</text>
+<line x1="740" y1="344" x2="740" y2="378" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+
+<path d="M866 404 V139 H604" fill="none" stroke="#4f5d75" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#f4a)"/>
+<text x="700" y="133" font-size="8.5" fill="#5a6580">settle：结论 + 状态，异步入队</text>
+
+<!-- 收尾 -->
+<rect x="360" y="462" width="240" height="44" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+<text x="480" y="481" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">③ 收尾：汇总 → 答复</text>
+<text x="480" y="496" text-anchor="middle" font-size="8.5" fill="#5a6580">只把结论写回父上下文</text>
+<line x1="480" y1="242" x2="480" y2="458" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f4a)"/>
+<text x="490" y="380" font-size="8.5" fill="#5a6580">没有新动作</text>
+
+<!-- 守卫 -->
+<rect x="48" y="462" width="280" height="44" fill="#f8eae8" stroke="#9b4b52" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="62" y="481" font-size="9" font-weight="600" fill="#9b4b52">守卫：预算 / 深度 / 取消</text>
+<text x="62" y="496" font-size="8.5" fill="#5a6580">触发时跳过决策，直接收尾</text>
+<line x1="330" y1="484" x2="356" y2="484" stroke="#9b4b52" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f4r)"/>
+
+<text x="48" y="540" font-size="8.5" fill="#8a93a6">循环本身就是调度器：下一轮派谁，取决于这一轮模型读到的上下文和走出的出口。</text>
+</svg>
