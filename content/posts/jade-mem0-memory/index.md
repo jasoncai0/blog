@@ -283,6 +283,16 @@ Jade 不是每轮对话都总结。`maybeWriteMemory()` 只在 run 成功分支�
 | 全局 | 只有偏好且明确说“全局/所有项目/跨项目” |
 | 上限 | 1,200 字 |
 
+命中“明确偏好/项目约定”的具体代码位置：
+
+- 长度和敏感词前置拦截：[MemoryPolicy.java:46-48](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/memory/MemoryPolicy.java#L46)
+- 偏好词命中：[MemoryPolicy.java:50-51](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/memory/MemoryPolicy.java#L50)
+- 项目约定词命中：[MemoryPolicy.java:52-53](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/memory/MemoryPolicy.java#L52)
+- 两者都没命中就返回空：[MemoryPolicy.java:54-56](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/memory/MemoryPolicy.java#L54)
+- 全局偏好提升：[MemoryPolicy.java:57](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/memory/MemoryPolicy.java#L57)
+- 生成候选（kind/confidence）：[MemoryPolicy.java:61-69](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/memory/MemoryPolicy.java#L61)
+- 底层 `contains` 判断：[MemoryPolicy.java:126-130](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/memory/MemoryPolicy.java#L126)
+
 也就是说，下面这些话会进入：
 
 ```text
