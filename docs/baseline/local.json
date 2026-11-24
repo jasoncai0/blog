@@ -885,10 +885,10 @@
   "figure": 4,
   "h1": 1,
   "h2": 11,
-  "h3": 12,
+  "h3": 13,
   "hr": 0,
-  "pre": 9,
-  "table": 6
+  "pre": 12,
+  "table": 7
  },
  "jade-p0-context-parallel-plan": {
   "figure": 0,
