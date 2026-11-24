@@ -125,6 +125,15 @@
   "pre": 7,
   "table": 10
  },
+ "claude-code-deep-research": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "hr": 0,
+  "pre": 4,
+  "table": 1
+ },
  "claude-code-harness-layers": {
   "figure": 10,
   "h1": 1,
@@ -1258,5 +1267,14 @@
   "hr": 0,
   "pre": 9,
   "table": 5
+ },
+ "webfetch-internals": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "hr": 0,
+  "pre": 2,
+  "table": 1
  }
 }
