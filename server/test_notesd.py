@@ -132,6 +132,14 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual(self.call("GET", "/api/me", headers=self.auth(laptop))[0], 200)
         self.assertEqual(self.call("GET", "/api/me", headers=self.auth(phone))[0], 401)
 
+    def test_change_password_keeps_bridge_token(self):
+        self.seed_user("Eve", "eve-pass-1")
+        token = self.token_for("Eve", "eve-pass-1")
+        bridge = notesd.Handler.store.create_token(notesd.Handler.store.user_by_name("Eve")["id"], "bridge", 0)
+        status, _ = self.call("POST", "/api/password", {"old_password": "eve-pass-1", "new_password": "eve-pass-2"}, self.auth(token))
+        self.assertEqual(status, 204)
+        self.assertEqual(self.call("GET", "/api/me", headers=self.auth(bridge))[0], 200)
+
     def test_logout_revokes_token(self):
         token = self.admin_token()
         self.assertEqual(self.call("POST", "/api/logout", {}, self.auth(token))[0], 204)

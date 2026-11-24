@@ -246,10 +246,11 @@ class Store:
             self.conn.commit()
 
     def drop_other_tokens(self, user_id: int, keep_hash: str) -> None:
-        """改密码后把别的设备踢下线，当前这台保留。"""
+        """改密码后把别的设备踢下线，当前这台和 bridge 的长令牌保留。"""
         with self._lock:
             self.conn.execute(
-                "DELETE FROM auth_tokens WHERE user_id = ? AND token_hash != ?", (user_id, keep_hash)
+                "DELETE FROM auth_tokens WHERE user_id = ? AND token_hash != ? AND name != 'bridge'",
+                (user_id, keep_hash),
             )
             self.conn.commit()
 
