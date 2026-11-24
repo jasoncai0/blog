@@ -134,6 +134,15 @@
   "pre": 4,
   "table": 2
  },
+ "claude-code-dreaming": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 11,
+  "h3": 0,
+  "hr": 0,
+  "pre": 4,
+  "table": 3
+ },
  "claude-code-harness-layers": {
   "figure": 10,
   "h1": 1,
