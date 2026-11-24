@@ -206,6 +206,15 @@
   "pre": 2,
   "table": 15
  },
+ "design-agent-media-tools": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 9,
+  "h3": 0,
+  "hr": 0,
+  "pre": 3,
+  "table": 2
+ },
  "design-agent-memory": {
   "figure": 10,
   "h1": 1,
