@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520" role="img" aria-labelledby="fig3-title fig3-desc">
+  <title id="fig3-title">工具返回什么的决策树</title>
+  <desc id="fig3-desc">按模型下一轮是否需要看见像素、图片大小，决定返回引用、内联 base64 还是 artifact id；视频一律返回引用。</desc>
+  <defs>
+    <marker id="a3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#4f5d75"/>
+    </marker>
+  </defs>
+  <rect width="960" height="520" fill="#f5f5f5"/>
+
+  <text x="40" y="36" font-size="8" letter-spacing="1.4" fill="#5b4b8a" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">TOOL RESULT / PIXELS OR REFERENCE</text>
+  <text x="40" y="64" font-size="16" font-weight="600" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">工具返回什么：像素还是引用</text>
+  <text x="40" y="86" font-size="10.5" fill="#4f5d75" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">工具结果会进入对话历史，并在后续每一轮请求里重发。大文件必须先落地。</text>
+
+  <!-- root -->
+  <rect x="320" y="100" width="320" height="58" rx="8" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+  <text x="480" y="126" font-size="10.5" font-weight="600" fill="#2d3142" text-anchor="middle" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">模型下一轮要看见像素吗？</text>
+  <text x="480" y="145" font-size="8" fill="#4f5d75" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">does the next turn need pixels?</text>
+
+  <!-- branch labels and lines -->
+  <path d="M320 129 L165 129 L165 218" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a3)"/>
+  <text x="300" y="122" font-size="9" fill="#4f5d75" text-anchor="end" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">否</text>
+
+  <line x1="480" y1="158" x2="480" y2="217" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a3)"/>
+  <text x="490" y="192" font-size="9" fill="#4f5d75" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">是</text>
+
+  <!-- left leaf -->
+  <rect x="40" y="222" width="250" height="88" rx="8" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1.2"/>
+  <text x="56" y="246" font-size="11" font-weight="600" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">返回引用</text>
+  <text x="56" y="266" font-size="8.5" fill="#2f6f5e" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">URL / asset id / file_id</text>
+  <text x="56" y="285" font-size="9" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">生命周期与权限归资产层</text>
+  <text x="56" y="301" font-size="8" fill="#4f5d75" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">OpenAI 用 file_id，Dify 用 URL</text>
+
+  <!-- mid -->
+  <rect x="320" y="222" width="320" height="58" rx="8" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+  <text x="480" y="248" font-size="10.5" font-weight="600" fill="#2d3142" text-anchor="middle" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">图片且小于约 200 KB？</text>
+  <text x="480" y="267" font-size="8" fill="#4f5d75" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">small enough to inline?</text>
+
+  <!-- top right -->
+  <path d="M640 251 L680 251 L680 222" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a3)"/>
+  <text x="650" y="244" font-size="9" fill="#4f5d75" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">是</text>
+
+  <rect x="700" y="176" width="220" height="90" rx="8" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+  <text x="716" y="200" font-size="11" font-weight="600" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">内联</text>
+  <text x="716" y="220" font-size="8.5" fill="#3d5a80" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">base64 / ImageBlock</text>
+  <text x="716" y="239" font-size="9" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">只适合预览或小图</text>
+  <text x="716" y="255" font-size="8" fill="#9b4b52" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">每一轮都会重发</text>
+
+  <!-- bottom right -->
+  <path d="M480 280 L480 345 L696 345" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#a3)"/>
+  <text x="492" y="304" font-size="9" fill="#4f5d75" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">否</text>
+
+  <rect x="700" y="302" width="220" height="90" rx="8" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.2"/>
+  <text x="716" y="326" font-size="11" font-weight="600" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">交给 artifact</text>
+  <text x="716" y="346" font-size="8.5" fill="#5b4b8a" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">file_id / artifact id</text>
+  <text x="716" y="365" font-size="9" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">模型按 id 再取</text>
+  <text x="716" y="381" font-size="8" fill="#4f5d75" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">ADK: save_artifact</text>
+
+  <!-- warning -->
+  <rect x="40" y="424" width="880" height="68" rx="6" fill="#f8eae8" stroke="#9b4b52" stroke-width="1.1"/>
+  <text x="58" y="448" font-size="10.5" font-weight="600" fill="#9b4b52" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">视频不走内联</text>
+  <text x="58" y="468" font-size="9.5" fill="#2d3142" font-family="-apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif">10 MB 的 mp4 转成 base64 约 13 MB 文本，每一轮请求都会重发；ADK codelab 直接返回 base64 视频时超 token 上限。</text>
+  <text x="58" y="484" font-size="8.5" fill="#4f5d75" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">MCP 也没有 video content type：只能 resource_link 或 blob</text>
+</svg>
