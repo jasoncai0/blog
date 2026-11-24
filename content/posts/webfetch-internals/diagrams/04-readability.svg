@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 510" width="960" height="510" role="img" aria-labelledby="f4t f4d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f4t">Readability 如何给正文打分</title>
+<desc id="f4d">左：三个段落挂在 div 容器下，段落得分向上按层级衰减累加到父、祖父和根节点。右：单个段落的分数公式、祖先衰减、class 权重和兄弟节点并入阈值。</desc>
+<defs>
+  <marker id="f4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+</defs>
+<rect width="960" height="510" fill="#f5f5f5"/>
+
+<text x="40" y="34" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">EXTRACTION / READABILITY SCORING</text>
+<text x="40" y="60" font-size="16" font-weight="600" fill="#2d3142">正文容器由段落得分累加选出</text>
+<text x="40" y="82" font-size="10.5" fill="#5a6580">段落按长度和标点得分，分数沿 DOM 向上衰减累加；总分最高的容器被当作正文</text>
+
+<!-- 树 -->
+<rect x="140" y="126" width="120" height="30" fill="#f7f9fc" stroke="#4f5d75" stroke-width="1"/>
+<text x="200" y="145" text-anchor="middle" font-size="9.5" fill="#2d3142">html</text>
+
+<rect x="140" y="172" width="120" height="30" fill="#f7f9fc" stroke="#4f5d75" stroke-width="1"/>
+<text x="200" y="191" text-anchor="middle" font-size="9.5" fill="#2d3142">body</text>
+
+<rect x="110" y="218" width="180" height="32" fill="#efeaf6" stroke="#5b4b8a" stroke-width="1.4"/>
+<text x="200" y="238" text-anchor="middle" font-size="9.5" fill="#2d3142">div#main.content</text>
+
+<rect x="330" y="218" width="100" height="32" fill="#f8eae8" stroke="#9b4b52" stroke-width="1"/>
+<text x="380" y="237" text-anchor="middle" font-size="9" fill="#2d3142">nav.sidebar</text>
+
+<rect x="44" y="276" width="86" height="28" fill="#ffffff" stroke="#c8cedb" stroke-width="1"/>
+<text x="87" y="294" text-anchor="middle" font-size="8.5" fill="#4f5d75">p · 80 字符</text>
+
+<rect x="146" y="276" width="108" height="34" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1.6"/>
+<text x="200" y="290" text-anchor="middle" font-size="8.5" fill="#2d3142">p · 600 字符</text>
+<text x="200" y="303" text-anchor="middle" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#2f6f5e">1+4+3 = 8</text>
+
+<rect x="270" y="276" width="86" height="28" fill="#ffffff" stroke="#c8cedb" stroke-width="1"/>
+<text x="313" y="294" text-anchor="middle" font-size="8.5" fill="#4f5d75">p · 120 字符</text>
+
+<path d="M200 156 V172 M200 202 V218 M200 250 V276 M150 250 V262 H87 V276 M250 250 V262 H313 V276 M260 187 H315 V218" fill="none" stroke="#8b93a7" stroke-width="1"/>
+
+<!-- 祖先得分 -->
+<rect x="266" y="133" width="34" height="16" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1"/>
+<text x="283" y="145" text-anchor="middle" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#2f6f5e">+1.3</text>
+<rect x="266" y="179" width="30" height="16" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1"/>
+<text x="281" y="191" text-anchor="middle" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#2f6f5e">+4</text>
+<rect x="296" y="226" width="30" height="16" fill="#e9f2ed" stroke="#2f6f5e" stroke-width="1"/>
+<text x="311" y="238" text-anchor="middle" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#2f6f5e">+8</text>
+
+<text x="376" y="270" font-size="8" fill="#9b4b52">链接密度高：−25</text>
+
+<!-- 右：公式面板 -->
+<rect x="470" y="120" width="450" height="300" fill="#ffffff" stroke="#e2e6ee"/>
+<rect x="470" y="120" width="4" height="300" fill="#5b4b8a"/>
+<text x="494" y="146" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" letter-spacing="1.4" fill="#5b4b8a">SCORE</text>
+<text x="494" y="168" font-size="11.5" font-weight="600" fill="#2d3142">单个段落的分数</text>
+
+<text x="494" y="194" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9" fill="#2d3142">score = 1 + 逗号数 + min(len/100, 3)</text>
+<text x="494" y="214" font-size="8.5" fill="#5a6580">逗号数近似「句子数」，长度上限 3 分，防止长广告位刷分。</text>
+
+<text x="494" y="242" font-size="9" fill="#4f5d75">p2 是 600 字符、4 个逗号：1 + 4 + 3 = 8</text>
+<text x="494" y="258" font-size="9" fill="#4f5d75">p1 是 80 字符、1 个逗号：1 + 1 + 0 = 2</text>
+<text x="494" y="274" font-size="9" fill="#4f5d75">p3 是 120 字符、0 个逗号：1 + 0 + 1 = 2</text>
+
+<text x="494" y="302" font-size="9.5" font-weight="600" fill="#2d3142">向上累加时按层级衰减</text>
+<text x="494" y="320" font-size="9" fill="#4f5d75">父 ÷1　祖父 ÷2　再往上 ÷6：div +8，body +4，html +1.3</text>
+<text x="494" y="336" font-size="8.5" fill="#5a6580">所以正文容器靠子段落累积分，而不是靠自己像不像正文。</text>
+
+<text x="494" y="362" font-size="9.5" font-weight="600" fill="#2d3142">另外两条修正</text>
+<text x="494" y="380" font-size="9" fill="#4f5d75">class/id 命中 positive 正则 +25，命中 negative 正则 −25</text>
+<text x="494" y="396" font-size="8.5" fill="#5a6580">comment / sidebar / footer / promo / -ad- 这类命名先扣分。</text>
+
+<text x="494" y="414" font-size="9" fill="#4f5d75">兄弟并入：分数 &gt; top×0.2，且 linkDensity &lt; 0.25</text>
+
+<rect x="40" y="440" width="880" height="44" fill="#ffffff" stroke="#e2e6ee"/>
+<rect x="40" y="440" width="4" height="44" fill="#2d3142"/>
+<text x="62" y="459" font-size="9.5" fill="#2d3142">这套打分的假设：人写的正文有标点、有长度、链接少；导航和页脚恰好反过来。假设没变，所以 2009 年的算法今天还能用。</text>
+<text x="62" y="475" font-size="8.5" fill="#5a6580">公式与阈值来自 mozilla/readability 源码：段落计分、祖先衰减、class 权重与兄弟节点并入阈值。</text>
+</svg>
