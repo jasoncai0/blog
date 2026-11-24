@@ -100,6 +100,25 @@ slug: "coding-agent-sessions"
 这件事的教训是：压缩的目标不是“把数组变短”，而是“在不超预算的前提下，保住继续工作所需的记忆”。只做裁剪，模型会重复劳动；只做摘要，不控制工具输出，又把预算烧在无意义的日志上。
 
 
+### 1.5 成功任务为什么会被标成失败
+
+最近出现过一个很迷惑的状态：任务明明编译、运行、最终回答都完成了，重启后会话列表却标成 `FAILED`。
+
+拆开看是三个时间点错位：
+
+1. CLI 在 `run.succeeded` 事件到达后立刻退出，并关闭 executor；
+2. `jade_sessions` 的终态快照原本要等 `executeTurn` 的 `finally` 才写；
+3. 重启时读到旧快照 `QUEUED`/`RUNNING`，按照“进程被中断”规则改成 `FAILED`。
+
+事件流里已经有成功答案，汇总表却还是运行中。修复不是简单改展示，而是把持久化顺序改对：
+
+- `RunEventLog.emit("run.finished")` 先把终态快照写入 `jade_sessions`，再让事件对 SSE 可见；
+- 一次性 CLI 等到 `run.finished` 再退出，不再只看内存里的 terminal 状态；
+- 启动恢复时，如果数据库快照仍未终态，就从工作区 `.agent/events.jsonl` 的 terminal 事件修复；
+- `succeed()` 清空遗留的“server restart”错误，避免出现 `SUCCEEDED + error` 的混合状态。
+
+回归用 `run-63129e37` 验证：修复前 `jade_sessions.status=QUEUED`，修复后恢复为 `SUCCEEDED`，41 个历史会话中只有两个确实被中断的 run 保持 `FAILED`。测试从 149 增到 156。
+
 ## 2. Trace 很有用，但别把 key 写进去
 
 模型请求体 trace 是排障利器。UI 里每次 `llm.request` 默认折叠，点开才显示完整 JSON：`model`、`temperature`、`messages`、`tools`、`tool_choice`。
