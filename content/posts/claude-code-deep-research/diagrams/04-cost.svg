@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="960" height="420" role="img" aria-labelledby="f4t f4d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f4t">五个阶段的子会话调用数</title>
+<desc id="f4d">按五个角度、十五个源、二十五条 claim 计算：Scope 一次、Search 五次、Fetch 十五次、Verify 七十五次、Synthesize 一次，合计九十七次；验证占约百分之七十七。</desc>
+<rect width="960" height="420" fill="#f5f5f5"/>
+
+<text x="48" y="36" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">DEEP-RESEARCH / COST</text>
+<text x="48" y="64" font-size="16" font-weight="600" fill="#2d3142">97 个会话，75 个在投票</text>
+<text x="48" y="86" font-size="10.5" fill="#5a6580">按 5 个角度、15 个源、25 条 claim 满配计算</text>
+
+<text x="896" y="120" text-anchor="end" font-size="13" font-weight="600" fill="#2d3142">合计 97 个子会话</text>
+<text x="896" y="138" text-anchor="end" font-size="9" fill="#bf4520">Verify 占 77%</text>
+
+<!-- rows -->
+<text x="176" y="144" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#2d3142">Scope</text>
+<rect x="190" y="128" width="12" height="24" fill="#3d5a80"/>
+<text x="214" y="144" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142">1</text>
+
+<text x="176" y="184" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#2d3142">Search</text>
+<rect x="190" y="168" width="39" height="24" fill="#5b4b8a"/>
+<text x="241" y="184" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142">5</text>
+<text x="258" y="184" font-size="8.5" fill="#5a6580">一个角度一个 searcher</text>
+
+<text x="176" y="224" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#2d3142">Fetch</text>
+<rect x="190" y="208" width="117" height="24" fill="#5b4b8a"/>
+<text x="319" y="224" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142">15</text>
+<text x="336" y="224" font-size="8.5" fill="#bf4520">软上限，高相关结果可越过</text>
+
+<text x="176" y="264" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#bf4520">Verify</text>
+<rect x="190" y="248" width="585" height="24" fill="#bf4520"/>
+<text x="206" y="264" font-size="8.5" fill="#ffffff">25 条 claim × 3 票</text>
+<text x="700" y="264" font-size="8.5" fill="#ffffff">77% 的调用</text>
+<text x="787" y="264" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142">75</text>
+
+<text x="176" y="304" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#2d3142">Synth</text>
+<rect x="190" y="288" width="12" height="24" fill="#2f6f5e"/>
+<text x="214" y="304" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="11" font-weight="600" fill="#2d3142">1</text>
+
+<line x1="48" y1="334" x2="896" y2="334" stroke="#e2e6ee"/>
+<text x="48" y="360" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#2d3142">agentCalls = 1 + angles + sources + claims × 3 + 1</text>
+<text x="48" y="382" font-size="9" fill="#5a6580">角度取 schema 上限 6 个时是 98；实际数量随搜索结果与抓取成败浮动。</text>
+</svg>
