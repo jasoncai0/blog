@@ -35,6 +35,15 @@
   "pre": 3,
   "table": 5
  },
+ "agent-memory-write-evict": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 7,
+  "h3": 7,
+  "hr": 0,
+  "pre": 4,
+  "table": 6
+ },
  "agent-reflection": {
   "figure": 12,
   "h1": 1,
