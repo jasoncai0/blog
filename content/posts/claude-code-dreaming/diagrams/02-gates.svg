@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" role="img" aria-labelledby="f2t f2d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f2t">Auto Dream 的六道检查与四个阶段</title>
+<desc id="f2d">六道检查依次是功能开关、24 小时时间窗、10 分钟扫描节流、5 个新会话、记忆写权限、整合锁。全部通过后 fork 子代理，依次执行定向、收集信号、整合、修剪索引四个阶段，最后写回主题文件与索引。</desc>
+<defs>
+  <marker id="f2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+</defs>
+<rect width="960" height="620" fill="#f5f5f5"/>
+
+<text x="48" y="36" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">CLAUDE CODE / AUTO DREAM</text>
+<text x="48" y="64" font-size="16" font-weight="600" fill="#2d3142">六道检查决定跑不跑，四个阶段决定改什么</text>
+<text x="48" y="86" font-size="10.5" fill="#5a6580">全部通过才 fork 子代理；任一道不过就退出，不阻塞主会话</text>
+<text x="912" y="86" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#5a6580">06 GATES / 04 PHASES</text>
+
+<!-- 六道检查 -->
+<text x="48" y="116" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.4" fill="#5a6580">GATES / 按开销从低到高</text>
+
+<g>
+  <rect x="40" y="126" width="138" height="76" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="40" y="126" width="138" height="3" fill="#3d5a80"/>
+  <text x="56" y="146" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#3d5a80">01</text>
+  <text x="56" y="166" font-size="12" font-weight="600" fill="#2d3142">功能</text>
+  <text x="56" y="186" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#3d5a80">flag 开启</text>
+  <text x="56" y="198" font-size="8.5" fill="#5a6580">settings 可覆盖</text>
+</g>
+<g>
+  <rect x="188" y="126" width="138" height="76" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="188" y="126" width="138" height="3" fill="#bf4520"/>
+  <text x="204" y="146" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#bf4520">02</text>
+  <text x="204" y="166" font-size="12" font-weight="600" fill="#2d3142">时间</text>
+  <text x="204" y="186" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#bf4520">≥ 24 小时</text>
+  <text x="204" y="198" font-size="8.5" fill="#5a6580">距上次整合</text>
+</g>
+<g>
+  <rect x="336" y="126" width="138" height="76" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="336" y="126" width="138" height="3" fill="#bf4520"/>
+  <text x="352" y="146" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#bf4520">03</text>
+  <text x="352" y="166" font-size="12" font-weight="600" fill="#2d3142">节流</text>
+  <text x="352" y="186" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#bf4520">≥ 10 分钟</text>
+  <text x="352" y="198" font-size="8.5" fill="#5a6580">ce = 600000</text>
+</g>
+<g>
+  <rect x="484" y="126" width="138" height="76" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="484" y="126" width="138" height="3" fill="#bf4520"/>
+  <text x="500" y="146" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#bf4520">04</text>
+  <text x="500" y="166" font-size="12" font-weight="600" fill="#2d3142">会话</text>
+  <text x="500" y="186" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#bf4520">≥ 5 个</text>
+  <text x="500" y="198" font-size="8.5" fill="#5a6580">排除当前会话</text>
+</g>
+<g>
+  <rect x="632" y="126" width="138" height="76" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="632" y="126" width="138" height="3" fill="#3d5a80"/>
+  <text x="648" y="146" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#3d5a80">05</text>
+  <text x="648" y="166" font-size="12" font-weight="600" fill="#2d3142">权限</text>
+  <text x="648" y="186" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#3d5a80">记忆可写</text>
+  <text x="648" y="198" font-size="8.5" fill="#5a6580">否则不启动</text>
+</g>
+<g>
+  <rect x="780" y="126" width="138" height="76" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="780" y="126" width="138" height="3" fill="#9b4b52"/>
+  <text x="796" y="146" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" fill="#9b4b52">06</text>
+  <text x="796" y="166" font-size="12" font-weight="600" fill="#2d3142">锁</text>
+  <text x="796" y="186" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="9.5" fill="#9b4b52">空闲</text>
+  <text x="796" y="198" font-size="8.5" fill="#5a6580">.consolidate-lock</text>
+</g>
+
+<!-- fork -->
+<line x1="480" y1="202" x2="480" y2="238" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f2a)"/>
+<text x="492" y="224" font-size="9" fill="#2d3142">全部通过</text>
+<g>
+  <rect x="280" y="238" width="400" height="52" fill="#ffffff" stroke="#5b4b8a"/>
+  <rect x="280" y="238" width="400" height="3" fill="#5b4b8a"/>
+  <text x="480" y="260" text-anchor="middle" font-size="11.5" font-weight="600" fill="#2d3142">fork 子代理</text>
+  <text x="480" y="278" text-anchor="middle" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#5b4b8a">querySource=auto_dream · skipTranscript · 只读 shell</text>
+</g>
+
+<!-- 四阶段 -->
+<text x="48" y="312" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.4" fill="#5a6580">PHASES / 在锁的保护下执行</text>
+
+<g>
+  <rect x="40" y="324" width="208" height="122" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="40" y="324" width="208" height="3" fill="#3d5a80"/>
+  <text x="58" y="346" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" letter-spacing="1" fill="#3d5a80">PHASE 1</text>
+  <text x="58" y="366" font-size="11.5" font-weight="600" fill="#2d3142">Orient 定向</text>
+  <text x="58" y="390" font-size="9" fill="#5a6580">ls 记忆目录</text>
+  <text x="58" y="408" font-size="9" fill="#5a6580">读 MEMORY.md 索引</text>
+  <text x="58" y="426" font-size="9" fill="#5a6580">浏览主题文件</text>
+</g>
+<g>
+  <rect x="260" y="324" width="208" height="122" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="260" y="324" width="208" height="3" fill="#bf4520"/>
+  <text x="278" y="346" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" letter-spacing="1" fill="#bf4520">PHASE 2</text>
+  <text x="278" y="366" font-size="11.5" font-weight="600" fill="#2d3142">Gather 收集信号</text>
+  <text x="278" y="390" font-size="9" fill="#5a6580">先找漂移的记忆</text>
+  <text x="278" y="408" font-size="9" fill="#5a6580">grep transcript</text>
+  <text x="278" y="426" font-size="9" fill="#5a6580">tail -50，不整读</text>
+</g>
+<g>
+  <rect x="480" y="324" width="208" height="122" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="480" y="324" width="208" height="3" fill="#2f6f5e"/>
+  <text x="498" y="346" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" letter-spacing="1" fill="#2f6f5e">PHASE 3</text>
+  <text x="498" y="366" font-size="11.5" font-weight="600" fill="#2d3142">Consolidate 整合</text>
+  <text x="498" y="390" font-size="9" fill="#5a6580">合并进已有文件</text>
+  <text x="498" y="408" font-size="9" fill="#5a6580">相对日期转绝对</text>
+  <text x="498" y="426" font-size="9" fill="#5a6580">删被推翻的事实</text>
+</g>
+<g>
+  <rect x="700" y="324" width="208" height="122" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="700" y="324" width="208" height="3" fill="#5b4b8a"/>
+  <text x="718" y="346" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8" letter-spacing="1" fill="#5b4b8a">PHASE 4</text>
+  <text x="718" y="366" font-size="11.5" font-weight="600" fill="#2d3142">Prune 修剪索引</text>
+  <text x="718" y="390" font-size="9" fill="#5a6580">≤ 200 行 / 25KB</text>
+  <text x="718" y="408" font-size="9" fill="#5a6580">每条 &lt; 150 字符</text>
+  <text x="718" y="426" font-size="9" fill="#5a6580">解决文件间矛盾</text>
+</g>
+
+<line x1="248" y1="385" x2="256" y2="385" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<line x1="468" y1="385" x2="476" y2="385" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<line x1="688" y1="385" x2="696" y2="385" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+
+<!-- 写回 -->
+<g>
+  <rect x="40" y="478" width="880" height="54" fill="#ffffff" stroke="#dfe4ee"/>
+  <rect x="40" y="478" width="4" height="54" fill="#2f6f5e"/>
+  <text x="64" y="500" font-size="10.5" font-weight="600" fill="#2d3142">写回：主题文件 + MEMORY.md 索引</text>
+  <text x="64" y="518" font-size="9" fill="#5a6580">返回一句总结；没有变化就说没有变化。</text>
+  <text x="896" y="512" text-anchor="end" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" fill="#5a6580">有文件被改 → Improved 通知</text>
+</g>
+
+<text x="48" y="566" font-size="9" fill="#5a6580">检查顺序按开销从低到高：读内存 → 一次 stat → 时间戳比较 → 扫会话目录 → 读权限配置 → 抢锁。</text>
+<text x="48" y="588" font-size="9" fill="#9b4b52">会话/权限/锁失败记 skip（sessions / permission_rule / lock）；时间与节流只留日志</text>
+</svg>
