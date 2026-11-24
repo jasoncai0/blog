@@ -17,6 +17,15 @@
   "pre": 5,
   "table": 6
  },
+ "agent-interview-30": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 9,
+  "h3": 37,
+  "hr": 0,
+  "pre": 1,
+  "table": 5
+ },
  "agent-loop-tao-compaction": {
   "figure": 5,
   "h1": 1,
@@ -873,13 +882,13 @@
   "table": 0
  },
  "jade-mem0-memory": {
-  "figure": 3,
+  "figure": 4,
   "h1": 1,
-  "h2": 10,
-  "h3": 7,
+  "h2": 11,
+  "h3": 12,
   "hr": 0,
-  "pre": 6,
-  "table": 4
+  "pre": 9,
+  "table": 6
  },
  "jade-p0-context-parallel-plan": {
   "figure": 0,
@@ -1213,6 +1222,15 @@
   "hr": 0,
   "pre": 0,
   "table": 2
+ },
+ "subagent-dispatch": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 9,
+  "h3": 0,
+  "hr": 0,
+  "pre": 5,
+  "table": 1
  },
  "vector-engine-milvus-es-pg": {
   "figure": 4,
