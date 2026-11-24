@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="adm-title adm-desc">
+  <title id="adm-title">记忆准入 v2：从关键词到证据驱动</title>
+  <desc id="adm-desc">成功 run 结束后，先从完整用户消息和验证结果构造候选窗口；确定性过滤拦截敏感信息、代码和日志；LLM 通过 strict emit_memory 只做语义判断；证据校验要求引文能在原文中找到；最后按置信度和去重结果自动写入、进入待审或丢弃。</desc>
+  <defs>
+    <marker id="a-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a93a6"/>
+    </marker>
+    <marker id="a-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#bf4520"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="540" fill="#f5f5f5"/>
+  <text x="40" y="34" font-family="'SF Mono',ui-monospace,monospace" font-size="8" letter-spacing="0.12em" fill="#bf4520">JADE / MEMORY ADMISSION V2</text>
+  <text x="40" y="62" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">先限定候选，再让模型判断，最后用证据落库</text>
+  <text x="40" y="84" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">规则负责安全与确定性；LLM 只判断语义；证据和策略决定写入、待审或丢弃</text>
+
+  <rect x="40" y="102" width="880" height="42" rx="3" fill="#fdf4f1" stroke="#e8c7bb"/>
+  <text x="56" y="120" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#9a3f24">v1 只认“最后一条用户消息 + 关键词”：高精度、低召回。</text>
+  <text x="56" y="135" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">“资产 ID 换成 Snowflake”“别再用 Gradle”会漏；“以后再说”“如果以后……”会误收。</text>
+
+  <rect x="40" y="170" width="150" height="82" rx="3" fill="#e9eff6" stroke="#b8cadf"/>
+  <text x="54" y="191" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">候选窗口</text>
+  <text x="54" y="209" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">本轮所有用户消息</text>
+  <text x="54" y="223" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">最终答案 + 验证摘要</text>
+  <text x="54" y="239" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">不是整段 transcript</text>
+
+  <rect x="205" y="170" width="150" height="82" rx="3" fill="#f7efe4" stroke="#e3b9a8"/>
+  <text x="219" y="191" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">确定性过滤</text>
+  <text x="219" y="209" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">敏感信息 / 代码块</text>
+  <text x="219" y="223" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">日志 / 长度 / 空话</text>
+  <text x="219" y="239" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">先拦住，不送模型</text>
+
+  <rect x="370" y="170" width="160" height="82" rx="3" fill="#efeaf6" stroke="#cbbfe0"/>
+  <text x="384" y="191" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">LLM 准入判断</text>
+  <text x="384" y="209" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">strict emit_memory</text>
+  <text x="384" y="223" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">kind / scope / statement</text>
+  <text x="384" y="239" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">只判断，不执行；2s 超时</text>
+
+  <rect x="545" y="170" width="160" height="82" rx="3" fill="#e9f2ed" stroke="#b5d0c5"/>
+  <text x="559" y="191" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">证据与去重</text>
+  <text x="559" y="209" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">quote 必须是原文子串</text>
+  <text x="559" y="223" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">同项目 / kind 查重</text>
+  <text x="559" y="239" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">冲突标 supersedes</text>
+
+  <rect x="720" y="170" width="200" height="82" rx="3" fill="#ffffff" stroke="#c9d2c6"/>
+  <text x="734" y="191" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">写入策略</text>
+  <text x="734" y="209" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">自动写 / 待审 / 丢弃</text>
+  <text x="734" y="223" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">infer=false + canonical</text>
+  <text x="734" y="239" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">全局仅限显式偏好</text>
+
+  <line x1="190" y1="211" x2="203" y2="211" stroke="#8a93a6" stroke-width="1" marker-end="url(#a-a)"/>
+  <line x1="355" y1="211" x2="368" y2="211" stroke="#bf4520" stroke-width="1" marker-end="url(#a-r)"/>
+  <line x1="530" y1="211" x2="543" y2="211" stroke="#8a93a6" stroke-width="1" marker-end="url(#a-a)"/>
+  <line x1="705" y1="211" x2="718" y2="211" stroke="#8a93a6" stroke-width="1" marker-end="url(#a-a)"/>
+
+  <line x1="820" y1="252" x2="820" y2="292" stroke="#8a93a6" stroke-width="1" marker-end="url(#a-a)"/>
+  <line x1="820" y1="292" x2="500" y2="292" stroke="#8a93a6" stroke-width="1"/>
+  <line x1="500" y1="292" x2="500" y2="314" stroke="#8a93a6" stroke-width="1" marker-end="url(#a-a)"/>
+  <line x1="820" y1="292" x2="710" y2="292" stroke="#8a93a6" stroke-width="1"/>
+  <line x1="710" y1="292" x2="710" y2="314" stroke="#8a93a6" stroke-width="1" marker-end="url(#a-a)"/>
+  <line x1="820" y1="292" x2="920" y2="292" stroke="#8a93a6" stroke-width="1"/>
+  <line x1="920" y1="292" x2="920" y2="314" stroke="#8a93a6" stroke-width="1" marker-end="url(#a-a)"/>
+
+  <rect x="410" y="318" width="180" height="68" rx="3" fill="#e9f2ed" stroke="#b5d0c5"/>
+  <text x="424" y="338" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">自动写入</text>
+  <text x="424" y="355" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">confidence ≥ 0.75</text>
+  <text x="424" y="370" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">证据必须来自用户原文</text>
+
+  <rect x="620" y="318" width="180" height="68" rx="3" fill="#f7efe4" stroke="#e3b9a8"/>
+  <text x="634" y="338" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">待审</text>
+  <text x="634" y="355" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">0.55 ≤ confidence &lt; 0.75</text>
+  <text x="634" y="370" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#6b7280">系统结论最多到这里</text>
+
+  <rect x="830" y="318" width="90" height="68" rx="3" fill="#f8eae8" stroke="#d7aaa9"/>
+  <text x="844" y="338" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="10" font-weight="600" fill="#2d3142">丢弃</text>
+  <text x="844" y="355" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">&lt; 0.55</text>
+
+  <rect x="40" y="414" width="880" height="86" rx="3" fill="#ffffff" stroke="#d8ddd4"/>
+  <text x="56" y="434" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" font-weight="600" fill="#2d3142">边界</text>
+  <text x="56" y="452" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">每次 run 最多 3 条；判断在 run 成功后执行，不增加主循环首 token 延迟；超时 / 非法 JSON / 证据不匹配：不写，不拖垮 run。</text>
+  <text x="56" y="468" font-family="'PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">记忆仍是不受信任的历史材料，不能覆盖当前任务、权限和沙箱规则；密钥、.env、完整代码 diff 在确定性过滤阶段就被丢弃。</text>
+  <text x="56" y="488" font-family="'SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">PROPOSAL · 2026-11-24 · 待 review，未实施</text>
+</svg>

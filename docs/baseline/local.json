@@ -891,13 +891,13 @@
   "table": 0
  },
  "jade-mem0-memory": {
-  "figure": 4,
+  "figure": 5,
   "h1": 1,
-  "h2": 11,
-  "h3": 13,
+  "h2": 12,
+  "h3": 19,
   "hr": 0,
-  "pre": 12,
-  "table": 7
+  "pre": 13,
+  "table": 10
  },
  "jade-p0-context-parallel-plan": {
   "figure": 0,
