@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="f1-title f1-desc">
+  <title id="f1-title">长期记忆的写入、存储、读取与维护分层</title>
+  <desc id="f1-desc">上方是写入管线：事件、抽取、召回与关系判定、策略门、提交审计。中间是记忆库与原文冷存。左下是读取：资格门、排序、注入上下文。右下是离线维护：衰减、预算、归档。紫色为模型，橙色为代码策略，绿色为存储。</desc>
+  <defs>
+    <marker id="f1-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4f5d75"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+  <text x="40" y="30" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" font-weight="500" fill="#5a6580" letter-spacing="0.16em">MEMORY CONTROL PLANE · WRITE / EVICT</text>
+  <text x="40" y="60" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="16" font-weight="600" fill="#2d3142">写入、存储、读取与维护：模型只碰语义，策略留在代码</text>
+  <text x="40" y="82" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#5a6580">同一条记忆在四个阶段被不同角色处理；边界画错，删除就不可审计</text>
+
+  <!-- 写入管线 -->
+  <rect x="40" y="120" width="160" height="56" rx="6" fill="#e8eef5" stroke="#3d5a80" stroke-width="1"/>
+  <text x="120" y="145" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">对话 / 工具事件</text>
+  <text x="120" y="162" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#3d5a80">turn · tool · doc</text>
+
+  <rect x="220" y="120" width="160" height="56" rx="6" fill="#ece9f4" stroke="#5b4b8a" stroke-width="1"/>
+  <text x="300" y="145" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">抽取候选</text>
+  <text x="300" y="162" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5b4b8a">LLM · Claim[]</text>
+
+  <rect x="400" y="120" width="160" height="56" rx="6" fill="#ece9f4" stroke="#5b4b8a" stroke-width="1"/>
+  <text x="480" y="145" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="11" font-weight="600" fill="#2d3142">召回 + 关系判定</text>
+  <text x="480" y="162" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#5b4b8a">top-k · same/contradict</text>
+
+  <rect x="580" y="120" width="160" height="56" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="660" y="145" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">策略门</text>
+  <text x="660" y="162" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#bf4520">score · veto · budget</text>
+
+  <rect x="760" y="120" width="160" height="56" rx="6" fill="#e6f0ec" stroke="#2f6f5e" stroke-width="1"/>
+  <text x="840" y="145" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">提交 + 审计</text>
+  <text x="840" y="162" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">insert · decision log</text>
+
+  <line x1="202" y1="148" x2="216" y2="148" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <line x1="382" y1="148" x2="396" y2="148" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <line x1="562" y1="148" x2="576" y2="148" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <line x1="742" y1="148" x2="756" y2="148" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+
+  <!-- 写入落库 -->
+  <path d="M840 176 L840 212 L480 212 L480 246" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <text x="668" y="206" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">写入 / 更新</text>
+
+  <!-- 记忆库 -->
+  <rect x="200" y="250" width="560" height="120" rx="6" fill="#ffffff" stroke="#2f6f5e" stroke-width="1.2"/>
+  <rect x="200" y="250" width="4" height="120" rx="2" fill="#2f6f5e"/>
+  <text x="220" y="276" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">记忆库（SQLite / 图）</text>
+  <text x="220" y="300" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">claim · valid_from / valid_to · status · confidence · supersedes</text>
+  <text x="220" y="320" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8.5" fill="#4f5d75">episodes 原文冷存（只追加） · audit log（只追加）</text>
+  <text x="220" y="344" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">active 有名额上限；warm / cold 仍可检索；tombstone 只留 id 与原因</text>
+  <text x="740" y="276" text-anchor="end" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#2f6f5e">STORE</text>
+
+  <!-- 读取 -->
+  <rect x="40" y="420" width="150" height="56" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="115" y="445" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">资格门</text>
+  <text x="115" y="462" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">status · valid_to · sensitivity</text>
+
+  <rect x="210" y="420" width="150" height="56" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="285" y="445" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">排序</text>
+  <text x="285" y="462" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">sim · importance · R</text>
+
+  <rect x="380" y="420" width="150" height="56" rx="6" fill="#e8eef5" stroke="#3d5a80" stroke-width="1"/>
+  <text x="455" y="445" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">注入上下文</text>
+  <text x="455" y="462" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#3d5a80">≤ 1.5k token</text>
+
+  <line x1="192" y1="448" x2="206" y2="448" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <line x1="362" y1="448" x2="376" y2="448" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <path d="M200 310 L115 310 L115 416" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <text x="123" y="404" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">检索</text>
+
+  <!-- 维护 -->
+  <rect x="550" y="420" width="110" height="56" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="605" y="445" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">衰减</text>
+  <text x="605" y="462" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">R = 0.5^(Δt/H)</text>
+
+  <rect x="680" y="420" width="110" height="56" rx="6" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="735" y="445" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">预算</text>
+  <text x="735" y="462" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#bf4520">utility 排序</text>
+
+  <rect x="810" y="420" width="110" height="56" rx="6" fill="#e6f0ec" stroke="#2f6f5e" stroke-width="1"/>
+  <text x="865" y="445" text-anchor="middle" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="12" font-weight="600" fill="#2d3142">归档</text>
+  <text x="865" y="462" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="7.5" fill="#2f6f5e">warm / cold / tombstone</text>
+
+  <line x1="662" y1="448" x2="676" y2="448" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <line x1="792" y1="448" x2="806" y2="448" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <path d="M760 310 L880 310 L880 416" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f1-arrow)"/>
+  <text x="888" y="404" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#4f5d75">离线维护</text>
+
+  <!-- 图例 -->
+  <text x="40" y="530" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="8" fill="#5a6580" letter-spacing="0.12em">图例</text>
+  <rect x="90" y="520" width="12" height="12" rx="2" fill="#ece9f4" stroke="#5b4b8a" stroke-width="1"/>
+  <text x="108" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">LLM 语义判断</text>
+  <rect x="220" y="520" width="12" height="12" rx="2" fill="#f6e7e1" stroke="#bf4520" stroke-width="1"/>
+  <text x="238" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">代码策略</text>
+  <rect x="330" y="520" width="12" height="12" rx="2" fill="#e6f0ec" stroke="#2f6f5e" stroke-width="1"/>
+  <text x="348" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">存储 / 审计</text>
+  <rect x="450" y="520" width="12" height="12" rx="2" fill="#e8eef5" stroke="#3d5a80" stroke-width="1"/>
+  <text x="468" y="530" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="9" fill="#4f5d75">上下文 / 入口</text>
+  <text x="920" y="530" text-anchor="end" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif" font-size="8" fill="#8a93a6">写入同步，维护异步</text>
+</svg>
