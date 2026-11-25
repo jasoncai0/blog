@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="960" height="580" role="img" aria-labelledby="g7t g7d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="g7t">会话、应用、屏幕三层状态</title>
+<desc id="g7d">执行器保存会话状态，应用保存表单与登录态，浏览器保存屏幕状态。三者各自失效，重置其中一个不会重置另外两个。</desc>
+<rect width="960" height="580" fill="#f5f5f5"/>
+
+<text x="48" y="40" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">THREE KINDS OF STATE</text>
+<text x="48" y="66" font-size="16" font-weight="600" fill="#2d3142">「当前在操作哪个窗口」只是第一层</text>
+<text x="48" y="88" font-size="10.5" fill="#5a6580">会话、应用、屏幕各存一份，各有各的失效条件</text>
+
+<!-- 会话 -->
+<rect x="40" y="112" width="272" height="190" fill="#ffffff" stroke="#e2e6ee"/>
+<rect x="40" y="112" width="4" height="190" fill="#5b4b8a"/>
+<text x="62" y="136" font-size="10.5" font-weight="600" fill="#2d3142">会话状态</text>
+<text x="62" y="154" font-size="8.5" fill="#8a93a6">存在执行器进程里</text>
+<text x="62" y="180" font-size="9" fill="#4f5d75">· 与浏览器的连接句柄</text>
+<text x="62" y="200" font-size="9" fill="#4f5d75">· 当前窗口 / 标签页</text>
+<text x="62" y="220" font-size="9" fill="#4f5d75">· 上一步的元素引用</text>
+<text x="62" y="240" font-size="9" fill="#4f5d75">· 超时与重试计数</text>
+<text x="62" y="272" font-size="8.5" fill="#5b4b8a">它的作用是省掉重复传参，不是记住内容</text>
+
+<rect x="40" y="316" width="272" height="96" fill="#efeaf6" stroke="#c9c2dd"/>
+<text x="62" y="338" font-size="9" font-weight="600" fill="#4f5d75">什么时候失效</text>
+<text x="62" y="358" font-size="8.5" fill="#4f5d75">执行器进程退出、超时、崩掉</text>
+<text x="62" y="376" font-size="8.5" fill="#4f5d75">标签页被关闭、窗口被销毁</text>
+<text x="62" y="396" font-size="8.5" fill="#a8752a">恢复方式：重连 + 重新观察一次</text>
+
+<!-- 应用 -->
+<rect x="344" y="112" width="272" height="190" fill="#ffffff" stroke="#e2e6ee"/>
+<rect x="344" y="112" width="4" height="190" fill="#2f6f5e"/>
+<text x="366" y="136" font-size="10.5" font-weight="600" fill="#2d3142">应用状态</text>
+<text x="366" y="154" font-size="8.5" fill="#8a93a6">存在应用或网页自己的内存里</text>
+<text x="366" y="180" font-size="9" fill="#4f5d75">· 已填的表单、已选的文件</text>
+<text x="366" y="200" font-size="9" fill="#4f5d75">· 登录 cookie 与 localStorage</text>
+<text x="366" y="220" font-size="9" fill="#4f5d75">· 上传进度、草稿</text>
+<text x="366" y="240" font-size="9" fill="#4f5d75">· 展开的文件夹、选中的行</text>
+<text x="366" y="272" font-size="8.5" fill="#2f6f5e">它才决定「下一步还能不能接着做」</text>
+
+<rect x="344" y="316" width="272" height="96" fill="#e9f2ed" stroke="#cfe0d6"/>
+<text x="366" y="338" font-size="9" font-weight="600" fill="#4f5d75">什么时候失效</text>
+<text x="366" y="358" font-size="8.5" fill="#4f5d75">刷新页面、清 cookie、会话过期</text>
+<text x="366" y="376" font-size="8.5" fill="#4f5d75">应用自动登出、切换账号</text>
+<text x="366" y="396" font-size="8.5" fill="#a8752a">恢复方式：重新登录，重走前置步骤</text>
+
+<!-- 屏幕 -->
+<rect x="648" y="112" width="272" height="190" fill="#ffffff" stroke="#e2e6ee"/>
+<rect x="648" y="112" width="4" height="190" fill="#4f5d75"/>
+<text x="670" y="136" font-size="10.5" font-weight="600" fill="#2d3142">屏幕状态</text>
+<text x="670" y="154" font-size="8.5" fill="#8a93a6">是渲染出来的一帧</text>
+<text x="670" y="180" font-size="9" fill="#4f5d75">· 当前像素（截图看到的那张）</text>
+<text x="670" y="200" font-size="9" fill="#4f5d75">· 键盘焦点在哪个控件</text>
+<text x="670" y="220" font-size="9" fill="#4f5d75">· 滚动位置、窗口层级</text>
+<text x="670" y="240" font-size="9" fill="#4f5d75">· 弹层、提示、动画中间态</text>
+<text x="670" y="272" font-size="8.5" fill="#8a93a6">它变化最快，几乎每步都不同</text>
+
+<rect x="648" y="316" width="272" height="96" fill="#ececec" stroke="#cfd6e3"/>
+<text x="670" y="338" font-size="9" font-weight="600" fill="#4f5d75">什么时候失效</text>
+<text x="670" y="358" font-size="8.5" fill="#4f5d75">任何一次滚动、重绘、切换标签页</text>
+<text x="670" y="376" font-size="8.5" fill="#4f5d75">用户随手滚动一下，截图就过期了</text>
+<text x="670" y="396" font-size="8.5" fill="#a8752a">恢复方式：重新截图或重新读一次</text>
+
+<!-- 底部：三个容易混的动作 -->
+<rect x="40" y="428" width="880" height="128" fill="#ffffff" stroke="#e2e6ee"/>
+<text x="64" y="452" font-size="9.5" font-weight="600" fill="#2d3142">三个容易混的动作，各自动了哪一层</text>
+<g font-size="9" fill="#4f5d75">
+  <text x="64" y="478">重新选中标签页</text>
+  <text x="200" y="478" fill="#8a93a6">→</text>
+  <text x="220" y="478">只改会话里的目标；浏览器不会因此恢复表单，页面也不会重载</text>
+  <text x="64" y="502">关掉执行器会话</text>
+  <text x="200" y="502" fill="#8a93a6">→</text>
+  <text x="220" y="502">断开的是控制连接；网站登录、已填内容都还在</text>
+  <text x="64" y="526">刷新页面</text>
+  <text x="200" y="526" fill="#8a93a6">→</text>
+  <text x="220" y="526">屏幕与 DOM 全换；会话里保存的元素引用同时作废，必须重查</text>
+</g>
+<text x="48" y="576" font-size="8.5" fill="#8a93a6">把三层混成一句「当前状态」的实现，重试时会重复执行已经成功的步骤。</text>
+</svg>

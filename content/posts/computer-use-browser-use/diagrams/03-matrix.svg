@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" role="img" aria-labelledby="g3t g3d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="g3t">读法与做法的四种组合</title>
+<desc id="g3d">纵轴是怎么读：结构或像素；横轴是怎么做：坐标输入或元素动作。四个象限分别是常见折中、最短路径、兜底和少见组合。</desc>
+<defs>
+  <marker id="g3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+</defs>
+<rect width="960" height="560" fill="#f5f5f5"/>
+
+<text x="48" y="40" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">TWO AXES / FOUR COMBINATIONS</text>
+<text x="48" y="66" font-size="16" font-weight="600" fill="#2d3142">怎么读，和怎么做，是两个独立的选择</text>
+<text x="48" y="88" font-size="10.5" fill="#5a6580">颜色按读法分组，横向位置按做法分组</text>
+
+<!-- 轴 -->
+<line x1="128" y1="490" x2="128" y2="126" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#g3a)"/>
+<line x1="118" y1="500" x2="912" y2="500" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#g3a)"/>
+<text transform="rotate(-90 108 300)" x="108" y="300" text-anchor="middle" font-size="10" font-weight="600" fill="#2d3142">怎么读界面</text>
+<text x="904" y="522" text-anchor="end" font-size="10" font-weight="600" fill="#2d3142">怎么落动作</text>
+<text x="120" y="150" text-anchor="end" font-size="9.5" fill="#3d5a80">结构</text>
+<text x="120" y="200" text-anchor="end" font-size="8.5" fill="#8a93a6">控件树 / DOM</text>
+<text x="120" y="400" text-anchor="end" font-size="9.5" fill="#a8752a">像素</text>
+<text x="120" y="450" text-anchor="end" font-size="8.5" fill="#8a93a6">截图</text>
+<text x="340" y="522" text-anchor="middle" font-size="9.5" fill="#4f5d75">坐标输入</text>
+<text x="340" y="538" text-anchor="middle" font-size="8.5" fill="#8a93a6">移动 + 按下 + 松开</text>
+<text x="700" y="522" text-anchor="middle" font-size="9.5" fill="#4f5d75">元素动作</text>
+<text x="700" y="538" text-anchor="middle" font-size="8.5" fill="#8a93a6">调用控件的默认动作</text>
+
+<!-- 左上 -->
+<rect x="156" y="128" width="352" height="156" fill="#ffffff" stroke="#c9d4e4"/>
+<rect x="156" y="128" width="4" height="156" fill="#3d5a80"/>
+<text x="176" y="152" font-size="10.5" font-weight="600" fill="#2d3142">常见折中</text>
+<text x="176" y="174" font-size="9" fill="#4f5d75">按名称查到控件，取出它的位置，再发坐标点击</text>
+<text x="176" y="194" font-size="9" fill="#4f5d75">定位不怕窗口挪动，点击仍然是一次真实鼠标事件</text>
+<text x="176" y="220" font-size="8.5" fill="#8a93a6">适用：应用只暴露「读」，不暴露「做」</text>
+<text x="176" y="240" font-size="8.5" fill="#8a93a6">风险：查到位置到点击之间有延迟，界面可能已经变了</text>
+
+<!-- 右上 -->
+<rect x="532" y="128" width="352" height="156" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.2"/>
+<rect x="532" y="128" width="4" height="156" fill="#3d5a80"/>
+<text x="552" y="152" font-size="10.5" font-weight="600" fill="#2d3142">最短路径</text>
+<text x="552" y="174" font-size="9" fill="#4f5d75">按名称查到控件，直接调用它的动作，不产生鼠标事件</text>
+<text x="552" y="194" font-size="9" fill="#4f5d75">不受遮挡、缩放、多屏影响，也不抢用户的鼠标</text>
+<text x="552" y="220" font-size="8.5" fill="#8a93a6">适用：应用声明了可执行动作，如按钮、菜单项</text>
+<text x="552" y="240" font-size="8.5" fill="#8a93a6">风险：支持面窄，自定义控件常常只有名字没有动作</text>
+
+<!-- 左下 -->
+<rect x="156" y="308" width="352" height="156" fill="#ffffff" stroke="#e0d3bd"/>
+<rect x="156" y="308" width="4" height="156" fill="#a8752a"/>
+<text x="176" y="332" font-size="10.5" font-weight="600" fill="#2d3142">兜底</text>
+<text x="176" y="354" font-size="9" fill="#4f5d75">截图里认出目标，算出中心点，发坐标点击</text>
+<text x="176" y="374" font-size="9" fill="#4f5d75">不要求应用配合；代价是每一步都重新认一遍</text>
+<text x="176" y="400" font-size="8.5" fill="#8a93a6">适用：画布、游戏、远程桌面、没有可访问性实现的应用</text>
+<text x="176" y="420" font-size="8.5" fill="#8a93a6">风险：相似元素混淆，窗口一挪就点偏，无法确认点到了谁</text>
+
+<!-- 右下 -->
+<rect x="532" y="308" width="352" height="156" fill="#ffffff" stroke="#e0d3bd"/>
+<rect x="532" y="308" width="4" height="156" fill="#a8752a"/>
+<text x="552" y="332" font-size="10.5" font-weight="600" fill="#2d3142">少见组合</text>
+<text x="552" y="354" font-size="9" fill="#4f5d75">截图里认出控件，再到控件树里找到对应元素触发</text>
+<text x="552" y="374" font-size="9" fill="#4f5d75">两套信息要能对上，通常靠位置或名称做匹配</text>
+<text x="552" y="400" font-size="8.5" fill="#8a93a6">适用：结构不完整，但关键控件有名字</text>
+<text x="552" y="420" font-size="8.5" fill="#8a93a6">风险：匹配错就等于点错，实现成本高于直接走结构</text>
+
+</svg>

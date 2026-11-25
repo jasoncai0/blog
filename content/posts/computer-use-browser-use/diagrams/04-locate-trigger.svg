@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520" role="img" aria-labelledby="g4t g4d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="g4t">定位与触发是两件事</title>
+<desc id="g4d">定位有三条路：结构查询、视觉识别、复用旧坐标。触发有两条路：调用元素动作、注入坐标输入。两者可以任意组合，失败模式也分开。</desc>
+<defs>
+  <marker id="g4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+</defs>
+<rect width="960" height="520" fill="#f5f5f5"/>
+
+<text x="48" y="40" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">LOCATE / TRIGGER</text>
+<text x="48" y="66" font-size="16" font-weight="600" fill="#2d3142">先找到，再点到，是两个独立的决定</text>
+<text x="48" y="88" font-size="10.5" fill="#5a6580">同一个「保存」按钮，可以查到、可以认出、也可以记住上次的位置</text>
+
+<!-- 阶段一 -->
+<rect x="48" y="112" width="268" height="316" fill="#ffffff" stroke="#e2e6ee"/>
+<rect x="48" y="112" width="4" height="316" fill="#3d5a80"/>
+<text x="68" y="136" font-size="10.5" font-weight="600" fill="#2d3142">第一步：定位</text>
+<text x="68" y="154" font-size="8.5" fill="#8a93a6">回答「它在哪」</text>
+
+<rect x="64" y="168" width="236" height="76" fill="#f7f8fa" stroke="#cfd6e3"/>
+<text x="78" y="188" font-size="9.5" font-weight="600" fill="#2d3142">① 结构查询</text>
+<text x="78" y="206" font-size="8.5" fill="#4f5d75">按角色 + 名称查控件树</text>
+<text x="78" y="222" font-size="8.5" fill="#5a6580">得到元素引用，位置随查询走</text>
+<text x="78" y="238" font-size="8.5" fill="#2f6f5e">稳定：名字不变就找得到</text>
+
+<rect x="64" y="256" width="236" height="76" fill="#f7f8fa" stroke="#cfd6e3"/>
+<text x="78" y="276" font-size="9.5" font-weight="600" fill="#2d3142">② 视觉识别</text>
+<text x="78" y="294" font-size="8.5" fill="#4f5d75">在截图上判断目标位置</text>
+<text x="78" y="310" font-size="8.5" fill="#5a6580">模型直接给点击坐标</text>
+<text x="78" y="326" font-size="8.5" fill="#a8752a">不稳：相似元素、缩放、换肤</text>
+
+<rect x="64" y="344" width="236" height="64" fill="#f7f8fa" stroke="#cfd6e3"/>
+<text x="78" y="364" font-size="9.5" font-weight="600" fill="#2d3142">③ 复用旧坐标</text>
+<text x="78" y="382" font-size="8.5" fill="#4f5d75">上一轮记下的位置直接用</text>
+<text x="78" y="398" font-size="8.5" fill="#9b4b52">最快，也最先失效</text>
+
+<!-- 组合 -->
+<path d="M300 206 H 330 V 300 H 356" fill="none" stroke="#4f5d75" stroke-width="1.1"/>
+<path d="M300 294 H 330" fill="none" stroke="#4f5d75" stroke-width="1.1"/>
+<path d="M300 376 H 330 V 300" fill="none" stroke="#4f5d75" stroke-width="1.1"/>
+<line x1="330" y1="300" x2="392" y2="300" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#g4a)"/>
+<text x="361" y="292" text-anchor="middle" font-size="8.5" fill="#a8752a">组合</text>
+
+<!-- 阶段二 -->
+<rect x="400" y="112" width="240" height="316" fill="#ffffff" stroke="#e2e6ee"/>
+<rect x="400" y="112" width="4" height="316" fill="#5b4b8a"/>
+<text x="420" y="136" font-size="10.5" font-weight="600" fill="#2d3142">第二步：触发</text>
+<text x="420" y="154" font-size="8.5" fill="#8a93a6">三条定位路径都能接到这里</text>
+
+<rect x="416" y="176" width="208" height="104" fill="#efeaf6" stroke="#5b4b8a"/>
+<text x="430" y="196" font-size="9.5" font-weight="600" fill="#2d3142">A 元素动作</text>
+<text x="430" y="214" font-size="8.5" fill="#4f5d75">调用控件的默认动作</text>
+<text x="430" y="230" font-size="8.5" fill="#4f5d75">应用内部执行，无鼠标事件</text>
+<text x="430" y="248" font-size="8" fill="#5a6580">要求：动作被暴露出来</text>
+<text x="430" y="266" font-size="8.5" fill="#8a93a6">不抢焦点、不受遮挡影响</text>
+
+<rect x="416" y="304" width="208" height="104" fill="#f7f8fa" stroke="#cfd6e3"/>
+<text x="430" y="324" font-size="9.5" font-weight="600" fill="#2d3142">B 坐标输入</text>
+<text x="430" y="342" font-size="8.5" fill="#4f5d75">移动指针、按下、松开</text>
+<text x="430" y="358" font-size="8.5" fill="#4f5d75">走系统输入通道</text>
+<text x="430" y="376" font-size="8" fill="#5a6580">要求：位置正确且无遮挡</text>
+<text x="430" y="394" font-size="8.5" fill="#8a93a6">可以只画动画、不真的移指针</text>
+
+<line x1="640" y1="228" x2="700" y2="228" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#g4a)"/>
+<line x1="640" y1="356" x2="700" y2="356" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#g4a)"/>
+
+<!-- 结果 -->
+<rect x="708" y="160" width="204" height="264" fill="#e9f2ed" stroke="#2f6f5e"/>
+<text x="726" y="186" font-size="10.5" font-weight="600" fill="#2d3142">界面响应</text>
+<text x="726" y="208" font-size="8.5" fill="#4f5d75">对话框关闭、文件写入、页面跳转</text>
+<text x="726" y="232" font-size="9.5" font-weight="600" fill="#2d3142">第三步：验结果</text>
+<text x="726" y="252" font-size="8.5" fill="#4f5d75">「点击成功」不等于「任务完成」</text>
+<text x="726" y="268" font-size="8.5" fill="#4f5d75">要查文件是否生成、内容是否正确</text>
+<line x1="726" y1="284" x2="896" y2="284" stroke="#cfe0d6"/>
+<text x="726" y="306" font-size="8.5" fill="#2f6f5e">两种失败分开报：</text>
+<text x="726" y="324" font-size="8.5" fill="#4f5d75">· 定位错 → 点到了别的控件</text>
+<text x="726" y="340" font-size="8.5" fill="#4f5d75">· 触发无效 → 到了元素但没执行</text>
+<text x="726" y="356" font-size="8.5" fill="#4f5d75">· 结果没验 → 上面两者都发现不了</text>
+<text x="726" y="392" font-size="8" fill="#8a93a6">前两个靠重试，第三个靠看结果。</text>
+<text x="726" y="408" font-size="8" fill="#8a93a6">只报「已点击」的工具，通常没做到这步。</text>
+
+<text x="48" y="470" font-size="9.5" fill="#4f5d75">把这两步分开之后，重试才有意义：定位失败换个查询条件，触发失败换条通道，各自重试不牵连。</text>
+<text x="48" y="494" font-size="8.5" fill="#8a93a6">混在一起写的执行器，只能整体重跑，一步错就退回起点。</text>
+</svg>
