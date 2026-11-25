@@ -1,7 +1,7 @@
 ---
 title: "编排的账本：DSH 多 Agent 的任务状态、唤醒与重规划"
 date: "2026-11-25T18:05:00+08:00"
-summary: "DSH 里没有编排器，也没有计划对象。计划内容由模型写进 tool payload，任务状态落在根 Session 的事件日志里，调度只做一件事：在正确的时刻把下一条消息放进 inbox。拆开 todo、team task、workflow、goal 四个载体和两条队列，看「下一轮」和「重规划」到底由谁决定。"
+summary: "DSH 里没有编排器，也没有计划对象。计划内容由模型写进 tool payload，任务状态落在根 Session 的事件日志里，调度只做一件事：在正确的时刻把下一条消息放进 inbox。拆开 todo、team task、workflow、goal 四个载体和两条队列，看「下一轮」和「重规划」到底由谁决定。文末补两个追问：Team 的协调边界，以及 DAG 对 claim 的约束范围。"
 description: "DeepSeek Harness 多 Agent 编排的状态归属：todo 的回合级投影、team task 的 CAS 任务板、subagent 结算通知、goal round 驱动器、inbox 的 next-turn/next-step 两条队列，以及「重规划」为什么不是一个函数。"
 tags: ["multi-agent", "planning", "harness", "architecture"]
 slug: "dsh-orchestration-ledger"
@@ -365,7 +365,49 @@ agent.followup(message)
 7. 给自动续跑设额度，并在消息真正被接受时扣，不要在排队时扣。
 8. 计划视图设过期策略。回合级清单在下一轮清空，持久任务板靠 revision 判新旧。
 
-## 10. 证据与版本
+## 10. 两个追问
+
+发布后被追问了两个问题，都关于 Team 的边界。回答补在这里，前文的结论不变。
+
+### 追问一：Team 是不是「没有协调」？
+
+**方向对，但「没有协调」说过头了。** 准确的说法是没有集中式协调器；协调仍然存在，靠共享状态、显式消息和权限。
+
+看板不记录进度。状态只有 `pending / in_progress / completed / deleted`；`in_progress` 是 claim 那一刻写进去的，之后到 complete 之前不会变。没有百分比，没有心跳，没有「完成 60%」这种字段。子 agent 干完活，结算通知进的是父 agent 的 inbox，不写看板。看板要变，只能有人显式调 `team_task_update`。
+
+收尾检查靠约定，不靠门禁。`TEAM_POLICY` 要求根 agent 在给最终答案前等齐必需的队友，但代码里没有拦截：带着 pending 任务收尾，Harness 不会报错。`ready` 也是读时算的，没有后台循环定时重算并采取动作。
+
+协调由三样东西承担：看板的 revision CAS 保证并发写不互相覆盖；`send_message` 承担「叫谁动一下」；owner 或 Lead 的权限限制谁能改任务。所以这是协调与执行解耦，不是没有协调。
+
+代价落在模型身上：谁先干、干多久、失败后重试还是换人，Harness 都不判断。
+
+### 追问二：看板里有 DAG 吗？claim 是自由的吗？
+
+**DAG 在，claim 受它约束；但在就绪集合里，选择是自由的。**
+
+DAG 不是一张单独的图对象，而是每条任务上的 `blockedBy: TeamTaskId[]`，邻接表形式。
+
+claim 有两个硬条件：任务处于 `pending`，且 `taskReady` 为真。后者要求 `blockedBy` 里每个任务都 `completed`。
+
+```ts
+// packages/team/agent-team/src/task-board.ts:145
+if (current.ownerId !== undefined && current.ownerId !== caller.id) {
+  throw new TeamError(`team task "${current.id}" is owned by another member`, 'TEAM_TASK_ALREADY_CLAIMED')
+}
+if (current.status !== 'pending' || !taskReady(state, current)) {
+  throw new TeamError(`team task "${current.id}" is not ready to claim`, 'TEAM_TASK_BLOCKED')
+}
+```
+
+前置没完成，claim 直接失败，不能抢跑。
+
+DAG 只提供偏序，不提供执行路径。就绪集合可能同时有多个节点，谁先 claim 都合法。没有拓扑排序器，没有优先级字段，没有公平轮转，也没有自动派发。`complete` 只改状态，让下游变 ready；它不发消息、不唤醒 agent。要有人再 `list` 一次，或者 Lead 显式发消息，下游才会动。
+
+图的写入有校验：创建任务和 `set_dependencies` 都会跑 `assertTaskGraph`，拒绝缺失 blocker、重复和成环；删除仍有下游引用的任务报 `TEAM_TASK_HAS_DEPENDENTS`。
+
+一句话：DAG 管「能不能领」，模型管「领哪个、谁来领、什么时候领」。
+
+## 11. 证据与版本
 
 源码取自 `deepseek-harness` 仓库 `0.2.2-rc.1`，HEAD `fcc0ad46`。本机运行的桌面版打包在 `app.asar` 里，无法逐行比对，所以行号只对应该 tag。
 
