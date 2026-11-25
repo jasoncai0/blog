@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-labelledby="title desc">
+  <title id="title">Jade team task lifecycle</title>
+  <desc id="desc">Task states, CAS updates, dependencies and Lead approval on the durable TeamBoard.</desc>
+  <rect width="1000" height="560" fill="#f7f6f2"/>
+  <g font-family="'IBM Plex Mono','SFMono-Regular',Menlo,monospace" fill="#22231f">
+    <text x="40" y="38" font-size="10" letter-spacing="2" fill="#bf4520">JADE / TEAMBOARD</text>
+    <text x="40" y="70" font-size="27" font-family="'Noto Serif SC','Songti SC',serif">任务先落板，成员再认领</text>
+    <text x="40" y="94" font-size="12" fill="#67675f">每次写操作带 expectedRevision；依赖未完成时不能 claim</text>
+
+    <rect x="58" y="170" width="180" height="70" rx="35" fill="#fff" stroke="#b9b8ad"/>
+    <text x="105" y="200" font-size="13" font-weight="600">PENDING</text>
+    <text x="98" y="220" font-size="10" fill="#67675f">ready / blocked</text>
+
+    <rect x="360" y="170" width="190" height="70" rx="35" fill="#f3f7f0" stroke="#7a9b6e"/>
+    <text x="402" y="200" font-size="13" font-weight="600">IN_PROGRESS</text>
+    <text x="412" y="220" font-size="10" fill="#5d6857">owner + active</text>
+
+    <rect x="680" y="170" width="190" height="70" rx="35" fill="#f8f4e9" stroke="#c49b47"/>
+    <text x="729" y="200" font-size="13" font-weight="600">COMPLETED</text>
+    <text x="722" y="220" font-size="10" fill="#7a632a">terminal, reopenable</text>
+
+    <rect x="360" y="390" width="190" height="62" rx="3" fill="#f5efec" stroke="#bf4520" stroke-dasharray="4 3"/>
+    <text x="412" y="416" font-size="13" font-weight="600">DELETED</text>
+    <text x="411" y="435" font-size="10" fill="#8d3b1f">tombstone only</text>
+
+    <rect x="700" y="352" width="260" height="132" rx="3" fill="#fff" stroke="#bf4520" stroke-dasharray="4 3"/>
+    <text x="714" y="376" font-size="10" letter-spacing="1.2" fill="#bf4520">GUARDRAILS</text>
+    <text x="714" y="398" font-size="10" fill="#67675f">Lead only: reassign</text>
+    <text x="714" y="414" font-size="10" fill="#67675f">owner/Lead: claim, complete, edit</text>
+    <text x="714" y="430" font-size="10" fill="#67675f">blockedBy must all be COMPLETED</text>
+    <text x="714" y="446" font-size="10" fill="#67675f">max 256 non-deleted tasks</text>
+    <text x="714" y="462" font-size="10" fill="#67675f">writeScopes warn, never lock</text>
+
+    <defs>
+      <marker id="b1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7f7e75"/></marker>
+      <marker id="b2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#bf4520"/></marker>
+    </defs>
+    <g stroke="#7f7e75" stroke-width="1.2" fill="none" marker-end="url(#b1)">
+      <path d="M238 205 L360 205"/>
+      <path d="M550 205 L680 205"/>
+    </g>
+    <text x="264" y="196" font-size="10" fill="#67675f">claim (ready)</text>
+    <text x="578" y="196" font-size="10" fill="#67675f">complete</text>
+
+    <path d="M700 170 L700 128 L360 128 L360 170" stroke="#bf4520" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#b2)"/>
+    <text x="514" y="118" font-size="10" fill="#bf4520">reopen</text>
+
+    <path d="M455 240 L455 390" stroke="#bf4520" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#b2)"/>
+    <text x="465" y="312" font-size="10" fill="#8d3b1f">delete</text>
+    <path d="M680 240 L540 390" stroke="#bf4520" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#b2)"/>
+    <text x="590" y="320" font-size="10" fill="#8d3b1f">delete</text>
+
+    <line x1="40" y1="508" x2="960" y2="508" stroke="#d8d7ce"/>
+    <text x="40" y="536" font-size="11" fill="#67675f">任务变化不会唤醒成员；只有 send_message 会。claim 是模型/队友的主动动作，不是调度器自动分配。</text>
+  </g>
+</svg>

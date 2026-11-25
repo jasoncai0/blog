@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-labelledby="title desc">
+  <title id="title">Jade Team architecture</title>
+  <desc id="desc">A root session owns TeamService and a shared workspace; writable teammates and the MySQL task board sit behind it.</desc>
+  <rect width="1000" height="620" fill="#f7f6f2"/>
+  <g font-family="'IBM Plex Mono','SFMono-Regular',Menlo,monospace" fill="#22231f">
+    <text x="40" y="38" font-size="10" letter-spacing="2" fill="#bf4520">JADE / TEAM</text>
+    <text x="40" y="70" font-size="27" font-family="'Noto Serif SC','Songti SC',serif">团队是根会话上的任务板与可写成员</text>
+    <text x="40" y="94" font-size="12" fill="#67675f">TeamService 管任务与成员；每个 teammate 仍是独立 AgentRun</text>
+
+    <rect x="40" y="118" width="610" height="452" rx="4" fill="none" stroke="#9e9d92" stroke-dasharray="5 4"/>
+    <text x="56" y="139" font-size="10" letter-spacing="1.5" fill="#67675f">JADE PROCESS · ONE ROOT SESSION</text>
+
+    <rect x="60" y="162" width="210" height="76" rx="3" fill="#fff" stroke="#b9b8ad"/>
+    <text x="74" y="187" font-size="13" font-weight="600">Web UI · Team</text>
+    <text x="74" y="208" font-size="10" fill="#67675f">toggle · members · task board</text>
+    <text x="74" y="224" font-size="10" fill="#67675f">child permission cards</text>
+
+    <rect x="60" y="274" width="210" height="76" rx="3" fill="#fff" stroke="#b9b8ad"/>
+    <text x="74" y="299" font-size="13" font-weight="600">AgentService</text>
+    <text x="74" y="320" font-size="10" fill="#67675f">run registry · team wiring</text>
+    <text x="74" y="336" font-size="10" fill="#67675f">toolsForRun · approval API</text>
+
+    <rect x="300" y="162" width="300" height="76" rx="3" fill="#fff" stroke="#bf4520" stroke-width="1.4"/>
+    <text x="314" y="187" font-size="13" font-weight="600">Lead AgentRun</text>
+    <text x="314" y="208" font-size="10" fill="#67675f">owns the root session and final verify</text>
+    <text x="314" y="224" font-size="10" fill="#67675f">team tools only while enabled</text>
+
+    <rect x="300" y="274" width="300" height="112" rx="3" fill="#fff" stroke="#b9b8ad"/>
+    <text x="314" y="299" font-size="13" font-weight="600">TeamService</text>
+    <text x="314" y="319" font-size="10" fill="#67675f">task CAS · blockedBy · scopes</text>
+    <text x="314" y="335" font-size="10" fill="#67675f">spawn · send_message · wait_agent</text>
+    <text x="314" y="351" font-size="10" fill="#67675f">session toggle · member registry</text>
+    <text x="314" y="370" font-size="10" fill="#8d3b1f">runtime-only members</text>
+
+    <rect x="60" y="414" width="210" height="112" rx="3" fill="#fff" stroke="#b9b8ad"/>
+    <text x="74" y="439" font-size="13" font-weight="600">Shared workspace</text>
+    <text x="74" y="460" font-size="10" fill="#67675f">same root workspace</text>
+    <text x="74" y="476" font-size="10" fill="#67675f">src/ · .agent/</text>
+    <text x="74" y="492" font-size="10" fill="#67675f">write/compile/run tools</text>
+    <text x="74" y="508" font-size="10" fill="#67675f">per-run approval broker</text>
+
+    <rect x="300" y="436" width="138" height="70" rx="3" fill="#f3f7f0" stroke="#7a9b6e"/>
+    <text x="312" y="460" font-size="12" font-weight="600">Worker run</text>
+    <text x="312" y="479" font-size="10" fill="#5d6857">team-xxxxxxxx</text>
+    <text x="312" y="494" font-size="10" fill="#5d6857">inbox · lastResult</text>
+
+    <rect x="462" y="436" width="138" height="70" rx="3" fill="#f3f7f0" stroke="#7a9b6e"/>
+    <text x="474" y="460" font-size="12" font-weight="600">Writer run</text>
+    <text x="474" y="479" font-size="10" fill="#5d6857">team-xxxxxxxx</text>
+    <text x="474" y="494" font-size="10" fill="#5d6857">own permissions</text>
+
+    <rect x="700" y="162" width="250" height="176" rx="3" fill="#fff" stroke="#b9b8ad"/>
+    <text x="714" y="187" font-size="10" letter-spacing="1.2" fill="#bf4520">MYSQL · DURABLE BOARD</text>
+    <text x="714" y="214" font-size="13" font-weight="600">jade_teams</text>
+    <text x="714" y="234" font-size="10" fill="#67675f">root_run_id · enabled · next_task_no</text>
+    <line x1="714" y1="248" x2="936" y2="248" stroke="#deddd4"/>
+    <text x="714" y="274" font-size="13" font-weight="600">jade_team_tasks</text>
+    <text x="714" y="294" font-size="10" fill="#67675f">revision · status · owner · blockedBy</text>
+    <text x="714" y="310" font-size="10" fill="#67675f">writeScopes · deleted tombstone</text>
+    <text x="714" y="326" font-size="10" fill="#8d3b1f">CAS: expectedRevision</text>
+
+    <rect x="700" y="372" width="250" height="126" rx="3" fill="#fff" stroke="#bf4520" stroke-dasharray="4 3"/>
+    <text x="714" y="397" font-size="10" letter-spacing="1.2" fill="#bf4520">LEAD APPROVAL</text>
+    <text x="714" y="423" font-size="13" font-weight="600">child permission request</text>
+    <text x="714" y="443" font-size="10" fill="#67675f">Team API lists pending requests</text>
+    <text x="714" y="459" font-size="10" fill="#67675f">Lead chooses once / session / deny</text>
+    <text x="714" y="475" font-size="10" fill="#67675f">then broker resolves child run</text>
+
+    <defs>
+      <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7f7e75"/></marker>
+      <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#bf4520"/></marker>
+    </defs>
+    <g stroke="#7f7e75" stroke-width="1.2" fill="none" marker-end="url(#a1)">
+      <path d="M165 238 L165 274"/>
+      <path d="M270 312 L300 312"/>
+      <path d="M450 238 L450 274"/>
+      <path d="M600 314 L700 290"/>
+      <path d="M600 350 L700 430" stroke="#bf4520" marker-end="url(#a2)"/>
+      <path d="M370 386 L370 436"/>
+      <path d="M530 386 L530 436"/>
+      <path d="M300 472 L270 472"/>
+      <path d="M438 472 L462 472"/>
+    </g>
+    <text x="617" y="300" font-size="9" fill="#67675f">persist</text>
+    <text x="608" y="397" font-size="9" fill="#bf4520" transform="rotate(35 608 397)">approval</text>
+    
+    
+  </g>
+</svg>

@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900" role="img" aria-labelledby="title desc">
+  <title id="title">Jade Team sequence</title>
+  <desc id="desc">Lead enables Team, creates a task, spawns a worker, approves a child permission, waits for a message and completes the task.</desc>
+  <rect width="1000" height="900" fill="#f7f6f2"/>
+  <g font-family="'IBM Plex Mono','SFMono-Regular',Menlo,monospace" fill="#22231f">
+    <text x="36" y="34" font-size="10" letter-spacing="2" fill="#bf4520">JADE / TEAM SEQUENCE</text>
+    <text x="36" y="64" font-size="25" font-family="'Noto Serif SC','Songti SC',serif">一次 spawn、审批、回传的完整时序</text>
+    <text x="36" y="88" font-size="11" fill="#67675f">任务在 MySQL；成员是内存中的 AgentRun；权限仍走 Lead 审批。</text>
+
+    <g font-size="11" font-weight="600">
+      <text x="55" y="132">Lead / Web</text>
+      <text x="315" y="132">TeamService</text>
+      <text x="575" y="132">Worker run</text>
+      <text x="835" y="132">MySQL</text>
+    </g>
+    <g stroke="#c9c8bd" stroke-width="1">
+      <line x1="120" y1="148" x2="120" y2="650"/>
+      <line x1="380" y1="148" x2="380" y2="650"/>
+      <line x1="640" y1="148" x2="640" y2="650"/>
+      <line x1="900" y1="148" x2="900" y2="650"/>
+    </g>
+    <defs>
+      <marker id="c1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#4b4b44"/></marker>
+      <marker id="c2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#bf4520"/></marker>
+    </defs>
+
+    <g stroke="#4b4b44" stroke-width="1.15" fill="none" marker-end="url(#c1)">
+      <path d="M126 170 L374 170"/>
+      <path d="M386 205 L894 205"/>
+      <path d="M126 245 L374 245"/>
+      <path d="M386 280 L894 280"/>
+      <path d="M126 320 L374 320"/>
+      <path d="M386 355 L634 355" stroke-dasharray="4 3"/>
+      <path d="M126 590 L374 590"/>
+    </g>
+    <g stroke="#bf4520" stroke-width="1.15" fill="none" marker-end="url(#c2)">
+      <path d="M646 395 C706 395 706 435 646 435"/>
+      <path d="M126 475 L634 475" stroke-dasharray="4 3"/>
+      <path d="M634 545 L386 545" stroke-dasharray="4 3"/>
+      <path d="M374 630 L126 630" stroke-dasharray="4 3"/>
+    </g>
+    <path d="M646 435 L646 435" stroke="#bf4520" marker-end="url(#c2)"/>
+
+    <g font-size="10" font-weight="600">
+      <circle cx="250" cy="170" r="9" fill="#bf4520"/><text x="246" y="174" fill="#fff">1</text>
+      <circle cx="700" cy="205" r="9" fill="#bf4520"/><text x="694" y="209" fill="#fff">2</text>
+      <circle cx="250" cy="245" r="9" fill="#bf4520"/><text x="246" y="249" fill="#fff">3</text>
+      <circle cx="700" cy="280" r="9" fill="#bf4520"/><text x="694" y="284" fill="#fff">4</text>
+      <circle cx="250" cy="320" r="9" fill="#bf4520"/><text x="246" y="324" fill="#fff">5</text>
+      <circle cx="520" cy="355" r="9" fill="#bf4520"/><text x="516" y="359" fill="#fff">6</text>
+      <circle cx="606" cy="415" r="9" fill="#bf4520"/><text x="602" y="419" fill="#fff">7</text>
+      <circle cx="520" cy="475" r="9" fill="#bf4520"/><text x="516" y="479" fill="#fff">8</text>
+      <circle cx="520" cy="545" r="9" fill="#bf4520"/><text x="516" y="549" fill="#fff">9</text>
+      <circle cx="250" cy="590" r="9" fill="#bf4520"/><text x="246" y="594" fill="#fff">10</text>
+      <circle cx="250" cy="630" r="9" fill="#bf4520"/><text x="246" y="634" fill="#fff">11</text>
+    </g>
+
+    <g font-size="10">
+      <text x="40" y="158" fill="#bf4520">enable Team</text>
+      <text x="40" y="188" fill="#67675f">POST /api/runs/{id}/team</text>
+      <text x="404" y="196" fill="#67675f">jade_teams.enabled = 1</text>
+      <text x="40" y="233" fill="#bf4520">create task</text>
+      <text x="40" y="263" fill="#67675f">team_task_create</text>
+      <text x="404" y="270" fill="#67675f">task-1 · rev 1</text>
+      <text x="40" y="308" fill="#bf4520">spawn worker</text>
+      <text x="40" y="338" fill="#67675f">team_spawn(name, task)</text>
+      <text x="404" y="345" fill="#67675f">team-xxxxxxxx · same workspace</text>
+      <text x="660" y="348" fill="#67675f">queue initial task</text>
+      <text x="730" y="405" fill="#bf4520">write_file → pending</text>
+      <text x="730" y="425" fill="#67675f">run WAITING_APPROVAL</text>
+      <text x="40" y="463" fill="#bf4520">Lead approves</text>
+      <text x="40" y="493" fill="#67675f">GET /team → allow once</text>
+      <text x="660" y="468" fill="#67675f">resume + write</text>
+      <text x="660" y="538" fill="#67675f">send_message → lead</text>
+      <text x="40" y="582" fill="#bf4520">wait_agent</text>
+      <text x="40" y="654" fill="#bf4520">idle + result → complete</text>
+    </g>
+    
+
+    <g transform="translate(36,690)">
+      <line x1="0" y1="0" x2="928" y2="0" stroke="#d8d7ce"/>
+      <text x="0" y="24" font-size="10" letter-spacing="1.2" fill="#bf4520">STEPS</text>
+      <g font-size="10" fill="#67675f">
+        <text x="0" y="48">1 enable session board (default off)</text>
+        <text x="0" y="72">2 persist enabled flag</text>
+        <text x="0" y="96">3 Lead creates durable task</text>
+        <text x="0" y="120">4 CAS revision 1</text>
+        <text x="0" y="144">5 spawn writable teammate</text>
+        <text x="0" y="168">6 async member loop consumes inbox</text>
+        <text x="470" y="48">7 child write requests Lead approval</text>
+        <text x="470" y="72">8 Lead resolves via Team API</text>
+        <text x="470" y="96">9 child sends result to Lead inbox</text>
+        <text x="470" y="120">10 Lead waits for idle + empty queue</text>
+        <text x="470" y="144">11 wait returns idle + result; Lead completes</text>
+      </g>
+    </g>
+  </g>
+</svg>
