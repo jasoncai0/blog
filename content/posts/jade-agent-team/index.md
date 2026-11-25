@@ -273,7 +273,19 @@ private ToolRegistry toolsForRun(AgentRun run) {
 
 `wait_agent` 默认只等 600 秒。等待窗口结束不代表 teammate 失败，更不代表任务该被重派。旧输出只有一句 `Timed out.`，Lead 模型很容易把它当成“成员卡死”，再 `team_spawn` 一个替代成员，造成两份工作写同一个 workspace。
 
-现在返回值先分组，再给每个成员状态：
+更隐蔽的是权限等待：child 的 `write_file` / `run_command` 会进入 `WAITING_APPROVAL`，但旧 `wait_agent` 只看 `running()` 和 inbox，不看 pending permission。于是 Lead 在 `wait_agent` 里空等 600 秒，child 的 300 秒权限超时先到，三个 teammate 全部被拒绝，Lead 才看到超时。真实事故里这一步耗掉了十分钟。
+
+现在 `wait_agent` 每轮先检查目标成员的 pending permission；一旦发现就立即返回，不再等权限超时：
+
+```text
+Waiting for Lead approval: py-dev, java-dev, go-dev.
+This is not a task failure. Approve in the Team dialog/API, then wait again.
+Pending: perm-... py-dev: write_file
+         perm-... java-dev: write_file
+         perm-... go-dev: run_command
+```
+
+同时返回值仍会分组，并给每个成员状态：
 
 ```text
 Timed out after 600s while some members were still active.
@@ -289,7 +301,8 @@ Inspect list_agents and the task board, then send_message or wait again.
 
 同时：
 
-- `timedOut=true` 只表示观察窗口到期，不是 `RunStatus`；
+- `timedOut=true` 只表示观察窗口到期，不是 `RunStatus`；`waitingApproval` 是提前返回，`timedOut=false`；
+- `waitingApproval` / `pendingPermissions` 说明 child 在等 Lead/用户审批，先批准再继续；
 - `stillRunning` / `queued` 是活跃成员，不能重派；
 - `completed` / `failed` 是已经 idle 的成员，按最后结果判断；
 - `idle` 是没有结果的空闲成员，需要进一步询问；
@@ -334,7 +347,7 @@ cd java-coding-agent
 2. worker 返回 `child-done`，`send_message` 把 `worker-done` 送回 Lead；
 3. writer 的 `write_file` 产生 `perm-8a5bf30b`，Lead allow once 后 child 回复 `child-wrote`；
 4. `TeamTaskStoreTest` 3 个、`TeamServiceTest` 1 个、`WebServerTest.teamApiTogglesSessionBoard` 1 个；
-5. 全量 `mvn test`：162 tests，0 failures。
+5. 全量 `mvn test`：163 tests，0 failures。
 
 ## 11. 限制
 
