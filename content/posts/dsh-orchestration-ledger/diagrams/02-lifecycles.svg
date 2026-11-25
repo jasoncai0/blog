@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" role="img" aria-labelledby="f2t f2d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f2t">三种计划载体的生命周期</title>
+<desc id="f2d">team task 在 pending、in_progress、completed、deleted 之间迁移，claim 要求依赖已满足，revision 每次加一；goal 有 active、paused、blocked、complete 四个持久 phase，activation 只活在进程内；todo 是回合级投影，turn/start 时清空，turn/end 保留。</desc>
+<defs>
+  <marker id="f2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+</defs>
+<rect width="960" height="560" fill="#f5f5f5"/>
+
+<text x="40" y="40" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">DSH / ORCHESTRATION LEDGER</text>
+<text x="40" y="66" font-size="16" font-weight="600" fill="#2d3142">三种生命周期，三种持久性</text>
+<text x="40" y="88" font-size="10.5" fill="#5a6580">task 跨轮、goal 跨会话、todo 只管这一轮</text>
+
+<!-- team -->
+<rect x="32" y="96" width="296" height="432" fill="#fbfbfc" stroke="#e6e9f0"/>
+<text x="48" y="122" font-size="12" font-weight="600" fill="#2d3142">team task</text>
+<text x="48" y="140" font-size="9.5" fill="#5a6580">根 Session 投影，revision 递增</text>
+
+<rect x="64" y="168" width="120" height="42" fill="#ffffff" stroke="#8a93a6"/>
+<text x="124" y="193" text-anchor="middle" font-size="11" fill="#2d3142">pending</text>
+
+<rect x="64" y="262" width="120" height="42" fill="#efeaf6" stroke="#5b4b8a"/>
+<text x="124" y="287" text-anchor="middle" font-size="11" fill="#2d3142">in_progress</text>
+
+<rect x="64" y="356" width="120" height="42" fill="#e9f2ed" stroke="#2f6f5e"/>
+<text x="124" y="381" text-anchor="middle" font-size="11" fill="#2d3142">completed</text>
+
+<rect x="64" y="448" width="120" height="36" fill="#f8eae8" stroke="#9b4b52" stroke-dasharray="4 3"/>
+<text x="124" y="471" text-anchor="middle" font-size="10" fill="#9b4b52">deleted</text>
+
+<line x1="124" y1="210" x2="124" y2="258" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f2a)"/>
+<text x="132" y="231" font-size="9" fill="#4f5d75">claim</text>
+<text x="132" y="243" font-size="8" fill="#8a93a6">ready 才可</text>
+
+<line x1="124" y1="304" x2="124" y2="352" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f2a)"/>
+<text x="132" y="325" font-size="9" fill="#4f5d75">complete</text>
+<text x="132" y="337" font-size="8" fill="#8a93a6">要有人认领</text>
+
+<line x1="124" y1="398" x2="124" y2="444" stroke="#9b4b52" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#f2a)"/>
+<text x="132" y="419" font-size="9" fill="#9b4b52">delete</text>
+
+<polyline points="64,283 48,283 48,189 60,189" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text transform="rotate(-90 40 240)" x="40" y="240" text-anchor="middle" font-size="9" fill="#4f5d75">release</text>
+
+<polyline points="184,377 214,377 214,200 188,200" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="222" y="300" font-size="9" fill="#4f5d75">reopen</text>
+
+<text x="48" y="504" font-size="8.5" fill="#8a93a6">writeScopes 只是提示，不是锁</text>
+
+<!-- goal -->
+<rect x="344" y="96" width="280" height="432" fill="#fbfbfc" stroke="#e6e9f0"/>
+<text x="360" y="122" font-size="12" font-weight="600" fill="#2d3142">goal</text>
+<text x="360" y="140" font-size="9.5" fill="#5a6580">phase 持久，activation 不持久</text>
+
+<rect x="368" y="150" width="96" height="40" fill="#f7efe4" stroke="#a8752a"/>
+<text x="416" y="175" text-anchor="middle" font-size="10.5" fill="#2d3142">paused</text>
+
+<rect x="496" y="150" width="96" height="40" fill="#e9f2ed" stroke="#2f6f5e"/>
+<text x="544" y="175" text-anchor="middle" font-size="10.5" fill="#2d3142">complete</text>
+
+<rect x="392" y="246" width="112" height="44" fill="#e9eff6" stroke="#3d5a80" stroke-width="1.4"/>
+<text x="448" y="273" text-anchor="middle" font-size="11" font-weight="600" fill="#2d3142">active</text>
+
+<rect x="392" y="372" width="112" height="44" fill="#f8eae8" stroke="#9b4b52"/>
+<text x="448" y="399" text-anchor="middle" font-size="10.5" fill="#2d3142">blocked</text>
+
+<line x1="408" y1="246" x2="408" y2="196" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="402" y="222" text-anchor="end" font-size="9" fill="#4f5d75">pause</text>
+
+<line x1="440" y1="190" x2="440" y2="242" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="446" y="220" font-size="9" fill="#4f5d75">resume</text>
+
+<line x1="504" y1="262" x2="540" y2="198" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="528" y="240" font-size="9" fill="#4f5d75">complete</text>
+
+<line x1="424" y1="290" x2="424" y2="368" stroke="#bf4520" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="418" y="342" text-anchor="end" font-size="9" fill="#bf4520">round-limit</text>
+
+<line x1="470" y1="372" x2="470" y2="294" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="476" y="344" font-size="9" fill="#4f5d75">edit → resume</text>
+
+<text x="392" y="310" font-size="8" fill="#5a6580">activation: armed | disarmed</text>
+<text x="392" y="322" font-size="8" fill="#8a93a6">只活在进程内，不写日志</text>
+
+<text x="360" y="452" font-size="9" fill="#4f5d75">重启后一律 disarmed，</text>
+<text x="360" y="468" font-size="9" fill="#4f5d75">续跑要一次人工 resume</text>
+<text x="360" y="494" font-size="8.5" fill="#8a93a6">roundsStarted 只在消息真的进入 step 时加一</text>
+
+<!-- todo -->
+<rect x="640" y="96" width="288" height="432" fill="#fbfbfc" stroke="#e6e9f0"/>
+<text x="656" y="122" font-size="12" font-weight="600" fill="#2d3142">todo</text>
+<text x="656" y="140" font-size="9.5" fill="#5a6580">回合级投影，不是模型上下文</text>
+
+<rect x="680" y="196" width="96" height="44" fill="#ffffff" stroke="#8a93a6"/>
+<text x="728" y="223" text-anchor="middle" font-size="10.5" fill="#2d3142">null</text>
+
+<rect x="680" y="320" width="96" height="44" fill="#e9eff6" stroke="#3d5a80"/>
+<text x="728" y="347" text-anchor="middle" font-size="10.5" fill="#2d3142">todos: [...]</text>
+
+<line x1="700" y1="244" x2="700" y2="316" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f2a)"/>
+<text x="708" y="282" font-size="9" fill="#4f5d75">todo_write</text>
+<text x="708" y="294" font-size="8" fill="#8a93a6">整表替换</text>
+
+<line x1="756" y1="320" x2="756" y2="244" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="762" y="282" font-size="9" fill="#4f5d75">turn/start</text>
+<text x="762" y="294" font-size="8" fill="#8a93a6">清零</text>
+
+<path d="M776 332 C 814 332, 814 352, 780 352" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f2a)"/>
+<text x="820" y="340" font-size="9" fill="#4f5d75">turn/end 保留</text>
+
+<text x="656" y="404" font-size="9" fill="#4f5d75">tool 结果只回 counts，</text>
+<text x="656" y="420" font-size="9" fill="#4f5d75">清单正文留在 transcript</text>
+<text x="656" y="446" font-size="8.5" fill="#8a93a6">模型下一轮看到的是自己</text>
+<text x="656" y="460" font-size="8.5" fill="#8a93a6">上一轮的 tool call，而不是注入的清单</text>
+
+<line x1="40" y1="540" x2="920" y2="540" stroke="#dfe3ea"/>
+<text x="40" y="554" font-size="9" fill="#8a93a6">同名的「任务」在不同载体里，持久性与唤醒语义完全不同。</text>
+</svg>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" width="960" height="700" role="img" aria-labelledby="f3t f3d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f3t">一次子任务完成后继续的完整时序</title>
+<desc id="f3d">用户提出目标后，Lead 建三个任务、启动两个子 Agent，然后 turn 结束进入 idle。子 Agent 结束时向父 inbox 投递结算消息；父空闲时排队，下一轮 claim task-1，再显式 send_message 叫醒子 Agent。后代树排空且父 idle 时，goal driver 追加一条 goal_round，Lead 完成 task-1，task-2 才变 ready。</desc>
+<defs>
+  <marker id="f3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+  <marker id="f3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#9b4b52"/></marker>
+</defs>
+<rect width="960" height="700" fill="#f5f5f5"/>
+
+<text x="40" y="40" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.6" fill="#5a6580">DSH / ORCHESTRATION TRACE</text>
+<text x="40" y="66" font-size="16" font-weight="600" fill="#2d3142">一次「子任务完成后继续」的完整时序</text>
+<text x="40" y="88" font-size="10.5" fill="#5a6580">四次落盘、两次唤醒；没有任何一步由调度器替模型决定内容</text>
+
+<!-- 参与者 -->
+<rect x="40" y="96" width="140" height="44" fill="#f7efe4" stroke="#a8752a"/>
+<text x="110" y="116" text-anchor="middle" font-size="11" font-weight="600" fill="#2d3142">用户</text>
+<text x="110" y="131" text-anchor="middle" font-size="8" fill="#8a6a3a">提出目标</text>
+
+<rect x="215" y="96" width="140" height="44" fill="#e9eff6" stroke="#3d5a80"/>
+<text x="285" y="116" text-anchor="middle" font-size="11" font-weight="600" fill="#2d3142">Lead</text>
+<text x="285" y="131" text-anchor="middle" font-size="8" fill="#3d5a80">根 Session</text>
+
+<rect x="390" y="96" width="160" height="44" fill="#f7efe4" stroke="#bf4520"/>
+<text x="470" y="116" text-anchor="middle" font-size="11" font-weight="600" fill="#2d3142">Inbox</text>
+<text x="470" y="131" text-anchor="middle" font-size="8" fill="#bf4520">goal driver 也在这里</text>
+
+<rect x="580" y="96" width="160" height="44" fill="#efeaf6" stroke="#5b4b8a"/>
+<text x="660" y="116" text-anchor="middle" font-size="11" font-weight="600" fill="#2d3142">子 Agent</text>
+<text x="660" y="131" text-anchor="middle" font-size="8" fill="#5b4b8a">独立 Session</text>
+
+<rect x="770" y="96" width="160" height="44" fill="#e9f2ed" stroke="#2f6f5e"/>
+<text x="850" y="116" text-anchor="middle" font-size="11" font-weight="600" fill="#2d3142">任务板</text>
+<text x="850" y="131" text-anchor="middle" font-size="8" fill="#2f6f5e">根 Session 投影</text>
+
+<line x1="110" y1="140" x2="110" y2="600" stroke="#c9cedb" stroke-width="1" stroke-dasharray="4 4"/>
+<line x1="285" y1="140" x2="285" y2="600" stroke="#c9cedb" stroke-width="1" stroke-dasharray="4 4"/>
+<line x1="470" y1="140" x2="470" y2="600" stroke="#c9cedb" stroke-width="1" stroke-dasharray="4 4"/>
+<line x1="660" y1="140" x2="660" y2="600" stroke="#c9cedb" stroke-width="1" stroke-dasharray="4 4"/>
+<line x1="850" y1="140" x2="850" y2="600" stroke="#c9cedb" stroke-width="1" stroke-dasharray="4 4"/>
+
+<!-- 1 -->
+<line x1="182" y1="175" x2="211" y2="175" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
+<text x="196" y="168" text-anchor="middle" font-size="8.5" fill="#5a6580">目标：实现 X</text>
+
+<!-- 2 -->
+<line x1="357" y1="212" x2="766" y2="212" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
+<text x="560" y="205" text-anchor="middle" font-size="8.5" fill="#5a6580">create ×3（task-1..task-3，blockedBy 连成链）</text>
+
+<!-- 3 -->
+<line x1="357" y1="249" x2="576" y2="249" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
+<text x="455" y="242" text-anchor="end" font-size="8.5" fill="#5a6580">start_subagent ×2</text>
+
+<!-- 4 -->
+<rect x="238" y="274" width="94" height="28" fill="#ffffff" stroke="#3d5a80"/>
+<text x="285" y="292" text-anchor="middle" font-size="9" fill="#3d5a80">turn 结束 → idle</text>
+
+<!-- 5 -->
+<line x1="658" y1="330" x2="474" y2="330" stroke="#9b4b52" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#f3b)"/>
+<text x="565" y="323" text-anchor="middle" font-size="8.5" fill="#9b4b52">subagent/end + settlement</text>
+
+<!-- 6 -->
+<line x1="468" y1="366" x2="289" y2="366" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
+<text x="378" y="359" text-anchor="middle" font-size="8.5" fill="#5a6580">followup（父空闲 → queue）</text>
+
+<!-- 7 -->
+<line x1="357" y1="402" x2="766" y2="402" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
+<text x="560" y="395" text-anchor="middle" font-size="8.5" fill="#5a6580">list → claim(task-1, rev=1)</text>
+
+<!-- 8 任务板注 -->
+<rect x="778" y="424" width="150" height="36" fill="#ffffff" stroke="#2f6f5e" stroke-dasharray="4 3"/>
+<text x="790" y="440" font-size="8.5" fill="#2d3142">task-2 仍 blocked</text>
+<text x="790" y="453" font-size="8" fill="#5a6580">写日志，不唤醒任何人</text>
+
+<!-- 9 -->
+<line x1="357" y1="470" x2="576" y2="470" stroke="#9b4b52" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#f3b)"/>
+<text x="466" y="463" text-anchor="middle" font-size="8.5" fill="#9b4b52">send_message（显式叫醒）</text>
+
+<!-- 10 -->
+<line x1="468" y1="510" x2="289" y2="510" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
+<text x="378" y="503" text-anchor="middle" font-size="8.5" fill="#5a6580">树排空 + idle → flush → goal_round</text>
+
+<!-- 11 -->
+<line x1="357" y1="550" x2="766" y2="550" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
+<text x="560" y="543" text-anchor="middle" font-size="8.5" fill="#5a6580">complete(task-1) → task-2 变 ready</text>
+
+<text x="40" y="618" font-size="9" fill="#5a6580">第 8 步是关键：task-2 就绪不会触发任何消息；要让子 Agent 动起来，只能靠第 9 步或它自己下一轮。</text>
+
+<line x1="40" y1="646" x2="80" y2="646" stroke="#4f5d75" stroke-width="1.3"/>
+<text x="88" y="649" font-size="8.5" fill="#5a6580">同步调用 / 唤醒</text>
+<line x1="240" y1="646" x2="280" y2="646" stroke="#9b4b52" stroke-width="1.2" stroke-dasharray="5 3"/>
+<text x="288" y="649" font-size="8.5" fill="#5a6580">异步通知</text>
+<text x="420" y="649" font-size="8.5" fill="#8a93a6">所有消息都先进 inbox，由 inbox 决定排队还是插入当前 step</text>
+</svg>
