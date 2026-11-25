@@ -269,6 +269,34 @@ private ToolRegistry toolsForRun(AgentRun run) {
 
 [`AgentService.java`](https://github.com/jasoncai0/Jade/blob/main/src/main/java/io/github/jasoncai0/agent/agent/AgentService.java#L424-L444)。
 
+### 8.4 wait_agent 超时不是任务失败
+
+`wait_agent` 默认只等 600 秒。等待窗口结束不代表 teammate 失败，更不代表任务该被重派。旧输出只有一句 `Timed out.`，Lead 模型很容易把它当成“成员卡死”，再 `team_spawn` 一个替代成员，造成两份工作写同一个 workspace。
+
+现在返回值先分组，再给每个成员状态：
+
+```text
+Timed out after 600s while some members were still active.
+This is an observation timeout, not a task failure.
+Still running: worker
+Queued: writer
+Completed: auditor
+Failed: -
+
+Do not reassign or spawn a duplicate for still-running/queued members.
+Inspect list_agents and the task board, then send_message or wait again.
+```
+
+同时：
+
+- `timedOut=true` 只表示观察窗口到期，不是 `RunStatus`；
+- `stillRunning` / `queued` 是活跃成员，不能重派；
+- `completed` / `failed` 是已经 idle 的成员，按最后结果判断；
+- `idle` 是没有结果的空闲成员，需要进一步询问；
+- 工具仍返回 `ok`，不会把 run 标成失败。
+
+这个边界必须由 Lead 的调度策略处理：超时后先看 `list_agents` 和任务板，再决定继续等、发消息，还是显式 reopen/reassign。不要用 timeout 直接触发重复分派。
+
 ## 9. API 和 UI
 
 ```text
@@ -306,7 +334,7 @@ cd java-coding-agent
 2. worker 返回 `child-done`，`send_message` 把 `worker-done` 送回 Lead；
 3. writer 的 `write_file` 产生 `perm-8a5bf30b`，Lead allow once 后 child 回复 `child-wrote`；
 4. `TeamTaskStoreTest` 3 个、`TeamServiceTest` 1 个、`WebServerTest.teamApiTogglesSessionBoard` 1 个；
-5. 全量 `mvn test`：161 tests，0 failures。
+5. 全量 `mvn test`：162 tests，0 failures。
 
 ## 11. 限制
 
