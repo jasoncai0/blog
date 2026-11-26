@@ -5,7 +5,7 @@ summary: "把 30 道 Agent 面试题按一次任务真正流过的层次重排�
 tags: ["agent", "architecture", "multi-agent", "context-engineering"]
 ---
 
-题目清单来自[小林面试笔记的 Agent 专题](https://xiaolinnote.com/ai/agent/agent_info.html)，一共 30 道。我按「一次任务真正流过的层次」重排了顺序，答案重写，不是原文搬运。
+题目清单来自[小林面试笔记的 Agent 专题](https://xiaolinnote.com/ai/agent/agent_info.html)，一共 30 道。我按「一次任务真正流过的层次」重排了顺序，答案重写，不是原文搬运。姊妹篇是 [RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html)，那篇沿检索链路展开，两篇在「上下文预算」和「证据与可信」两处互相接得上。
 
 原站的顺序是按话题排的：概念、范式、工程、多 Agent、运行机制。按这个顺序刷题，容易背成 30 个孤立的知识点。面试官提问却是顺着一条链往下追的：你说 Agent 能自己规划，他就问规划错了怎么办；你说有记忆，他就问记忆什么时候写、写多大粒度；你说多 Agent 协作，他就问子 Agent 挂了谁接管。所以这份文档按链排：概念 → 范式 → 上下文 → 协作 → 执行 → 质量 → 控制权。
 
