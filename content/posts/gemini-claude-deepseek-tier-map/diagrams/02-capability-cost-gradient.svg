@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" role="img" aria-labelledby="f2t f2d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
+<title id="f2t">2026 模型能力与输出成本梯度图</title>
+<desc id="f2d">横轴为每百万输出 token 的对数美元单价，纵轴为 S+ 到 B 四个能力梯度，标出 Gemini 4、Claude 5.2/5.5 与 DeepSeek V4/V4.1 的坐标及帕累托选型阶梯。</desc>
+<rect width="960" height="640" fill="#f5f5f5"/>
+<text x="28" y="34" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.5" fill="#5a6580">CAPABILITY VS COST GRADIENT / LOG SCALE</text>
+<text x="28" y="58" font-size="16" font-weight="600" fill="#2d3142">模型能力与输出成本梯度图（越靠左上性价比越高）</text>
+<text x="28" y="78" font-size="10" fill="#5a6580">横轴：API 输出单价（$/1M tokens，对数刻度）；纵轴：综合推理与工程梯度分层</text>
+<rect x="92" y="108" width="828" height="456" fill="#ffffff" stroke="#d5dbe5"/>
+<rect x="92" y="108.0" width="828" height="68.40000000000003" fill="#f8f9fb"/>
+<rect x="92" y="108.0" width="4" height="68.40000000000003" fill="#2d3142"/>
+<line x1="92" y1="176.40000000000003" x2="920" y2="176.40000000000003" stroke="#e2e6ee" stroke-dasharray="4,4"/>
+<text x="104" y="126.0" font-size="9.5" font-weight="600" fill="#2d3142">Tier S+ 超前沿深度推理 (Carbon / Fable 5.2)</text>
+<rect x="92" y="176.40000000000003" width="828" height="82.07999999999993" fill="#ffffff"/>
+<rect x="92" y="176.40000000000003" width="4" height="82.07999999999993" fill="#3d5a80"/>
+<line x1="92" y1="258.47999999999996" x2="920" y2="258.47999999999996" stroke="#e2e6ee" stroke-dasharray="4,4"/>
+<text x="104" y="194.40000000000003" font-size="9.5" font-weight="600" fill="#3d5a80">Tier S 主力旗舰工程 (Neon / Opus 5.5 / Sonnet 5.5 / V4-Pro)</text>
+<rect x="92" y="258.47999999999996" width="828" height="118.56000000000006" fill="#e9f2ed"/>
+<rect x="92" y="258.47999999999996" width="4" height="118.56000000000006" fill="#2f6f5e"/>
+<line x1="92" y1="377.04" x2="920" y2="377.04" stroke="#e2e6ee" stroke-dasharray="4,4"/>
+<text x="104" y="276.47999999999996" font-size="9.5" font-weight="600" fill="#2f6f5e">Tier A 高效执行与高频 Agent (Hydrogen / DeepSeek-V4.1-Flash)</text>
+<rect x="92" y="377.04" width="828" height="186.95999999999998" fill="#ffffff"/>
+<rect x="92" y="377.04" width="4" height="186.95999999999998" fill="#5a6580"/>
+<text x="104" y="395.04" font-size="9.5" font-weight="600" fill="#5a6580">Tier B 极致吞吐与路由压缩 (Haiku 5.5 / V4.1-Flash Off-Peak)</text>
+<line x1="149.79090629877157" y1="108" x2="149.79090629877157" y2="564" stroke="#ececec"/>
+<text x="149.79090629877157" y="582" text-anchor="middle" font-size="9.5" fill="#4f5d75">$0.5</text>
+<line x1="262.09933851059066" y1="108" x2="262.09933851059066" y2="564" stroke="#ececec"/>
+<text x="262.09933851059066" y="582" text-anchor="middle" font-size="9.5" fill="#4f5d75">$1</text>
+<line x1="374.4077707224097" y1="108" x2="374.4077707224097" y2="564" stroke="#ececec"/>
+<text x="374.4077707224097" y="582" text-anchor="middle" font-size="9.5" fill="#4f5d75">$2</text>
+<line x1="522.8714425559663" y1="108" x2="522.8714425559663" y2="564" stroke="#ececec"/>
+<text x="522.8714425559663" y="582" text-anchor="middle" font-size="9.5" fill="#4f5d75">$5</text>
+<line x1="635.1798747677852" y1="108" x2="635.1798747677852" y2="564" stroke="#ececec"/>
+<text x="635.1798747677852" y="582" text-anchor="middle" font-size="9.5" fill="#4f5d75">$10</text>
+<line x1="747.4883069796043" y1="108" x2="747.4883069796043" y2="564" stroke="#ececec"/>
+<text x="747.4883069796043" y="582" text-anchor="middle" font-size="9.5" fill="#4f5d75">$20</text>
+<line x1="859.7967391914234" y1="108" x2="859.7967391914234" y2="564" stroke="#ececec"/>
+<text x="859.7967391914234" y="582" text-anchor="middle" font-size="9.5" fill="#4f5d75">$40</text>
+<path d="M 149.8,413.5 L 179.3,363.4 L 291.6,340.6 L 485.1,226.6 L 635.2,153.6 L 859.8,139.9" fill="none" stroke="#8a93a6" stroke-width="1.5" stroke-dasharray="5,4"/>
+<circle cx="859.7967391914234" cy="139.91999999999996" r="5.5" fill="#5b4b8a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="847.7967391914234" y="127.91999999999996" text-anchor="end" font-size="10.5" font-weight="600" fill="#2d3142">Claude Fable 5.2</text>
+<text x="847.7967391914234" y="140.91999999999996" text-anchor="end" font-size="8.5" fill="#5a6580">$8 / $40 · 公开最强推理</text>
+<circle cx="635.1798747677852" cy="153.59999999999997" r="5.5" fill="#3d5a80" stroke="#ffffff" stroke-width="1.5"/>
+<text x="647.1798747677852" y="143.59999999999997" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">Gemini 4 Carbon</text>
+<text x="647.1798747677852" y="156.59999999999997" text-anchor="start" font-size="8.5" fill="#5a6580">$2/$10 (推广) · 深度旗舰</text>
+<circle cx="747.4883069796043" cy="180.96000000000004" r="5.5" fill="#5b4b8a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="759.4883069796043" y="174.96000000000004" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">Claude Opus 5.5</text>
+<text x="759.4883069796043" y="187.96000000000004" text-anchor="start" font-size="8.5" fill="#5a6580">$4 / $20 · 复杂知识默认</text>
+<circle cx="700.8760961264834" cy="203.76" r="5.5" fill="#3d5a80" stroke="#ffffff" stroke-width="1.5"/>
+<text x="712.8760961264834" y="215.76" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">Gemini 4 Neon</text>
+<text x="712.8760961264834" y="228.76" text-anchor="start" font-size="8.5" fill="#5a6580">$3 / $15 · AA 61 · Coding #1</text>
+<circle cx="485.08777899402446" cy="226.56" r="5.5" fill="#2f6f5e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="473.08777899402446" y="214.56" text-anchor="end" font-size="10.5" font-weight="600" fill="#2d3142">DeepSeek-V4-Pro</text>
+<text x="473.08777899402446" y="227.56" text-anchor="end" font-size="8.5" fill="#5a6580">$1.32/$3.96 · 1.6T 开源旗舰</text>
+<circle cx="635.1798747677852" cy="244.8" r="5.5" fill="#5b4b8a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="647.1798747677852" y="256.8" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">Claude Sonnet 5.5</text>
+<text x="647.1798747677852" y="269.8" text-anchor="start" font-size="8.5" fill="#5a6580">$2 / $10 · 日常开发主力</text>
+<circle cx="588.5676639146643" cy="285.84000000000003" r="6.5" fill="#3d5a80" stroke="#ffffff" stroke-width="1.5"/>
+<text x="600.5676639146643" y="289.84000000000003" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">Gemini 4 Hydrogen</text>
+<text x="600.5676639146643" y="302.84000000000003" text-anchor="start" font-size="8.5" fill="#5a6580">$1.50/$7.50 · AA 51~54</text>
+<circle cx="291.64032024755136" cy="340.56" r="6.5" fill="#2f6f5e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="303.64032024755136" y="330.56" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">DeepSeek-V4.1-Flash (Peak)</text>
+<text x="303.64032024755136" y="343.56" text-anchor="start" font-size="8.5" fill="#5a6580">$0.30/$1.20 · AA ~33 · DeepSWE ~77</text>
+<circle cx="179.3318880357323" cy="363.36" r="6.5" fill="#2f6f5e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="191.3318880357323" y="377.36" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">DeepSeek-V4.1-Flash (Off-Peak)</text>
+<text x="191.3318880357323" y="390.36" text-anchor="start" font-size="8.5" fill="#5a6580">$0.15/$0.60 · 175 tok/s</text>
+<circle cx="149.79090629877157" cy="413.52" r="5.5" fill="#5b4b8a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="161.79090629877157" y="417.52" text-anchor="start" font-size="10.5" font-weight="600" fill="#2d3142">Claude Haiku 5.5</text>
+<text x="161.79090629877157" y="430.52" text-anchor="start" font-size="8.5" fill="#5a6580">$0.10/$0.50 起 · 极速路由</text>
+<text x="506.0" y="604" text-anchor="middle" font-size="10.5" font-weight="600" fill="#2d3142">Output 单价（USD / 1M Tokens，对数刻度 — 越靠左越便宜）</text>
+<text x="34" y="336.0" text-anchor="middle" transform="rotate(-90 34 336.0)" font-size="10.5" font-weight="600" fill="#2d3142">综合推理与复杂工程梯度（越高越强）</text>
+<circle cx="560" cy="76" r="4.5" fill="#3d5a80"/>
+<text x="569" y="79" font-size="9.5" font-weight="600" fill="#2d3142">Google Gemini 4</text>
+<circle cx="686" cy="76" r="4.5" fill="#5b4b8a"/>
+<text x="695" y="79" font-size="9.5" font-weight="600" fill="#2d3142">Anthropic Claude</text>
+<circle cx="812" cy="76" r="4.5" fill="#2f6f5e"/>
+<text x="821" y="79" font-size="9.5" font-weight="600" fill="#2d3142">DeepSeek V4/V4.1</text>
+<text x="28" y="626" font-size="8.5" fill="#5a6580">注：虚线折线为同成本段能力上界（Pareto 前沿）；Carbon 推广价结束后位置将向右移。纵轴按各厂定位与公开基准排布，非单一跑分线性刻度。</text>
+</svg>
