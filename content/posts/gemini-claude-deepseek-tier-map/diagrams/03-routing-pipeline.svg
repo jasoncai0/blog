@@ -1,65 +1,103 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520" role="img" aria-labelledby="f3t f3d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
-<title id="f3t">三阵营多模型生产路由管线</title>
-<desc id="f3d">输入请求先经过任务特征分流闸门，再按高难度规划、高频工程、多模态/长文执行、极致并发四条支路落到对应梯队模型，最后经验证节点输出。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="660" viewBox="0 0 1280 660" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f3-t f3-d">
+<title id="f3-t">2026 生产多模型路由管线（Multi-Model Routing Pipeline）</title>
+<desc id="f3-d">输入请求经过三维特征分流闸门进入 S+、S、A、B 四条模型支路，低层连续校验失败时逐级升级兜底。</desc>
 <defs>
-  <marker id="f3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4f5d75"/></marker>
+<style>
+  .f3-title { font-size: 24px; font-weight: 800; fill: #0F172A; }
+  .f3-subtitle { font-size: 13.5px; fill: #475569; }
+  .f3-stage-hdr { font-size: 14px; font-weight: 700; fill: #FFFFFF; }
+  .f3-card-title { font-size: 14px; font-weight: 700; fill: #0F172A; }
+  .f3-card-sub { font-size: 11.5px; fill: #334155; }
+  .f3-card-meta { font-size: 10.8px; font-weight: 600; fill: #475569; }
+  .f3-badge { font-size: 12px; font-weight: 800; fill: #FFFFFF; }
+  .f3-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f3-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f3-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f3-arr-up" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
 </defs>
-<rect width="960" height="520" fill="#f5f5f5"/>
-<text x="28" y="34" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.5" fill="#5a6580">MULTI-MODEL ROUTING PIPELINE</text>
-<text x="28" y="58" font-size="16" font-weight="600" fill="#2d3142">工程落地怎么配：从任务分流到模型梯队的路由管线</text>
-<text x="28" y="78" font-size="10" fill="#5a6580">先按复杂度、多模态需求与预算过闸门，再把不同子步骤交给最匹配的梯队，避免全链路用旗舰烧预算</text>
-<rect x="28" y="210" width="146" height="106" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="28" y="210" width="4" height="106" fill="#3d5a80"/>
-<text x="44" y="236" font-size="11.5" font-weight="600" fill="#2d3142">输入请求</text>
-<text x="44" y="256" font-size="9" fill="#4f5d75">用户任务 / 代码库</text>
-<text x="44" y="274" font-size="9" fill="#4f5d75">音视频 PDF / 批量数据</text>
-<text x="44" y="294" font-size="8.5" fill="#5a6580">产出：TaskSpec</text>
-<rect x="216" y="182" width="166" height="162" fill="#f7efe4" stroke="#bf4520"/>
-<text x="232" y="208" font-size="11.5" font-weight="600" fill="#2d3142">路由分流闸门</text>
-<text x="232" y="226" font-size="9" fill="#5a6580">按三个维度判定去向</text>
-<text x="232" y="252" font-size="9" fill="#4f5d75">1. 推理深度与失败代价</text>
-<text x="232" y="272" font-size="9" fill="#4f5d75">2. 原生多模态 / 上下文量</text>
-<text x="232" y="292" font-size="9" fill="#4f5d75">3. 单次吞吐与 Token 预算</text>
-<text x="232" y="322" font-size="8.5" fill="#bf4520">产出：Tier + 思考档位</text>
-<line x1="176" y1="263" x2="210" y2="263" stroke="#4f5d75" stroke-width="1.3" marker-end="url(#f3a)"/>
-<text x="193" y="255" text-anchor="middle" font-size="8" fill="#5a6580">特征</text>
-<rect x="468" y="106" width="318" height="82" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="468" y="106" width="4" height="82" fill="#5b4b8a"/>
-<text x="482" y="126" font-size="10.5" font-weight="600" fill="#2d3142">支路 1 · 顶层架构与长程攻坚 (S+)</text>
-<text x="482" y="145" font-size="10" font-weight="600" fill="#5b4b8a">Gemini 4 Carbon / Claude Fable 5.2</text>
-<text x="482" y="162" font-size="8.8" fill="#4f5d75">开源侧备选：DeepSeek-V4-Pro</text>
-<text x="482" y="178" font-size="8.2" fill="#5a6580">产出：架构方案 / 难例拆解</text>
-<path d="M 382 263 C 425 263, 420 146, 462 146" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<path d="M 786 146 C 808 146, 806 263, 822 263" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<rect x="468" y="206" width="318" height="82" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="468" y="206" width="4" height="82" fill="#5b4b8a"/>
-<text x="482" y="226" font-size="10.5" font-weight="600" fill="#2d3142">支路 2 · 高频软件工程主力 (S)</text>
-<text x="482" y="245" font-size="10" font-weight="600" fill="#5b4b8a">Gemini 4 Neon / Claude Opus·Sonnet 5.5</text>
-<text x="482" y="262" font-size="8.8" fill="#4f5d75">跨文件重构 / 测试闭环 / 日常 SWE</text>
-<text x="482" y="278" font-size="8.2" fill="#5a6580">产出：代码补丁 / PR Diff</text>
-<path d="M 382 263 C 425 263, 420 246, 462 246" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<path d="M 786 246 C 808 246, 806 263, 822 263" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<rect x="468" y="306" width="318" height="82" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="468" y="306" width="4" height="82" fill="#2f6f5e"/>
-<text x="482" y="326" font-size="10.5" font-weight="600" fill="#2d3142">支路 3 · 执行引擎与多模态 (A)</text>
-<text x="482" y="345" font-size="10" font-weight="600" fill="#2f6f5e">Gemini 4 Hydrogen / DeepSeek-V4.1-Flash</text>
-<text x="482" y="362" font-size="8.8" fill="#4f5d75">音视频 PDF 解析、Worker 子代理、高频脚本</text>
-<text x="482" y="378" font-size="8.2" fill="#5a6580">产出：结构化分析 / 子任务产物</text>
-<path d="M 382 263 C 425 263, 420 346, 462 346" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<path d="M 786 346 C 808 346, 806 263, 822 263" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<rect x="468" y="406" width="318" height="82" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="468" y="406" width="4" height="82" fill="#2f6f5e"/>
-<text x="482" y="426" font-size="10.5" font-weight="600" fill="#2d3142">支路 4 · 极速并发与路由清洗 (B)</text>
-<text x="482" y="445" font-size="10" font-weight="600" fill="#2f6f5e">Claude Haiku 5.5 / V4.1-Flash Off-Peak</text>
-<text x="482" y="462" font-size="8.8" fill="#4f5d75">标签分类、字段抽取、百倍级低成本批处理</text>
-<text x="482" y="478" font-size="8.2" fill="#5a6580">产出：JSON 抽取 / 路由标签</text>
-<path d="M 382 263 C 425 263, 420 446, 462 446" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<path d="M 786 446 C 808 446, 806 263, 822 263" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#f3a)"/>
-<rect x="828" y="206" width="106" height="114" fill="#e9f2ed" stroke="#2f6f5e"/>
-<text x="842" y="232" font-size="11" font-weight="600" fill="#2d3142">交付与复核</text>
-<text x="842" y="254" font-size="8.8" fill="#4f5d75">低层失败时</text>
-<text x="842" y="270" font-size="8.8" fill="#4f5d75">逐级升级到</text>
-<text x="842" y="286" font-size="8.8" fill="#4f5d75">高一档模型</text>
-<text x="842" y="308" font-size="8.2" fill="#2f6f5e">输出：最终结果</text>
-<text x="28" y="506" font-size="8.5" fill="#5a6580">典型组合：Google Antigravity 用 Carbon/Neon 做顶层规划，Hydrogen 做执行 Worker；降本部署则用 V4.1-Flash 兜底高频循环、V4-Pro 兜底难例。</text>
+<rect x="0.5" y="0.5" width="1279" height="659" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f3-title">2026 生产多模型路由管线（Multi-Model Routing Pipeline）</text>
+<text x="32" y="66" class="f3-subtitle">按失败代价、全模态长度与 Token 预算分流；低层校验连续失败 2 次自动升级高阶梯队兜底</text>
+<rect x="32" y="88" width="190" height="36" rx="8" fill="#1E293B"/>
+<text x="127" y="111" text-anchor="middle" class="f3-stage-hdr">1. 请求入口</text>
+<rect x="264" y="88" width="236" height="36" rx="8" fill="#1A73E8"/>
+<text x="382" y="111" text-anchor="middle" class="f3-stage-hdr">2. 特征路由闸门</text>
+<rect x="556" y="88" width="460" height="36" rx="8" fill="#0F766E"/>
+<text x="786" y="111" text-anchor="middle" class="f3-stage-hdr">3. 四级模型执行池（按梯队派单）</text>
+<rect x="1062" y="88" width="186" height="36" rx="8" fill="#D97757"/>
+<text x="1155" y="111" text-anchor="middle" class="f3-stage-hdr">4. 校验与兜底升级</text>
+<rect x="32" y="270" width="190" height="170" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.2" filter="url(#f3-shadow)"/>
+<rect x="32" y="270" width="5" height="170" rx="2" fill="#1E293B"/>
+<text x="50" y="302" class="f3-card-title">多源任务请求</text>
+<text x="50" y="328" class="f3-card-sub">· 核心代码库与跨文件 PR</text>
+<text x="50" y="350" class="f3-card-sub">· 长音视频 / 大体积 PDF</text>
+<text x="50" y="372" class="f3-card-sub">· 批量脚本重构与清洗</text>
+<text x="50" y="394" class="f3-card-sub">· 实时分类与抽取流量</text>
+<text x="50" y="422" class="f3-card-meta">输出中间态：TaskSpec</text>
+<rect x="264" y="242" width="236" height="226" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.4" filter="url(#f3-shadow)"/>
+<rect x="264" y="242" width="5" height="226" rx="2" fill="#2563EB"/>
+<text x="284" y="274" class="f3-card-title">三维路由判定器</text>
+<rect x="284" y="290" width="196" height="44" rx="6" fill="#FFFFFF" stroke="#DBEAFE"/>
+<text x="296" y="309" class="f3-card-sub" style="font-weight:700;">维度 A：推理深度与失败代价</text>
+<text x="296" y="326" class="f3-card-meta">不可逆架构 / 安全审计 → 直通 S+</text>
+<rect x="284" y="342" width="196" height="44" rx="6" fill="#FFFFFF" stroke="#DBEAFE"/>
+<text x="296" y="361" class="f3-card-sub" style="font-weight:700;">维度 B：模态类型与数据合规</text>
+<text x="296" y="378" class="f3-card-meta">音视频/PDF → Hydrogen；内网 → V4</text>
+<rect x="284" y="394" width="196" height="44" rx="6" fill="#FFFFFF" stroke="#DBEAFE"/>
+<text x="296" y="413" class="f3-card-sub" style="font-weight:700;">维度 C：并发吞吐与单价上限</text>
+<text x="296" y="430" class="f3-card-meta">批处理优先 Off-Peak 与缓存命中</text>
+<text x="284" y="456" class="f3-card-meta" style="fill:#1D4ED8;">输出：TargetTier + ThinkingLevel</text>
+<line x1="222" y1="355" x2="256" y2="355" stroke="#64748B" stroke-width="1.8" marker-end="url(#f3-arr)"/>
+<rect x="556" y="144" width="460" height="106" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.2" filter="url(#f3-shadow)"/>
+<rect x="572" y="158" width="76" height="24" rx="12" fill="#9333EA"/>
+<text x="610" y="174" text-anchor="middle" class="f3-badge">Tier S+</text>
+<text x="660" y="175" class="f3-card-title">Gemini 4 Carbon / Claude Fable 5.2</text>
+<text x="572" y="204" class="f3-card-sub">长程架构决策、复杂并发排错、高等数学与安全审计</text>
+<text x="572" y="228" class="f3-card-meta">私有化重推理备选：DeepSeek-V4-Pro ($1.32/$3.96 Peak)</text>
+<path d="M 500 355 C 528 355, 524 197.0, 548 197.0" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<path d="M 1016 197.0 C 1038 197.0, 1036 355, 1054 355" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<rect x="556" y="262" width="460" height="106" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2" filter="url(#f3-shadow)"/>
+<rect x="572" y="276" width="76" height="24" rx="12" fill="#2563EB"/>
+<text x="610" y="292" text-anchor="middle" class="f3-badge">Tier S</text>
+<text x="660" y="293" class="f3-card-title">Gemini 4 Neon / Claude Opus·Sonnet 5.5</text>
+<text x="572" y="322" class="f3-card-sub">多文件软件工程、复杂代码库重构、企业核心知识工作</text>
+<text x="572" y="346" class="f3-card-meta">Neon ($3/$15, Coding #1) · Sonnet 5.5 ($2/$10, 日常主力)</text>
+<path d="M 500 355 C 528 355, 524 315.0, 548 315.0" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<path d="M 1016 315.0 C 1038 315.0, 1036 355, 1054 355" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<rect x="556" y="380" width="460" height="106" rx="10" fill="#ECFDF5" stroke="#10B981" stroke-width="2.2" filter="url(#f3-shadow)"/>
+<rect x="572" y="394" width="76" height="24" rx="12" fill="#059669"/>
+<text x="610" y="410" text-anchor="middle" class="f3-badge">Tier A ★</text>
+<text x="660" y="411" class="f3-card-title">Gemini 4 Hydrogen / DeepSeek-V4.1-Flash</text>
+<text x="572" y="440" class="f3-card-sub">全模态长文档与数据分析 (Hydrogen) · 高频编码脚本 (V4.1-Flash)</text>
+<text x="572" y="464" class="f3-card-meta">Hydrogen 建议用默认/低思考档防冗余 · V4.1-Flash 175 tok/s</text>
+<path d="M 500 355 C 528 355, 524 433.0, 548 433.0" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<path d="M 1016 433.0 C 1038 433.0, 1036 355, 1054 355" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<rect x="556" y="498" width="460" height="106" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2" filter="url(#f3-shadow)"/>
+<rect x="572" y="512" width="76" height="24" rx="12" fill="#D97706"/>
+<text x="610" y="528" text-anchor="middle" class="f3-badge">Tier B</text>
+<text x="660" y="529" class="f3-card-title">Claude Haiku 5.5 / V4.1-Flash (Off-Peak)</text>
+<text x="572" y="558" class="f3-card-sub">实时交互响应、JSON 字段抽取、标签路由、超低价批处理</text>
+<text x="572" y="582" class="f3-card-meta">Haiku $0.10/$0.50 起 · V4.1-Flash 谷时 $0.15/$0.60 (Cache $0.003)</text>
+<path d="M 500 355 C 528 355, 524 551.0, 548 551.0" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<path d="M 1016 551.0 C 1038 551.0, 1036 355, 1054 355" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+<rect x="1062" y="250" width="186" height="210" rx="10" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.4" filter="url(#f3-shadow)"/>
+<rect x="1062" y="250" width="5" height="210" rx="2" fill="#EA580C"/>
+<text x="1080" y="282" class="f3-card-title">自动校验门禁</text>
+<text x="1080" y="308" class="f3-card-sub">· 编译 / 单测通过率</text>
+<text x="1080" y="330" class="f3-card-sub">· JSON Schema 校验</text>
+<line x1="1080" y1="348" x2="1232" y2="348" stroke="#FED7AA" stroke-width="1.2"/>
+<text x="1080" y="372" class="f3-card-sub" style="font-weight:700;fill:#9A3412;">连续 2 次校验失败：</text>
+<text x="1080" y="394" class="f3-card-meta">工程主栈 → Neon / Opus</text>
+<text x="1080" y="414" class="f3-card-meta">内网开源 → 升 V4-Pro</text>
+<text x="1080" y="442" class="f3-card-meta" style="fill:#059669;">通过 → 直接交付结果</text>
+<path d="M 1155 250 C 1155 132, 1045 132, 1022 185" fill="none" stroke="#D97706" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#f3-arr-up)"/>
+<text x="1095" y="142" text-anchor="middle" class="f3-card-meta" style="fill:#B45309;">失败自动升档兜底</text>
+<text x="32" y="636" class="f3-footer">★ 编排范式：Google Antigravity 用 Carbon / Neon 做顶层拆解，Hydrogen 做执行子代理；极致降本链路用 DeepSeek-V4.1-Flash 承接主流量，难例升档兜底。</text>
 </svg>

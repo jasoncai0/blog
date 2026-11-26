@@ -1,110 +1,115 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680" width="960" height="680" role="img" aria-labelledby="f1t f1d" font-family="'Geist','PingFang SC','Noto Sans SC',system-ui,sans-serif">
-<title id="f1t">三大模型阵营能力对标分层图</title>
-<desc id="f1d">将 Google Gemini 4（Carbon、Argon、Neon、Hydrogen）、Anthropic Claude（Fable 5.2、Opus 5.5、Sonnet 5.5、Haiku 5.5）与 DeepSeek（V4-Pro、V4.1-Flash）按 S+ 到 B 四个能力层对齐。</desc>
-<rect width="960" height="680" fill="#f5f5f5"/>
-<text x="28" y="34" font-family="'Geist Mono','SFMono-Regular',ui-monospace,monospace" font-size="8.5" letter-spacing="1.5" fill="#5a6580">MODEL ALIGNMENT MATRIX / 2026-11</text>
-<text x="28" y="58" font-size="16" font-weight="600" fill="#2d3142">Gemini 4 × Claude 5.2/5.5 × DeepSeek V4.1 四层能力对标</text>
-<text x="28" y="78" font-size="10" fill="#5a6580">按推理深度、Agent 工程定位与公开 API 单价（$/1M tokens）对齐；虚线框表示跨档覆盖或无独立同级型号</text>
-<rect x="28" y="92" width="124" height="34" fill="#ffffff" stroke="#e2e6ee"/>
-<text x="90" y="113" text-anchor="middle" font-size="11" font-weight="600" fill="#2d3142">能力梯队</text>
-<rect x="162" y="92" width="250" height="34" fill="#e9eff6" stroke="#e2e6ee"/>
-<rect x="162" y="92" width="4" height="34" fill="#3d5a80"/>
-<text x="176" y="113" font-size="11.5" font-weight="600" fill="#2d3142">Google Gemini 4</text>
-<rect x="422" y="92" width="250" height="34" fill="#efeaf6" stroke="#e2e6ee"/>
-<rect x="422" y="92" width="4" height="34" fill="#5b4b8a"/>
-<text x="436" y="113" font-size="11.5" font-weight="600" fill="#2d3142">Anthropic Claude 5.2 / 5.5</text>
-<rect x="682" y="92" width="250" height="34" fill="#e9f2ed" stroke="#e2e6ee"/>
-<rect x="682" y="92" width="4" height="34" fill="#2f6f5e"/>
-<text x="696" y="113" font-size="11.5" font-weight="600" fill="#2d3142">DeepSeek V4.1 / V4-Pro</text>
-<rect x="28" y="134" width="904" height="136" fill="#ececec" stroke="#d5dbe5"/>
-<rect x="28" y="134" width="124" height="136" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="42" y="148" width="34" height="20" rx="3" fill="#2d3142"/>
-<text x="59" y="162" text-anchor="middle" font-size="10.5" font-weight="600" fill="#ffffff">S+</text>
-<text x="42" y="186" font-size="11.5" font-weight="600" fill="#2d3142">超前沿深度推理</text>
-<text x="42" y="202" font-size="9" fill="#5a6580">长程架构 / 数学 / 安全</text>
-<rect x="168" y="142.0" width="238" height="57.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="168" y="142.0" width="4" height="57.0" fill="#3d5a80"/>
-<text x="180" y="160.0" font-size="11" font-weight="600" fill="#2d3142">Gemini 4 Carbon</text>
-<text x="180" y="176.0" font-size="9" fill="#4f5d75">最强深度推理 / 安全 / 长程规划</text>
-<text x="180" y="191.0" font-size="8.5" fill="#5a6580">$2/$10 (推广期) · 1M ctx / 1M out</text>
-<rect x="168" y="205.0" width="238" height="57.0" fill="#f8f9fb" stroke="#8a93a6" stroke-dasharray="4,3"/>
-<text x="180" y="223.0" font-size="11" font-weight="600" fill="#2d3142">Gemini 4 Argon</text>
-<text x="180" y="239.0" font-size="9" fill="#4f5d75">早期高效前沿 (往 Carbon/Neon 过渡)</text>
-<text x="180" y="254.0" font-size="8.5" fill="#5a6580">单轮低 token 消耗 · 1M ctx</text>
-<rect x="428" y="142.0" width="238" height="120.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="428" y="142.0" width="4" height="120.0" fill="#5b4b8a"/>
-<text x="440" y="166.0" font-size="11" font-weight="600" fill="#2d3142">Claude Fable 5.2</text>
-<text x="440" y="186.0" font-size="9" fill="#4f5d75">公开线最强推理 / 复杂代码库与数学</text>
-<text x="440" y="205.0" font-size="8.5" fill="#5a6580">$8/$40 · 1M ctx / 128K out (Mythos同源)</text>
-<rect x="688" y="142.0" width="238" height="120.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="688" y="142.0" width="4" height="120.0" fill="#2f6f5e"/>
-<text x="700" y="166.0" font-size="11" font-weight="600" fill="#2d3142">DeepSeek-V4-Pro (0813)</text>
-<text x="700" y="186.0" font-size="9" fill="#4f5d75">V4 世代重型旗舰 (1.6T / 49B 激活)</text>
-<text x="700" y="205.0" font-size="8.5" fill="#5a6580">$1.32/$3.96 (Peak) · MIT 开源 · 纯文本</text>
-<rect x="28" y="280" width="904" height="136" fill="#ececec" stroke="#d5dbe5"/>
-<rect x="28" y="280" width="124" height="136" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="42" y="294" width="34" height="20" rx="3" fill="#2d3142"/>
-<text x="59" y="308" text-anchor="middle" font-size="10.5" font-weight="600" fill="#ffffff">S</text>
-<text x="42" y="332" font-size="11.5" font-weight="600" fill="#2d3142">主力旗舰工程</text>
-<text x="42" y="348" font-size="9" fill="#5a6580">高频研发 / 多文件 SWE</text>
-<rect x="168" y="288.0" width="238" height="120.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="168" y="288.0" width="4" height="120.0" fill="#3d5a80"/>
-<text x="180" y="312.0" font-size="11" font-weight="600" fill="#2d3142">Gemini 4 Neon</text>
-<text x="180" y="332.0" font-size="9" fill="#4f5d75">11月新品 · 高频工程与科研主力</text>
-<text x="180" y="351.0" font-size="8.5" fill="#5a6580">$3/$15 · AA Index 61 (#3) · Coding 58.6 (#1)</text>
-<rect x="428" y="288.0" width="238" height="57.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="428" y="288.0" width="4" height="57.0" fill="#5b4b8a"/>
-<text x="440" y="306.0" font-size="11" font-weight="600" fill="#2d3142">Claude Opus 5.5</text>
-<text x="440" y="322.0" font-size="9" fill="#4f5d75">复杂知识工作与长程编码默认起点</text>
-<text x="440" y="337.0" font-size="8.5" fill="#5a6580">$4/$20 · 1M ctx / 128K out</text>
-<rect x="428" y="351.0" width="238" height="57.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="428" y="351.0" width="4" height="57.0" fill="#5b4b8a"/>
-<text x="440" y="369.0" font-size="11" font-weight="600" fill="#2d3142">Claude Sonnet 5.5</text>
-<text x="440" y="385.0" font-size="9" fill="#4f5d75">日常编码主力 (Claude Code 默认)</text>
-<text x="440" y="400.0" font-size="8.5" fill="#5a6580">$2/$10 · Fast · 均衡速度与代码精度</text>
-<rect x="688" y="288.0" width="238" height="120.0" fill="#f8f9fb" stroke="#8a93a6" stroke-dasharray="4,3"/>
-<text x="700" y="312.0" font-size="11" font-weight="600" fill="#2d3142">无独立 V4.1 中端档位</text>
-<text x="700" y="332.0" font-size="9" fill="#4f5d75">V4-Pro (深度) 与 V4.1-Flash max 协同</text>
-<text x="700" y="351.0" font-size="8.5" fill="#5a6580">V4.1 系列重点落在高效 Flash 分支</text>
-<rect x="28" y="426" width="904" height="122" fill="#e9eff6" stroke="#d5dbe5"/>
-<rect x="28" y="426" width="124" height="122" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="42" y="440" width="34" height="20" rx="3" fill="#2d3142"/>
-<text x="59" y="454" text-anchor="middle" font-size="10.5" font-weight="600" fill="#ffffff">A</text>
-<text x="42" y="478" font-size="11.5" font-weight="600" fill="#2d3142">高效执行 / Agent</text>
-<text x="42" y="494" font-size="9" fill="#5a6580">多模态分析 / 子代理</text>
-<rect x="168" y="434.0" width="238" height="106.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="168" y="434.0" width="4" height="106.0" fill="#3d5a80"/>
-<text x="180" y="458.0" font-size="11" font-weight="600" fill="#2d3142">Gemini 4 Hydrogen ★</text>
-<text x="180" y="478.0" font-size="9" fill="#4f5d75">日用主力 / 数据分析 / 执行子代理</text>
-<text x="180" y="497.0" font-size="8.5" fill="#5a6580">$1.50/$7.50 · AA 51~54 · 1M 全模态</text>
-<rect x="428" y="434.0" width="238" height="106.0" fill="#f8f9fb" stroke="#8a93a6" stroke-dasharray="4,3"/>
-<text x="440" y="458.0" font-size="11" font-weight="600" fill="#2d3142">Sonnet 5.5 (轻量) ↔ Haiku 5.5 (高思)</text>
-<text x="440" y="478.0" font-size="9" fill="#4f5d75">价格低于 Sonnet，推理强于基础 Haiku</text>
-<text x="440" y="497.0" font-size="8.5" fill="#5a6580">衔接日常编码与高频自适应思考</text>
-<rect x="688" y="434.0" width="238" height="106.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="688" y="434.0" width="4" height="106.0" fill="#2f6f5e"/>
-<text x="700" y="458.0" font-size="11" font-weight="600" fill="#2d3142">DeepSeek-V4.1-Flash (1017) ★</text>
-<text x="700" y="478.0" font-size="9" fill="#4f5d75">CED MoE 552B (8B/16B激活) · 175 tok/s</text>
-<text x="700" y="497.0" font-size="8.5" fill="#5a6580">$0.30/$1.20 (Peak) · AA ~33 · DeepSWE ~77</text>
-<rect x="28" y="558" width="904" height="100" fill="#ececec" stroke="#d5dbe5"/>
-<rect x="28" y="558" width="124" height="100" fill="#ffffff" stroke="#e2e6ee"/>
-<rect x="42" y="572" width="34" height="20" rx="3" fill="#2d3142"/>
-<text x="59" y="586" text-anchor="middle" font-size="10.5" font-weight="600" fill="#ffffff">B</text>
-<text x="42" y="610" font-size="11.5" font-weight="600" fill="#2d3142">极致并发与路由</text>
-<text x="42" y="626" font-size="9" fill="#5a6580">抽取 / 分类 / 极低单价</text>
-<rect x="168" y="566.0" width="238" height="84.0" fill="#f8f9fb" stroke="#8a93a6" stroke-dasharray="4,3"/>
-<text x="180" y="590.0" font-size="11" font-weight="600" fill="#2d3142">Hydrogen (Low Thinking)</text>
-<text x="180" y="610.0" font-size="9" fill="#4f5d75">Google 未单设 $0.10 级 Helium/Lite 档</text>
-<text x="180" y="629.0" font-size="8.5" fill="#5a6580">通过降档思考 + 缓存折扣 ($0.15) 兼顾成本</text>
-<rect x="428" y="566.0" width="238" height="84.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="428" y="566.0" width="4" height="84.0" fill="#5b4b8a"/>
-<text x="440" y="590.0" font-size="11" font-weight="600" fill="#2d3142">Claude Haiku 5.5</text>
-<text x="440" y="610.0" font-size="9" fill="#4f5d75">实时交互 / 数据抽取 / 路由分发</text>
-<text x="440" y="629.0" font-size="8.5" fill="#5a6580">$0.10 / $0.50 起 (超100k阶梯调价)</text>
-<rect x="688" y="566.0" width="238" height="84.0" fill="#ffffff" stroke="#d5dbe5"/>
-<rect x="688" y="566.0" width="4" height="84.0" fill="#2f6f5e"/>
-<text x="700" y="590.0" font-size="11" font-weight="600" fill="#2d3142">V4.1-Flash (Off-Peak / Cache)</text>
-<text x="700" y="610.0" font-size="9" fill="#4f5d75">全行业性价比上限 · MIT 可私有部署</text>
-<text x="700" y="629.0" font-size="8.5" fill="#5a6580">$0.15 / $0.60 (谷时半价) · Cache $0.003</text>
-<text x="28" y="672" font-size="8.5" fill="#5a6580">注：Gemini 4 Carbon $2/$10 为推广期价；Haiku 5.5 超 100k tokens 按阶梯调价；DeepSeek V4.1-Flash 的通用智力分低于 Hydrogen，但编码 Agent 实测跨级打榜。</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f1-t f1-d">
+<title id="f1-t">2026 主流大模型能力对标矩阵：Gemini 4 × Claude 5.2/5.5 × DeepSeek V4/V4.1</title>
+<desc id="f1-d">按核心推理深度、Agent 编码定位与价格梯度对齐三家大模型产品线。</desc>
+<defs>
+<style>
+  .f1-title { font-size: 24px; font-weight: 800; fill: #0F172A; }
+  .f1-subtitle { font-size: 13.5px; fill: #475569; }
+  .f1-col-hdr { font-size: 15px; font-weight: 700; fill: #FFFFFF; }
+  .f1-col-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f1-tier-badge { font-size: 14px; font-weight: 800; fill: #FFFFFF; }
+  .f1-tier-sub { font-size: 12px; font-weight: 600; fill: #334155; }
+  .f1-card-title { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f1-card-tag { font-size: 11.2px; fill: #334155; }
+  .f1-card-meta { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f1-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f1-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="819" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f1-title">2026 主流大模型能力对标矩阵：Gemini 4 × Claude 5.2/5.5 × DeepSeek V4/V4.1</text>
+<text x="32" y="66" class="f1-subtitle">按核心推理深度、Agent 编码定位与价格梯度对齐（数据基准：2026年11月公开 API 定价与基准测试；价格均为每百万 Tokens 美元计）</text>
+<rect x="28" y="88" width="152" height="44" rx="8" fill="#1E293B"/>
+<text x="104" y="109" text-anchor="middle" class="f1-col-hdr">能力梯度</text>
+<text x="104" y="124" text-anchor="middle" class="f1-col-sub">Capability Tier</text>
+<rect x="195" y="88" width="335" height="44" rx="8" fill="#1A73E8"/>
+<text x="362.5" y="109" text-anchor="middle" class="f1-col-hdr">Google Gemini 4 系列</text>
+<text x="362.5" y="124" text-anchor="middle" class="f1-col-sub">全系 1M 原生全模态上下文 · 可调思考深度</text>
+<rect x="555" y="88" width="335" height="44" rx="8" fill="#D97757"/>
+<text x="722.5" y="109" text-anchor="middle" class="f1-col-hdr">Anthropic Claude 5.2 / 5.5</text>
+<text x="722.5" y="124" text-anchor="middle" class="f1-col-sub">全系 1M 上下文 / 128K 输出 · 工程标杆</text>
+<rect x="915" y="88" width="335" height="44" rx="8" fill="#0F766E"/>
+<text x="1082.5" y="109" text-anchor="middle" class="f1-col-hdr">DeepSeek V4.1 / V4-Pro</text>
+<text x="1082.5" y="124" text-anchor="middle" class="f1-col-sub">MIT 开源权重 · 1M 上下文 / 384K 输出 · 峰谷半价</text>
+<rect x="28" y="145" width="1222" height="156" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.2"/>
+<rect x="44" y="163" width="120" height="28" rx="14" fill="#9333EA"/>
+<text x="104" y="182" text-anchor="middle" class="f1-tier-badge">Tier S+</text>
+<text x="104" y="213" text-anchor="middle" class="f1-tier-sub">超前沿深度推理</text>
+<text x="104" y="231" text-anchor="middle" class="f1-tier-sub">Frontier Peak</text>
+<rect x="203" y="155.0" width="319" height="64.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="217" y="176.0" class="f1-card-title">Gemini 4 Carbon</text>
+<text x="217" y="194.0" class="f1-card-tag">最强深度推理 / 安全 / 长程规划</text>
+<text x="217" y="211.0" class="f1-card-meta">$2 / $10 (Intro) · 1M ctx / 1M out</text>
+<rect x="203" y="227.0" width="319" height="64.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="217" y="248.0" class="f1-card-title">Gemini 4 Argon</text>
+<text x="217" y="266.0" class="f1-card-tag">早期高能效前沿 (正过渡中)</text>
+<text x="217" y="283.0" class="f1-card-meta">低单轮 token 消耗 · 1M ctx</text>
+<rect x="563" y="155.0" width="319" height="136.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="577" y="183.0" class="f1-card-title">Claude Fable 5.2</text>
+<text x="577" y="208.0" class="f1-card-tag">公开最强推理 / 高难数学与代码库</text>
+<text x="577" y="233.0" class="f1-card-meta">$8 / $40 · 1M ctx / 128K out (Mythos同源)</text>
+<rect x="923" y="155.0" width="319" height="136.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="937" y="183.0" class="f1-card-title">DeepSeek-V4-Pro (0813)</text>
+<text x="937" y="208.0" class="f1-card-tag">V4 世代重型旗舰 (1.6T / 49B激活)</text>
+<text x="937" y="233.0" class="f1-card-meta">$1.32 / $3.96 (Peak) · 开源 MIT · 纯文本</text>
+<rect x="28" y="314" width="1222" height="160" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2"/>
+<rect x="44" y="332" width="120" height="28" rx="14" fill="#2563EB"/>
+<text x="104" y="351" text-anchor="middle" class="f1-tier-badge">Tier S</text>
+<text x="104" y="382" text-anchor="middle" class="f1-tier-sub">主力旗舰与工程</text>
+<text x="104" y="400" text-anchor="middle" class="f1-tier-sub">Flagship Workhorse</text>
+<rect x="203" y="324.0" width="319" height="140.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="217" y="352.0" class="f1-card-title">Gemini 4 Neon</text>
+<text x="217" y="377.0" class="f1-card-tag">高频复杂工程 / 科学工作流 (11月新品)</text>
+<text x="217" y="402.0" class="f1-card-meta">$3 / $15 · AA Index 61 (#3) · Coding 58.6 (#1)</text>
+<rect x="563" y="324.0" width="319" height="66.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="577" y="345.0" class="f1-card-title">Claude Opus 5.5</text>
+<text x="577" y="363.0" class="f1-card-tag">复杂知识工作与长程编码默认起点</text>
+<text x="577" y="380.0" class="f1-card-meta">$4 / $20 · 1M ctx / 128K out</text>
+<rect x="563" y="398.0" width="319" height="66.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="577" y="419.0" class="f1-card-title">Claude Sonnet 5.5</text>
+<text x="577" y="437.0" class="f1-card-tag">日常开发与内容生成黄金主力</text>
+<text x="577" y="454.0" class="f1-card-meta">$2 / $10 · Fast · Claude Code 核心主力</text>
+<rect x="923" y="324.0" width="319" height="140.0" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="937" y="352.0" class="f1-card-title">V4.1 暂无独立中端闭源级档位</text>
+<text x="937" y="377.0" class="f1-card-tag">由 V4-Pro（深度）与 V4.1-Flash max（编码）上下协同</text>
+<text x="937" y="402.0" class="f1-card-meta">注：DeepSeek V4.1 系列主打 Flash 高效分支</text>
+<rect x="28" y="487" width="1222" height="146" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2"/>
+<rect x="44" y="505" width="120" height="28" rx="14" fill="#059669"/>
+<text x="104" y="524" text-anchor="middle" class="f1-tier-badge">Tier A</text>
+<text x="104" y="555" text-anchor="middle" class="f1-tier-sub">高效执行与 Agent</text>
+<text x="104" y="573" text-anchor="middle" class="f1-tier-sub">Efficient Execution</text>
+<rect x="203" y="497.0" width="319" height="126.0" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="203" y="497.0" width="5" height="126.0" rx="2" fill="#10B981"/>
+<text x="217" y="525.0" class="f1-card-title">Gemini 4 Hydrogen ★</text>
+<text x="217" y="550.0" class="f1-card-tag">日常主力 / 多模态分析 / Orchestrator 执行引擎</text>
+<text x="217" y="575.0" class="f1-card-meta">$1.50 / $7.50 · AA Index 51~54 · 1M 全模态</text>
+<rect x="563" y="497.0" width="319" height="126.0" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="577" y="525.0" class="f1-card-title">Sonnet 5.5 (轻量) ↔ Haiku 5.5 (高思)</text>
+<text x="577" y="550.0" class="f1-card-tag">价格低于 Sonnet，综合推理大幅超越基础 Haiku</text>
+<text x="577" y="575.0" class="f1-card-meta">衔接编码甜点与高频自适应思考</text>
+<rect x="923" y="497.0" width="319" height="126.0" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="923" y="497.0" width="5" height="126.0" rx="2" fill="#10B981"/>
+<text x="937" y="525.0" class="f1-card-title">DeepSeek-V4.1-Flash (1017) ★</text>
+<text x="937" y="550.0" class="f1-card-tag">文本+视觉 CED MoE (552B / 8B-16B激活) · 175 tok/s</text>
+<text x="937" y="575.0" class="f1-card-meta">$0.30 / $1.20 (Peak) · AA Index ~33 · DeepSWE ~77</text>
+<rect x="28" y="646" width="1222" height="124" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+<rect x="44" y="664" width="120" height="28" rx="14" fill="#D97706"/>
+<text x="104" y="683" text-anchor="middle" class="f1-tier-badge">Tier B</text>
+<text x="104" y="714" text-anchor="middle" class="f1-tier-sub">极致并发与路由</text>
+<text x="104" y="732" text-anchor="middle" class="f1-tier-sub">Ultra-Budget Scale</text>
+<rect x="203" y="656.0" width="319" height="104.0" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="217" y="684.0" class="f1-card-title">Gemini 4 Hydrogen (Low Thinking)</text>
+<text x="217" y="709.0" class="f1-card-tag">Google 当前未单设 Helium/Lite 档位</text>
+<text x="217" y="734.0" class="f1-card-meta">通过调低思考档位兼顾低延迟与缓存折扣 ($0.15)</text>
+<rect x="563" y="656.0" width="319" height="104.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="577" y="684.0" class="f1-card-title">Claude Haiku 5.5</text>
+<text x="577" y="709.0" class="f1-card-tag">实时交互 / 信息抽取 / 分类路由</text>
+<text x="577" y="734.0" class="f1-card-meta">$0.10 / $0.50 起 (超100k阶梯调价) · 最快速度</text>
+<rect x="923" y="656.0" width="319" height="104.0" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="937" y="684.0" class="f1-card-title">DeepSeek-V4.1-Flash (Off-Peak / Cache)</text>
+<text x="937" y="709.0" class="f1-card-tag">全行业性价比天花板 · 开源 MIT 可自部署</text>
+<text x="937" y="734.0" class="f1-card-meta">$0.15 / $0.60 (Off-Peak) · Cache Hit $0.003</text>
+<text x="32" y="798" class="f1-footer">★ 重点关注：Gemini 4 Hydrogen ($1.50/$7.50, AA Index 51-54) 介于 Claude Sonnet 5.5 与 Haiku 5.5 之间；DeepSeek V4.1 主打 V4.1-Flash 分支，在编码 Agent 与价格上极具冲击力。</text>
 </svg>
