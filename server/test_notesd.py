@@ -446,6 +446,54 @@ class NotesdTest(unittest.TestCase):
         self.assertEqual(data["note_id"], "job-0009")
         conn.close()
 
+    def test_ask_after_ai_reply_queues_the_latest_question(self):
+        """多轮：AI 答过一轮后，追问还能再让 AI 回答，且问的是最新那层。"""
+        slug = "multi-round"
+        self.call("PUT", f"/api/notes/{slug}/mr-0001", self.note("mr-0001"))
+        _, first = self.call("POST", f"/api/notes/{slug}/mr-0001/ask", {})
+        notesd.Handler.store.finish_job(first["job"]["id"], True, "")
+        self.call("POST", f"/api/notes/{slug}/mr-0001/replies", {"author": "AI", "text": "结论一"})
+        self.call("POST", f"/api/notes/{slug}/mr-0001/replies", {"author": "我", "text": "那第二点呢"})
+        status, body = self.call("POST", f"/api/notes/{slug}/mr-0001/ask", {})
+        self.assertEqual(status, 200)
+        self.assertTrue(body["triggered"])
+        self.assertEqual(body["job"]["prompt"], "那第二点呢")
+
+    def test_reply_with_ask_flag_forces_a_job(self):
+        slug = "reply-ask"
+        self.call("PUT", f"/api/notes/{slug}/ra-0001", self.note("ra-0001"))
+        status, body = self.call("POST", f"/api/notes/{slug}/ra-0001/replies",
+                                 {"author": "我", "text": "展开讲讲第二点", "ask": True})
+        self.assertEqual(status, 200)
+        self.assertTrue(body["triggered"])
+        self.assertEqual(body["job"]["prompt"], "展开讲讲第二点")
+        self.assertEqual(body["job"]["kind"], "manual")
+
+    def test_question_reply_triggers_without_a_bound_session(self):
+        slug = "reply-nosess"
+        self.call("PUT", f"/api/notes/{slug}/rn-0001", self.note("rn-0001"))
+        _, body = self.call("POST", f"/api/notes/{slug}/rn-0001/replies", {"author": "我", "text": "为什么？"})
+        self.assertTrue(body["triggered"])
+
+    def test_ai_reply_never_triggers_another_job(self):
+        """bridge 用 Root 身份回帖；AI 的回答里带问号也不能再排一轮，否则自我循环。"""
+        slug = "ai-loop"
+        self.call("PUT", f"/api/notes/{slug}/al-0001", self.note("al-0001"))
+        _, body = self.call("POST", f"/api/notes/{slug}/al-0001/replies",
+                            {"author": "AI", "text": "为什么这样？因为收敛。"})
+        self.assertFalse(body["triggered"])
+
+    def test_finished_job_is_pushed_to_the_owners_note_stream(self):
+        slug = "jobs-finish-stream"
+        self.call("PUT", f"/api/notes/{slug}/jf-0001", self.note("jf-0001"))
+        _, body = self.call("POST", f"/api/notes/{slug}/jf-0001/ask", {})
+        conn, resp = self.stream(f"/api/notes/{slug}/stream")
+        notesd.Handler.store.finish_job(body["job"]["id"], True, "")
+        event, data = self.first_event(resp)
+        self.assertEqual(event, "job.updated")
+        self.assertEqual(data["job"]["status"], "done")
+        conn.close()
+
     def test_statement_reply_does_not_create_job(self):
         slug = "jobs-plain"
         self.register(slug)

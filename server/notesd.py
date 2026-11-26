@@ -167,6 +167,14 @@ def now() -> int:
     return int(time.time() * 1000)
 
 
+def latest_question(thread: list, fallback: str = "") -> str:
+    """多轮时要答的是最新那层人写的话，不是 1 楼。"""
+    for floor in reversed(thread or []):
+        if floor.get("author") != "AI" and (floor.get("text") or "").strip():
+            return floor["text"]
+    return fallback
+
+
 class Store:
     def __init__(self, path: str):
         self.path = path
@@ -176,6 +184,10 @@ class Store:
         self._subs: dict[str, list[queue.Queue]] = defaultdict(list)
         self._subs_lock = threading.Lock()
         self.conn.executescript(SCHEMA)
+        # 老库的 jobs 没有 user_id：任务完成时要推到「主人:文章」频道，缺了就推丢。
+        cols = {r["name"] for r in self.conn.execute("PRAGMA table_info(jobs)")}
+        if "user_id" not in cols:
+            self.conn.execute("ALTER TABLE jobs ADD COLUMN user_id INTEGER NOT NULL DEFAULT 0")
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
         self.conn.commit()
@@ -452,9 +464,9 @@ class Store:
         ts = now()
         with self._lock, self.conn:
             self.conn.execute(
-                "INSERT INTO jobs(id, slug, note_id, session_id, kind, prompt, status, created, updated) "
-                "VALUES(?,?,?,?,?,?,'pending',?,?)",
-                (job_id, slug, note_id, session_id, kind, prompt, ts, ts),
+                "INSERT INTO jobs(id, slug, note_id, session_id, kind, prompt, status, created, updated, user_id) "
+                "VALUES(?,?,?,?,?,?,'pending',?,?,?)",
+                (job_id, slug, note_id, session_id, kind, prompt, ts, ts, user_id),
             )
         job = self.job(job_id) or {}
         self.publish("jobs", "job.created", job)
@@ -519,7 +531,11 @@ class Store:
         job = self.job(job_id)
         if job:
             self.publish("jobs", "job.updated", job)
-            self.publish(f"note:{job['slug']}", "job.updated", {"note_id": job["note_id"], "job": job_summary(job)})
+            self.publish(
+                f"note:{job.get('user_id', 0)}:{job['slug']}",
+                "job.updated",
+                {"note_id": job["note_id"], "job": job_summary(job)},
+            )
         return job
 
     def upsert_session(self, slug: str, session_id: str, workspace: str, title: str) -> dict:
@@ -1028,8 +1044,7 @@ class Handler(BaseHTTPRequestHandler):
                 if row is None:
                     self.send_json(HTTPStatus.NOT_FOUND, {"error": "no such note"})
                     return
-                thread = json.loads(row["thread"])
-                prompt = (thread[0].get("text") if thread else "") or row["q"]
+                prompt = latest_question(json.loads(row["thread"]), row["q"])
                 body = self.read_json() or {}
                 if body.get("auto") and not QUESTION_RE.search(prompt):
                     self.send_json(HTTPStatus.OK, {"ok": True, "triggered": False, "job": None})
@@ -1075,16 +1090,21 @@ class Handler(BaseHTTPRequestHandler):
                     return
                 session = self.store.session_for(slug)
                 job = None
+                forced = bool(body.get("ask"))
+                # AI 的回帖也走这个接口（bridge 用 Root 身份），它自己的话不能再排一轮，否则自问自答停不下来。
                 if (
                     user.get("role") == "admin"
-                    and session
-                    and QUESTION_RE.search(reply["text"])
+                    and reply["author"] != "AI"
+                    and (forced or QUESTION_RE.search(reply["text"]))
                     and not self.store.active_job(note_id)
                 ):
-                    thread = (note or {}).get("thread") or []
-                    prompt = (thread[0].get("text") if thread else "") or reply["text"]
                     job = self.store.create_job(
-                        slug, note_id, (session["session_id"] if session else ""), prompt, "auto", user["id"]
+                        slug,
+                        note_id,
+                        (session["session_id"] if session else ""),
+                        reply["text"],
+                        "manual" if forced else "auto",
+                        user["id"],
                     )
                 self.send_json(HTTPStatus.OK, {"ok": True, "note": note, "triggered": job is not None, "job": job})
                 return

@@ -164,14 +164,15 @@ async function getJSON(path) {
   return res.json();
 }
 
-export async function postReply(slug, noteId, text, author = "我") {
+export async function postReply(slug, noteId, text, author = "我", { ask = false } = {}) {
   const headers = { "Content-Type": "application/json", ...authHeaders() };
   const res = await fetch(`${API}/notes/${slug}/${noteId}/replies`, {
     method: "POST",
     headers,
-    body: JSON.stringify({ author, text, t: Date.now() }),
+    body: JSON.stringify(ask ? { author, text, t: Date.now(), ask: true } : { author, text, t: Date.now() }),
   });
   if (res.status === 401) throw new AuthError("login required");
+  if (res.status === 409) throw new Error("thread full");
   if (!res.ok) throw new Error(`reply ${res.status}`);
   return res.json();
 }

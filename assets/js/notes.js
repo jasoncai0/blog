@@ -403,6 +403,7 @@ function initNotes() {
   // 本地先行，连上服务端后再合并（服务端更新的取服务端，本地独有的推上去）。
   pullNotes(slug)
     .then(({ notes, deleted }) => {
+      notes.forEach((n) => setJob(n.id, n.job));
       const local = notesFor(all, slug);
       const { merged, adopted } = mergeNotes(local, notes, deleted);
       all = save({ ...all, [slug]: merged });
@@ -435,33 +436,42 @@ function initNotes() {
   const fmtTime = (t) =>
     new Date(t).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
-  function paintJob(row, text, button, job, hasAI) {
+  // 每条批注最近一次 AI 任务的状态，只信服务端（拉取、SSE、接口返回），不信本地缓存里的旧 job。
+  const jobs = new Map();
+  const BUSY = new Set(["pending", "running"]);
+  const jobOf = (id) => jobs.get(id) || null;
+  const setJob = (id, job) => {
+    if (job && job.status) jobs.set(id, job);
+  };
+
+  // 「让 AI 回答」只看三件事：任务在不在跑、追问框有没有字、最后一层是不是 AI。
+  // 多轮时按钮一直在；AI 答完后要先写一句追问，空着点会提示，不会悄悄消失。
+  function paintJob(row) {
+    const pop = row.closest(".nt-pop");
+    const text = row.querySelector(".nt-job-text");
+    const button = row.querySelector(".nt-ask");
+    const replyBtn = row.querySelector(".nt-reply-send");
+    const draft = pop?.querySelector(".nt-reply-input")?.value.trim() || "";
+    const job = jobOf(row.dataset.note);
     const status = job?.status || "";
-    const showAsk = !status && !hasAI;
-    row.classList.toggle("is-hidden", !showAsk && !status);
-    button.hidden = !showAsk && status !== "blocked";
-    button.disabled = false;
-    if (status === "pending") {
+    const busy = BUSY.has(status);
+    row.classList.toggle("is-blocked", status === "blocked");
+    row.classList.toggle("is-busy", busy);
+    button.disabled = busy;
+    if (replyBtn) replyBtn.textContent = "回复";
+    if (busy) {
       text.textContent = "AI 正在回答中…";
-      row.classList.remove("is-blocked");
-    } else if (status === "running") {
-      text.textContent = "AI 正在回答中…";
-      row.classList.remove("is-blocked");
+      button.textContent = "回答中…";
     } else if (status === "blocked") {
       text.textContent = `AI 回复失败${job.error ? "：" + job.error : ""}`;
-      row.classList.add("is-blocked");
-      button.textContent = "重试";
-    } else if (showAsk) {
-      text.textContent = "";
-      row.classList.remove("is-blocked");
-      button.textContent = "让 AI 回答";
+      button.textContent = draft ? "发送并问 AI" : "重试";
     } else {
-      text.textContent = "";
-      row.classList.remove("is-blocked");
+      if (!row.dataset.hint) text.textContent = "";
+      button.textContent = draft ? "发送并问 AI" : "让 AI 回答";
     }
   }
 
-  function openPopById(id, { focus = true, anchorEl = null, job = null } = {}) {
+  function openPopById(id, { focus = true, anchorEl = null, job = null, focusReply = false } = {}) {
     const mark = body.querySelector(`mark.note-hl[data-note="${id}"]`);
     const note = notesFor(all, slug).find((n) => n.id === id);
     if (!note || (!mark && !anchorEl)) return;
@@ -532,6 +542,7 @@ function initNotes() {
     jobRow.dataset.note = id;
     const jobText = document.createElement("span");
     jobText.className = "nt-job-text";
+    jobText.setAttribute("aria-live", "polite");
     const askBtn = document.createElement("button");
     askBtn.type = "button";
     askBtn.className = "nt-ask";
@@ -539,8 +550,7 @@ function initNotes() {
     askBtn.textContent = "让 AI 回答";
     // 只有 Root 能让 AI 回答：登录了但不是管理员就不渲染；访客点了会先要求登录。
     if (current() && !isAdmin()) askBtn.hidden = true;
-    const hasAI = note.thread.some((m) => m.author === "AI");
-    paintJob(jobRow, jobText, askBtn, job || note.job, hasAI);
+    if (job) setJob(id, job);
     // 点「让 AI 回答」时先落一次批注：用户常常写完问题直接点，不等「保存」。
     const persistFirstFloor = () => {
       const current = notesFor(all, slug).find((n) => n.id === id);
@@ -552,71 +562,112 @@ function initNotes() {
       renderList();
       return updated;
     };
-
-    askBtn.addEventListener("click", async () => {
-      if (!input.value.trim()) {
-        input.focus();
-        jobText.textContent = "先写一句问题，再让 AI 回答";
-        return;
-      }
-      persistFirstFloor();
-      askBtn.disabled = true;
-      try {
-        const { authNeeded } = await syncNow();
-        if (authNeeded) {
-          askBtn.disabled = false;
-          promptForKey(() => askBtn.click());
-          return;
-        }
-        await askAI(slug, id);
-        paintJob(jobRow, jobText, askBtn, { status: "pending", attempts: 0 }, hasAI);
-      } catch (err) {
-        askBtn.disabled = false;
-        if (err instanceof AuthError) {
-          promptForKey(() => askBtn.click());
-        } else {
-          jobText.textContent = err.message || "没能排进队列";
-        }
-      }
-    });
-    jobRow.append(jobText, askBtn);
+    const hint = (msg) => {
+      jobRow.dataset.hint = msg ? "1" : "";
+      jobText.textContent = msg;
+    };
 
     const replyBox = document.createElement("div");
     replyBox.className = "nt-reply";
     const replyInput = document.createElement("textarea");
     replyInput.className = "nt-reply-input";
     replyInput.rows = 2;
-    replyInput.placeholder = "回复这一条…";
+    replyInput.placeholder = note.thread.length > 1 ? "追问或回复…（⌘/Ctrl + Enter 发送）" : "回复这一条…（⌘/Ctrl + Enter 发送）";
     const replyBtn = document.createElement("button");
     replyBtn.type = "button";
     replyBtn.className = "nt-reply-send";
     replyBtn.dataset.act = "reply";
     replyBtn.textContent = "回复";
-    const replyHint = document.createElement("p");
-    replyHint.className = "nt-reply-hint";
-    replyBtn.addEventListener("click", async () => {
+
+    // 追加一层；ask=true 时服务端在同一个请求里排 AI 任务，不会和自动触发抢成 409。
+    const sendReply = async (ask) => {
       const text = replyInput.value.trim();
       if (!text) {
         replyInput.focus();
         return;
       }
       replyBtn.disabled = true;
+      askBtn.disabled = true;
       try {
-        const data = await postReply(slug, id, text);
+        const data = await postReply(slug, id, text, "我", { ask });
         all = save({ ...all, [slug]: notesFor(all, slug).map((n) => (n.id === id ? data.note : n)) });
+        if (data?.triggered) setJob(id, data.job || { status: "pending" });
         closePop();
-        openPopById(id, { job: data?.triggered ? data.job || { status: "pending" } : null });
+        openPopById(id, { focusReply: true });
         renderList();
       } catch (err) {
         replyBtn.disabled = false;
+        paintJob(jobRow);
         if (err instanceof AuthError) {
-          promptForKey(() => replyBtn.click());
+          promptForKey(() => sendReply(ask));
         } else {
-          replyHint.textContent = "回复没发出去，稍后再试";
+          hint(err.message === "thread full" ? "楼层已满（50 层）" : "回复没发出去，稍后再试");
         }
       }
+    };
+
+    // 不带新话时，「让 AI 回答」答的是最新一层人写的话。
+    const askExisting = async () => {
+      const latest = notesFor(all, slug).find((n) => n.id === id) || note;
+      const thread = latest.thread || [];
+      const blocked = jobOf(id)?.status === "blocked";
+      if (thread.length <= 1) {
+        if (!input.value.trim()) {
+          input.focus();
+          hint("先写一句问题，再让 AI 回答");
+          return;
+        }
+        persistFirstFloor();
+      } else if (thread[thread.length - 1]?.author === "AI" && !blocked) {
+        replyInput.focus();
+        hint("AI 已经答过这一层，先在下面写一句追问");
+        return;
+      }
+      askBtn.disabled = true;
+      try {
+        const { authNeeded } = await syncNow();
+        if (authNeeded) {
+          askBtn.disabled = false;
+          promptForKey(() => askExisting());
+          return;
+        }
+        const res = await askAI(slug, id);
+        hint("");
+        setJob(id, res?.job || { status: "pending", attempts: 0 });
+        paintJob(jobRow);
+      } catch (err) {
+        askBtn.disabled = false;
+        if (err instanceof AuthError) {
+          promptForKey(() => askExisting());
+        } else {
+          hint(err.message || "没能排进队列");
+        }
+      }
+    };
+
+    askBtn.addEventListener("click", () => {
+      if (BUSY.has(jobOf(id)?.status)) return;
+      hint("");
+      if (replyInput.value.trim()) sendReply(true);
+      else askExisting();
     });
-    replyBox.append(replyInput, replyBtn, replyHint);
+    replyBtn.addEventListener("click", () => {
+      hint("");
+      sendReply(false);
+    });
+    replyInput.addEventListener("input", () => {
+      hint("");
+      paintJob(jobRow);
+    });
+    replyInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        sendReply(false);
+      }
+    });
+    jobRow.append(jobText, replyBtn, askBtn);
+    replyBox.append(replyInput, jobRow);
+    paintJob(jobRow);
 
     const foot = document.createElement("div");
     foot.className = "nt-acts";
@@ -630,17 +681,17 @@ function initNotes() {
     delBtn.textContent = "删除";
     foot.append(saveBtn, delBtn);
 
-    pop.append(head, first, list, jobRow, replyBox, foot);
+    pop.append(head, first, list, replyBox, foot);
     document.body.append(pop);
 
     if (!mark) {
-      const hint = document.createElement("p");
-      hint.className = "nt-stale-tip";
-      hint.textContent =
+      const staleTip = document.createElement("p");
+      staleTip.className = "nt-stale-tip";
+      staleTip.textContent =
         staleIds.get(note.id) === "figure"
           ? "这条批注划在示意图里，图内文字不能高亮；批注内容还在，可以复制或删除。"
           : "原文改动过，这句已经定位不到；批注内容还在，可以复制或删除。";
-      pop.insertBefore(hint, first);
+      pop.insertBefore(staleTip, first);
     }
     const rect = (mark || anchorEl).getBoundingClientRect();
     // 优先放在高亮下面；下面放不下就翻到上面，两边都放不下才退回「贴着视口底」。
@@ -656,7 +707,10 @@ function initNotes() {
     pop.style.top = `${Math.max(12, top)}px`;
     pop.style.left = `${Math.min(window.innerWidth - pop.offsetWidth - 12, Math.max(12, rect.left))}px`;
     // 从列表跳转过来时不抢焦点：焦点留在高亮上，键盘用户不会突然被扔进 textarea。
-    if (focus) input.focus();
+    // 多轮时最新一层在底部：刚回复完或楼层多时滚到底，焦点落在追问框。
+    if (focusReply || note.thread.length > 2) pop.scrollTop = pop.scrollHeight;
+    if (focusReply) replyInput.focus();
+    else if (focus) input.focus();
 
     saveBtn.addEventListener("click", async () => {
       all = save(setThreadText(all, slug, id, input.value, Date.now()));
@@ -879,23 +933,32 @@ function initNotes() {
       const incoming = data.note;
       const current = notesFor(all, slug).find((n) => n.id === incoming.id);
       if (current && JSON.stringify(current.thread) === JSON.stringify(incoming.thread)) return;
+      // AI 的楼层先于任务 done 到达；楼层到了就说明这一轮答完了，不让按钮卡在「回答中」。
+      if (incoming.thread?.[incoming.thread.length - 1]?.author === "AI" && BUSY.has(jobOf(incoming.id)?.status)) {
+        setJob(incoming.id, { ...jobOf(incoming.id), status: "done" });
+      }
       all = save({ ...all, [slug]: notesFor(all, slug).map((n) => (n.id === incoming.id ? incoming : n)) });
       paintAll();
       renderList();
       if (pop && pop.dataset.note === incoming.id) {
-        const wasFocused = document.activeElement?.closest(".nt-pop");
-        const scrollTop = pop.querySelector(".nt-thread")?.parentElement?.scrollTop || 0;
-        openPopById(incoming.id, { focus: !wasFocused });
+        const draft = pop.querySelector(".nt-reply-input")?.value || "";
+        const typing = document.activeElement?.classList.contains("nt-reply-input");
+        openPopById(incoming.id, { focus: false, focusReply: typing });
         const fresh = document.querySelector(".nt-pop");
-        if (fresh && scrollTop) fresh.scrollTop = scrollTop;
+        // 读者正在写追问时新楼层到了：草稿原样带过去，不丢字。
+        const box = fresh?.querySelector(".nt-reply-input");
+        if (box && draft) {
+          box.value = draft;
+          paintJob(fresh.querySelector(".nt-job"));
+        }
+        if (fresh) fresh.scrollTop = fresh.scrollHeight;
       }
       return;
     }
     if (kind === "job.updated" && data?.note_id) {
+      setJob(data.note_id, data.job);
       const row = document.querySelector(`.nt-job[data-note="${data.note_id}"]`);
-      if (!row) return;
-      const note = notesFor(all, slug).find((n) => n.id === data.note_id);
-      paintJob(row, row.querySelector(".nt-job-text"), row.querySelector(".nt-ask"), data.job, !!note?.thread?.some((m) => m.author === "AI"));
+      if (row) paintJob(row);
     }
   });
 

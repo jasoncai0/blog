@@ -70,18 +70,51 @@ PROMPT_TEMPLATE = """你是这篇文章的作者。读者在文章《{slug}》�
 """
 
 
+FOLLOW_UP_TEMPLATE = """你是这篇文章的作者。读者在文章《{slug}》的这句话下面留了批注，你们已经来回聊了几层：
+
+> {quote}
+
+之前的楼层（从早到晚）：
+{history}
+
+读者这次的追问：
+{question}
+
+请接着上面的对话直接给结论，不要重复之前已经说过的内容：{points}
+
+硬约束：
+- 简体中文，只给结论和必要理由，不要开场白、不要「好的」「希望对你有帮助」这类收尾。
+- 不超过 400 字。要展开就分成 2–3 个短段落，不要列长清单。
+- 只引用你能从这场会话里确认的事实；不确定就说不确定，不要编造引用。
+"""
+MAX_HISTORY_FLOORS = 8
+MAX_FLOOR_CHARS = 600
+
+
 def build_prompt(job: dict) -> str:
     note = job.get("note") or {}
-    thread = note.get("thread") or []
-    question = ""
-    for floor in thread:
-        if floor.get("author") != "AI" and floor.get("text"):
-            question = floor["text"]
+    thread = [f for f in (note.get("thread") or []) if (f.get("text") or "").strip()]
+    # 要答的是最新一层人写的话；它之前的楼层都算上下文。
+    last = max((i for i, f in enumerate(thread) if f.get("author") != "AI"), default=-1)
+    question = thread[last]["text"] if last >= 0 else job.get("prompt", "")
     quote = note.get("q") or job.get("prompt") or ""
-    return PROMPT_TEMPLATE.format(
+    history = thread[:last] if last > 0 else []
+    if not history:
+        return PROMPT_TEMPLATE.format(
+            slug=job.get("slug", ""),
+            quote=quote,
+            question=question,
+            points="一到三点，每点一句话",
+        )
+    lines = [
+        f"- {'AI' if f.get('author') == 'AI' else '读者'}：{f['text'][:MAX_FLOOR_CHARS]}"
+        for f in history[-MAX_HISTORY_FLOORS:]
+    ]
+    return FOLLOW_UP_TEMPLATE.format(
         slug=job.get("slug", ""),
         quote=quote,
-        question=question or job.get("prompt", ""),
+        history="\n".join(lines),
+        question=question,
         points="一到三点，每点一句话",
     )
 

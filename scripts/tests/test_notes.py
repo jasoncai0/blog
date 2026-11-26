@@ -652,6 +652,74 @@ def test_save_stays_quiet_when_nothing_triggers(page, base):
     assert page.locator(".nt-pop").count() == 0, "保存后气泡应当关闭"
 
 
+def seed_thread(page, thread, needle="收敛是必要条件"):
+    anchor = page.evaluate(ANCHOR_JS, needle)
+    seed(page, {SLUG: [{
+        "id": "n1", "q": anchor["q"], "pre": anchor["pre"], "post": anchor["post"],
+        "block": anchor["block"], "t": 1,
+        "thread": [{"author": a, "text": t, "t": i + 1} for i, (a, t) in enumerate(thread)],
+    }]})
+
+
+def open_seeded_thread(page, base, thread):
+    page.goto(base + ARTICLE)
+    page.wait_for_timeout(300)
+    seed_thread(page, thread)
+    page.reload()
+    page.wait_for_timeout(400)
+    page.locator("mark.note-hl").first.click()
+    page.wait_for_timeout(200)
+
+
+def test_ask_stays_available_after_ai_replied(page, base):
+    """多轮：AI 答过一轮后按钮还在、可点；空追问时提示先写一句。"""
+    open_seeded_thread(page, base, [("我", "为什么丢掉编辑也算收敛？"), ("AI", "因为收敛只要求终态一致。")])
+    ask = page.locator(".nt-pop .nt-ask")
+    assert ask.is_visible() and ask.is_enabled(), "AI 答过之后「让 AI 回答」不能消失"
+    ask.click()
+    page.wait_for_timeout(200)
+    hint = page.locator(".nt-pop .nt-job-text").inner_text()
+    assert "追问" in hint, f"最后一层是 AI 时应当提示先写追问：{hint}"
+    assert page.evaluate("document.activeElement.classList.contains('nt-reply-input')"), "焦点应落到追问框"
+
+
+def test_follow_up_is_sent_with_ask_flag(page, base):
+    bodies = []
+
+    def fulfill(route):
+        bodies.append(json.loads(route.request.post_data or "{}"))
+        note = {"id": "n1", "q": "收敛是必要条件", "pre": "", "post": "", "block": 0, "t": 1,
+                "thread": [{"author": "我", "text": "问", "t": 1}, {"author": "AI", "text": "答", "t": 2},
+                           {"author": "我", "text": "那第二点呢", "t": 3}]}
+        route.fulfill(status=200, content_type="application/json",
+                      body=json.dumps({"ok": True, "note": note, "triggered": True,
+                                       "job": {"id": "job-y", "status": "pending"}}))
+
+    page.route("**/api/notes/**/replies", fulfill)
+    open_seeded_thread(page, base, [("我", "问"), ("AI", "答")])
+    page.fill(".nt-pop .nt-reply-input", "那第二点呢")
+    label = page.locator(".nt-pop .nt-ask").inner_text()
+    assert "发送并问 AI" in label, f"追问框有字时按钮应变成发送并问：{label}"
+    page.click(".nt-pop .nt-ask")
+    page.wait_for_timeout(500)
+    assert bodies and bodies[0].get("ask") is True and bodies[0]["text"] == "那第二点呢", bodies
+    assert page.locator(".nt-pop .nt-floor").count() == 3, "追问后应当多出一层"
+    assert "AI 正在回答中" in page.locator(".nt-pop .nt-job-text").inner_text()
+    assert page.locator(".nt-pop .nt-ask").is_disabled(), "回答中按钮应当禁用，防止重复排队"
+
+
+def test_ask_answers_an_unanswered_follow_up(page, base):
+    asked = []
+    page.route("**/api/notes/**/ask", lambda route: (asked.append(1), route.fulfill(
+        status=200, content_type="application/json",
+        body='{"ok": true, "triggered": true, "job": {"id": "job-z", "status": "pending"}}')))
+    open_seeded_thread(page, base, [("我", "问"), ("AI", "答"), ("我", "可是时钟漂移呢")])
+    page.click(".nt-pop .nt-ask")
+    page.wait_for_timeout(500)
+    assert asked, "最后一层是人写的追问时，空追问框点按钮应直接让 AI 回答这层"
+    assert "AI 正在回答中" in page.locator(".nt-pop .nt-job-text").inner_text()
+
+
 def test_guest_keeps_local_notes_on_device(page, base):
     """没登录时本地笔记不上传（账号体系下访客是纯本机模式）。"""
     requests = []
@@ -672,6 +740,9 @@ def test_guest_keeps_local_notes_on_device(page, base):
 
 
 CASES = [
+    (test_ask_stays_available_after_ai_replied, False, DESKTOP),
+    (test_follow_up_is_sent_with_ask_flag, False, DESKTOP),
+    (test_ask_answers_an_unanswered_follow_up, False, DESKTOP),
     (test_save_shows_ai_is_answering_when_a_question_triggers_it, False, DESKTOP),
     (test_save_stays_quiet_when_nothing_triggers, False, DESKTOP),
     (test_ask_saves_the_typed_annotation_first, False, DESKTOP),

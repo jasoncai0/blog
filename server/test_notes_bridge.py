@@ -55,6 +55,26 @@ class BridgeTest(unittest.TestCase):
         self.assertIn("只给结论", prompt)
         self.assertIn("400", prompt)
 
+    def test_build_prompt_follow_up_carries_history_and_latest_question(self):
+        job = {
+            "slug": "ot-crdt-lww",
+            "note": {
+                "q": "收敛是必要条件",
+                "thread": [
+                    {"author": "我", "text": "这里为什么不用向量时钟？"},
+                    {"author": "AI", "text": "因为 LWW 只需要全序时间戳。"},
+                    {"author": "我", "text": "那时钟漂移怎么办"},
+                ],
+            },
+            "prompt": "fallback",
+        }
+        prompt = notes_bridge.build_prompt(job)
+        self.assertIn("之前的楼层", prompt)
+        self.assertIn("因为 LWW 只需要全序时间戳", prompt)
+        question = prompt.split("读者这次的追问")[1]
+        self.assertIn("那时钟漂移怎么办", question)
+        self.assertNotIn("向量时钟", question)
+
     def test_parse_reply_takes_last_assistant_text(self):
         stdout = "\n".join([
             '{"type":"assistant","text":"第一段"}',
