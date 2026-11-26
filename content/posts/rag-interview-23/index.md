@@ -5,7 +5,7 @@ summary: "把 23 道 RAG 面试题按一条真实请求的走向重排：定位�
 tags: ["rag", "embedding", "ann", "evaluation"]
 ---
 
-题目清单来自[小林面试笔记的 RAG 专题](https://xiaolinnote.com/ai/rag/rag_info.html)，一共 23 道。顺序按「一次查询在系统里怎么走」重排，答案重写，不是原文搬运。姊妹篇是 [Agent 面试 30 题](https://www.jasoncai.site/posts/agent-interview-30.html)，两篇的分层方式一致：先定位，再按数据流往下走。
+题目清单来自[小林面试笔记的 RAG 专题](https://xiaolinnote.com/ai/rag/rag_info.html)，一共 23 道。顺序按「一次查询在系统里怎么走」重排，答案重写，不是原文搬运。姊妹篇是 [Agent 面试 30 题](https://www.jasoncai.site/posts/agent-interview-30.html) 和 [工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html)，三篇的分层方式一致：先定位，再按数据流往下走。
 
 原站按主题排：概念、切分、向量、检索、工程。按这个顺序背，容易把 RAG 记成一堆零件的名字。面试官实际是顺着链路追的：你说切分，他问语义被切断怎么办；你说向量检索，他问型号搜不到怎么办；你说混合检索，他问两路分数怎么合并。所以这份文档按链路排：定位 → 切分 → 向量化 → 索引 → 检索 → 生成 → 运行。
 
@@ -452,4 +452,4 @@ Self-RAG：模型自己判断要不要检索、检索结果好不好、答案有
 
 题目与原文：[小林面试笔记 · RAG 面试题](https://xiaolinnote.com/ai/rag/rag_info.html)。原文每篇有完整的面试对话、更长的推导和配图，这份文档只保留了我认为面试时真用得上的部分。
 
-姊妹篇：[Agent 面试 30 题：按运行时分层整理的答案](https://www.jasoncai.site/posts/agent-interview-30.html)，那篇讲的是 Agent 的运行支撑，这一篇讲的是它查资料的那一段。
+姊妹篇：[Agent 面试 30 题：按运行时分层整理的答案](https://www.jasoncai.site/posts/agent-interview-30.html) 讲的是 Agent 的运行支撑，这一篇讲的是它查资料的那一段；[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html) 讲它在拿到资料之后怎么调工具、怎么执行。
