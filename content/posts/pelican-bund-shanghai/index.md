@@ -1,13 +1,16 @@
 ---
 title: "鹈鹕骑行上海外滩：Canvas 动画与运动学实现"
 date: 2026-11-26T20:32:00+08:00
-summary: "用原生 HTML5 Canvas 实现一段鹈鹕骑车经过上海外滩的交互动画，约束外滩地理视角、2.15:1 齿比传动与双腿二连杆逆运动学。"
+summary: "使用 Google Gemini 4 Neon（Medium 档位 / Medium 思考深度）单轮生成的上海外滩鹈鹕骑行 Canvas 动画实测，记录完整评测参数、外滩地理视角与二连杆逆运动学约束。"
+description: "鹈鹕测试（Pelican Benchmark）上海外滩动态版实测：Gemini 4 Neon（Medium 思考深度）生成参数、空间方位与自行车逆运动学拆解。"
 tags:
-  - meta
+  - pelican-test
+  - evaluation
   - codegen
+  - meta
 ---
 
-这段动画用单个原生 `<canvas>` 实现，不依赖外部动画库或图片素材。画面中的外滩方位、车轮转速、链条线速度与鹈鹕双腿关节由同一套距离变量驱动，避免常见的「脚踏悬空」「轮子打滑」「地标左右颠倒」问题。
+这段「鹈鹕骑自行车」本土化动态测试由 Google Gemini 4 Neon 在 Medium 档位与 Medium 思考深度下单轮生成，使用单个原生 `<canvas>` 实现，不依赖外部动画库或图片素材。画面中的外滩方位、车轮转速、链条线速度与鹈鹕双腿关节由同一套距离变量驱动，避免常见的「脚踏悬空」「轮子打滑」「地标左右颠倒」问题。
 
 ## 在线演示
 
@@ -118,7 +121,7 @@ tags:
   <canvas id="pelican-scene" class="pelican-canvas" aria-label="鹈鹕骑着自行车在上海外滩骑行动画"></canvas>
 
   <div class="pelican-foot">
-    <span>中山东一路非机动车道（自北向南骑行）· 对岸黄浦江与浦东陆家嘴</span>
+    <span>Gemini 4 Neon (Medium) · 中山东一路非机动车道（自北向南骑行）</span>
     <span id="pelican-telemetry" class="pelican-mono">踏频 58 RPM · 点击画面按铃</span>
   </div>
 
@@ -1218,6 +1221,25 @@ tags:
     })();
   </script>
 </div>
+
+## 评测参数与生成记录
+
+相比静态 SVG 版的经典鹈鹕测试（Pelican riding a bicycle），连续帧 Canvas 动画额外考察模型对多帧几何闭合、齿轮线速度同步与真实城市空间方位的联合约束能力。本次实测的完整运行参数如下：
+
+| 参数项 | 配置与实测记录 |
+|---|---|
+| 评测基准 | 鹈鹕测试（Pelican Benchmark）上海外滩动态交互版（60fps Canvas） |
+| 生成模型 | Google Gemini 4 Neon（Gemini 4 系列 Tier S 主力工程模型） |
+| 模型档位（Mode / Tier） | Medium |
+| 思考深度（Thinking Depth） | Medium（中等思考深度，1M 原生上下文窗口） |
+| 运行宿主（Harness） | Google Antigravity（Agentic 模式，启用文件编辑与 `node --check` 语法校验） |
+| 原始提示词（Prompt） | `帮我画一张鹈鹕骑着自行车在上海外滩骑行的代码动画，要求符合上海本地特色，要求动画流畅，要求逻辑合理。` |
+| 交互与返工轮次 | 单轮直出（Zero-shot，0 次人工追问返工） |
+| 端到端耗时 | 4 分 15 秒（20:12:54 提交提示词 → 20:17:09 完成自检交付） |
+| 产物规格 | 单文件原生 Canvas 2D + Web Audio API，零第三方图形库、零外部图片与音频 |
+
+1. **中等思考深度已够覆盖空间与传动约束。** Gemini 4 Neon 在 Medium 思考深度下一次性对齐了浦西东望陆家嘴的北南地标顺序、钻石车架闭合拓扑、分层视差与齿比联动，无需切到最高思考档消耗额外输出 token。
+2. **同轮静态几何自检消除了下止点脱节。** 模型在写出首版代码后同一轮内复算髋关节到五通与脚踏的距离，发现脚踏处于 6 点钟下止点时跨度为 66.8px，而初版大腿加小腿仅 46px（22px + 24px），当场将二连杆臂长修补为 71px（35px + 36px）并通过 `node --check` 校验。
 
 ## 地理方位与外滩元素
 

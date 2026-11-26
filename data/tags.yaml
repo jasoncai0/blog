@@ -77,3 +77,7 @@ github-trending:
 game-dev:
   name: 游戏开发
   description: 3D 游戏开发、引擎、资产管线与制作流程
+
+pelican-test:
+  name: 鹈鹕测试
+  description: 鹈鹕骑自行车（Pelican Benchmark）代码生成、空间几何与物理运动学实测
