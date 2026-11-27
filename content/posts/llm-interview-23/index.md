@@ -5,7 +5,7 @@ summary: "把 23 道大模型面试题按「一次请求真正流过的层」重
 tags: ["llm-training", "inference", "evaluation", "architecture"]
 ---
 
-题目清单来自[小林面试笔记的大模型专题](https://xiaolinnote.com/ai/llm/llm_info.html)，一共 23 道。顺序按「一次请求在模型里怎么走」重排，答案重写，不是原文搬运。姊妹篇三篇：[Agent 面试 30 题](https://www.jasoncai.site/posts/agent-interview-30.html) 讲运行时，[RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html) 讲资料怎么进来，[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html) 讲手怎么伸出去，这一篇讲中间那台发动机。
+题目清单来自[小林面试笔记的大模型专题](https://xiaolinnote.com/ai/llm/llm_info.html)，一共 23 道。顺序按「一次请求在模型里怎么走」重排，答案重写，不是原文搬运。姊妹篇四篇：[Agent 面试 30 题](https://www.jasoncai.site/posts/agent-interview-30.html) 讲运行时，[RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html) 讲资料怎么进来，[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html) 讲手怎么伸出去，[Claude Code 面试 25 题](https://www.jasoncai.site/posts/claude-code-interview-25.html) 讲工业级编码 Agent 怎么在源码层吃透长上下文与缓存，这一篇讲中间那台发动机。
 
 原站按概念分块：基础、训练、微调、推理、部署。按这个顺序背，容易把 Transformer、LoRA、量化记成三件不相干的事。面试官其实是顺着一次请求问的：模型怎么把文字变成向量，参数怎么来的，为什么微调能改行为，为什么长上下文贵，线上为什么慢。所以这份文档按请求链排：底座 → 训练 → 微调 → 结构 → 生成 → 可信 → 部署。
 
@@ -505,4 +505,4 @@ Prompt Caching 是跨请求的优化：多个请求前缀相同时，第一请�
 
 题目与原文：[小林面试笔记 · 大模型面试题](https://xiaolinnote.com/ai/llm/llm_info.html)。原文每篇有完整的面试对话、更长的推导和配图，这份文档只保留了我认为面试时真用得上的部分。
 
-姊妹篇：[Agent 面试 30 题：按运行时分层整理的答案](https://www.jasoncai.site/posts/agent-interview-30.html) 讲 Agent 怎么循环、怎么记、怎么保证完成；[RAG 面试 23 题：沿一条检索链路整理的答案](https://www.jasoncai.site/posts/rag-interview-23.html) 讲资料怎么进来；[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html) 讲模型怎么把手伸出去。这一篇是它们脚下那台发动机。
+姊妹篇：[Agent 面试 30 题：按运行时分层整理的答案](https://www.jasoncai.site/posts/agent-interview-30.html) 讲 Agent 怎么循环、怎么记、怎么保证完成；[RAG 面试 23 题：沿一条检索链路整理的答案](https://www.jasoncai.site/posts/rag-interview-23.html) 讲资料怎么进来；[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html) 讲模型怎么把手伸出去；[Claude Code 面试 25 题](https://www.jasoncai.site/posts/claude-code-interview-25.html) 讲 Prompt Caching 分割线、Fork 前缀对齐与五层上下文压缩怎么在真实客户端里落地。这一篇是它们脚下那台发动机。

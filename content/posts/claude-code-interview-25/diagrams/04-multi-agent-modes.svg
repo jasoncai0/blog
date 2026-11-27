@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f4-t f4-d">
+<title id="f4-t">Claude Code 多 Agent 协作时序与隔离对比图</title>
+<desc id="f4-d">按时间线自上而下展示常规 Subagent 同步与 120s 转后台单向通知、agent-teams 信箱双向通信唤醒、Fork 字节级缓存共享与 Coordinator 并行合成。</desc>
+<defs>
+<style>
+  .f4-title { font-size: 22.5px; font-weight: 800; fill: #0F172A; }
+  .f4-subtitle { font-size: 13px; fill: #475569; }
+  .f4-actor-hdr { font-size: 13.5px; font-weight: 700; fill: #FFFFFF; }
+  .f4-actor-sub { font-size: 10.8px; fill: rgba(255,255,255,0.88); }
+  .f4-band-lbl { font-size: 12.2px; font-weight: 800; }
+  .f4-msg { font-size: 11.2px; font-weight: 600; fill: #0F172A; }
+  .f4-note { font-size: 10.8px; fill: #334155; }
+  .f4-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f4-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f4-arr-solid" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#1E293B"/>
+</marker>
+<marker id="f4-arr-async" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f4-arr-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+<marker id="f4-arr-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="719" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f4-title">多 Agent 协作时序：单向通知、团队双向信箱、Fork 缓存共享与 Coordinator</text>
+<text x="32" y="65" class="f4-subtitle">实线表示同步调用或字节级状态克隆，虚线表示异步队列投递与 &lt;task-notification&gt; XML 伪装用户消息回传</text>
+
+<!-- 5 Lifeline Actors: X centers = 135, 385, 640, 895, 1145 -->
+<rect x="40" y="88" width="190" height="48" rx="8" fill="#1E293B"/>
+<text x="135" y="110" text-anchor="middle" class="f4-actor-hdr">父 Agent / Coordinator</text>
+<text x="135" y="127" text-anchor="middle" class="f4-actor-sub">主会话 / 纯协调者</text>
+
+<rect x="290" y="88" width="190" height="48" rx="8" fill="#1A73E8"/>
+<text x="385" y="110" text-anchor="middle" class="f4-actor-hdr">Task 表与信箱队列</text>
+<text x="385" y="127" text-anchor="middle" class="f4-actor-sub">LocalAgentTaskState</text>
+
+<rect x="545" y="88" width="190" height="48" rx="8" fill="#0F766E"/>
+<text x="640" y="110" text-anchor="middle" class="f4-actor-hdr">常规 / 团队 Subagent</text>
+<text x="640" y="127" text-anchor="middle" class="f4-actor-sub">三道门裁剪工具池</text>
+
+<rect x="800" y="88" width="190" height="48" rx="8" fill="#059669"/>
+<text x="895" y="110" text-anchor="middle" class="f4-actor-hdr">Fork Subagent ★</text>
+<text x="895" y="127" text-anchor="middle" class="f4-actor-sub">字节级一致复用缓存</text>
+
+<rect x="1050" y="88" width="190" height="48" rx="8" fill="#D97757"/>
+<text x="1145" y="110" text-anchor="middle" class="f4-actor-hdr">Anthropic API &amp; Cache</text>
+<text x="1145" y="127" text-anchor="middle" class="f4-actor-sub">前缀字节精确匹配</text>
+
+<line x1="135" y1="136" x2="135" y2="668" stroke="#CBD5E1" stroke-width="1.6" stroke-dasharray="5,5"/>
+<line x1="385" y1="136" x2="385" y2="668" stroke="#CBD5E1" stroke-width="1.6" stroke-dasharray="5,5"/>
+<line x1="640" y1="136" x2="640" y2="668" stroke="#CBD5E1" stroke-width="1.6" stroke-dasharray="5,5"/>
+<line x1="895" y1="136" x2="895" y2="668" stroke="#CBD5E1" stroke-width="1.6" stroke-dasharray="5,5"/>
+<line x1="1145" y1="136" x2="1145" y2="668" stroke="#CBD5E1" stroke-width="1.6" stroke-dasharray="5,5"/>
+
+<!-- Phase 1 -->
+<rect x="28" y="150" width="1224" height="148" rx="10" fill="#EFF6FF" fill-opacity="0.6" stroke="#BFDBFE" stroke-width="1.1"/>
+<text x="44" y="171" class="f4-band-lbl" fill="#1D4ED8">阶段 1 · 默认形态 Subagent：按字段隔离启动，超 120 秒转后台，仅支持「子 → 父」单向完成通知</text>
+
+<line x1="135" y1="194" x2="632" y2="194" stroke="#1E293B" stroke-width="1.7" marker-end="url(#f4-arr-solid)"/>
+<text x="385" y="187" text-anchor="middle" class="f4-msg">1. createSubagentContext：克隆 readFileState，置空 setAppState，留任务通路，depth+1</text>
+
+<line x1="640" y1="226" x2="1137" y2="226" stroke="#1E293B" stroke-width="1.6" marker-end="url(#f4-arr-solid)"/>
+<text x="892" y="219" text-anchor="middle" class="f4-note">2. 独立系统提示词（如 Explore 仅带只读工具），不命中父缓存，重算前缀</text>
+
+<line x1="640" y1="258" x2="393" y2="258" stroke="#2563EB" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#f4-arr-async)"/>
+<text x="515" y="251" text-anchor="middle" class="f4-note" style="fill:#1D4ED8;">3a. 运行超 120s 触发 auto-background 释放父前台</text>
+
+<line x1="385" y1="284" x2="143" y2="284" stroke="#2563EB" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#f4-arr-async)"/>
+<text x="262" y="277" text-anchor="middle" class="f4-msg" style="fill:#1D4ED8;">3b. 拼 &lt;task-notification&gt; XML 伪装用户消息</text>
+
+<!-- Phase 2 -->
+<rect x="28" y="310" width="1224" height="122" rx="10" fill="#FDF4FF" fill-opacity="0.65" stroke="#E9D5FF" stroke-width="1.1"/>
+<text x="44" y="331" class="f4-band-lbl" fill="#9333EA">阶段 2 · 团队模式（--agent-teams）：解锁 SendMessage 工具，补齐「父 → 子」异步信箱与停机唤醒</text>
+
+<line x1="135" y1="358" x2="377" y2="358" stroke="#1E293B" stroke-width="1.7" marker-end="url(#f4-arr-solid)"/>
+<text x="256" y="351" text-anchor="middle" class="f4-msg">4. SendMessage 投递 pendingMessages[] 即返</text>
+
+<line x1="385" y1="386" x2="632" y2="386" stroke="#2563EB" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#f4-arr-async)"/>
+<text x="512" y="379" text-anchor="middle" class="f4-note">5a. 运行中：每轮工具结束后自取字条注入历史</text>
+
+<rect x="656" y="396" width="576" height="26" rx="6" fill="#FFFFFF" stroke="#D8B4FE"/>
+<text x="668" y="413" class="f4-note" style="fill:#6B21A8;">5b. 已停止：resumeAgentBackground 从磁盘 transcript 恢复完整历史并唤醒续跑</text>
+
+<!-- Phase 3 -->
+<rect x="28" y="444" width="1224" height="106" rx="10" fill="#ECFDF5" fill-opacity="0.7" stroke="#10B981" stroke-width="1.8"/>
+<text x="44" y="465" class="f4-band-lbl" fill="#059669">阶段 3 · Fork Subagent ★：锁定 CacheSafeParams 五项前缀字节级一致（与 Coordinator 互斥）</text>
+
+<line x1="135" y1="492" x2="887" y2="492" stroke="#059669" stroke-width="1.8" marker-end="url(#f4-arr-green)"/>
+<text x="512" y="485" text-anchor="middle" class="f4-msg" style="fill:#065F46;">6. getSystemPrompt 返回空串，原样复用父已渲染字节 + 工具顺序 + 消息前缀</text>
+
+<line x1="895" y1="526" x2="1137" y2="526" stroke="#059669" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#f4-arr-green)"/>
+<text x="1016" y="519" text-anchor="middle" class="f4-msg" style="fill:#065F46;">7. 命中父 Prompt Cache（成本降至 ~10%）</text>
+
+<!-- Phase 4 -->
+<rect x="28" y="562" width="1224" height="108" rx="10" fill="#FFFBEB" fill-opacity="0.75" stroke="#FDE68A" stroke-width="1.2"/>
+<text x="44" y="583" class="f4-band-lbl" fill="#B45309">阶段 4 · Coordinator 模式（CLAUDE_CODE_COORDINATOR_MODE=1）：主代理退化为纯协调者，两层扁平扇出</text>
+
+<line x1="135" y1="608" x2="632" y2="608" stroke="#D97706" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#f4-arr-orange)"/>
+<text x="385" y="601" text-anchor="middle" class="f4-msg" style="fill:#92400E;">8. 单轮并发扇出 N 个异步 Worker 调研 → 协调者亲自读结果写规格（禁当传话筒）</text>
+
+<rect x="152" y="622" width="1080" height="34" rx="6" fill="#FFFFFF" stroke="#FCD34D"/>
+<text x="166" y="643" class="f4-note">9. 续命 vs 新派：改刚查过的文件 → SendMessage 续命老 Worker；跨模块或走偏 → 派新 Worker；测试验证 → 必派新 Worker 防自写自验</text>
+
+<text x="32" y="698" class="f4-footer">★ 递归防护：全局黑名单剥夺所有 Subagent 与 Worker 的「再派子代理 / 创建团队 / 切 Plan 模式 / 主动提问用户」工具，层级硬锁在两层以内。</text>
+</svg>

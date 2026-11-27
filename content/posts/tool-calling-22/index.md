@@ -5,7 +5,7 @@ summary: "把 22 道工具调用面试题按一次调用真正经过的层次重
 tags: ["agent", "architecture", "harness", "sandbox"]
 ---
 
-题目清单来自[小林面试笔记的 LLM 工具调用专题](https://xiaolinnote.com/ai/tools/tools_info.html)，一共 22 道。顺序按「一次调用从模型决定到工具真正执行」重排，答案重写，不是原文搬运。姊妹篇是 [Agent 面试 30 题](https://www.jasoncai.site/posts/agent-interview-30.html)、[RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html) 和 [大模型面试 23 题](https://www.jasoncai.site/posts/llm-interview-23.html)：Agent 那篇讲运行时怎么循环，RAG 那篇讲知识怎么进来，大模型那篇讲模型的底座和推理成本，这一篇讲 Agent 的手和工具箱怎么接。
+题目清单来自[小林面试笔记的 LLM 工具调用专题](https://xiaolinnote.com/ai/tools/tools_info.html)，一共 22 道。顺序按「一次调用从模型决定到工具真正执行」重排，答案重写，不是原文搬运。姊妹篇是 [Agent 面试 30 题](https://www.jasoncai.site/posts/agent-interview-30.html)、[RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html)、[大模型面试 23 题](https://www.jasoncai.site/posts/llm-interview-23.html) 和 [Claude Code 面试 25 题](https://www.jasoncai.site/posts/claude-code-interview-25.html)：Agent 那篇讲运行时怎么循环，RAG 那篇讲知识怎么进来，大模型那篇讲模型的底座和推理成本，Claude Code 那篇拆一套真实终端 Agent 的源码落点，这一篇讲 Agent 的手和工具箱怎么接。
 
 原站大致按概念聚集：Function Calling、MCP、Skill、传输、工程实践。按这个顺序背，容易背成四套并列的名词。面试官实际是顺着一条调用链追的：你说 Function Calling，他问模型凭什么会输出 JSON；你说 MCP，他问它和 Function Calling 谁在上谁在下；你说 Skill，他问它和 MCP 差在哪；你说工具很多，他问你怎么路由、怎么容错。所以这份文档按层排：原理 → 协议 → 能力包 → 通信 → 接入形态 → 规模化。
 
@@ -485,4 +485,4 @@ A2A 里 Task 是一等公民：调用方不是「调一个函数」，而是「�
 
 题目与原文：[小林面试笔记 · 工具调用面试题](https://xiaolinnote.com/ai/tools/tools_info.html)。原文每篇有完整的面试对话、更长的推导和配图，这份文档只保留了我认为面试时真用得上的部分。
 
-姊妹篇：[Agent 面试 30 题：按运行时分层整理的答案](https://www.jasoncai.site/posts/agent-interview-30.html) 讲运行时的循环、记忆和治理，[RAG 面试 23 题：沿一条检索链路整理的答案](https://www.jasoncai.site/posts/rag-interview-23.html) 讲知识怎么进来，[大模型面试 23 题](https://www.jasoncai.site/posts/llm-interview-23.html) 讲模型自己怎么算。这一篇讲的是中间那段：Agent 的手和工具箱怎么接。
+姊妹篇：[Agent 面试 30 题：按运行时分层整理的答案](https://www.jasoncai.site/posts/agent-interview-30.html) 讲运行时的循环、记忆和治理，[RAG 面试 23 题：沿一条检索链路整理的答案](https://www.jasoncai.site/posts/rag-interview-23.html) 讲知识怎么进来，[大模型面试 23 题](https://www.jasoncai.site/posts/llm-interview-23.html) 讲模型自己怎么算，[Claude Code 面试 25 题](https://www.jasoncai.site/posts/claude-code-interview-25.html) 展示 Skill 渐进式披露、流式工具执行器与 Hooks 在 51 万行源码里的真实实现。这一篇讲的是中间那段：Agent 的手和工具箱怎么接。

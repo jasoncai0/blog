@@ -5,7 +5,7 @@ summary: "把 30 道 Agent 面试题按一次任务真正流过的层次重排�
 tags: ["agent", "architecture", "multi-agent", "context-engineering"]
 ---
 
-题目清单来自[小林面试笔记的 Agent 专题](https://xiaolinnote.com/ai/agent/agent_info.html)，一共 30 道。我按「一次任务真正流过的层次」重排了顺序，答案重写，不是原文搬运。姊妹篇三篇：[RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html) 沿检索链路展开，[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html) 讲 Agent 的手和工具箱怎么接，[大模型面试 23 题](https://www.jasoncai.site/posts/llm-interview-23.html) 讲它们脚下那台发动机。四篇在「上下文预算」「证据与可信」「执行边界」三处接得上。
+题目清单来自[小林面试笔记的 Agent 专题](https://xiaolinnote.com/ai/agent/agent_info.html)，一共 30 道。我按「一次任务真正流过的层次」重排了顺序，答案重写，不是原文搬运。姊妹篇四篇：[RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html) 沿检索链路展开，[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html) 讲 Agent 的手和工具箱怎么接，[大模型面试 23 题](https://www.jasoncai.site/posts/llm-interview-23.html) 讲它们脚下那台发动机，[Claude Code 面试 25 题](https://www.jasoncai.site/posts/claude-code-interview-25.html) 拿 51 万行终端编码 Agent 源码把这套运行时落到工程实现。五篇在「上下文预算」「证据与可信」「执行边界」三处接得上。
 
 原站的顺序是按话题排的：概念、范式、工程、多 Agent、运行机制。按这个顺序刷题，容易背成 30 个孤立的知识点。面试官提问却是顺着一条链往下追的：你说 Agent 能自己规划，他就问规划错了怎么办；你说有记忆，他就问记忆什么时候写、写多大粒度；你说多 Agent 协作，他就问子 Agent 挂了谁接管。所以这份文档按链排：概念 → 范式 → 上下文 → 协作 → 执行 → 质量 → 控制权。
 
@@ -675,4 +675,4 @@ Harness 是模型之外的那层运行支撑，核心是一个循环：准备上
 3. **把 Prompt 当安全边界。** 权限、租户、写操作校验必须在模型之外。
 4. **说「框架会处理」。** 框架处理了什么、没处理什么，答不出来就等于没做过。
 
-题目与原文：[小林面试笔记 · Agent 面试题](https://xiaolinnote.com/ai/agent/agent_info.html)。原文每篇有完整的面试对话、更长的推导和配图，这份文档只保留了我认为面试时真用得上的部分。
+题目与原文：[小林面试笔记 · Agent 面试题](https://xiaolinnote.com/ai/agent/agent_info.html)。原文每篇有完整的面试对话、更长的推导和配图，这份文档只保留了我认为面试时真用得上的部分。姊妹篇见 [RAG 面试 23 题](https://www.jasoncai.site/posts/rag-interview-23.html)、[工具调用面试 22 题](https://www.jasoncai.site/posts/tool-calling-22.html)、[大模型面试 23 题](https://www.jasoncai.site/posts/llm-interview-23.html) 与 [Claude Code 面试 25 题](https://www.jasoncai.site/posts/claude-code-interview-25.html)。

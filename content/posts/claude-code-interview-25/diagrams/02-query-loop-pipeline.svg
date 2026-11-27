@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="680" viewBox="0 0 1280 680" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f2-t f2-d">
+<title id="f2-t">Claude Code 主循环 queryLoop 数据流与三条异常自愈回路</title>
+<desc id="f2-d">展示四层异步生成器入口、流式输出与工具调用分流、读写工具并发控制，以及孤立 tool_use 修补、输出续写、被动压缩三条兜底回路。</desc>
+<defs>
+<style>
+  .f2-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f2-subtitle { font-size: 13px; fill: #475569; }
+  .f2-stage-hdr { font-size: 14px; font-weight: 700; fill: #FFFFFF; }
+  .f2-card-title { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f2-card-sub { font-size: 11.2px; fill: #334155; }
+  .f2-card-meta { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f2-badge { font-size: 11.2px; font-weight: 800; fill: #FFFFFF; }
+  .f2-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f2-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f2-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f2-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+<marker id="f2-arr-fix" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="679" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f2-title">主循环 queryLoop 执行管线与三条异常自愈回路</text>
+<text x="32" y="65" class="f2-subtitle">正常路径仅占约 200 行，其余 1500+ 行专职处理边吐字边跑工具、配对修补、输出续写与被动压缩兜底</text>
+
+<!-- Stage Headers -->
+<rect x="32" y="88" width="224" height="36" rx="8" fill="#1E293B"/>
+<text x="144" y="111" text-anchor="middle" class="f2-stage-hdr">1. 四层异步生成器入口</text>
+
+<rect x="288" y="88" width="276" height="36" rx="8" fill="#1A73E8"/>
+<text x="426" y="111" text-anchor="middle" class="f2-stage-hdr">2. 流式推理与分支判定</text>
+
+<rect x="596" y="88" width="334" height="36" rx="8" fill="#0F766E"/>
+<text x="763" y="111" text-anchor="middle" class="f2-stage-hdr">3. StreamingToolExecutor 调度</text>
+
+<rect x="962" y="88" width="286" height="36" rx="8" fill="#D97757"/>
+<text x="1105" y="111" text-anchor="middle" class="f2-stage-hdr">4. 异常拦截与自愈写回 State</text>
+
+<!-- Stage 1 -->
+<rect x="32" y="164" width="224" height="304" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.2" filter="url(#f2-shadow)"/>
+<rect x="32" y="164" width="5" height="304" rx="2" fill="#1E293B"/>
+<text x="48" y="192" class="f2-card-title">yield* 事件流水线</text>
+<rect x="48" y="206" width="192" height="44" rx="6" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="58" y="225" class="f2-card-sub" style="font-weight:700;">L1 ask(params)</text>
+<text x="58" y="242" class="f2-card-meta">SDK 单次调用入口</text>
+<rect x="48" y="258" width="192" height="48" rx="6" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="58" y="277" class="f2-card-sub" style="font-weight:700;">L2 QueryEngine.submit</text>
+<text x="58" y="294" class="f2-card-meta">会话账本 + Sonnet 预取记忆</text>
+<rect x="48" y="314" width="192" height="44" rx="6" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="58" y="333" class="f2-card-sub" style="font-weight:700;">L3 query(params)</text>
+<text x="58" y="350" class="f2-card-meta">生命周期包装与清理收尾</text>
+<rect x="48" y="366" width="192" height="48" rx="6" fill="#EFF6FF" stroke="#93C5FD"/>
+<text x="58" y="385" class="f2-card-sub" style="font-weight:700;fill:#1D4ED8;">L4 queryLoop 本体</text>
+<text x="58" y="402" class="f2-card-meta">显式 State 驱动 while(true)</text>
+<text x="48" y="444" class="f2-card-meta">每吐 1 个 chunk 原样冒泡至终端</text>
+
+<line x1="256" y1="316" x2="282" y2="316" stroke="#64748B" stroke-width="1.8" marker-end="url(#f2-arr)"/>
+
+<!-- Stage 2 -->
+<rect x="288" y="164" width="276" height="304" rx="10" fill="#EFF6FF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="288" y="164" width="5" height="304" rx="2" fill="#10B981"/>
+<text x="306" y="192" class="f2-card-title">流式调 API 与 needsFollowUp ★</text>
+<text x="306" y="216" class="f2-card-sub">1. 先过五层轻量检查与阈值压缩</text>
+<text x="306" y="237" class="f2-card-sub">2. streamAPI 边收边 yield 文字块</text>
+<text x="306" y="258" class="f2-card-sub">3. 识别完整 tool_use 立即投递后台</text>
+
+<rect x="306" y="278" width="242" height="76" rx="8" fill="#FFFFFF" stroke="#BFDBFE"/>
+<text x="318" y="300" class="f2-card-sub" style="font-weight:700;fill:#059669;">分支 A：无 tool_use 块</text>
+<text x="318" y="319" class="f2-card-meta">needsFollowUp = false</text>
+<text x="318" y="338" class="f2-card-meta">过 Stop Hook 后返回 completed</text>
+
+<rect x="306" y="366" width="242" height="82" rx="8" fill="#FFFFFF" stroke="#BFDBFE"/>
+<text x="318" y="388" class="f2-card-sub" style="font-weight:700;fill:#1D4ED8;">分支 B：含 1..N 个 tool_use</text>
+<text x="318" y="407" class="f2-card-meta">needsFollowUp = true</text>
+<text x="318" y="426" class="f2-card-meta">流完收齐 getRemainingResults()</text>
+
+<!-- Stage 3 -->
+<rect x="596" y="148" width="334" height="130" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.3" filter="url(#f2-shadow)"/>
+<rect x="612" y="162" width="94" height="24" rx="12" fill="#059669"/>
+<text x="659" y="178" text-anchor="middle" class="f2-badge">只读并发池</text>
+<text x="716" y="179" class="f2-card-title">addTool 即刻后台起跑</text>
+<text x="612" y="206" class="f2-card-sub">Read / Grep / Glob / 只读 MCP 工具</text>
+<text x="612" y="228" class="f2-card-sub">模型仍在吐字时，首个工具已跑完过半</text>
+<text x="612" y="254" class="f2-card-meta">生成时间与 I/O 时间重叠，压低端到端延迟</text>
+
+<rect x="596" y="294" width="334" height="130" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.3" filter="url(#f2-shadow)"/>
+<rect x="612" y="308" width="94" height="24" rx="12" fill="#D97706"/>
+<text x="659" y="324" text-anchor="middle" class="f2-badge">写操作串行锁</text>
+<text x="716" y="325" class="f2-card-title">按声明顺序排他执行</text>
+<text x="612" y="352" class="f2-card-sub">Edit / Write / Bash 等含外部副作用工具</text>
+<text x="612" y="374" class="f2-card-sub">PreToolUse 门禁与授权 → 执行 → PostToolUse</text>
+<text x="612" y="400" class="f2-card-meta">漏标只读属性时 fail-closed 默认归入串行</text>
+
+<rect x="596" y="440" width="334" height="64" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.2"/>
+<text x="612" y="465" class="f2-card-title" style="fill:#166534;">正常退出通道（completed / max_turns）</text>
+<text x="612" y="487" class="f2-card-meta">无后续工具调用且过 Stop Hook，交付最终回复</text>
+
+<path d="M 564 407 C 580 407, 576 213, 590 213" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f2-arr)"/>
+<path d="M 564 407 C 580 407, 576 359, 590 359" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f2-arr)"/>
+<path d="M 548 316 C 574 316, 572 472, 590 472" fill="none" stroke="#059669" stroke-width="1.8" marker-end="url(#f2-arr-ok)"/>
+
+<!-- Stage 4 -->
+<rect x="962" y="148" width="286" height="110" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.3" filter="url(#f2-shadow)"/>
+<rect x="976" y="160" width="88" height="22" rx="11" fill="#9333EA"/>
+<text x="1020" y="175" text-anchor="middle" class="f2-badge">配对修补</text>
+<text x="1074" y="176" class="f2-card-title">孤立 tool_use 兜底</text>
+<text x="976" y="201" class="f2-card-sub">Ctrl+C / 断网 / 降级致工具未执行时</text>
+<text x="976" y="221" class="f2-card-sub">合成 is_error: true 假 tool_result</text>
+<text x="976" y="243" class="f2-card-meta">对齐 tool_use_id，防下轮 API 400 拒收</text>
+
+<rect x="962" y="272" width="286" height="114" rx="10" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.3" filter="url(#f2-shadow)"/>
+<rect x="976" y="284" width="88" height="22" rx="11" fill="#EA580C"/>
+<text x="1020" y="299" text-anchor="middle" class="f2-badge">截断续写</text>
+<text x="1074" y="300" class="f2-card-title">两段式输出恢复</text>
+<text x="976" y="325" class="f2-card-sub">1. 命中 8K 控费线 → 静默升 64K 重试</text>
+<text x="976" y="345" class="f2-card-sub">2. 64K 仍满 → 塞 nudge 从断点续写</text>
+<text x="976" y="369" class="f2-card-meta">maxOutputTokensRecoveryCount 限 3 次</text>
+
+<rect x="962" y="400" width="286" height="110" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.3" filter="url(#f2-shadow)"/>
+<rect x="976" y="412" width="88" height="22" rx="11" fill="#2563EB"/>
+<text x="1020" y="427" text-anchor="middle" class="f2-badge">被动压缩</text>
+<text x="1074" y="428" class="f2-card-title">413 Reactive Compact</text>
+<text x="976" y="453" class="f2-card-sub">请求撞 prompt_too_long 当场补压一次</text>
+<text x="976" y="473" class="f2-card-sub">hasAttemptedReactiveCompact 同轮限 1 次</text>
+<text x="976" y="495" class="f2-card-meta">压后仍超限则干净返回 prompt_too_long</text>
+
+<path d="M 930 213 L 956 204" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f2-arr)"/>
+<path d="M 930 359 L 956 328" fill="none" stroke="#64748B" stroke-width="1.6" marker-end="url(#f2-arr)"/>
+
+<!-- Loopback Bar -->
+<rect x="288" y="544" width="960" height="68" rx="10" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.4" stroke-dasharray="6,4"/>
+<text x="312" y="572" class="f2-card-title">跨轮不可变更新：state = { ...state, messages: [...prev, assistant, toolResults], turnCount + 1 }</text>
+<text x="312" y="595" class="f2-card-meta">所有重试计数与防重标志集中存于 State 对象，不落闭包全局变量；构造新 State 后沿虚线 continue 回循环头</text>
+
+<path d="M 1105 510 L 1105 538" fill="none" stroke="#D97706" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#f2-arr-fix)"/>
+<path d="M 763 424 L 763 538" fill="none" stroke="#64748B" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#f2-arr)"/>
+<path d="M 288 578 C 266 578, 266 440, 282 420" fill="none" stroke="#D97706" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#f2-arr-fix)"/>
+
+<text x="32" y="652" class="f2-footer">★ 面试题眼：Anthropic API 强制每个 tool_use 紧跟同 ID 的 tool_result；按 Ctrl+C 后仍能接着聊，靠 yieldMissingToolResultBlocks 补假错。</text>
+</svg>

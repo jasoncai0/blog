@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f3-t f3-d">
+<title id="f3-t">Claude Code 上下文五层压缩与双层记忆双泳道治理图</title>
+<desc id="f3-d">上泳道展示会话内短期上下文 5 层渐进式压缩与 4 段恢复，下泳道展示跨会话长期记忆 6 层静态规则与动态抽取召回闭环。</desc>
+<defs>
+<style>
+  .f3-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f3-subtitle { font-size: 13px; fill: #475569; }
+  .f3-lane-hdr { font-size: 14px; font-weight: 800; fill: #FFFFFF; }
+  .f3-lane-sub { font-size: 11px; fill: rgba(255,255,255,0.9); }
+  .f3-card-title { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f3-card-sub { font-size: 11px; fill: #334155; }
+  .f3-card-meta { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f3-step-pill { font-size: 11px; font-weight: 800; fill: #FFFFFF; }
+  .f3-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f3-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f3-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f3-arr-teal" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#0F766E"/>
+</marker>
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="759" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f3-title">短期五层压缩与长期无向量库记忆：按信息半衰期分泳道治理</text>
+<text x="32" y="65" class="f3-subtitle">会话内靠五级阶梯与分通道附件保住现场状态；跨会话靠六层 CLAUDE.md 与封闭四类型 Markdown 文件沉淀长期规律</text>
+
+<!-- Swimlane 1 -->
+<rect x="28" y="88" width="1224" height="304" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.3"/>
+<rect x="28" y="88" width="1224" height="40" rx="8" fill="#1A73E8"/>
+<text x="46" y="113" class="f3-lane-hdr">泳道 A · 会话内短期上下文：5 层压缩金字塔 + 压后四段重组（从零损耗落盘到全量重写）</text>
+<text x="1234" y="113" text-anchor="end" class="f3-lane-sub">生命周期：单次会话（Session）</text>
+
+<!-- Card A1: X=44, W=278 -->
+<rect x="44" y="144" width="278" height="232" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<rect x="58" y="156" width="96" height="22" rx="11" fill="#059669"/>
+<text x="106" y="171" text-anchor="middle" class="f3-step-pill">L1 落盘 + L2 Snip</text>
+<text x="58" y="198" class="f3-card-title">前两层：拦截大包与清理远古头</text>
+<text x="58" y="220" class="f3-card-sub">· L1：单结果 &gt;50KB 或整条 &gt;200KB</text>
+<text x="58" y="239" class="f3-card-sub">  写磁盘，消息内仅留 2KB 预览摘要</text>
+<text x="58" y="263" class="f3-card-sub">· L2：模型顺手调 snip 标早期无用消息</text>
+<text x="58" y="282" class="f3-card-sub">  本地移除并插清理边界，不另发请求</text>
+<text x="58" y="314" class="f3-card-meta">传 snipTokensFreed 给 L5 免重复压缩</text>
+<text x="58" y="358" class="f3-card-meta" style="fill:#059669;">代价最低：大文件未失真，随时重 Read</text>
+
+<line x1="322" y1="260" x2="340" y2="260" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+
+<!-- Card A2: X=346, W=268 -->
+<rect x="346" y="144" width="268" height="232" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<rect x="360" y="156" width="84" height="22" rx="11" fill="#2563EB"/>
+<text x="402" y="171" text-anchor="middle" class="f3-step-pill">L3 时间衰减</text>
+<text x="360" y="198" class="f3-card-title">Micro-Compact 瘦身</text>
+<text x="360" y="220" class="f3-card-sub">距上次 API 调用超 60 分钟时触发</text>
+<text x="360" y="239" class="f3-card-sub">（此时服务端 Prompt Cache 已过期）</text>
+<text x="360" y="263" class="f3-card-sub">清空 Read/Bash/Grep/Edit 等可重取</text>
+<text x="360" y="282" class="f3-card-sub">工具旧输出，仅保留最近 5 个</text>
+<text x="360" y="314" class="f3-card-meta">子 Agent 与 Task 状态不可复现，禁裁</text>
+<text x="360" y="358" class="f3-card-meta" style="fill:#1D4ED8;">兼作 L5 送摘要器前的预处理瘦身步</text>
+
+<line x1="614" y1="260" x2="632" y2="260" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+
+<!-- Card A3: X=638, W=292 -->
+<rect x="638" y="144" width="292" height="232" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f3-shadow)"/>
+<rect x="638" y="144" width="5" height="232" rx="2" fill="#10B981"/>
+<rect x="654" y="156" width="108" height="22" rx="11" fill="#9333EA"/>
+<text x="708" y="171" text-anchor="middle" class="f3-step-pill">L4 / L5 互斥二选一</text>
+<text x="654" y="198" class="f3-card-title">投影视图 vs 全量重写 ★</text>
+<text x="654" y="220" class="f3-card-sub">· L4 Collapse(灰度)：90%/95% 读时投影</text>
+<text x="654" y="239" class="f3-card-sub">  不改原历史，开启即短路 L5</text>
+<text x="654" y="263" class="f3-card-sub">· L5 Auto-Compact：留 20K(p99.99) + 13K</text>
+<text x="654" y="282" class="f3-card-sub">  ≈ 距上限 33K 触发同模型全量重写</text>
+<text x="654" y="314" class="f3-card-meta">剥离 &lt;analysis&gt;，输出 9 节清单（含全部用户消息）</text>
+<text x="654" y="358" class="f3-card-meta" style="fill:#9333EA;">防呆：前后夹击禁调工具 + 3 次熔断 + 递归守卫</text>
+
+<line x1="930" y1="260" x2="948" y2="260" stroke="#64748B" stroke-width="1.6" marker-end="url(#f3-arr)"/>
+
+<!-- Card A4: X=954, W=282 -->
+<rect x="954" y="144" width="282" height="232" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.4" filter="url(#f3-shadow)"/>
+<rect x="968" y="156" width="92" height="22" rx="11" fill="#D97706"/>
+<text x="1014" y="171" text-anchor="middle" class="f3-step-pill">压后四段重组</text>
+<text x="968" y="198" class="f3-card-title">分通道恢复现场状态</text>
+<text x="968" y="220" class="f3-card-sub">1. boundaryMarker（压前 Token 快照）</text>
+<text x="968" y="239" class="f3-card-sub">2. summaryMessages（续接声明+备份路径）</text>
+<text x="968" y="258" class="f3-card-sub">3. attachments：恢复最近 ≤5 个文件</text>
+<text x="968" y="277" class="f3-card-sub">   (单文件 ≤5K/总 ≤50K) + Skill(≤25K)</text>
+<text x="968" y="298" class="f3-card-sub">4. 清 getUserContext 下轮重读 CLAUDE.md</text>
+<text x="968" y="324" class="f3-card-meta">自动压开 suppressFollowUpQuestions 免打断</text>
+<text x="968" y="358" class="f3-card-meta" style="fill:#B45309;">语义进摘要 · 状态走附件 · 规则走重载</text>
+
+<!-- Cross-lane Connector -->
+<line x1="560" y1="392" x2="560" y2="420" stroke="#0F766E" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#f3-arr-teal)"/>
+<text x="572" y="411" class="f3-card-meta" style="fill:#0F766E;">每轮完整结束触发 stopHook → 后台 fork 主会话抽取长期记忆</text>
+
+<!-- Swimlane 2 -->
+<rect x="28" y="424" width="1224" height="290" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.3"/>
+<rect x="28" y="424" width="1224" height="40" rx="8" fill="#0F766E"/>
+<text x="46" y="449" class="f3-lane-hdr">泳道 B · 跨会话长期记忆：静态六层声明式规则 + 动态四类型 Markdown 闭环（零向量数据库）</text>
+<text x="1234" y="449" text-anchor="end" class="f3-lane-sub">生命周期：跨会话持久（Disk / Git）</text>
+
+<!-- Card B1: X=44, W=278 -->
+<rect x="44" y="480" width="278" height="218" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<text x="58" y="506" class="f3-card-title">静态线：6 层 CLAUDE.md 叠加</text>
+<text x="58" y="528" class="f3-card-sub">Managed → User → Project(入库) →</text>
+<text x="58" y="547" class="f3-card-sub">Local(私有) → AutoMem → TeamMem</text>
+<text x="58" y="571" class="f3-card-sub">· 支持 @include 引用与子目录按需挂载</text>
+<text x="58" y="590" class="f3-card-sub">· .claude/rules 按 paths glob 精准加载</text>
+<text x="58" y="618" class="f3-card-meta">单文件 ≤200 行(92%) vs 400 行(70%)</text>
+<text x="58" y="638" class="f3-card-meta">清负资产：架构复述、覆盖率许愿、术语表</text>
+<text x="58" y="680" class="f3-card-meta" style="fill:#0F766E;">拆 rules 模块化后遵守率可升至 96%</text>
+
+<!-- Card B2: X=346, W=268 -->
+<rect x="346" y="480" width="268" height="218" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<text x="360" y="506" class="f3-card-title">写入端：封闭 4 类型 + 乐观锁</text>
+<text x="360" y="528" class="f3-card-sub">仅限 user / feedback / project / reference</text>
+<text x="360" y="547" class="f3-card-sub">必填 Why 与 How to apply，转绝对日期</text>
+<text x="360" y="571" class="f3-card-sub">禁存代码结构、Git 历史等可推导信息</text>
+<text x="360" y="590" class="f3-card-sub">extractMemories 复用父 Prompt Cache</text>
+<text x="360" y="618" class="f3-card-meta">Opus 5 标 [stated] + if_version 乐观锁</text>
+<text x="360" y="638" class="f3-card-meta">拆 write / append / str_replace 三接口</text>
+<text x="360" y="680" class="f3-card-meta" style="fill:#0F766E;">MEMORY.md 双上限：≤200 行且 ≤25KB</text>
+
+<line x1="614" y1="589" x2="632" y2="589" stroke="#0F766E" stroke-width="1.6" marker-end="url(#f3-arr-teal)"/>
+
+<!-- Card B3: X=638, W=292 -->
+<rect x="638" y="480" width="292" height="218" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f3-shadow)"/>
+<rect x="638" y="480" width="5" height="218" rx="2" fill="#10B981"/>
+<text x="654" y="506" class="f3-card-title">召回端：Sonnet 秘书并行选 Top-5 ★</text>
+<text x="654" y="528" class="f3-card-sub">1. 仅扫各 .md 前 30 行提取 frontmatter</text>
+<text x="654" y="547" class="f3-card-sub">2. 提交消息即并行发 sideQuery（零增延迟）</text>
+<text x="654" y="566" class="f3-card-sub">3. JSON Schema 宁缺毋滥返回 ≤5 个文件名</text>
+<text x="654" y="594" class="f3-card-meta">过滤 alreadySurfaced 防重复占名额</text>
+<text x="654" y="614" class="f3-card-meta">过滤在用工具文档，但保留该工具坑点警告</text>
+<text x="654" y="634" class="f3-card-meta">选 Sonnet 弃 Haiku：防误召回污染上下文</text>
+<text x="654" y="680" class="f3-card-meta" style="fill:#059669;">几百候选规模内，小模型挑文件胜过向量阈值</text>
+
+<line x1="930" y1="589" x2="948" y2="589" stroke="#0F766E" stroke-width="1.6" marker-end="url(#f3-arr-teal)"/>
+
+<!-- Card B4: X=954, W=282 -->
+<rect x="954" y="480" width="282" height="218" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<text x="968" y="506" class="f3-card-title">注入与防腐：老化警告 + 先验后用</text>
+<text x="968" y="528" class="f3-card-sub">包入 &lt;system-reminder&gt; 区分用户当轮话</text>
+<text x="968" y="549" class="f3-card-sub">超 2 天自动加陈旧警告：当快照不当现状</text>
+<text x="968" y="570" class="f3-card-sub">引用路径、函数、flag 前强制先 grep 核实</text>
+<text x="968" y="598" class="f3-card-meta">双层防注入：拒存且忽略越权与讨好指令</text>
+<text x="968" y="618" class="f3-card-meta">仅当改变结论或示例时才用，不表演记得你</text>
+<text x="968" y="680" class="f3-card-meta" style="fill:#B45309;">记忆是数据非指令，当前要求高于历史偏好</text>
+
+<text x="32" y="738" class="f3-footer">★ 核心纪律：代码是活的、记忆是死的。能从当前仓库 grep 或 git log 推出来的信息一律禁存，防止重构后变成「权威的错误」。</text>
+</svg>

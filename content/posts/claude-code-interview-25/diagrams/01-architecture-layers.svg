@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f1-t f1-d">
+<title id="f1-t">Claude Code 四层客户端架构与工程化扩展定位矩阵</title>
+<desc id="f1-d">按安全与治理层、引擎调度层、工具能力层、服务与状态层拆解 51 万行客户端架构及外围扩展落点。</desc>
+<defs>
+<style>
+  .f1-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f1-subtitle { font-size: 13px; fill: #475569; }
+  .f1-col-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f1-col-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f1-tier-badge { font-size: 13.5px; font-weight: 800; fill: #FFFFFF; }
+  .f1-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f1-card-title { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f1-card-tag { font-size: 11.2px; fill: #334155; }
+  .f1-card-meta { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f1-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f1-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="799" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f1-title">Claude Code 四层客户端架构与工程化扩展定位矩阵</text>
+<text x="32" y="65" class="f1-subtitle">引擎层零业务逻辑，新增能力只增工具不改循环；安全门禁横切全层，Prompt Cache 分割线贯穿服务底座</text>
+
+<!-- Column Headers -->
+<rect x="28" y="86" width="164" height="44" rx="8" fill="#1E293B"/>
+<text x="110" y="107" text-anchor="middle" class="f1-col-hdr">架构分层</text>
+<text x="110" y="122" text-anchor="middle" class="f1-col-sub">System Layer</text>
+
+<rect x="206" y="86" width="342" height="44" rx="8" fill="#1A73E8"/>
+<text x="377" y="107" text-anchor="middle" class="f1-col-hdr">核心运行时机制</text>
+<text x="377" y="122" text-anchor="middle" class="f1-col-sub">Core Runtime Mechanism</text>
+
+<rect x="562" y="86" width="342" height="44" rx="8" fill="#D97757"/>
+<text x="733" y="107" text-anchor="middle" class="f1-col-hdr">关键源码边界与阈值</text>
+<text x="733" y="122" text-anchor="middle" class="f1-col-sub">Invariants &amp; Guardrails</text>
+
+<rect x="918" y="86" width="334" height="44" rx="8" fill="#0F766E"/>
+<text x="1085" y="107" text-anchor="middle" class="f1-col-hdr">对应用户态扩展（六件套）</text>
+<text x="1085" y="122" text-anchor="middle" class="f1-col-sub">User-Facing Harness</text>
+
+<!-- Layer 1: Safety & Governance -->
+<rect x="28" y="144" width="1224" height="144" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.2"/>
+<rect x="44" y="164" width="132" height="28" rx="14" fill="#9333EA"/>
+<text x="110" y="183" text-anchor="middle" class="f1-tier-badge">安全与治理层</text>
+<text x="110" y="213" text-anchor="middle" class="f1-tier-sub">横切全层门禁</text>
+<text x="110" y="231" text-anchor="middle" class="f1-tier-sub">Safety &amp; Hooks</text>
+
+<rect x="206" y="156" width="342" height="120" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="206" y="156" width="5" height="120" rx="2" fill="#10B981"/>
+<text x="222" y="182" class="f1-card-title">权限矩阵 + Bash AST 语法审计 ★</text>
+<text x="222" y="205" class="f1-card-tag">按「可逆性 × 影响范围」判定放行或确认</text>
+<text x="222" y="226" class="f1-card-tag">Shell 做语法树级注入与逃逸检测，非正则</text>
+<text x="222" y="254" class="f1-card-meta">单次授权仅限当前范围，防 git push 蔓延</text>
+
+<rect x="562" y="156" width="342" height="120" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="578" y="182" class="f1-card-title">模式锁与退出码硬拦截</text>
+<text x="578" y="205" class="f1-card-tag">Plan 模式剥离写权限，每 5 轮注只读提醒</text>
+<text x="578" y="226" class="f1-card-tag">Hook 退出码 0 放行，2 阻断并回传 stderr</text>
+<text x="578" y="254" class="f1-card-meta">permissions.deny 读前拦截 .env 与密钥目录</text>
+
+<rect x="918" y="156" width="322" height="120" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="934" y="182" class="f1-card-title">Hooks + 四档模式 + Plugins</text>
+<text x="934" y="205" class="f1-card-tag">PreToolUse 拦写敏感项，PostToolUse 格式化</text>
+<text x="934" y="226" class="f1-card-tag">default / accept edits / plan / auto 四档</text>
+<text x="934" y="254" class="f1-card-meta">Plugin 打包 skills/agents/hooks/.mcp.json</text>
+
+<!-- Layer 2: Engine Layer -->
+<rect x="28" y="300" width="1224" height="148" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2"/>
+<rect x="44" y="320" width="132" height="28" rx="14" fill="#2563EB"/>
+<text x="110" y="339" text-anchor="middle" class="f1-tier-badge">引擎调度层</text>
+<text x="110" y="369" text-anchor="middle" class="f1-tier-sub">零业务逻辑心脏</text>
+<text x="110" y="387" text-anchor="middle" class="f1-tier-sub">Query Engine</text>
+
+<rect x="206" y="312" width="342" height="124" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="206" y="312" width="5" height="124" rx="2" fill="#10B981"/>
+<text x="222" y="338" class="f1-card-title">Tool-Use Loop（弃用显式 ReAct） ★</text>
+<text x="222" y="361" class="f1-card-tag">推理放入 Extended Thinking，直取原生 tool_use</text>
+<text x="222" y="382" class="f1-card-tag">ask → QueryEngine → query → queryLoop 接力</text>
+<text x="222" y="410" class="f1-card-meta">无 tool_use 即 completed，省每轮 Thought 文本</text>
+
+<rect x="562" y="312" width="342" height="124" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="578" y="338" class="f1-card-title">显式 State 对象与 17 类退出码</text>
+<text x="578" y="361" class="f1-card-tag">1729 行主循环 80% 处理中断、截断与超长</text>
+<text x="578" y="382" class="f1-card-tag">孤立 tool_use 补 is_error 假结果防 API 400</text>
+<text x="578" y="410" class="f1-card-meta">8K 截断静默升 64K，仍满最多 3 次 nudge 续写</text>
+
+<rect x="918" y="312" width="322" height="124" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="934" y="338" class="f1-card-title">Subagents + Fork + Coordinator</text>
+<text x="934" y="361" class="f1-card-tag">按字段克隆读缓存、置空全局写、保留任务表</text>
+<text x="934" y="382" class="f1-card-tag">Fork 对齐 5 项前缀字节，子代理成本降约 90%</text>
+<text x="934" y="410" class="f1-card-meta">/effort 五档与 ultrathink 控单轮思考深度</text>
+
+<!-- Layer 3: Tool Layer -->
+<rect x="28" y="460" width="1224" height="144" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2"/>
+<rect x="44" y="480" width="132" height="28" rx="14" fill="#059669"/>
+<text x="110" y="499" text-anchor="middle" class="f1-tier-badge">工具能力层</text>
+<text x="110" y="529" text-anchor="middle" class="f1-tier-sub">40+ 类型安全工具</text>
+<text x="110" y="547" text-anchor="middle" class="f1-tier-sub">Tooling &amp; Action</text>
+
+<rect x="206" y="472" width="342" height="120" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="222" y="498" class="f1-card-title">检索三件套 + 流式并发执行器</text>
+<text x="222" y="521" class="f1-card-tag">Glob(限 100) + Grep(ripgrep) + Read(限 2000 行)</text>
+<text x="222" y="542" class="f1-card-tag">StreamingToolExecutor 边吐字边并发跑只读工具</text>
+<text x="222" y="570" class="f1-card-meta">漏标只读属性默认 fail-closed 退回串行锁</text>
+
+<rect x="562" y="472" width="342" height="120" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="578" y="498" class="f1-card-title">编译期三属性契约与专用工具优先</text>
+<text x="578" y="521" class="f1-card-tag">类型强制声明：是否只读、是否破坏性、能否并发</text>
+<text x="578" y="542" class="f1-card-tag">禁 Bash 跑 cat/grep/sed，走专用工具过权限门禁</text>
+<text x="578" y="570" class="f1-card-meta">预计超 3 次查询自动转派只读 Explore 子代理</text>
+
+<rect x="918" y="472" width="322" height="120" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="934" y="498" class="f1-card-title">Skills（渐进式披露）+ LSP</text>
+<text x="934" y="521" class="f1-card-tag">常驻目录仅占 1% 窗口，单条描述硬限 250 字符</text>
+<text x="934" y="542" class="f1-card-tag">isMeta 用户消息注入正文，不破坏系统前缀缓存</text>
+<text x="934" y="570" class="f1-card-meta">多语言大仓配 LSP 插件，按符号查定义与引用</text>
+
+<!-- Layer 4: Shared Services & State -->
+<rect x="28" y="616" width="1224" height="142" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+<rect x="44" y="636" width="132" height="28" rx="14" fill="#D97706"/>
+<text x="110" y="655" text-anchor="middle" class="f1-tier-badge">服务与状态层</text>
+<text x="110" y="685" text-anchor="middle" class="f1-tier-sub">缓存 · 压缩 · 记忆</text>
+<text x="110" y="703" text-anchor="middle" class="f1-tier-sub">Shared Services</text>
+
+<rect x="206" y="628" width="342" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="222" y="654" class="f1-card-title">三级 Prompt Cache + 五层压缩金字塔</text>
+<text x="222" y="676" class="f1-card-tag">DYNAMIC_BOUNDARY 切开全球静态前缀（省 90%）</text>
+<text x="222" y="697" class="f1-card-tag">50KB 落盘 → Snip → Micro → Collapse/Auto 重写</text>
+<text x="222" y="724" class="f1-card-meta">压后按活跃度恢复 ≤5 个文件（单 5K / 总 50K）</text>
+
+<rect x="562" y="628" width="342" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="578" y="654" class="f1-card-title">无向量库结构化文件记忆</text>
+<text x="578" y="676" class="f1-card-tag">MEMORY.md 限 200 行且 ≤25KB，防超长行撑爆</text>
+<text x="578" y="697" class="f1-card-tag">封闭 4 类型（user/feedback/project/reference）</text>
+<text x="578" y="724" class="f1-card-meta">Sonnet 选 Top-5；超 2 天加陈旧警告先 grep 核验</text>
+
+<rect x="918" y="628" width="322" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="934" y="654" class="f1-card-title">六层 CLAUDE.md + rules + MCP</text>
+<text x="934" y="676" class="f1-card-tag">单文件 ≤200 行(92%)，拆 rules 路径加载升 96%</text>
+<text x="934" y="697" class="f1-card-tag">MCP 统一 stdio / Streamable HTTP 接外部系统</text>
+<text x="934" y="724" class="f1-card-meta">虚线框表磁盘/外部态：随目录与会话动态装配</text>
+
+<text x="32" y="780" class="f1-footer">★ 核心设计：把推理交给模型内部 Extended Thinking，把确定性约束（权限、配对修复、缓存对齐、压缩阈值）收归客户端代码。</text>
+</svg>
