@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="790" viewBox="0 0 1280 790" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f1-t f1-d">
+<title id="f1-t">Git 分布式镜像架构 vs. Scion 在线非对称架构四层对标</title>
+<desc id="f1-d">对比协议假设、提交存储、检出传输与查询运维四个层面上 Git 集群与 Scion 的设计差异。</desc>
+<defs>
+<style>
+  .f1-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f1-subtitle { font-size: 13px; fill: #475569; }
+  .f1-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f1-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f1-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f1-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f1-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f1-card-b { font-size: 11.2px; fill: #334155; }
+  .f1-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f1-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f1-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f1-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f1-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f1-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f1-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f1-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="789" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f1-title">Git 分布式镜像架构 vs. Scion 在线非对称架构四层对标</text>
+<text x="32" y="65" class="f1-subtitle">围绕「Agent 与 CI 客户端永远在线」重构假设，把百 GB 单体仓库的读写复杂度从仓库总大小解耦到单次变更大小</text>
+<rect x="28" y="86" width="164" height="46" rx="8" fill="#1E293B"/>
+<text x="110" y="107" text-anchor="middle" class="f1-hdr">架构分层 / 维度</text>
+<text x="110" y="123" text-anchor="middle" class="f1-hdr-sub">Engineering Layer</text>
+<rect x="208" y="86" width="338" height="46" rx="8" fill="#475569"/>
+<text x="377.0" y="107" text-anchor="middle" class="f1-hdr">Git 单体仓库扩容方案（旧）</text>
+<text x="377.0" y="123" text-anchor="middle" class="f1-hdr-sub">Symmetric Offline Design + Mirrors</text>
+<rect x="560" y="86" width="338" height="46" rx="8" fill="#1A73E8"/>
+<text x="729.0" y="107" text-anchor="middle" class="f1-hdr">Scion 在线非对称设计（新）</text>
+<text x="729.0" y="123" text-anchor="middle" class="f1-hdr-sub">Asymmetric Online-First Architecture</text>
+<rect x="912" y="86" width="338" height="46" rx="8" fill="#0F766E"/>
+<text x="1081.0" y="107" text-anchor="middle" class="f1-hdr">工程收益与规模实测</text>
+<text x="1081.0" y="123" text-anchor="middle" class="f1-hdr-sub">Measured Fleet Impact</text>
+<rect x="28" y="146" width="1224" height="142" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.2"/>
+<rect x="42" y="166" width="136" height="28" rx="14" fill="#9333EA"/>
+<text x="110" y="185" text-anchor="middle" class="f1-badge">1. 客户端假设</text>
+<text x="110" y="218" text-anchor="middle" class="f1-tier-sub">在线与对称性</text>
+<text x="110" y="238" text-anchor="middle" class="f1-tier-sub">Client-Server Role</text>
+<rect x="214" y="158" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="183" class="f1-card-t">每个克隆都是完整自治服务器</text>
+<text x="229" y="205" class="f1-card-b">· 假设客户端离线，本地保存全量历史与对象</text>
+<text x="229" y="224" class="f1-card-b">· 100GB 主干历史 + &gt;25GB 压缩工作区</text>
+<text x="229" y="263" class="f1-card-m">2,500 万次/天朴素检出相当于 &gt;600 PB/天流量</text>
+<rect x="566" y="158" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="158" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="183" class="f1-card-t">强非对称：轻客户端 + 全能服务端 ★</text>
+<text x="581" y="205" class="f1-card-b">· 客户端仅管有界缓存、落盘文件与变更监听</text>
+<text x="581" y="224" class="f1-card-b">· 历史、Blame、合并与提交全由服务端执行</text>
+<text x="581" y="263" class="f1-card-m">大量读写与 CI 差集任务完全免除本地检出</text>
+<rect x="918" y="158" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="183" class="f1-card-t">API 驱动周边工具生态</text>
+<text x="933" y="205" class="f1-card-b">· 自动二分排查（Bisect）与自动回滚免克隆</text>
+<text x="933" y="224" class="f1-card-b">· 细粒度目录级 IAM 权限与语义审批约束</text>
+<text x="933" y="263" class="f1-card-m">7 人团队 5 个月连同审查工具 Antique 一并交付</text>
+<rect x="28" y="302" width="1224" height="142" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2"/>
+<rect x="42" y="322" width="136" height="28" rx="14" fill="#2563EB"/>
+<text x="110" y="341" text-anchor="middle" class="f1-badge">2. 提交与存储</text>
+<text x="110" y="374" text-anchor="middle" class="f1-tier-sub">写入与全局锁</text>
+<text x="110" y="394" text-anchor="middle" class="f1-tier-sub">Commit &amp; Ref Model</text>
+<rect x="214" y="314" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="339" class="f1-card-t">本地 Commit + 推送 Packfile 抢锁</text>
+<text x="229" y="361" class="f1-card-b">· Commit 指向全量目录树，推送需协调 Ref 锁</text>
+<text x="229" y="380" class="f1-card-b">· 全局合并队列锁在千级并发下锁死吞吐</text>
+<text x="229" y="419" class="f1-card-m">快照种子（Seeds）刷新速度追不上主干推进</text>
+<rect x="566" y="314" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="314" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="339" class="f1-card-t">服务端 WAL 增量 Changeset ★</text>
+<text x="581" y="361" class="f1-card-b">· 仅存相对第一父节点的变更路径与 Blob 指针</text>
+<text x="581" y="380" class="f1-card-b">· 无 Packfile、无全量副本；主干推进走单行 CAS</text>
+<text x="581" y="419" class="f1-card-m">开销严格正比于本次改动大小，与仓库总体积无关</text>
+<rect x="918" y="314" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="339" class="f1-card-t">支撑 12 倍合入增速</text>
+<text x="933" y="361" class="f1-card-b">· 日均合入从 5 月 2,500 涨至 9 月 &gt;30,000</text>
+<text x="933" y="380" class="f1-card-b">· 转向合入后验证，并发冲突由 Claude 秒级自愈</text>
+<text x="933" y="419" class="f1-card-m">借鉴 Meta Mononoke (Bonsai) 与 Google Piper</text>
+<rect x="28" y="458" width="1224" height="142" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2"/>
+<rect x="42" y="478" width="136" height="28" rx="14" fill="#059669"/>
+<text x="110" y="497" text-anchor="middle" class="f1-badge">3. 检出与传输</text>
+<text x="110" y="530" text-anchor="middle" class="f1-tier-sub">协商与缓存拓扑</text>
+<text x="110" y="550" text-anchor="middle" class="f1-tier-sub">Checkout Protocol</text>
+<rect x="214" y="470" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="495" class="f1-card-t">上报本地集合 + 实时增量打包</text>
+<text x="229" y="517" class="f1-card-b">· 服务端耗费巨量 CPU 计算缺失对象与压缩包</text>
+<text x="229" y="536" class="f1-card-b">· 数百台 Git Mirror 撞上单机磁盘与内存上限</text>
+<text x="229" y="575" class="f1-card-m">单个多 GB Packfile 响应难以中断续传</text>
+<rect x="566" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="470" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="495" class="f1-card-t">只报缺失哈希 + 三层同构缓存 ★</text>
+<text x="581" y="517" class="f1-card-b">· scn 从根树递归拉缺失 Tree/Blob（内容寻址）</text>
+<text x="581" y="536" class="f1-card-b">· daemon → 区域内存 cache → server 零压缩直出</text>
+<text x="581" y="575" class="f1-card-m">天然原生支持稀疏检出与按需虚拟化挂载</text>
+<rect x="918" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="495" class="f1-card-t">检出提速两个数量级</text>
+<text x="933" y="517" class="f1-card-b">· 每一级缓存命中率均稳定超过 99%</text>
+<text x="933" y="536" class="f1-card-b">· 基础设施 CPU/内存缩至 1/200，CI 省 25% CPU</text>
+<text x="933" y="575" class="f1-card-m">严格分层调用阻断区域缓存故障击穿上游</text>
+<rect x="28" y="614" width="1224" height="142" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+<rect x="42" y="634" width="136" height="28" rx="14" fill="#D97706"/>
+<text x="110" y="653" text-anchor="middle" class="f1-badge">4. 历史与索引</text>
+<text x="110" y="686" text-anchor="middle" class="f1-tier-sub">元数据查询机制</text>
+<text x="110" y="706" text-anchor="middle" class="f1-tier-sub">Derived Indexing</text>
+<rect x="214" y="626" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="651" class="f1-card-t">浅克隆下历史操作极易断裂</text>
+<text x="229" y="673" class="f1-card-b">· Shallow Clone 执行 blame/diff 需频繁补拉历史</text>
+<text x="229" y="692" class="f1-card-b">· 仓库定期 GC 与重打包运维负担极重</text>
+<text x="229" y="731" class="f1-card-m">部分克隆与历史依赖工具链长期互相掣肘</text>
+<rect x="566" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="626" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="651" class="f1-card-t">统一递归派生数据（Derived Data） ★</text>
+<text x="581" y="673" class="f1-card-b">· Blame、路径历史、提交跳表均由父节点递归算出</text>
+<text x="581" y="692" class="f1-card-b">· 按类型自由选择急切计算或惰性按需计算</text>
+<text x="581" y="731" class="f1-card-m">内部结构升级对客户端完全透明，零维护停机</text>
+<rect x="918" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="651" class="f1-card-t">持续透明演进与 AI 盯盘</text>
+<text x="933" y="673" class="f1-card-b">· 随时新增拷贝检测、路径检索等新派生索引</text>
+<text x="933" y="692" class="f1-card-b">· 各组件配专属 Claude Superfan 盯遥测抓毛刺</text>
+<text x="933" y="731" class="f1-card-m">Mythos Preview 重写导入管线省 20 倍内存提速 4 倍</text>
+<text x="32" y="768" class="f1-footer">★ 实测收益（2026-09）：支撑日均 &gt;30,000 次合入与 2,500 万次 CI 检出，基础设施资源降至 1/200，检出耗时从分钟级降至秒级。</text>
+</svg>

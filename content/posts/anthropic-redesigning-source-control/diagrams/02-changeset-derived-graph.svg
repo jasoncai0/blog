@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="668" viewBox="0 0 1280 668" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f2-t f2-d">
+<title id="f2-t">Scion 服务端数据模型：WAL 增量变更集与递归派生索引</title>
+<desc id="f2-d">左侧为 WAL Changeset、Blob 存储与 Spanner CAS，中间为递归派生框架，右侧为三类下游消费端。</desc>
+<defs>
+<style>
+  .f2-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f2-subtitle { font-size: 13px; fill: #475569; }
+  .f2-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f2-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f2-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f2-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f2-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f2-card-b { font-size: 11.2px; fill: #334155; }
+  .f2-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f2-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f2-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f2-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f2-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f2-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f2-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f2-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="667" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f2-title">Scion 服务端数据模型：WAL 增量变更集与递归派生索引</text>
+<text x="32" y="65" class="f2-subtitle">把「高吞吐无锁提交」与「复杂历史图查询」拆成两层：底层只写增量指针，上层递归派生任意查询视图</text>
+<rect x="32" y="88" width="370" height="38" rx="8" fill="#1E293B"/>
+<text x="217" y="112" text-anchor="middle" class="f2-hdr">写入主干：无锁 WAL 与内容寻址存储</text>
+<rect x="434" y="88" width="412" height="38" rx="8" fill="#1A73E8"/>
+<text x="640" y="112" text-anchor="middle" class="f2-hdr">索引引擎：统一递归派生数据（Derived Data）</text>
+<rect x="878" y="88" width="370" height="38" rx="8" fill="#0F766E"/>
+<text x="1063" y="112" text-anchor="middle" class="f2-hdr">消费出口：免克隆 RPC 与稀疏客户端</text>
+<rect x="32" y="146" width="370" height="148" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="32" y="146" width="5" height="148" rx="2" fill="#10B981"/>
+<text x="47" y="171" class="f2-card-t">WAL Changeset（基本工作单元） ★</text>
+<text x="47" y="193" class="f2-card-b">· 服务端直接生成，无客户端本地 commit + push</text>
+<text x="47" y="212" class="f2-card-b">· 仅存相对第一父节点的变更文件路径列表</text>
+<text x="47" y="231" class="f2-card-b">· 携带压缩文件内容的哈希指针（无全量 Tree）</text>
+<text x="47" y="281" class="f2-card-m">写入复杂度 = O(本次变更文件数)，立即可见</text>
+<rect x="32" y="316" width="370" height="126" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="47" y="341" class="f2-card-t">对象存储（Content-Addressed Blobs）</text>
+<text x="47" y="363" class="f2-card-b">· 存储压缩后的不可变文件内容与目录树节点</text>
+<text x="47" y="382" class="f2-card-b">· 哈希寻址永不覆写，任意节点可无协调缓存</text>
+<text x="47" y="429" class="f2-card-m">彻底消除 Git Packfile 打包与定期 GC</text>
+<rect x="32" y="464" width="370" height="128" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="47" y="489" class="f2-card-t">Spanner 单行原子指针（Refs CAS）</text>
+<text x="47" y="511" class="f2-card-b">· 仅保留 main 与发布分支指针，抑制全局状态</text>
+<text x="47" y="530" class="f2-card-b">· 推进主干 = Spanner 单行 Compare-and-Swap</text>
+<text x="47" y="579" class="f2-card-m">创建与拉取 Changeset 全程不碰 Ref 锁</text>
+<rect x="434" y="146" width="412" height="446" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.4"/>
+<rect x="454" y="166" width="372" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="454" y="166" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="469" y="191" class="f2-card-t">通用递归派生框架 f(C) = step(f(P₁), ΔC) ★</text>
+<text x="469" y="213" class="f2-card-b">· 任意变更集 C 的索引值由第一父节点 P₁ 派生值递推</text>
+<text x="469" y="232" class="f2-card-b">· 支持 Eager（合入即算）与 Lazy（查时再算）双模式</text>
+<text x="469" y="251" class="f2-card-b">· 计算结果回写 Spanner 并由无状态节点内存缓存</text>
+<text x="469" y="273" class="f2-card-m">客户端零感知底层索引结构演进</text>
+<rect x="454" y="302" width="178" height="126" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="469" y="327" class="f2-card-t">提交图跳表</text>
+<text x="469" y="349" class="f2-card-b">Skip Lists</text>
+<text x="469" y="368" class="f2-card-b">· O(log N) 祖先查询</text>
+<text x="469" y="387" class="f2-card-b">· 快速求 Merge Base</text>
+<text x="469" y="415" class="f2-card-m">支撑高频变基与合并</text>
+<rect x="648" y="302" width="178" height="126" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="663" y="327" class="f2-card-t">行级归属与路径历史</text>
+<text x="663" y="349" class="f2-card-b">Blame &amp; Path History</text>
+<text x="663" y="368" class="f2-card-b">· 秒级定位行修改人</text>
+<text x="663" y="387" class="f2-card-b">· 单文件演进轨迹</text>
+<text x="663" y="415" class="f2-card-m">替代本地全量历史扫描</text>
+<rect x="454" y="444" width="372" height="128" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="469" y="469" class="f2-card-t">可扩展新派生索引（按需热插拔）</text>
+<text x="469" y="491" class="f2-card-b">· 拷贝与重命名检测索引（Copy Detection）</text>
+<text x="469" y="510" class="f2-card-b">· 路径前缀文件检索索引（Path-based Search）</text>
+<text x="469" y="529" class="f2-card-b">· 无需迁移存量 WAL 即可为新场景提速</text>
+<text x="469" y="559" class="f2-card-m">随业务增长已在线增补十余种派生结构</text>
+<rect x="878" y="146" width="370" height="140" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="893" y="171" class="f2-card-t">CI / 自动 Bisect / 自动回滚管线</text>
+<text x="893" y="193" class="f2-card-b">· 直接调服务端 API 获取 Diff、历史与祖先关系</text>
+<text x="893" y="212" class="f2-card-b">· 零本地仓库副本，甚至跳过代码写操作检出</text>
+<text x="893" y="273" class="f2-card-m">彻底卸下千万级任务的仓库维护负担</text>
+<rect x="878" y="308" width="370" height="134" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="893" y="333" class="f2-card-t">Antique 代码审查与语义门禁</text>
+<text x="893" y="355" class="f2-card-b">· 区分纯注释修改与核心逻辑变更配置差异化审批</text>
+<text x="893" y="374" class="f2-card-b">· 绑定目录级细粒度访问控制（Monorepo IAM）</text>
+<text x="893" y="429" class="f2-card-m">让人类审查精力聚焦高风险意图决策</text>
+<rect x="878" y="464" width="370" height="128" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="878" y="464" width="5" height="128" rx="2" fill="#10B981"/>
+<text x="893" y="489" class="f2-card-t">scn 客户端（稀疏 / 虚拟化工作区） ★</text>
+<text x="893" y="511" class="f2-card-b">· 仅对真需要读盘的任务拉取目标目录树与文件</text>
+<text x="893" y="530" class="f2-card-b">· 按需挂载，客户端只为实际读取的字节买单</text>
+<text x="893" y="579" class="f2-card-m">配合宿主机守护进程实现秒级就绪</text>
+<line x1="217" y1="294" x2="217" y2="310" stroke="#64748B" stroke-width="1.8" marker-end="url(#f2-arr)"/>
+<line x1="402" y1="220" x2="448" y2="220" stroke="#2563EB" stroke-width="2" marker-end="url(#f2-arr-blue)"/>
+<line x1="826" y1="220" x2="872" y2="220" stroke="#059669" stroke-width="2" marker-end="url(#f2-arr-ok)"/>
+<line x1="826" y1="370" x2="872" y2="370" stroke="#059669" stroke-width="2" marker-end="url(#f2-arr-ok)"/>
+<path d="M 402 418 L 418 418 L 418 618 L 1063 618 L 1063 598" fill="none" stroke="#64748B" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#f2-arr)"/>
+<text x="735" y="611" text-anchor="middle" class="f2-edge-lbl">内容寻址树与文件块（经三层缓存流式直传 scn 工作区）</text>
+<text x="32" y="646" class="f2-footer">★ 关键取舍：Changeset 仅记录相对第一父提交的改动，契合单体仓库主干开发（Trunk-based）对主线归属查询的实际需求。</text>
+</svg>

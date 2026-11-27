@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="790" viewBox="0 0 1280 790" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f1-t f1-d">
+<title id="f1-t">Anthropic 模型安全评测四阶工程框架（借鉴心理学可重复性改革）</title>
+<desc id="f1-d">按准备与构念、泛化仿真、内部效度与评分器、预注册与披露四层归纳安全评测核心规范。</desc>
+<defs>
+<style>
+  .f1-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f1-subtitle { font-size: 13px; fill: #475569; }
+  .f1-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f1-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f1-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f1-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f1-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f1-card-b { font-size: 11.2px; fill: #334155; }
+  .f1-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f1-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f1-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f1-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f1-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f1-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f1-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f1-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="789" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f1-title">Anthropic 模型安全评测四阶工程框架（借鉴心理学可重复性改革）</text>
+<text x="32" y="65" class="f1-subtitle">从「测什么」到「怎么报」全链路防失真，解决评测易被刷分、构念错位、评分器静默漂移与统计噪声混淆</text>
+<rect x="28" y="86" width="164" height="46" rx="8" fill="#1E293B"/>
+<text x="110" y="107" text-anchor="middle" class="f1-hdr">架构分层 / 维度</text>
+<text x="110" y="123" text-anchor="middle" class="f1-hdr-sub">Engineering Layer</text>
+<rect x="208" y="86" width="338" height="46" rx="8" fill="#475569"/>
+<text x="377.0" y="107" text-anchor="middle" class="f1-hdr">常见评测陷阱（失真来源）</text>
+<text x="377.0" y="123" text-anchor="middle" class="f1-hdr-sub">Common Validity Failures</text>
+<rect x="560" y="86" width="338" height="46" rx="8" fill="#D97757"/>
+<text x="729.0" y="107" text-anchor="middle" class="f1-hdr">Anthropic 标准工程实践</text>
+<text x="729.0" y="123" text-anchor="middle" class="f1-hdr-sub">Recommended Safeguard Eval Design</text>
+<rect x="912" y="86" width="338" height="46" rx="8" fill="#0F766E"/>
+<text x="1081.0" y="107" text-anchor="middle" class="f1-hdr">量化门禁与代表案例</text>
+<text x="1081.0" y="123" text-anchor="middle" class="f1-hdr-sub">Thresholds &amp; System Card Cases</text>
+<rect x="28" y="146" width="1224" height="142" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.2"/>
+<rect x="42" y="166" width="136" height="28" rx="14" fill="#9333EA"/>
+<text x="110" y="185" text-anchor="middle" class="f1-badge">1. 构念与安全</text>
+<text x="110" y="218" text-anchor="middle" class="f1-tier-sub">测对目标且不闯祸</text>
+<text x="110" y="238" text-anchor="middle" class="f1-tier-sub">Construct &amp; Sandbox</text>
+<rect x="214" y="158" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="183" class="f1-card-t">把「拒绝回答率」当万能安全分</text>
+<text x="229" y="205" class="f1-card-b">· 自杀危机冷漠拒答拿满分却是严重失职</text>
+<text x="229" y="224" class="f1-card-b">· 观测对比直接下因果结论；联网测攻防越界</text>
+<text x="229" y="263" class="f1-card-m">只测有害请求会诱导模型靠过度拒答刷分</text>
+<rect x="566" y="158" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="158" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="183" class="f1-card-t">领域恰当响应率 + 断网沙箱 ★</text>
+<text x="581" y="205" class="f1-card-b">· 方法专家+领域专家共建分场景判定细则</text>
+<text x="581" y="224" class="f1-card-b">· 双用途协助合法部分、扣留实质危害细节</text>
+<text x="581" y="263" class="f1-card-m">同域有害+良性配对双向测；攻防评测断网监控</text>
+<rect x="918" y="158" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="183" class="f1-card-t">全对话一票否决制</text>
+<text x="933" y="205" class="f1-card-b">· 多轮中任一轮失守则整场对话判不恰当</text>
+<text x="933" y="224" class="f1-card-b">· 覆盖 16 个政策领域 × 7 种语言多端环境</text>
+<text x="933" y="263" class="f1-card-m">干预归因强制采用单变量控制因果设计</text>
+<rect x="28" y="302" width="1224" height="142" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2"/>
+<rect x="42" y="322" width="136" height="28" rx="14" fill="#2563EB"/>
+<text x="110" y="341" text-anchor="middle" class="f1-badge">2. 多轮泛化</text>
+<text x="110" y="374" text-anchor="middle" class="f1-tier-sub">贴近真实渐进交互</text>
+<text x="110" y="394" text-anchor="middle" class="f1-tier-sub">Multi-Turn Generalization</text>
+<rect x="214" y="314" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="339" class="f1-card-t">纯单轮静态题库或凭空编造剧本</text>
+<text x="229" y="361" class="f1-card-b">· 单轮题库在近期模型上 94%–98% 全面饱和</text>
+<text x="229" y="380" class="f1-card-b">· 拍脑袋编的攻击提示词比真实用户更好防</text>
+<text x="229" y="419" class="f1-card-m">漏掉跨十轮情绪累积与渐进话术包装</text>
+<rect x="566" y="314" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="314" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="339" class="f1-card-t">正交规格驱动动态用户仿真 ★</text>
+<text x="581" y="361" class="f1-card-b">· 固定首轮起点，独立 Claude 动态扮演用户</text>
+<text x="581" y="380" class="f1-card-b">· 目标、策略、人设、语气多维独立正交采样</text>
+<text x="581" y="419" class="f1-card-m">从真实违规样本与临床访谈持续迭代题库</text>
+<rect x="918" y="314" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="339" class="f1-card-t">杀猪盘与心理危机仿真</text>
+<text x="933" y="361" class="f1-card-b">· 借「帮丧偶亲属找稳健对象」试探诈骗边界</text>
+<text x="933" y="380" class="f1-card-b">· 首轮透露失业丧亲，验证十轮后上下文警觉</text>
+<text x="933" y="419" class="f1-card-m">单轮退居防回归，多轮拉开真实安全差距</text>
+<rect x="28" y="458" width="1224" height="142" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2"/>
+<rect x="42" y="478" width="136" height="28" rx="14" fill="#059669"/>
+<text x="110" y="497" text-anchor="middle" class="f1-badge">3. 评分器校准</text>
+<text x="110" y="530" text-anchor="middle" class="f1-tier-sub">守住内部测量效度</text>
+<text x="110" y="550" text-anchor="middle" class="f1-tier-sub">Grader Calibration</text>
+<rect x="214" y="470" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="495" class="f1-card-t">综合印象打分 + 同源模型自评</text>
+<text x="229" y="517" class="f1-card-b">· 偏爱长回复、首选项与自身生成风格</text>
+<text x="229" y="536" class="f1-card-b">· 正则抓 Yes/No 误判礼貌拒答；崩溃静默计分</text>
+<text x="229" y="575" class="f1-card-m">免责声明套话轻易骗过未校准的 LLM 评分器</text>
+<rect x="566" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="470" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="495" class="f1-card-t">原子二值细则 + 六步去偏盲校 ★</text>
+<text x="581" y="517" class="f1-card-b">· 拆成窄域 Yes/No 题，声明免责套话不抵罪</text>
+<text x="581" y="536" class="f1-card-b">· 剥离构造元数据、异构模型评分、正反序翻转</text>
+<text x="581" y="575" class="f1-card-m">评分崩溃显式报错剔除（Fail Loudly）</text>
+<rect x="918" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="495" class="f1-card-t">对齐人类专家互评基准</text>
+<text x="933" y="517" class="f1-card-b">· 双盲标注计算 Cohen's κ 机会校正一致率</text>
+<text x="933" y="536" class="f1-card-b">· 换评分模型重评抽样，顶层结论翻转即重修</text>
+<text x="933" y="575" class="f1-card-m">人机一致率须逼近人类领域专家内部一致率</text>
+<rect x="28" y="614" width="1224" height="142" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+<rect x="42" y="634" width="136" height="28" rx="14" fill="#D97706"/>
+<text x="110" y="653" text-anchor="middle" class="f1-badge">4. 预注册披露</text>
+<text x="110" y="686" text-anchor="middle" class="f1-tier-sub">区分信号与抽样噪声</text>
+<text x="110" y="706" text-anchor="middle" class="f1-tier-sub">Preregister &amp; Report</text>
+<rect x="214" y="626" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="651" class="f1-card-t">看结果挑切片 + 只报裸平均分</text>
+<text x="229" y="673" class="f1-card-b">· 小样本波动被包装成代际安全提升</text>
+<text x="229" y="692" class="f1-card-b">· 混比裸 API 与带系统提示词的产品端得分</text>
+<text x="229" y="731" class="f1-card-m">隐藏未变化子类目，制造统计显著假象</text>
+<rect x="566" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="626" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="651" class="f1-card-t">预注册方案 + 配对检验置信区间 ★</text>
+<text x="581" y="673" class="f1-card-b">· 采数前锁定指标、切片与判定阈值</text>
+<text x="581" y="692" class="f1-card-b">· 同题配对差值算 CI，完整披露提示词与配置</text>
+<text x="581" y="731" class="f1-card-m">微调全程快照持续跑评测，漏洞负责任披露</text>
+<rect x="918" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="651" class="f1-card-t">样本下限与 34pp 配置差</text>
+<text x="933" y="673" class="f1-card-b">· 样本下限：多轮 ≥100 题，单轮 ≥1,000 题</text>
+<text x="933" y="692" class="f1-card-b">· Fable 5.1 裸 API 与 claude.ai 分差达 34pp</text>
+<text x="933" y="731" class="f1-card-m">开源工具链复用：UK AISI Inspect + Petri</text>
+<text x="32" y="768" class="f1-footer">★ 最小落地三件事：① 采数前写清测量构念；② 用人类专家盲标校准评分器（Cohen's κ）；③ 报告附置信区间与完整运行配置。</text>
+</svg>

@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="596" viewBox="0 0 1280 596" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f1-t f1-d">
+<title id="f1-t">Messages API 零明文生产影子验证管线（Shadowing &amp; Fingerprinting）</title>
+<desc id="f1-d">展示输入双端检查点比对、模型单次执行流重放、输出分拣对账及隐私安全差异指纹聚类派单。</desc>
+<defs>
+<style>
+  .f1-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f1-subtitle { font-size: 13px; fill: #475569; }
+  .f1-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f1-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f1-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f1-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f1-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f1-card-b { font-size: 11.2px; fill: #334155; }
+  .f1-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f1-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f1-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f1-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f1-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f1-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f1-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f1-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="595" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f1-title">Messages API 零明文生产影子验证管线（Shadowing &amp; Fingerprinting）</text>
+<text x="32" y="65" class="f1-subtitle">单次调用大模型并重放输出流，在不读取任何客户明文的前提下精准捕获字节级等价性偏差</text>
+<rect x="32" y="88" width="236" height="38" rx="8" fill="#1E293B"/>
+<text x="150.0" y="112" text-anchor="middle" class="f1-hdr">1. 输入检查点（双端并行）</text>
+<rect x="298" y="88" width="250" height="38" rx="8" fill="#1A73E8"/>
+<text x="423.0" y="112" text-anchor="middle" class="f1-hdr">2. 单次模型推理与流重放</text>
+<rect x="578" y="88" width="252" height="38" rx="8" fill="#0F766E"/>
+<text x="704.0" y="112" text-anchor="middle" class="f1-hdr">3. 输出分拣与计费对账</text>
+<rect x="860" y="88" width="388" height="38" rx="8" fill="#D97757"/>
+<text x="1054.0" y="112" text-anchor="middle" class="f1-hdr">4. 零明文指纹提取与聚类派单</text>
+<rect x="32" y="148" width="236" height="152" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="47" y="173" class="f1-card-t">Python 生产主链路（Oracle）</text>
+<text x="47" y="195" class="f1-card-b">① 准入校验 → ② 解析参数配置</text>
+<text x="47" y="214" class="f1-card-b">→ ③ 拼装推理 Prompt → ④ 分词</text>
+<text x="47" y="233" class="f1-card-b">与安全分类器筛查（逐段产生产物）</text>
+<text x="47" y="287" class="f1-card-m">随新模型与新特性持续发版变更</text>
+<rect x="32" y="348" width="236" height="152" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="32" y="348" width="5" height="152" rx="2" fill="#10B981"/>
+<text x="47" y="373" class="f1-card-t">Rust 影子待验链路 ★</text>
+<text x="47" y="395" class="f1-card-b">镜像接收同一请求，独立跑完</text>
+<text x="47" y="414" class="f1-card-b">完全对齐的 ①–④ 输入构建步骤，</text>
+<text x="47" y="433" class="f1-card-b">在每个检查点与 Python 逐段比对</text>
+<text x="47" y="487" class="f1-card-m">4 月过 98% 测试但线上输入仅匹配 25%</text>
+<rect x="298" y="148" width="250" height="152" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="298" y="148" width="5" height="152" rx="2" fill="#10B981"/>
+<text x="313" y="173" class="f1-card-t">Claude 模型仅调用一次 ★</text>
+<text x="313" y="195" class="f1-card-b">· 仅由主链路发起真实推理与计费</text>
+<text x="313" y="214" class="f1-card-b">· 严防客户配额与账单被双倍扣减</text>
+<text x="313" y="233" class="f1-card-b">· 消除模型采样非确定性干扰</text>
+<text x="313" y="287" class="f1-card-m">解决传统双跑 Diff 忽略回复差异盲区</text>
+<rect x="298" y="348" width="250" height="152" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="313" y="373" class="f1-card-t">原始 Token 流精确重放</text>
+<text x="313" y="395" class="f1-card-b">将同一次推理产出的原始流原样</text>
+<text x="313" y="414" class="f1-card-b">复制喂给 Rust 输出状态机，确保</text>
+<text x="313" y="433" class="f1-card-b">两侧面对一模一样的模型输出</text>
+<text x="313" y="487" class="f1-card-m">任何下游偏差 100% 归因于代码差异</text>
+<rect x="578" y="148" width="252" height="152" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="593" y="173" class="f1-card-t">Python 输出分拣与计量</text>
+<text x="593" y="195" class="f1-card-b">· 流式切分 text / thinking / tool</text>
+<text x="593" y="214" class="f1-card-b">· 实时 SSE 推流返回客户端</text>
+<text x="593" y="233" class="f1-card-b">· 统计 Token 用量写入限流与账单</text>
+<text x="593" y="287" class="f1-card-m">作为客户实际收到的权威响应</text>
+<rect x="578" y="348" width="252" height="152" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="593" y="373" class="f1-card-t">Rust 影子输出对账</text>
+<text x="593" y="395" class="f1-card-b">· 逐事件对比流式分块边界与转义</text>
+<text x="593" y="414" class="f1-card-b">· 核对限流计数与计费字段一致性</text>
+<text x="593" y="433" class="f1-card-b">· 拦截丢块、错位或 Emoji 转义偏差</text>
+<text x="593" y="487" class="f1-card-m">影子结果仅对账，不向客户重复发包</text>
+<rect x="860" y="148" width="388" height="352" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.4"/>
+<rect x="880" y="168" width="348" height="150" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="880" y="168" width="5" height="150" rx="2" fill="#10B981"/>
+<text x="895" y="193" class="f1-card-t">隐私保护字节指纹（不存任何客户文本） ★</text>
+<text x="895" y="215" class="f1-card-b">step: build_prompt  |  piece: 2</text>
+<text x="895" y="234" class="f1-card-b">first_diff: byte 17 |  py: 190B / rs: 190B</text>
+<text x="895" y="253" class="f1-card-b">附加非敏感标签：模型名 + 启用的 API 特性集</text>
+<text x="895" y="305" class="f1-card-m">既定位代码阶段又保护客户请求隐私</text>
+<rect x="880" y="336" width="348" height="146" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="895" y="361" class="f1-card-t">10–30 分钟聚类去重 → 唤醒协调 Agent</text>
+<text x="895" y="383" class="f1-card-b">· 单 Bug 可刷出数十万条同指纹日志</text>
+<text x="895" y="402" class="f1-card-b">· 脚本定时按差异字段分组，仅新指纹告警</text>
+<text x="895" y="421" class="f1-card-b">· 自动指派专属 Worker Agent 并建 Slack 线程</text>
+<text x="895" y="469" class="f1-card-m">修掉前置差异 A 后，被掩盖的 B/C 自动浮现</text>
+<line x1="268" y1="224" x2="292" y2="224" stroke="#64748B" stroke-width="1.8" marker-end="url(#f1-arr)"/>
+<line x1="548" y1="224" x2="572" y2="224" stroke="#64748B" stroke-width="1.8" marker-end="url(#f1-arr)"/>
+<line x1="423" y1="300" x2="423" y2="342" stroke="#2563EB" stroke-width="2" marker-end="url(#f1-arr-blue)"/>
+<text x="435" y="326" class="f1-edge-lbl" fill="#1D4ED8">重放同一输出流</text>
+<line x1="548" y1="424" x2="572" y2="424" stroke="#64748B" stroke-width="1.8" marker-end="url(#f1-arr)"/>
+<line x1="150" y1="300" x2="150" y2="348" stroke="#D97706" stroke-width="2" stroke-dasharray="4,3"/>
+<text x="162" y="328" class="f1-edge-lbl" fill="#B45309">输入分段比对</text>
+<line x1="704" y1="300" x2="704" y2="348" stroke="#D97706" stroke-width="2" stroke-dasharray="4,3"/>
+<text x="716" y="328" class="f1-edge-lbl" fill="#B45309">输出逐块比对</text>
+<line x1="830" y1="244" x2="874" y2="244" stroke="#D97706" stroke-width="1.8" marker-end="url(#f1-arr-warn)"/>
+<path d="M 150 500 L 150 532 L 1054 532 L 1054 506" fill="none" stroke="#D97706" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#f1-arr-warn)"/>
+<text x="600" y="525" text-anchor="middle" class="f1-edge-lbl" fill="#B45309">输入或输出任一检查点失配 → 立即记录首个差异字节指纹并送入聚类池</text>
+<text x="32" y="574" class="f1-footer">★ 为什么不用常规两次请求 Diff：大模型天然非确定性会让常规工具忽略回复差异，连带放过输出解析与分拣 Bug。</text>
+</svg>

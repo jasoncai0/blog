@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="790" viewBox="0 0 1280 790" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f1-t f1-d">
+<title id="f1-t">Anthropic 生产级 Agent 四层工程栈（2025–2026 核心原理矩阵）</title>
+<desc id="f1-d">展示评测验证层、契约编排层、上下文记忆层与托管围栏层的设计机制与实测收益。</desc>
+<defs>
+<style>
+  .f1-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f1-subtitle { font-size: 13px; fill: #475569; }
+  .f1-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f1-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f1-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f1-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f1-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f1-card-b { font-size: 11.2px; fill: #334155; }
+  .f1-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f1-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f1-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f1-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f1-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f1-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f1-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f1-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="789" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f1-title">Anthropic 生产级 Agent 四层工程栈（2025–2026 核心原理矩阵）</text>
+<text x="32" y="65" class="f1-subtitle">当模型能力跨过自主执行阈值，系统重心从单轮提示词转向验证、编排、记忆与安全围栏四层协同</text>
+<rect x="28" y="86" width="164" height="46" rx="8" fill="#1E293B"/>
+<text x="110" y="107" text-anchor="middle" class="f1-hdr">架构分层 / 维度</text>
+<text x="110" y="123" text-anchor="middle" class="f1-hdr-sub">Engineering Layer</text>
+<rect x="208" y="86" width="338" height="46" rx="8" fill="#475569"/>
+<text x="377.0" y="107" text-anchor="middle" class="f1-hdr">传统脆弱做法（易失效）</text>
+<text x="377.0" y="123" text-anchor="middle" class="f1-hdr-sub">Naive / Brittle Baseline</text>
+<rect x="560" y="86" width="338" height="46" rx="8" fill="#D97757"/>
+<text x="729.0" y="107" text-anchor="middle" class="f1-hdr">Anthropic 核心机制</text>
+<text x="729.0" y="123" text-anchor="middle" class="f1-hdr-sub">Production Engineering Pattern</text>
+<rect x="912" y="86" width="338" height="46" rx="8" fill="#0F766E"/>
+<text x="1081.0" y="107" text-anchor="middle" class="f1-hdr">代表实践与实测指标</text>
+<text x="1081.0" y="123" text-anchor="middle" class="f1-hdr-sub">Verified Metrics &amp; Evidence</text>
+<rect x="28" y="146" width="1224" height="142" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.2"/>
+<rect x="42" y="166" width="136" height="28" rx="14" fill="#9333EA"/>
+<text x="110" y="185" text-anchor="middle" class="f1-badge">L4 验证与评测层</text>
+<text x="110" y="218" text-anchor="middle" class="f1-tier-sub">抗刷分与独立检验</text>
+<text x="110" y="238" text-anchor="middle" class="f1-tier-sub">Verification &amp; Evals</text>
+<rect x="214" y="158" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="183" class="f1-card-t">静态单轮题库 + 模型自评</text>
+<text x="229" y="205" class="f1-card-b">· 单轮安全评测挤在 94%–98% 饱和区</text>
+<text x="229" y="224" class="f1-card-b">· 生成者自评天然倾向自我表扬放水</text>
+<text x="229" y="263" class="f1-card-m">常规机考 2 小时内被 Opus 4.5 追平</text>
+<rect x="566" y="158" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="158" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="183" class="f1-card-t">分布外谜题 + 独立评分闭环 ★</text>
+<text x="581" y="205" class="f1-card-b">· 极简异构指令集 + 零调试器考造工具</text>
+<text x="581" y="224" class="f1-card-b">· 正交多轮动态仿真 + 盲元数据评分器</text>
+<text x="581" y="263" class="f1-card-m">生产系统自身改造为零明文影子验证器</text>
+<rect x="918" y="158" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="183" class="f1-card-t">Technical &amp; Safety Evals</text>
+<text x="933" y="205" class="f1-card-b">· Fable 5.1 系统提示词修补提分 +34pp</text>
+<text x="933" y="224" class="f1-card-b">· Rust 迁移单请求 CPU -70%、TTFT -20%</text>
+<text x="933" y="263" class="f1-card-m">2026-01 机考演进 / 2026-11 安全与迁移</text>
+<rect x="28" y="302" width="1224" height="142" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2"/>
+<rect x="42" y="322" width="136" height="28" rx="14" fill="#2563EB"/>
+<text x="110" y="341" text-anchor="middle" class="f1-badge">L3 编排与契约层</text>
+<text x="110" y="374" text-anchor="middle" class="f1-tier-sub">长程开发 Harness</text>
+<text x="110" y="394" text-anchor="middle" class="f1-tier-sub">Adaptive Harness</text>
+<rect x="214" y="314" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="339" class="f1-card-t">单会话一把梭或死板固定脚手架</text>
+<text x="229" y="361" class="f1-card-b">· 试图一次写完致上下文耗尽留烂摊子</text>
+<text x="229" y="380" class="f1-card-b">· 模型升级后旧拆分逻辑沦为纯延迟死重</text>
+<text x="229" y="419" class="f1-card-m">Solo 跑游戏引擎 20 分钟 $9 核心玩法断连</text>
+<rect x="566" y="314" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="314" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="339" class="f1-card-t">JSON 特性账本 + 随代际做减法 ★</text>
+<text x="581" y="361" class="f1-card-b">· Planner + Generator + Playwright QA</text>
+<text x="581" y="380" class="f1-card-b">· 升至 Opus 4.6 后移除 Sprint 与硬重置</text>
+<text x="581" y="419" class="f1-card-m">先定交付契约再动工，按需保留终局 QA</text>
+<rect x="918" y="314" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="339" class="f1-card-t">Long-Running Apps</text>
+<text x="933" y="361" class="f1-card-b">· V1 完整 Harness 6h/$200 跑通 16 特性</text>
+<text x="933" y="380" class="f1-card-b">· V2 精简版 3h50m/$124.7 交付浏览器 DAW</text>
+<text x="933" y="419" class="f1-card-m">2025-11 初版脚手架 / 2026-03 V2 演进</text>
+<rect x="28" y="458" width="1224" height="142" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2"/>
+<rect x="42" y="478" width="136" height="28" rx="14" fill="#059669"/>
+<text x="110" y="497" text-anchor="middle" class="f1-badge">L2 上下文与记忆层</text>
+<text x="110" y="530" text-anchor="middle" class="f1-tier-sub">注意力预算管理</text>
+<text x="110" y="550" text-anchor="middle" class="f1-tier-sub">Context &amp; Dreaming</text>
+<rect x="214" y="470" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="495" class="f1-card-t">全量预塞 Schema + 无差别记流水</text>
+<text x="229" y="517" class="f1-card-b">· 数千 MCP 工具定义预占十余万 tokens</text>
+<text x="229" y="536" class="f1-card-b">· Sonnet 3.7 乱建 413 个文件仅获 1 枚徽章</text>
+<text x="229" y="575" class="f1-card-m">n² 注意力稀释 + 过期状态反噬主任务</text>
+<rect x="566" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="470" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="495" class="f1-card-t">MCP 代码化按需读 + 离线 Dreaming ★</text>
+<text x="581" y="517" class="f1-card-b">· 工具映射为脚本树，沙箱内过滤中间数据</text>
+<text x="581" y="536" class="f1-card-b">· 后台对照原始日志纠偏并维护双向 Wiki</text>
+<text x="581" y="575" class="f1-card-m">MEMORY.md 仅预载前 200 行/25KB 索引</text>
+<rect x="918" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="495" class="f1-card-t">Context &amp; Agent Memory</text>
+<text x="933" y="517" class="f1-card-b">· MCP 代码执行省 98.7%（150k→2k tokens）</text>
+<text x="933" y="536" class="f1-card-b">· 4.2 亿词库 Wiki+搜索达 61%，合同 100%</text>
+<text x="933" y="575" class="f1-card-m">2025-09/11 上下文工程 / 2026-11 记忆组件</text>
+<rect x="28" y="614" width="1224" height="142" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+<rect x="42" y="634" width="136" height="28" rx="14" fill="#D97706"/>
+<text x="110" y="653" text-anchor="middle" class="f1-badge">L1 运行时与围栏层</text>
+<text x="110" y="686" text-anchor="middle" class="f1-tier-sub">脑手解耦与容器隔离</text>
+<text x="110" y="706" text-anchor="middle" class="f1-tier-sub">Sandbox &amp; Containment</text>
+<rect x="214" y="626" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="651" class="f1-card-t">单容器耦合 Pet + 人工弹窗审批</text>
+<text x="229" y="673" class="f1-card-b">· 容器挂死即丢会话，冷启动阻塞首字输出</text>
+<text x="229" y="692" class="f1-card-b">· 人工审批 93% 顺手点过，难防钓鱼外传</text>
+<text x="229" y="731" class="f1-card-m">白名单域名 api.anthropic.com 曾遭借壳泄密</text>
+<rect x="566" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f1-shadow)"/>
+<rect x="566" y="626" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="581" y="651" class="f1-card-t">脑手日志三元解耦 + 环境确定性围栏 ★</text>
+<text x="581" y="673" class="f1-card-b">· 无状态 Brain + 按需 Hands + 外部 Session</text>
+<text x="581" y="692" class="f1-card-b">· VM 内置 MITM 校验专属 Token + 盲审分类</text>
+<text x="581" y="731" class="f1-card-m">凭证永不进沙箱，外部 Vault 出站代填</text>
+<rect x="918" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f1-shadow)"/>
+<text x="933" y="651" class="f1-card-t">Managed Agents &amp; Auto Mode</text>
+<text x="933" y="673" class="f1-card-b">· 解耦后 p50 TTFT -60%、p95 TTFT -90%</text>
+<text x="933" y="692" class="f1-card-b">· 原生沙箱减 84% 弹窗，双阶段误拦仅 0.4%</text>
+<text x="933" y="731" class="f1-card-m">2026-03 Auto Mode / 04 托管 / 05 围栏</text>
+<text x="32" y="768" class="f1-footer">★ 演进主线：底座每升一代就拆掉一层过时脚手架（如移除 Sprint 拆分），同时把安全与验证收敛到确定性外部边界。</text>
+</svg>

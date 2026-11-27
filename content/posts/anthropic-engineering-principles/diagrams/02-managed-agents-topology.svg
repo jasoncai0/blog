@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="700" viewBox="0 0 1280 700" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f2-t f2-d">
+<title id="f2-t">Managed Agents 脑手分离拓扑：从单容器宠物到四元无状态集群</title>
+<desc id="f2-d">左侧对比单容器耦合痛点，右侧展示 Session、Brain、Vault、Hands 之间的接口调用关系。</desc>
+<defs>
+<style>
+  .f2-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f2-subtitle { font-size: 13px; fill: #475569; }
+  .f2-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f2-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f2-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f2-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f2-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f2-card-b { font-size: 11.2px; fill: #334155; }
+  .f2-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f2-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f2-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f2-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f2-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f2-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f2-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f2-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="699" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f2-title">Managed Agents 脑手分离拓扑：从单容器宠物到四元无状态集群</text>
+<text x="32" y="65" class="f2-subtitle">将状态持久化进外部 Session 日志、将凭证锁进外部 Vault，使 Harness 与沙箱均成为随时可销毁重建的无状态节点</text>
+<rect x="32" y="88" width="430" height="40" rx="8" fill="#475569"/>
+<text x="247" y="113" text-anchor="middle" class="f2-hdr">旧方案：单容器强耦合（Pet 宠物模式）</text>
+<rect x="32" y="142" width="430" height="510" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.4"/>
+<rect x="54" y="164" width="386" height="330" rx="10" fill="rgba(255,255,255,0.75)" stroke="#D97706" stroke-width="1.5" stroke-dasharray="6,4"/>
+<text x="72" y="192" class="f2-card-t" style="fill:#B45309;">单一持久容器（共享进程、磁盘与环境变量）</text>
+<rect x="72" y="210" width="350" height="74" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="87" y="235" class="f2-card-t">Agent Harness + 会话内存态</text>
+<text x="87" y="257" class="f2-card-b">循环状态与本地文件强绑定，容器重启即丢失会话</text>
+<rect x="72" y="298" width="350" height="74" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="87" y="323" class="f2-card-t">代码执行沙箱 + Git/API 密钥共处</text>
+<text x="87" y="345" class="f2-card-b">生成代码与凭证同处一室，提示词注入可直接读环境变量</text>
+<rect x="72" y="386" width="350" height="90" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="87" y="411" class="f2-card-t">三大生产死穴</text>
+<text x="87" y="433" class="f2-card-b">1. 首字响应前必须先拉镜像、克隆仓库（拉高 TTFT）</text>
+<text x="87" y="452" class="f2-card-b">2. 含客户数据无法开 Shell 排障；连客户 VPC 需对等组网</text>
+<rect x="54" y="514" width="386" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="69" y="539" class="f2-card-t">为什么必须重构</text>
+<text x="69" y="561" class="f2-card-b">· 任何模型无需用容器的纯推理轮次也被迫承担冷启动税</text>
+<text x="69" y="580" class="f2-card-b">· 单容器崩溃会连带摧毁该大脑挂载的所有外部执行环境</text>
+<text x="69" y="619" class="f2-card-m">定位：原型期捷径，无法横向扩展至多脑多手</text>
+<rect x="498" y="88" width="750" height="40" rx="8" fill="#0F766E"/>
+<text x="873" y="113" text-anchor="middle" class="f2-hdr">Managed Agents：大脑、双手、会话日志与凭证金库四元解耦（Cattle 集群模式）</text>
+<rect x="498" y="142" width="750" height="510" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.4"/>
+<rect x="524" y="166" width="330" height="128" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="524" y="166" width="5" height="128" rx="2" fill="#10B981"/>
+<text x="539" y="191" class="f2-card-t">Session 事件日志（外部持久存储） ★</text>
+<text x="539" y="213" class="f2-card-b">· 只追加（Append-only）完整事件流</text>
+<text x="539" y="232" class="f2-card-b">· 支持 getEvents() 按位置切片回溯上下文</text>
+<text x="539" y="251" class="f2-card-b">· 独立于上下文窗口，压缩不丢原始记录</text>
+<text x="539" y="281" class="f2-card-m">接口：emitEvent(id, ev) / getEvents(slice)</text>
+<rect x="524" y="356" width="330" height="142" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="524" y="356" width="5" height="142" rx="2" fill="#10B981"/>
+<text x="539" y="381" class="f2-card-t">无状态 Brain（Claude + Harness） ★</text>
+<text x="539" y="403" class="f2-card-b">· 崩溃后由 wake(sessionId) 瞬时异地拉起</text>
+<text x="539" y="422" class="f2-card-b">· 收到请求立即读事件启动推理（零容器等待）</text>
+<text x="539" y="441" class="f2-card-b">· 负责按模型代际组装高缓存命中率上下文</text>
+<text x="539" y="485" class="f2-card-m">实测收益：p50 TTFT -60% · p95 TTFT &gt; -90%</text>
+<rect x="904" y="166" width="320" height="128" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="919" y="191" class="f2-card-t">外部凭证金库（Vault + MCP Proxy）</text>
+<text x="919" y="213" class="f2-card-b">· OAuth 令牌与密钥永不进入沙箱或 Harness</text>
+<text x="919" y="232" class="f2-card-b">· Git 令牌仅在克隆初始化时绑定本地远端</text>
+<text x="919" y="251" class="f2-card-b">· 专用代理出站时凭会话令牌自动代填凭证</text>
+<text x="919" y="281" class="f2-card-m">安全边界：沙箱被注入也读不到任何密钥</text>
+<rect x="904" y="356" width="320" height="142" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="919" y="381" class="f2-card-t">按需可替换 Hands（容器 / VPC / 终端）</text>
+<text x="919" y="403" class="f2-card-b">· 仅在首次调用工具时按需拉起 provision()</text>
+<text x="919" y="422" class="f2-card-b">· 统一抽象为 execute(name, input) -&gt; string</text>
+<text x="919" y="441" class="f2-card-b">· 容器崩溃转成普通工具报错供 Claude 重试</text>
+<text x="919" y="485" class="f2-card-m">支持一对多手及跨大脑移交执行环境</text>
+<rect x="524" y="522" width="700" height="110" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="539" y="547" class="f2-card-t">操作系统式持久抽象（Meta-Harness）</text>
+<text x="539" y="569" class="f2-card-b">如同 OS 用虚拟文件 read() 屏蔽物理磁盘演进，Managed Agents 只固化 Session / Harness / Sandbox 三道窄接口；</text>
+<text x="539" y="588" class="f2-card-b">底层无论是 Claude Code 通用循环还是垂直领域专用脚手架，均可随模型升级自由替换而不破坏外围设施。</text>
+<text x="539" y="619" class="f2-card-m">来源：Scaling Managed Agents: Decoupling the brain from the hands (2026-04-08)</text>
+<line x1="655" y1="356" x2="655" y2="302" stroke="#2563EB" stroke-width="2" marker-end="url(#f2-arr-blue)"/>
+<line x1="725" y1="294" x2="725" y2="348" stroke="#059669" stroke-width="2" marker-end="url(#f2-arr-ok)"/>
+<text x="643" y="330" text-anchor="end" class="f2-edge-lbl" fill="#1D4ED8">emitEvent 写日志</text>
+<text x="737" y="330" text-anchor="start" class="f2-edge-lbl" fill="#047857">getEvents 切片重放</text>
+<line x1="854" y1="427" x2="896" y2="427" stroke="#2563EB" stroke-width="2" marker-end="url(#f2-arr-blue)"/>
+<text x="879" y="415" text-anchor="middle" class="f2-edge-lbl" fill="#1D4ED8">execute()</text>
+<line x1="1064" y1="356" x2="1064" y2="302" stroke="#D97706" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#f2-arr-warn)"/>
+<text x="1076" y="332" text-anchor="start" class="f2-edge-lbl" fill="#B45309">会话令牌过代理代填密钥</text>
+<text x="32" y="678" class="f2-footer">★ 核心架构收益：推理启动不再等待容器冷启动（p95 TTFT 降超 90%），且彻底阻断沙箱代码读取环境变量窃取密钥的路径。</text>
+</svg>

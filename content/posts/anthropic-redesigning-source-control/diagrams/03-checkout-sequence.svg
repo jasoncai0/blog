@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="656" viewBox="0 0 1280 656" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f3-t f3-d">
+<title id="f3-t">Scion 三级缓存四跳检出时序（Checkout Sequence）</title>
+<desc id="f3-d">展示 scn 客户端、宿主机 scion-daemon、区域 scion-cache 与权威 scion-server 之间的八步交互时序。</desc>
+<defs>
+<style>
+  .f3-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f3-subtitle { font-size: 13px; fill: #475569; }
+  .f3-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f3-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f3-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f3-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f3-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f3-card-b { font-size: 11.2px; fill: #334155; }
+  .f3-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f3-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f3-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f3-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f3-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f3-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f3-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f3-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="655" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f3-title">Scion 三级缓存四跳检出时序（Checkout Sequence）</text>
+<text x="32" y="65" class="f3-subtitle">摒弃 Git 昂贵的 have/want 增量包协商，按不可变哈希逐级回源，每一跳缓存命中率均超过 99%</text>
+<rect x="32" y="88" width="236" height="48" rx="8" fill="#1E293B"/>
+<text x="150" y="109" text-anchor="middle" class="f3-hdr">scn 客户端</text>
+<text x="150" y="126" text-anchor="middle" class="f3-hdr-sub">Agent / CI 任务工作区</text>
+<line x1="150" y1="136" x2="150" y2="555" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,5"/>
+<rect x="337" y="88" width="236" height="48" rx="8" fill="#1A73E8"/>
+<text x="455" y="109" text-anchor="middle" class="f3-hdr">scion-daemon</text>
+<text x="455" y="126" text-anchor="middle" class="f3-hdr-sub">宿主机共享守护进程 (Socket)</text>
+<line x1="455" y1="136" x2="455" y2="555" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,5"/>
+<rect x="657" y="88" width="236" height="48" rx="8" fill="#0F766E"/>
+<text x="775" y="109" text-anchor="middle" class="f3-hdr">scion-cache</text>
+<text x="775" y="126" text-anchor="middle" class="f3-hdr-sub">同区域内存缓存集群 (&gt;99% 命中)</text>
+<line x1="775" y1="136" x2="775" y2="555" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,5"/>
+<rect x="977" y="88" width="236" height="48" rx="8" fill="#D97757"/>
+<text x="1095" y="109" text-anchor="middle" class="f3-hdr">scion-server</text>
+<text x="1095" y="126" text-anchor="middle" class="f3-hdr-sub">权威服务 (Spanner + 对象存储)</text>
+<line x1="1095" y1="136" x2="1095" y2="555" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,5"/>
+<line x1="150" y1="170" x2="447" y2="170" stroke="#2563EB" stroke-width="2" marker-end="url(#f3-arr-blue)"/>
+<rect x="97.5" y="149" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="302.5" y="162" text-anchor="middle" class="f3-edge-lbl" style="fill:#2563EB;">1. 请求目标子目录根 Tree 哈希（不发本地已有列表）</text>
+<line x1="455" y1="215" x2="158" y2="215" stroke="#059669" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#f3-arr-ok)"/>
+<rect x="97.5" y="194" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="302.5" y="207" text-anchor="middle" class="f3-edge-lbl" style="fill:#059669;">2. 命中定期快照或同机前序任务缓存 → 亚毫秒返回目录树</text>
+<line x1="150" y1="268" x2="447" y2="268" stroke="#2563EB" stroke-width="2" marker-end="url(#f3-arr-blue)"/>
+<rect x="97.5" y="247" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="302.5" y="260" text-anchor="middle" class="f3-edge-lbl" style="fill:#2563EB;">3. 对比筛出本地缺失的子 Tree 与文件 Blob 哈希列表</text>
+<line x1="455" y1="315" x2="767" y2="315" stroke="#2563EB" stroke-width="2" marker-end="url(#f3-arr-blue)"/>
+<rect x="410.0" y="294" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="615.0" y="307" text-anchor="middle" class="f3-edge-lbl" style="fill:#2563EB;">4. 仅将本机未命中的哈希发往同可用区 scion-cache（同构 RPC）</text>
+<line x1="775" y1="362" x2="463" y2="362" stroke="#059669" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#f3-arr-ok)"/>
+<rect x="410.0" y="341" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="615.0" y="354" text-anchor="middle" class="f3-edge-lbl" style="fill:#059669;">5. 内存直接流式吐出磁盘格式对象（零差集计算、零增量压缩）</text>
+<line x1="775" y1="415" x2="1087" y2="415" stroke="#D97706" stroke-width="2" marker-end="url(#f3-arr-warn)"/>
+<rect x="730.0" y="394" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="935.0" y="407" text-anchor="middle" class="f3-edge-lbl" style="fill:#D97706;">6. 极少数冷对象（&lt;1%）回源权威 scion-server 拉取并回填</text>
+<line x1="1095" y1="462" x2="783" y2="462" stroke="#64748B" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#f3-arr)"/>
+<rect x="730.0" y="441" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="935.0" y="454" text-anchor="middle" class="f3-edge-lbl" style="fill:#64748B;">7. 读取 Cloud Storage / Spanner 返回不可变内容块</text>
+<line x1="455" y1="512" x2="158" y2="512" stroke="#059669" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#f3-arr-ok)"/>
+<rect x="97.5" y="491" width="410" height="17" rx="4" fill="#FFFFFF" opacity="0.92"/>
+<text x="302.5" y="504" text-anchor="middle" class="f3-edge-lbl" style="fill:#059669;">8. 落盘稀疏目录或按需虚拟化挂载文件，检出在数秒内完成</text>
+<rect x="32" y="564" width="1216" height="44" rx="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+<text x="640" y="591" text-anchor="middle" class="f3-card-b" style="font-weight:700;fill:#92400E;">故障域硬隔离：虽然四层实现完全相同的 RPC 协议，但路由策略严禁客户端或宿主机跨层直连 scion-server，防止区域缓存抖动演变为全局雪崩。</text>
+<text x="32" y="634" class="f3-footer">★ 可断点续传：每个请求只拉确定的不可变小对象，消除单次多 GB Packfile 传输断连重拉的浪费。</text>
+</svg>

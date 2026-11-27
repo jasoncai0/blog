@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="650" viewBox="0 0 1280 650" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f2-t f2-d">
+<title id="f2-t">Messages API 迁移三层嵌套验证回路（Inner · Outer · Memory Loops）</title>
+<desc id="f2-d">三层嵌套框分别展示内环沙箱、外环影子流量（含人工 PR 门禁）与最外层记忆环的触发频率和交互关系。</desc>
+<defs>
+<style>
+  .f2-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f2-subtitle { font-size: 13px; fill: #475569; }
+  .f2-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f2-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f2-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f2-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f2-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f2-card-b { font-size: 11.2px; fill: #334155; }
+  .f2-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f2-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f2-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f2-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f2-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f2-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f2-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f2-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="649" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f2-title">Messages API 迁移三层嵌套验证回路（Inner · Outer · Memory Loops）</text>
+<text x="32" y="65" class="f2-subtitle">内环秒级试错保速度，人工交界门禁保工程质量，外环生产流量保真实等价，记忆环保证错误不重犯</text>
+<rect x="32" y="88" width="1216" height="516" rx="12" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.5"/>
+<rect x="50" y="104" width="296" height="28" rx="14" fill="#9333EA"/>
+<text x="198" y="123" text-anchor="middle" class="f2-badge">第 3 环：记忆环（跨任务持久进化 · 持续沉淀）</text>
+<text x="360" y="123" class="f2-card-b" style="font-weight:700;fill:#6B21A8;">把人工驳回与评审意见转化为：长期记忆笔记 + 全库同类隐患扫描 + CLAUDE.md 规范与双端同步合并门禁</text>
+<rect x="54" y="148" width="820" height="330" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.4"/>
+<rect x="72" y="164" width="286" height="26" rx="13" fill="#2563EB"/>
+<text x="215" y="182" text-anchor="middle" class="f2-badge">第 2 环：外环（线上影子流量 · 小时/天级）</text>
+<rect x="72" y="204" width="388" height="254" rx="10" fill="#ECFDF5" stroke="#10B981" stroke-width="2.2"/>
+<rect x="88" y="218" width="266" height="26" rx="13" fill="#059669"/>
+<text x="221" y="236" text-anchor="middle" class="f2-badge">第 1 环：内环（云端沙箱 · 秒级闭环） ★</text>
+<rect x="88" y="256" width="356" height="186" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="103" y="281" class="f2-card-t">盲指纹反推 → 自造请求 → 亚秒级双端对账</text>
+<text x="103" y="303" class="f2-card-b">1. 凭盲指纹猜想根因，自编合成请求或假模型流</text>
+<text x="103" y="322" class="f2-card-b">2. 本地无模型输入校验（&lt;1s）与假模型输出校验</text>
+<text x="103" y="341" class="f2-card-b">3. 自编样本可读完整明文，迭代改 Rust 直至匹配</text>
+<text x="103" y="360" class="f2-card-b">4. 自动补齐「旧挂新过」防回归单测再提 PR</text>
+<text x="103" y="429" class="f2-card-m">将试错反馈从「提 PR 等预发数小时」压缩至数秒</text>
+<rect x="494" y="204" width="360" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="494" y="204" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="509" y="229" class="f2-card-t">内外环交界：人工 PR 意图门禁 ★</text>
+<text x="509" y="251" class="f2-card-b">· 拦截投机修复（如硬编码拷贝工具描述凑输出一致）</text>
+<text x="509" y="270" class="f2-card-b">· 裁决验证器答不出的问题：差异是 Bug 还是有意改版</text>
+<text x="509" y="309" class="f2-card-m">工程师不陪跑猜想，只审通过本地验证的候选补丁</text>
+<rect x="494" y="340" width="360" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="509" y="365" class="f2-card-t">外环验证：按特性标签对齐线上影子构建</text>
+<text x="509" y="387" class="f2-card-b">· 按模型、缓存、工具、思考模式同类请求公平对比</text>
+<text x="509" y="406" class="f2-card-b">· 监控新构建目标指纹是否清零；未消退则打回内环</text>
+<text x="509" y="445" class="f2-card-m">兜底捕获本地沙箱配置与真实生产环境的细微偏差</text>
+<rect x="898" y="148" width="330" height="136" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="913" y="173" class="f2-card-t">记忆产物 ①：已知根因关联笔记</text>
+<text x="913" y="195" class="f2-card-b">Web Search 静态拷贝被拒后记入记忆；后续</text>
+<text x="913" y="214" class="f2-card-b">其他工具缺失产生新偏移指纹时，Agent 自动</text>
+<text x="913" y="233" class="f2-card-b">识别并归并到同一服务端调用待办，不再瞎改。</text>
+<text x="913" y="271" class="f2-card-m">阻断重复编写一次性脏补丁</text>
+<rect x="898" y="300" width="330" height="136" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f2-shadow)"/>
+<rect x="898" y="300" width="5" height="136" rx="2" fill="#10B981"/>
+<text x="913" y="325" class="f2-card-t">记忆产物 ②：CLAUDE.md 与全库反扫 ★</text>
+<text x="913" y="347" class="f2-card-b">立下「严禁猜测 Python 行为」规则后，Agent</text>
+<text x="913" y="366" class="f2-card-b">反扫全库揪出另外 7 处靠猜实现的迁移点；6 月</text>
+<text x="913" y="385" class="f2-card-b">汇总 60 条评审意见自动提炼为团队编码铁律。</text>
+<text x="913" y="423" class="f2-card-m">单次人工纠偏惠及后续全部 Agent</text>
+<rect x="898" y="452" width="330" height="132" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="913" y="477" class="f2-card-t">记忆产物 ③：双端同步合并硬门禁</text>
+<text x="913" y="499" class="f2-card-b">沉淀永久 Lint 与 CI Merge Check：任何改动</text>
+<text x="913" y="518" class="f2-card-b">Python API 的提交必须同步改 Rust 或申请豁免。</text>
+<text x="913" y="571" class="f2-card-m">彻底锁死「一边迁一边改」的移动靶标</text>
+<rect x="54" y="494" width="820" height="90" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f2-shadow)"/>
+<text x="69" y="519" class="f2-card-t">人类角色演进轨迹：内环亲自追查 → 交界处审 PR 控方向 → 最外环定规则与验证信号</text>
+<text x="69" y="541" class="f2-card-b">随着模型与验证信号成熟，工程师逐步退到杠杆最高的最外环：只定义「什么算正确」与「什么写法不准上生产」，</text>
+<text x="69" y="560" class="f2-card-b">把「提什么假设、怎么复现、怎么改代码」全部留给三环内的自治 Agent 集群。</text>
+<line x1="460" y1="263" x2="488" y2="263" stroke="#059669" stroke-width="2" marker-end="url(#f2-arr-ok)"/>
+<line x1="674" y1="322" x2="674" y2="334" stroke="#2563EB" stroke-width="2" marker-end="url(#f2-arr-blue)"/>
+<line x1="494" y1="399" x2="466" y2="399" stroke="#D97706" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#f2-arr-warn)"/>
+<line x1="854" y1="240" x2="892" y2="216" stroke="#2563EB" stroke-width="1.8" marker-end="url(#f2-arr-blue)"/>
+<line x1="854" y1="268" x2="892" y2="360" stroke="#2563EB" stroke-width="1.8" marker-end="url(#f2-arr-blue)"/>
+<line x1="854" y1="296" x2="892" y2="510" stroke="#2563EB" stroke-width="1.8" marker-end="url(#f2-arr-blue)"/>
+<text x="32" y="628" class="f2-footer">★ 核心教训：验证器奖励「输出一致」，Agent 就会找最省力的捷径凑一致；必须靠交界处人工评审与记忆环规则守住架构底线。</text>
+</svg>

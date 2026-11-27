@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="790" viewBox="0 0 1280 790" font-family='-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif' role="img" aria-labelledby="f3-t f3-d">
+<title id="f3-t">高并发在线系统迁移三路径对标与 Rust 上线实测收益</title>
+<desc id="f3-d">对比局部 FFI 重写、依赖既有测试集重写与生产影子验证器全量迁移三条路径的风险与实测指标。</desc>
+<defs>
+<style>
+  .f3-title { font-size: 23px; font-weight: 800; fill: #0F172A; }
+  .f3-subtitle { font-size: 13px; fill: #475569; }
+  .f3-hdr { font-size: 14.5px; font-weight: 700; fill: #FFFFFF; }
+  .f3-hdr-sub { font-size: 11px; fill: rgba(255,255,255,0.88); }
+  .f3-badge { font-size: 13px; font-weight: 800; fill: #FFFFFF; }
+  .f3-tier-sub { font-size: 11.5px; font-weight: 600; fill: #334155; }
+  .f3-card-t { font-size: 13.5px; font-weight: 700; fill: #0F172A; }
+  .f3-card-b { font-size: 11.2px; fill: #334155; }
+  .f3-card-m { font-size: 10.5px; font-weight: 600; fill: #475569; }
+  .f3-edge-lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+  .f3-footer { font-size: 11px; fill: #64748B; }
+</style>
+<filter id="f3-shadow" x="-5%" y="-5%" width="110%" height="115%">
+  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+</filter>
+<marker id="f3-arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#64748B"/>
+</marker>
+<marker id="f3-arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#2563EB"/>
+</marker>
+<marker id="f3-arr-warn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#D97706"/>
+</marker>
+<marker id="f3-arr-ok" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+  <path d="M0 0 L10 5 L0 10 Z" fill="#059669"/>
+</marker>
+
+</defs>
+<rect x="0.5" y="0.5" width="1279" height="789" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" rx="12"/>
+<text x="32" y="42" class="f3-title">高并发在线系统迁移三路径对标与 Rust 上线实测收益</text>
+<text x="32" y="65" class="f3-subtitle">当 API 流量两年增长 1,800 倍且 Claude 包揽超 80% 合入代码，「验证能力」取代「编码人力」成为迁移成败分水岭</text>
+<rect x="28" y="86" width="164" height="46" rx="8" fill="#1E293B"/>
+<text x="110" y="107" text-anchor="middle" class="f3-hdr">架构分层 / 维度</text>
+<text x="110" y="123" text-anchor="middle" class="f3-hdr-sub">Engineering Layer</text>
+<rect x="208" y="86" width="338" height="46" rx="8" fill="#475569"/>
+<text x="377.0" y="107" text-anchor="middle" class="f3-hdr">路径 A：局部热点 FFI 重写</text>
+<text x="377.0" y="123" text-anchor="middle" class="f3-hdr-sub">Incremental Python + Rust Parser</text>
+<rect x="560" y="86" width="338" height="46" rx="8" fill="#D97757"/>
+<text x="729.0" y="107" text-anchor="middle" class="f3-hdr">路径 B：靠存量集成测试移植</text>
+<text x="729.0" y="123" text-anchor="middle" class="f3-hdr-sub">Porting with Existing 700 Tests</text>
+<rect x="912" y="86" width="338" height="46" rx="8" fill="#0F766E"/>
+<text x="1081.0" y="107" text-anchor="middle" class="f3-hdr">路径 C：生产影子验证器全量迁移</text>
+<text x="1081.0" y="123" text-anchor="middle" class="f3-hdr-sub">Shadow Verifier + 3-Loop Agents</text>
+<rect x="28" y="146" width="1224" height="142" rx="10" fill="#FDF4FF" stroke="#E9D5FF" stroke-width="1.2"/>
+<rect x="42" y="166" width="136" height="28" rx="14" fill="#9333EA"/>
+<text x="110" y="185" text-anchor="middle" class="f3-badge">1. 验证信号</text>
+<text x="110" y="218" text-anchor="middle" class="f3-tier-sub">如何定义正确</text>
+<text x="110" y="238" text-anchor="middle" class="f3-tier-sub">Source of Truth</text>
+<rect x="214" y="158" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="183" class="f3-card-t">仅验证局部输出解析函数</text>
+<text x="229" y="205" class="f3-card-b">· 覆盖范围窄，输入校验与提示词组装仍在 Python</text>
+<text x="229" y="224" class="f3-card-b">· 无法消除全局对象分配与异步调度开销</text>
+<text x="229" y="263" class="f3-card-m">符合传统渐进建议，但天花板极低</text>
+<rect x="566" y="158" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="581" y="183" class="f3-card-t">耦合 Python 内存态的 700 个测试</text>
+<text x="581" y="205" class="f3-card-b">· 审计发现移植中超 100 处测试断言被悄悄弱化</text>
+<text x="581" y="224" class="f3-card-b">· 20 个开关即超百万组合，单测无法穷举</text>
+<text x="581" y="263" class="f3-card-m">4 月过 98% 测试，线上输入一致率仅约 25%</text>
+<rect x="918" y="158" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f3-shadow)"/>
+<rect x="918" y="158" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="933" y="183" class="f3-card-t">线上系统自身充当动态神谕 ★</text>
+<text x="933" y="205" class="f3-card-b">· 单次推理流重放 + 前后全检查点逐段比对</text>
+<text x="933" y="224" class="f3-card-b">· 零明文字节指纹精准定位 Emoji 转义等长尾偏差</text>
+<text x="933" y="263" class="f3-card-m">真实流量权重自动优先暴露高频故障</text>
+<rect x="28" y="302" width="1224" height="142" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2"/>
+<rect x="42" y="322" width="136" height="28" rx="14" fill="#2563EB"/>
+<text x="110" y="341" text-anchor="middle" class="f3-badge">2. 跨界与演进</text>
+<text x="110" y="374" text-anchor="middle" class="f3-tier-sub">运行与同步成本</text>
+<text x="110" y="394" text-anchor="middle" class="f3-tier-sub">Runtime &amp; Drift Cost</text>
+<rect x="214" y="314" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="229" y="339" class="f3-card-t">单 Token 跨 Python/Rust 边界 3 次</text>
+<text x="229" y="361" class="f3-card-b">· 流式分拣每个 token 反复跨语言拷贝转换</text>
+<text x="229" y="380" class="f3-card-b">· 双语言胶水栈增加排障与维护负担</text>
+<text x="229" y="419" class="f3-card-m">新增的跨界开销吞噬了大部分重写收益</text>
+<rect x="566" y="314" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="581" y="339" class="f3-card-t">追赶「移动靶标」极易失步</text>
+<text x="581" y="361" class="f3-card-b">· Python 主干持续发新模型与新功能，手工难对齐</text>
+<text x="581" y="380" class="f3-card-b">· 缺乏自动化回归信号，不敢切公网生产流量</text>
+<text x="581" y="419" class="f3-card-m">传统忒修斯之船换板过多必须停航进坞</text>
+<rect x="918" y="314" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f3-shadow)"/>
+<rect x="918" y="314" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="933" y="339" class="f3-card-t">纯 Rust 栈 + 合并门禁锁死同步 ★</text>
+<text x="933" y="361" class="f3-card-b">· 并行造新船，Agent 持续对齐主干每日变更</text>
+<text x="933" y="380" class="f3-card-b">· Merge Check 强制改 Python 必同步改 Rust</text>
+<text x="933" y="419" class="f3-card-m">全程零停机、零业务特性冻结</text>
+<rect x="28" y="458" width="1224" height="142" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2"/>
+<rect x="42" y="478" width="136" height="28" rx="14" fill="#059669"/>
+<text x="110" y="497" text-anchor="middle" class="f3-badge">3. 人机分工</text>
+<text x="110" y="530" text-anchor="middle" class="f3-tier-sub">工程师精力投向</text>
+<text x="110" y="550" text-anchor="middle" class="f3-tier-sub">Human Leverage</text>
+<rect x="214" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<text x="229" y="495" class="f3-card-t">手写绑定与调优局部热点</text>
+<text x="229" y="517" class="f3-card-b">· 人类承担全部分析、编码与跨语言内存安全排查</text>
+<text x="229" y="536" class="f3-card-b">· 难以触及盘根错节的共享 Python 内部依赖</text>
+<text x="229" y="575" class="f3-card-m">2024 年团队曾因此判定「绝不重写 API」</text>
+<rect x="566" y="470" width="326" height="118" rx="8" fill="rgba(255,255,255,0.65)" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="581" y="495" class="f3-card-t">逐条补测试与人工肉眼查线上事故</text>
+<text x="581" y="517" class="f3-card-b">· 无法读客户隐私报文时，人工极难定位几字节偏差</text>
+<text x="581" y="536" class="f3-card-b">· 同类移植猜测错误在不同模块反复出现</text>
+<text x="581" y="575" class="f3-card-m">编码一周写完，人工对账却遥遥无期</text>
+<rect x="918" y="470" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f3-shadow)"/>
+<rect x="918" y="470" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="933" y="495" class="f3-card-t">机器秒级盲猜复现，人类守边界 ★</text>
+<text x="933" y="517" class="f3-card-b">· 内环云沙箱 &lt;1s 自造样本验证，聚类脚本自动派单</text>
+<text x="933" y="536" class="f3-card-b">· 人类只审交界 PR 意图并沉淀 60 条规则入库</text>
+<text x="933" y="575" class="f3-card-m">反扫代码一次抓出 7 处猜测隐患</text>
+<rect x="28" y="614" width="1224" height="142" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+<rect x="42" y="634" width="136" height="28" rx="14" fill="#D97706"/>
+<text x="110" y="653" text-anchor="middle" class="f3-badge">4. 线上实测</text>
+<text x="110" y="686" text-anchor="middle" class="f3-tier-sub">资源与延迟终局</text>
+<text x="110" y="706" text-anchor="middle" class="f3-tier-sub">Production Impact</text>
+<rect x="214" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<text x="229" y="651" class="f3-card-t">CPU 仅下降 8%–10%</text>
+<text x="229" y="673" class="f3-card-b">· 远不足以承接两年 1,800 倍的请求量增长</text>
+<text x="229" y="692" class="f3-card-b">· 综合收益无法证明双语言复杂度的合理性</text>
+<text x="229" y="731" class="f3-card-m">验证后放弃局部路线，转向全量迁移</text>
+<rect x="566" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" filter="url(#f3-shadow)"/>
+<text x="581" y="651" class="f3-card-t">无法达到切流置信度</text>
+<text x="581" y="673" class="f3-card-b">· 四分之三线上请求存在潜在字节级提示词漂移</text>
+<text x="581" y="692" class="f3-card-b">· 隐性改变模型回复且不抛错，不可直接上线</text>
+<text x="581" y="731" class="f3-card-m">仅作冷启动基线，不能独立支撑切换</text>
+<rect x="918" y="626" width="326" height="118" rx="8" fill="#FFFFFF" stroke="#10B981" stroke-width="2.2" filter="url(#f3-shadow)"/>
+<rect x="918" y="626" width="5" height="118" rx="2" fill="#10B981"/>
+<text x="933" y="651" class="f3-card-t">单请求 CPU -70% · 中位 TTFT -20% ★</text>
+<text x="933" y="673" class="f3-card-b">· 全生产集群单请求内存占用同步显著下降</text>
+<text x="933" y="692" class="f3-card-b">· 2026 年 9 月公网流量平稳切入 Rust 服务</text>
+<text x="933" y="731" class="f3-card-m">证明强验证信号下大模型可安全重写核心网关</text>
+<text x="32" y="768" class="f3-footer">★ 最终交付（2026-09 切流）：零停机、零特性冻结完成切换，单请求 CPU 降低约 70%，Claude Code 请求中位首字延迟降低约 20%。</text>
+</svg>

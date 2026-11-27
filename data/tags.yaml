@@ -81,3 +81,7 @@ game-dev:
 pelican-test:
   name: 鹈鹕测试
   description: 鹈鹕骑自行车（Pelican Benchmark）代码生成、空间几何与物理运动学实测
+
+anthropic-engineering:
+  name: Anthropic 工程
+  description: Anthropic Engineering 专栏核心原理拆解与周度新文追踪
