@@ -161,6 +161,15 @@
   "pre": 9,
   "table": 4
  },
+ "claude-code-interview-25": {
+  "figure": 4,
+  "h1": 1,
+  "h2": 9,
+  "h3": 32,
+  "hr": 0,
+  "pre": 2,
+  "table": 4
+ },
  "coding-agent-loop": {
   "figure": 2,
   "h1": 1,
@@ -908,6 +917,15 @@
   "pre": 2,
   "table": 4
  },
+ "gemini-claude-deepseek-tier-map": {
+  "figure": 3,
+  "h1": 1,
+  "h2": 5,
+  "h3": 0,
+  "hr": 0,
+  "pre": 0,
+  "table": 1
+ },
  "github-trending-2026-w47": {
   "figure": 3,
   "h1": 1,
@@ -997,6 +1015,15 @@
   "hr": 0,
   "pre": 14,
   "table": 5
+ },
+ "llm-interview-23": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 9,
+  "h3": 30,
+  "hr": 0,
+  "pre": 0,
+  "table": 1
  },
  "llm-training-pipeline": {
   "figure": 5,
@@ -1259,6 +1286,15 @@
   "pre": 0,
   "table": 10
  },
+ "pelican-bund-shanghai": {
+  "figure": 0,
+  "h1": 1,
+  "h2": 5,
+  "h3": 0,
+  "hr": 0,
+  "pre": 1,
+  "table": 1
+ },
  "personal-agent-anatomy": {
   "figure": 7,
   "h1": 1,
@@ -1285,6 +1321,15 @@
   "hr": 0,
   "pre": 6,
   "table": 3
+ },
+ "rag-interview-23": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 9,
+  "h3": 30,
+  "hr": 0,
+  "pre": 0,
+  "table": 1
  },
  "rag-production-practice": {
   "figure": 5,
@@ -1320,6 +1365,15 @@
   "h3": 0,
   "hr": 0,
   "pre": 5,
+  "table": 1
+ },
+ "tool-calling-22": {
+  "figure": 5,
+  "h1": 1,
+  "h2": 9,
+  "h3": 29,
+  "hr": 0,
+  "pre": 0,
   "table": 1
  },
  "vector-engine-milvus-es-pg": {
